@@ -1,29 +1,28 @@
 class NodeAT12 < Formula
   desc "Platform built on V8 to build network applications"
   homepage "https://nodejs.org/"
-  url "https://nodejs.org/dist/v12.22.7/node-v12.22.7.tar.xz"
-  sha256 "cc6a23b44870679a94bd8f3c8d4e1f4b77bb2712a36888ab87463459e6785f6b"
+  url "https://nodejs.org/dist/v12.22.12/node-v12.22.12.tar.xz"
+  sha256 "bc42b7f8495b9bfc7f7850dd180bb02a5bdf139cc232b8c6f02a6967e20714f2"
   license "MIT"
-
-  livecheck do
-    url "https://nodejs.org/dist/"
-    regex(%r{href=["']?v?(12(?:\.\d+)+)/?["' >]}i)
-  end
+  revision 1
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "852bbcd8a35c647f1c3bcacbd8ea3367171f043037894174e5de3b302aac8635"
-    sha256 cellar: :any,                 arm64_big_sur:  "dc0b9ba4edc54658398d773c5223e339ef5b406c06c5494e7e68f7c490081677"
-    sha256 cellar: :any,                 monterey:       "65ea462fffc38965193813d88d7536d0aaef9e15d75cb8968a5e3870d9d88e14"
-    sha256 cellar: :any,                 big_sur:        "4b182fb0bb0634af76a2c2b20f9c32454a4107682af31df2ac7c329340779648"
-    sha256 cellar: :any,                 catalina:       "7f0aff2700d2914da161f62ff1c744c36ab0dda3e9a22cb78778f15b836c959f"
-    sha256 cellar: :any,                 mojave:         "4d651ee1724446252579bb639a374913e7a30dc20a2a9bf0f4e504ce2e9cc4bd"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "47e45d7f449a3cc34bcc0fbe775ed6f85cff4a61f5d038b80503056070b3bf3b"
+    sha256 cellar: :any,                 arm64_ventura:  "045359c8f591ca97d2f4ab9f6348cd456331c03f68cb88913fc7724145fb76ec"
+    sha256 cellar: :any,                 arm64_monterey: "080b711a20d34d0272b737fe0b764afe8e0339c6cf298faee8397a4870ac3b7d"
+    sha256 cellar: :any,                 arm64_big_sur:  "535bf5c436d07b3078237460cba937124540b3fa92c4123a290b24fed6e0a0d9"
+    sha256 cellar: :any,                 monterey:       "a9f6e355460a7eaa9309ae1ba8332040a51409ce3dd462ca957b80ff45c65c42"
+    sha256 cellar: :any,                 big_sur:        "1f790b5c3a7cb07599d61e61be28a076d3980b14f14939d2e3f29daf5f9f4d9e"
+    sha256 cellar: :any,                 catalina:       "a9544a2762f1c2fd862c44cebc867cd2e3ad97836229d5228ac4340bbd0301be"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "744c889c42c289732d392589d369c3c462ee83579c863375c0ec745c1e7de10a"
   end
 
   keg_only :versioned_formula
 
+  # https://nodejs.org/en/about/releases/
+  disable! date: "2022-04-30", because: :unsupported
+
   depends_on "pkg-config" => :build
-  depends_on "python@3.9" => :build
+  depends_on "python@3.9" => :build # fails with Python 3.10
   depends_on "brotli"
   depends_on "c-ares"
   depends_on "icu4c"
@@ -31,6 +30,7 @@ class NodeAT12 < Formula
   depends_on "libuv"
   depends_on "openssl@1.1"
 
+  uses_from_macos "python"
   uses_from_macos "zlib"
 
   on_macos do
@@ -39,7 +39,7 @@ class NodeAT12 < Formula
 
   def install
     # make sure subprocesses spawned by make are using our Python 3
-    ENV["PYTHON"] = which("python3")
+    ENV["PYTHON"] = python = Formula["python@3.9"].opt_bin/"python3.9"
 
     args = %W[
       --prefix=#{prefix}
@@ -62,7 +62,7 @@ class NodeAT12 < Formula
       --shared-cares-libpath=#{Formula["c-ares"].lib}
       --openssl-use-def-ca-store
     ]
-    system "python3", "configure.py", *args
+    system python, "configure.py", *args
     system "make", "install"
 
     term_size_vendor_dir = lib/"node_modules/npm/node_modules/term-size/vendor"
@@ -92,8 +92,12 @@ class NodeAT12 < Formula
     output = shell_output("#{bin}/node -e 'console.log(new Intl.NumberFormat(\"de-DE\").format(1234.56))'").strip
     assert_equal "1.234,56", output
 
-    # make sure npm can find node
+    # make sure npm can find node and python
     ENV.prepend_path "PATH", opt_bin
+    if MacOS.version >= :monterey
+      (testpath/"bin").install_symlink Utils.safe_popen_read("xcrun", "-find", "python3").chomp => "python"
+      ENV.prepend_path "PATH", testpath/"bin"
+    end
     ENV.delete "NVM_NODEJS_ORG_MIRROR"
     assert_equal which("node"), opt_bin/"node"
     assert_predicate bin/"npm", :exist?, "npm must exist"

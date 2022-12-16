@@ -1,8 +1,8 @@
 class Mariadb < Formula
   desc "Drop-in replacement for MySQL"
   homepage "https://mariadb.org/"
-  url "https://downloads.mariadb.com/MariaDB/mariadb-10.6.4/source/mariadb-10.6.4.tar.gz"
-  sha256 "75bf9b147a95d38160d01a73b098d50a1960563b46d16a235971fff64d99643c"
+  url "https://downloads.mariadb.com/MariaDB/mariadb-10.10.2/source/mariadb-10.10.2.tar.gz"
+  sha256 "57cbd0112b22b592f657cd4eb82e2f36ad901351317bf8e17849578e803f3cb2"
   license "GPL-2.0-only"
 
   # This uses a placeholder regex to satisfy the `PageMatch` strategy
@@ -20,48 +20,53 @@ class Mariadb < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "60dbcef58f2dbde95de4461ff84483fee87522bee4cc914f4bc0dfdc97f0e078"
-    sha256 arm64_big_sur:  "b68638debac644c1818e23c6b92007c10696dc9ded1bfd57707fec1a5f0b69ea"
-    sha256 monterey:       "6c52a2b4146791f42b3e407bf55e22fb60490ce147d1211bdd731b019e446752"
-    sha256 big_sur:        "618039a83fbea4ad919c9062482793ae70103402644fe6466e868209149ce235"
-    sha256 catalina:       "cdfde8963d10dfea9d11402720d4151762e41209940fe39eab908f9926656bb4"
-    sha256 mojave:         "1e360d01735f007d930a6436eb1880fe159bb35d751d733b62449b28c4d1c246"
-    sha256 x86_64_linux:   "ba618ba8e2db07798bb40d9c1233a1a129d420e72223f46f03cbbab35dc52df7"
+    sha256 arm64_ventura:  "8bf8565ff3cfd8d9cb69ec38450dcc87802c9b8ae9f569a452926a9e8707642f"
+    sha256 arm64_monterey: "af53faa5484f46c67f0711aef9c2dbc0df1907e619dc616f576a00ce9c5ea994"
+    sha256 arm64_big_sur:  "18dbcf86270148e068d85eb4f9d3e0939a2edc1f6465199d5be2f7583185fe15"
+    sha256 ventura:        "aef7acbcdecd5b1e14f5a4815849c21799c6dedb99b190a669b52b803bd33c34"
+    sha256 monterey:       "9382abb29378ccebb7e11ecdcbd107d93299cf104611cc60d695d694bb139555"
+    sha256 big_sur:        "746b9c8f0971ea2f3d18043f5bbcb6b93ffc92d58a56a26fb7843b0be8b3006f"
+    sha256 catalina:       "b7134d5eb53aa6503405dda3e75a148f3077426f30c99eae76d97eececc4b948"
+    sha256 x86_64_linux:   "df7ad5f9b108da21ec963f40340f06a2abfa42c4b228c9f40ad9c18ff6fec2e4"
   end
 
   depends_on "bison" => :build
   depends_on "cmake" => :build
+  depends_on "fmt" => :build
   depends_on "pkg-config" => :build
   depends_on "groonga"
   depends_on "openssl@1.1"
   depends_on "pcre2"
+  depends_on "zstd"
 
   uses_from_macos "bzip2"
+  uses_from_macos "libxcrypt"
   uses_from_macos "ncurses"
   uses_from_macos "zlib"
 
-  on_macos do
-    # Need patch to remove MYSQL_SOURCE_DIR from include path because it contains
-    # file called VERSION.
-    # https://github.com/Homebrew/homebrew-core/pull/76887#issuecomment-840851149
-    # Originally reported upstream at https://jira.mariadb.org/browse/MDEV-7209,
-    # but only partially fixed.
-    patch :DATA
-  end
-
   on_linux do
-    depends_on "gcc"
     depends_on "linux-pam"
+    depends_on "readline" # uses libedit on macOS
   end
 
   conflicts_with "mysql", "percona-server",
     because: "mariadb, mysql, and percona install the same binaries"
+
   conflicts_with "mytop", because: "both install `mytop` binaries"
   conflicts_with "mariadb-connector-c", because: "both install `mariadb_config`"
 
   fails_with gcc: "5"
 
+  # fix compilation, remove in 10.10.3
+  patch do
+    url "https://github.com/mariadb-corporation/mariadb-connector-c/commit/44383e3df4896f2d04d9141f640934d3e74e04d7.patch?full_index=1"
+    sha256 "3641e17e29dc7c9bf24bc23e4d68da81f0d9f33b0568f8ff201c4ebc0487d26a"
+    directory "libmariadb"
+  end
+
   def install
+    ENV.cxx11
+
     # Set basedir and ldata so that mysql_install_db can find the server
     # without needing an explicit path to be set. This can still
     # be overridden by calling --basedir= when calling.
@@ -81,8 +86,8 @@ class Mariadb < Formula
       -DINSTALL_DOCDIR=share/doc/#{name}
       -DINSTALL_INFODIR=share/info
       -DINSTALL_MYSQLSHAREDIR=share/mysql
-      -DWITH_READLINE=yes
-      -DWITH_SSL=yes
+      -DWITH_LIBFMT=system
+      -DWITH_SSL=system
       -DWITH_UNIT_TESTS=OFF
       -DDEFAULT_CHARSET=utf8mb4
       -DDEFAULT_COLLATION=utf8mb4_general_ci
@@ -171,30 +176,10 @@ class Mariadb < Formula
     EOS
   end
 
-  plist_options manual: "mysql.server start"
-
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
-        <true/>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/mysqld_safe</string>
-          <string>--datadir=#{var}/mysql</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}</string>
-      </dict>
-      </plist>
-    EOS
+  service do
+    run [opt_bin/"mysqld_safe", "--datadir=#{var}/mysql"]
+    keep_alive true
+    working_dir var
   end
 
   test do
@@ -214,19 +199,3 @@ class Mariadb < Formula
     system "#{bin}/mysqladmin", "--port=#{port}", "--user=root", "--password=", "shutdown"
   end
 end
-
-__END__
-diff --git a/storage/mroonga/CMakeLists.txt b/storage/mroonga/CMakeLists.txt
-index 555ab248751..cddb6f2f2a6 100644
---- a/storage/mroonga/CMakeLists.txt
-+++ b/storage/mroonga/CMakeLists.txt
-@@ -215,8 +215,7 @@ set(MYSQL_INCLUDE_DIRS
-   "${MYSQL_REGEX_INCLUDE_DIR}"
-   "${MYSQL_RAPIDJSON_INCLUDE_DIR}"
-   "${MYSQL_LIBBINLOGEVENTS_EXPORT_DIR}"
--  "${MYSQL_LIBBINLOGEVENTS_INCLUDE_DIR}"
--  "${MYSQL_SOURCE_DIR}")
-+  "${MYSQL_LIBBINLOGEVENTS_INCLUDE_DIR}")
-
- if(MRN_BUNDLED)
-   set(MYSQL_PLUGIN_DIR "${INSTALL_PLUGINDIR}")

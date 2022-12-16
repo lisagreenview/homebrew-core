@@ -1,26 +1,29 @@
 class Freerdp < Formula
   desc "X11 implementation of the Remote Desktop Protocol (RDP)"
   homepage "https://www.freerdp.com/"
-  url "https://github.com/FreeRDP/FreeRDP/archive/2.4.0.tar.gz"
-  sha256 "80eb7e09e2a106345d07f0985608c480341854b19b6f8fc653cb7043a9531e52"
+  url "https://github.com/FreeRDP/FreeRDP/archive/2.9.0.tar.gz"
+  sha256 "ab8de7e962bdc3c34956160de2de8ed28423d39a78452b7686b72c94b1953b27"
   license "Apache-2.0"
 
   bottle do
-    sha256 arm64_big_sur: "13930739489389e5ecad0f8afa3d05bf41698a01b880c561f0ad05e099a9a8f3"
-    sha256 big_sur:       "0350c39447e947f7d860d12d4658eb6481f1afa83316a84249cba336e1b79776"
-    sha256 catalina:      "02424460eacaf34e564f922c26e096c74a145fde68067cfd2f3426c811dc0b11"
-    sha256 mojave:        "8c029ee46cd1ea1662c5969858aadb78f2311f4cfe4397d5119ac94aa039a650"
-    sha256 x86_64_linux:  "a5c914c81394cb1c941d78ebfb2813ba94494af167d5bcb3d4e71cb3bfec10a1"
+    sha256 arm64_ventura:  "3962f4d8fc6b873a085e429d2e1cd6ecb5e8f0528d12346b0d8b5297871a0e4e"
+    sha256 arm64_monterey: "65385380b0748b5cc0ac2012478e592dd6aacdc698ef3c914bb02fab83dd06b4"
+    sha256 arm64_big_sur:  "ab61d2a1ad23d2ac49a4f2719d3ee4664edc69b780191ef99305604e46e5c263"
+    sha256 ventura:        "7e98964a57e71b78470727346c6af9587013d5594e9b1a10ecc947a28ec09541"
+    sha256 monterey:       "775b85f8b0462129e9c6e958d4f913709a12523bd649ac6f0b81a3f6135f3a68"
+    sha256 big_sur:        "68a63b87cf9deb4523748275d26c5c89cfb18d10c8d3a35e8f9eb3b229c18c0c"
+    sha256 catalina:       "da77e3c22bef94303b804859965b7bad508717ab8639d351482d0b85c2e1af4a"
+    sha256 x86_64_linux:   "2836bb43cb7266126991a78a30f8d2c0fbe37982a97216968c631e73e9167722"
   end
 
   head do
-    url "https://github.com/FreeRDP/FreeRDP.git"
+    url "https://github.com/FreeRDP/FreeRDP.git", branch: "master"
     depends_on xcode: :build
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libusb"
   depends_on "libx11"
   depends_on "libxcursor"
@@ -31,7 +34,7 @@ class Freerdp < Formula
   depends_on "libxrandr"
   depends_on "libxrender"
   depends_on "libxv"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   uses_from_macos "cups"
 
@@ -44,19 +47,17 @@ class Freerdp < Formula
   end
 
   def install
-    system "cmake", ".", *std_cmake_args,
-                         "-DWITH_X11=ON",
-                         "-DBUILD_SHARED_LIBS=ON",
-                         "-DWITH_JPEG=ON",
-                         "-DCMAKE_INSTALL_NAME_DIR=#{lib}"
-    system "make", "install"
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args,
+                    "-DWITH_X11=ON",
+                    "-DBUILD_SHARED_LIBS=ON",
+                    "-DWITH_JPEG=ON",
+                    "-DCMAKE_INSTALL_NAME_DIR=#{lib}"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do
-    on_linux do
-      # failed to open display
-      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
-    end
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
 
     success = `#{bin}/xfreerdp --version` # not using system as expected non-zero exit code
     details = $CHILD_STATUS

@@ -1,32 +1,43 @@
 class Boringtun < Formula
   desc "Userspace WireGuard implementation in Rust"
   homepage "https://github.com/cloudflare/boringtun"
-  url "https://github.com/cloudflare/boringtun/archive/v0.3.0.tar.gz"
-  sha256 "1107b0170a33769db36876334261924edc71dfc1eb00f9b464c7d2ad6d5743d3"
+  url "https://github.com/cloudflare/boringtun/archive/refs/tags/boringtun-0.5.2.tar.gz"
+  sha256 "660f69e20b1980b8e75dc0373dfe137f58fb02b105d3b9d03f35e1ce299d61b3"
   license "BSD-3-Clause"
   head "https://github.com/cloudflare/boringtun.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, monterey:     "97dc60eaf03ff668094d700af5ef656c7033e0fe6b6e7cacf287ebaddf8c5b46"
-    sha256 cellar: :any_skip_relocation, big_sur:      "0de06cdb03839450dbe101b3f1042820f82aee7eda323039be0f48a0b2baf3e9"
-    sha256 cellar: :any_skip_relocation, catalina:     "dd119327645c4905c39a4b0e6f65472690d619e127088e62573b5a0c454cbb01"
-    sha256 cellar: :any_skip_relocation, mojave:       "c871b547c950e928ee065ce5dbe1442a41d65213b840654bb9e6922b7dedae0f"
-    sha256 cellar: :any_skip_relocation, high_sierra:  "7e6fc1a3b6458d9df1b0c15ee53d14f0ea04e85494f306034fd8531d2ff4277c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "d7b49eed536d9c38b5f0c56a8ef447aac785af786f386d1510fb04bd7d894afe"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "771e9f8fd6958064233b4740b6802ec798ec64462c02a3a85c85c27c76138192"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7918d4b24e6a15ae72e03d5ea2aa83c0feb7dc6b5be96b687f87352581327a6c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4be1130077bf81005fdfcc1fb871b9107251aa945eea633d017f673773ce730b"
+    sha256 cellar: :any_skip_relocation, ventura:        "ef525de5f1b5fe80e35994fcaf91e365b19aca09592fcc3fe3de17d6b363288c"
+    sha256 cellar: :any_skip_relocation, monterey:       "e4a19a3612bf4f8500cb116efb36e7455ebdf2ee3baa3786573a4570cd0abc09"
+    sha256 cellar: :any_skip_relocation, big_sur:        "13109557e5560e9dc8f5206fc9475f3738ec2bd802a5dba5f96d2df7551105fc"
+    sha256 cellar: :any_skip_relocation, catalina:       "c1a5968594032037de5a17596cbb487b9ad90a010adb3b7a0c41792241fafd7c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c30345c5bcef09072ad4143c2b2136ce6c6b6ffd56a583db5f368b037f0b61fc"
   end
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", *std_cargo_args
+    system "cargo", "install", *std_cargo_args(path: "boringtun-cli")
+  end
+
+  def caveats
+    <<~EOS
+      boringtun-cli requires root privileges so you will need to run `sudo boringtun-cli utun`.
+      You should be certain that you trust any software you grant root privileges.
+    EOS
   end
 
   test do
-    system "#{bin}/boringtun", "--help"
-    assert_match "boringtun " + version.to_s, shell_output("#{bin}/boringtun -V").chomp
-    shell_output("#{bin}/boringtun utun -v --log #{testpath}/boringtun.log", 1)
+    system "#{bin}/boringtun-cli", "--help"
+    assert_match "boringtun #{version}", shell_output("#{bin}/boringtun-cli -V").chomp
+
+    output = shell_output("#{bin}/boringtun-cli utun --log #{testpath}/boringtun.log 2>&1", 1)
     assert_predicate testpath/"boringtun.log", :exist?
-    boringtun_log = File.read(testpath/"boringtun.log")
-    assert_match "Success, daemonized", boringtun_log.split("/n").first
+    # requires `sudo` to start
+    assert_match "BoringTun failed to start", output
   end
 end

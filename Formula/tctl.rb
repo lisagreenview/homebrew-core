@@ -1,25 +1,27 @@
 class Tctl < Formula
   desc "Temporal CLI (tctl)"
   homepage "https://temporal.io/"
-  url "https://github.com/temporalio/temporal/archive/v1.13.1.tar.gz"
-  sha256 "3276bb3a030c7c96bfc56535dd7bf28c41ff8064c467b4e4cfba1c694879b97b"
+  url "https://github.com/temporalio/tctl/archive/v1.17.2.tar.gz"
+  sha256 "ad887002f36d67a03739d08b098c474f4120008207316c987741395ce0b30889"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "7114b1fc40d833d3367e992870023b23008db954cff5b1ecbf5513cb16f1e5a9"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "115c9115b6a4cc4e607e9d1364dc2137444e655498e3fe3b2a94a55dd9fb1aec"
-    sha256 cellar: :any_skip_relocation, monterey:       "7398111ca517ef9bbeff166800ea5d0824b186ef193c4c10a03262974cce1f69"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3d08dd8c5dd937be0e26d5dab629492d988b435476a1be1fe87f8165a95d327a"
-    sha256 cellar: :any_skip_relocation, catalina:       "56258d8700ace899a78b0c2ba34b3fda39ea39b3f11fd617dd8d6a96d1ed43a6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8952e4caaf2c6b395c69c0c0676b1a3b45226fb397df3c28e6ea1c8e87c67f48"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "23306dba780b51edd53f72c5b351826485932cbf80efa3419684d06ffedfdaf8"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e62d9e56770170c73542750d0e0673450d329ac4cc1b82cb09137c505afec5ad"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b338afaf531528c54a443aaa53f9bd858e763fb2c731041005408844121a814c"
+    sha256 cellar: :any_skip_relocation, ventura:        "f25060e666c9f4934f9cdc40d113c73ac89ee94a684dc8fa8232f8c208164c8b"
+    sha256 cellar: :any_skip_relocation, monterey:       "8b4202cc9e1cdc7cab5f877f1db859bbd4c2ad5f968e2caee6ef24bcaf22f500"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ee71c8e3cdd32bd0ac60f8773798be5afd3817e850c20a799cf2c5a6a35c9b02"
+    sha256 cellar: :any_skip_relocation, catalina:       "a329194b90331faf0337f21e03c3b95fbc4a1603a9cbef31af8377e84261cf29"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3044d16c588df32845253e6c720d651d6f4471d36a54a2c10503d99759b3fa3a"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/tools/cli/main.go"
+    system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/tctl/main.go"
     system "go", "build", *std_go_args(ldflags: "-s -w"), "-o", bin/"tctl-authorization-plugin",
-      "./cmd/tools/cli/plugins/authorization/main.go"
+      "./cmd/plugins/tctl-authorization-plugin/main.go"
   end
 
   test do

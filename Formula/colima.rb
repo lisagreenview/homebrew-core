@@ -1,36 +1,40 @@
 class Colima < Formula
-  desc "Container runtimes on MacOS with minimal setup"
+  desc "Container runtimes on MacOS (and Linux) with minimal setup"
   homepage "https://github.com/abiosoft/colima/blob/main/README.md"
   url "https://github.com/abiosoft/colima.git",
-      tag:      "v0.2.2",
-      revision: "b2c7697bee2d73e995f156fe8e9870eb246c07e6"
+      tag:      "v0.5.0",
+      revision: "5a94ab4f098ec0fe94e6d0df8b411fb149fe26fe"
   license "MIT"
   head "https://github.com/abiosoft/colima.git", branch: "main"
 
+  livecheck do
+    url :stable
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
+  end
+
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "9747ca65ca6be26b4263e1bce95c1a940701c536fd0f87b58832691f74881896"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "81d0c6180696757c3a29e4688128a31ef06b3f3ff6a45a7098e67ca5f2fa0e99"
-    sha256 cellar: :any_skip_relocation, monterey:       "79d53bbe6644ce662a7134c2846cc431731eb37c2cc0ac6fab7943f5fbca6d29"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f03962f3ac2eea17cb4a7c716a86c703a5f17da0ae76517ab8e3bac2002350bf"
-    sha256 cellar: :any_skip_relocation, catalina:       "6ed11d66cfc5537d24f1861bf764d88bfab103fd86b4278bc45c0f01e4ad27a0"
-    sha256 cellar: :any_skip_relocation, mojave:         "96faa5778cd2aaf10f5df4ec89c824f19573955add9cd3da68265d12688297fb"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "0060374b54b103dd5eab7f5a46d3b085cd1afb653d4b7d10b12bbe846546b840"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "59c8b3bf12e51d16bbb598955eac7dfcd52f22e1bba02688267f8529a498d872"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "29d2a3364bc5518086bb6864b640338663ac9f8e4c9a6b0c15f4ab030b860489"
+    sha256 cellar: :any_skip_relocation, ventura:        "527d350e36f3509e45b62eac3a43f2a34fcd2f9da832dc2d7180ec1dce820d69"
+    sha256 cellar: :any_skip_relocation, monterey:       "465d8338a2efcb7ae00abf7dcd06de384691b0fd1eaccaaeb7d66a0a8b4b3215"
+    sha256 cellar: :any_skip_relocation, big_sur:        "767c5d3c6d732a9b7b57e460712ec22c9a8118353bbd88f9738103926f6b9746"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c2da8e2f0578dd55e2f3a8bf0d22bd4a748524e5260bc33e05026c61d7d499e8"
   end
 
   depends_on "go" => :build
   depends_on "lima"
-  depends_on :macos
 
   def install
     project = "github.com/abiosoft/colima"
     ldflags = %W[
+      -s -w
       -X #{project}/config.appVersion=#{version}
       -X #{project}/config.revision=#{Utils.git_head}
     ]
-    system "go", "build", *std_go_args(ldflags: ldflags.join(" ")), "./cmd/colima"
+    system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/colima"
 
-    (bash_completion/"colima").write Utils.safe_popen_read(bin/"colima", "completion", "bash")
-    (zsh_completion/"_colima").write Utils.safe_popen_read(bin/"colima", "completion", "zsh")
-    (fish_completion/"colima.fish").write Utils.safe_popen_read(bin/"colima", "completion", "fish")
+    generate_completions_from_executable(bin/"colima", "completion")
   end
 
   test do

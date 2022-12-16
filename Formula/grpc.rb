@@ -2,23 +2,28 @@ class Grpc < Formula
   desc "Next generation open source RPC library and framework"
   homepage "https://grpc.io/"
   url "https://github.com/grpc/grpc.git",
-      tag:      "v1.41.1",
-      revision: "635693ce624f3b3a89e5a764f0664958ef08b2b9"
+      tag:      "v1.51.1",
+      revision: "0a82c02a9b817a53574994374dcff53f2e961df2"
   license "Apache-2.0"
-  head "https://github.com/grpc/grpc.git"
+  head "https://github.com/grpc/grpc.git", branch: "master"
 
+  # The "latest" release on GitHub is sometimes for an older major/minor and
+  # there's sometimes a notable gap between when a version is tagged and
+  # released, so we have to check the releases page instead.
   livecheck do
-    url :stable
-    strategy :github_latest
+    url "https://github.com/grpc/grpc/releases?q=prerelease%3Afalse"
+    regex(%r{href=["']?[^"' >]*?/tag/v?(\d+(?:\.\d+)+)["' >]}i)
+    strategy :page_match
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "57ee3e421301dd0d5f0b99d8017c37520b46abdd9a7d132362fb57e0f56467d5"
-    sha256 cellar: :any,                 arm64_big_sur:  "9fe7e3fd4e67950fc089624f5cd0424de62127fc5ed33ea613fc21274242654a"
-    sha256 cellar: :any,                 monterey:       "b39d9bbb0fd664247cadebe19b5092cd2343a05a3db31c34771e9623376d7d80"
-    sha256 cellar: :any,                 big_sur:        "a6776023c168da9feb395fe023b592d666768f3651a417f8639f7cf31d84dbdf"
-    sha256 cellar: :any,                 catalina:       "7a481b8490ca15d714a2c6286b8796b34552e788564e665cd04240f2f66d2aaf"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8a6ff4d10656bb6942dc8f2d9d5212389c59879031241bdcc339a6e1b91a4175"
+    sha256 cellar: :any,                 arm64_ventura:  "ae834c08d68b254734cbc447444a7ed68c586bf54f7264a60fd9d5c84579b252"
+    sha256 cellar: :any,                 arm64_monterey: "1608c7eedf66260356b7250d6a506f176e77cfa573adc8421fc95ceb3a4892d3"
+    sha256 cellar: :any,                 arm64_big_sur:  "273400008e5051aa362e72c850d70b12b928a0122bf3b6e72a71d84865b7c39f"
+    sha256 cellar: :any,                 ventura:        "546f1b138ecabede6d0ab9786e9ffb206c4b708f48101ebef41acc2301b79af5"
+    sha256 cellar: :any,                 monterey:       "23fd418457a3c933128e182c4a7a507a9a174eaeaa523965504d105cf3df6fb8"
+    sha256 cellar: :any,                 big_sur:        "2ab684061c5927a4f12fdba3ae5d1084b63169568989b6789a36637742120133"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fdaa72c6288d904047b2a1d7b0298e4687b896738d215a16ea761d292195f079"
   end
 
   depends_on "autoconf" => :build
@@ -35,13 +40,7 @@ class Grpc < Formula
   uses_from_macos "zlib"
 
   on_macos do
-    # This shouldn't be needed for `:test`, but there's a bug in `brew`:
-    # CompilerSelectionError: pdnsrec cannot be built with any available compilers.
-    depends_on "llvm" => [:build, :test] if DevelopmentTools.clang_build_version <= 1100
-  end
-
-  on_linux do
-    depends_on "gcc"
+    depends_on "llvm" => :build if DevelopmentTools.clang_build_version <= 1100
   end
 
   fails_with :clang do
@@ -52,7 +51,6 @@ class Grpc < Formula
   fails_with gcc: "5" # C++17
 
   def install
-    ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["llvm"].opt_lib
     ENV.llvm_clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1100)
     mkdir "cmake/build" do
       args = %W[
@@ -94,9 +92,6 @@ class Grpc < Formula
   end
 
   test do
-    # Force use of system clang on Mojave
-    ENV.clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1100)
-
     (testpath/"test.cpp").write <<~EOS
       #include <grpc/grpc.h>
       int main() {

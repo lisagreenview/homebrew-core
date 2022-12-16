@@ -3,19 +3,26 @@ class Restund < Formula
   homepage "https://web.archive.org/web/20200427184619/www.creytiv.com/restund.html"
   url "https://sources.openwrt.org/restund-0.4.12.tar.gz"
   sha256 "3170441dc882352ab0275556b6fc889b38b14203d936071b5fa12f39a5c86d47"
+  license "BSD-3-Clause"
+  revision 9
 
+  # The sources.openwrt.org directory listing page is 2+ MB in size and
+  # growing. This alternative check is less ideal but only a few KB. Versions
+  # on the package page can use a format like 1.2.3-4, so we omit any trailing
+  # suffix to match the tarball version.
   livecheck do
-    url "https://sources.openwrt.org/"
-    regex(/href=.*?restund[._-]v?(\d+(?:\.\d+)+)\.t/i)
+    url "https://openwrt.org/packages/pkgdata/restund"
+    regex(/<dd [^>]*?class="version"[^>]*?>\s*?v?(\d+(?:\.\d+)+)/im)
   end
 
   bottle do
-    rebuild 1
-    sha256 big_sur:     "389b79ebc0bd2352f739496d27e8d684db16a4a371ff24c511dc0b2a6059e5ec"
-    sha256 catalina:    "904de3a9379dac2c1215b992e1aff7cfd42e09f288e5b88df1969c9ba1675050"
-    sha256 mojave:      "7ec584f71cc4b6f54f30c1dfcae29e11f110b8f26506e1154e5646ce326923b1"
-    sha256 high_sierra: "2d5b243b9971a38fdc00c1d2d332e7875aa17f74ea4d1f083eeacbfaa38d004f"
-    sha256 sierra:      "ea2c7e202307b9a48ed65020570d5ce3236b556757263cb16c35143baa92ca79"
+    sha256 arm64_ventura:  "b9ba059a6225c2f65e8a9c5e6f6f1e0e697026a5adbd11feebe829bcda207e09"
+    sha256 arm64_monterey: "0d6aba84bcbe504021c1fd5add9804830061fcab75ec2fb596645bc50c3f9eae"
+    sha256 arm64_big_sur:  "ad737b821dd36a44e0c9f396c4b3e4e647fc3cc090ecf9b7c4a1b333264c69f6"
+    sha256 ventura:        "0748883809bea3879eb9d559b4989c4cd3b510816e49a85c25eb476bcf3f8280"
+    sha256 monterey:       "b01e965a4ef6ce7c29e03c14ac544a3f2e74014ed8eb4214c926f5ea54cff5b0"
+    sha256 big_sur:        "73ad50480e142d78199a62c58557e5235b7ab987447688620314af3a9e692b37"
+    sha256 x86_64_linux:   "edc5342cec41fc3fe065907f880cfaafd50dd83258a296c43b1144ed63a7b8d0"
   end
 
   depends_on "libre"

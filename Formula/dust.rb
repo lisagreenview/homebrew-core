@@ -1,10 +1,10 @@
 class Dust < Formula
   desc "More intuitive version of du in rust"
   homepage "https://github.com/bootandy/dust"
-  url "https://github.com/bootandy/dust/archive/v0.7.5.tar.gz"
-  sha256 "f892aaf7a0a7852e12d01b2ced6c2484fb6dc5fe7562abdf0c44a2d08aa52618"
+  url "https://github.com/bootandy/dust/archive/v0.8.3.tar.gz"
+  sha256 "1e07203546274276503a4510adcf5dc6eacd5d1e20604fcd55a353b3b63c1213"
   license "Apache-2.0"
-  head "https://github.com/bootandy/dust.git"
+  head "https://github.com/bootandy/dust.git", branch: "master"
 
   livecheck do
     url :stable
@@ -12,19 +12,25 @@ class Dust < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e6edca1e8a6965f9a88bce456deb43d05270c732b5486666754595de01693026"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "96f49e81189c0120c16bb3da858f7a9c6daad1fba6efaeccf6a3d0d34ce1253b"
-    sha256 cellar: :any_skip_relocation, monterey:       "e32c73ed14a8ef6e0f17ab6346b4bb497acdb243da0edeebc35acdfd4be6c191"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1e21970d1f6b01d5c472c9a56f4d2415f721d3534fb600cf3dd22782c7b10294"
-    sha256 cellar: :any_skip_relocation, catalina:       "1c9527d0399c8b1235c9291b448bfb30c0a4590fd4e9129d17b4bbbbe6ace74a"
-    sha256 cellar: :any_skip_relocation, mojave:         "b044d0c3122ea62432349dd64374ca257d5e9265f158973a2e11ceaf8955cb1d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4ea0ed558b2941ac32109b8b8a83bf4f55c3177b26a7b1436e98c71616cf822c"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "ffa6dcff87e28671bcb9d488a54e2b095d78ede9945a736b692f1f03d6e4a1d2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8459366edac296e35df8598fa1ded08448b691ab07de289d3ad02ab403644ac0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "13c912d4ca38e5fb053a02bb3534df155125f662a1a5554e4def555b74d0c5e4"
+    sha256 cellar: :any_skip_relocation, ventura:        "751b82c8a0d41f9e8dcbe91b4fad1e08727a7d958078961058ea94841873e676"
+    sha256 cellar: :any_skip_relocation, monterey:       "6a04c6681d1cfb6357605d018be6fc8cf20fe29b9da656a5886a5893585a6c9c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1fb7f67c5612d8172e34e019af005c267119ca1caa2bb2cc1fd2116aef182c39"
+    sha256 cellar: :any_skip_relocation, catalina:       "0e3b7c9209a8111e83f97ed92e8f41c220564558d032e7a918017075e57d68c4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "15f9df74f891f4087e40a24dc38f3d5a5aecb6ff0caae2555585c18e5fdc065b"
   end
 
   depends_on "rust" => :build
 
   def install
     system "cargo", "install", *std_cargo_args
+
+    bash_completion.install "completions/dust.bash"
+    fish_completion.install "completions/dust.fish"
+    zsh_completion.install "completions/_dust"
   end
 
   test do

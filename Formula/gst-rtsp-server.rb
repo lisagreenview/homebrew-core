@@ -1,8 +1,8 @@
 class GstRtspServer < Formula
   desc "RTSP server library based on GStreamer"
   homepage "https://gstreamer.freedesktop.org/modules/gst-rtsp-server.html"
-  url "https://gstreamer.freedesktop.org/src/gst-rtsp-server/gst-rtsp-server-1.18.4.tar.xz"
-  sha256 "a46bb8de40b971a048580279d2660e616796f871ad3ed00c8a95fe4d273a6c94"
+  url "https://gstreamer.freedesktop.org/src/gst-rtsp-server/gst-rtsp-server-1.20.3.tar.xz"
+  sha256 "ee402718be9b127f0e5e66ca4c1b4f42e4926ec93ba307b7ccca5dc6cc9794ca"
   license "LGPL-2.0-or-later"
 
   livecheck do
@@ -11,13 +11,14 @@ class GstRtspServer < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "9b8dab026348a2348dfa8ab395fe3760b16fa595f15c80f4eeb7828fb89b80b0"
-    sha256 cellar: :any,                 arm64_big_sur:  "0fd899f6268df8362cadf3f19b92753740301acaf2aa180a4d95f256cb40e4a8"
-    sha256 cellar: :any,                 monterey:       "7d53dbc68b9682aedc0b4c7abbac2341d262480b91b883f3f5c108778be57f47"
-    sha256 cellar: :any,                 big_sur:        "2cbafc9f96e6c7b87afac67edaf0c0252205307ee088066f2d3766807ebdc68e"
-    sha256 cellar: :any,                 catalina:       "7528fe1df86bbd0c6702b3e4c843af6509640098c1cd5b5d326941c2006c503a"
-    sha256 cellar: :any,                 mojave:         "1f69a3c5c02d021ebbb7e5a96779f38d15ffa3eef0680d993f3f5c508bbdb0ad"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2502c56d4e31e2d562eb47c87977d090fafad4778383cc4c29586ac03aa7310a"
+    sha256 cellar: :any, arm64_ventura:  "28b0061a9d53963c72f2e7b5e54732f99ad879d96e1feee890e83340d0c903d6"
+    sha256 cellar: :any, arm64_monterey: "90a81b846111c1db567d317b815bb6efc564483ad575a6138f72d8783e6f8784"
+    sha256 cellar: :any, arm64_big_sur:  "f08baa8c08ebe29ad326a560a055f645d3b8f7db64436a5ab2032a70ed379a4c"
+    sha256 cellar: :any, ventura:        "d76a2514d0f1d9828418aaf12e61c1b0f421aae90198f4675b6614e7feb4bdca"
+    sha256 cellar: :any, monterey:       "28f1609e63622117d9852473cfdb928a49d42dc83aa6245b2847dc5d2e950329"
+    sha256 cellar: :any, big_sur:        "260e025c8a41886fe63f4c8efb71c5ebe260a89233fac51dacb560dc5a4a07e3"
+    sha256 cellar: :any, catalina:       "df71c3fc2210572f2f6d7be6568ee599f75d2ac4747826e727dc14b2a59f4c3a"
+    sha256               x86_64_linux:   "89dbd844a505aaf257ffff2eb5bd299352767d4a65a0c6da92812cd4d19d2818"
   end
 
   depends_on "gobject-introspection" => :build

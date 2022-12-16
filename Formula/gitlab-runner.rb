@@ -2,10 +2,10 @@ class GitlabRunner < Formula
   desc "Official GitLab CI runner"
   homepage "https://gitlab.com/gitlab-org/gitlab-runner"
   url "https://gitlab.com/gitlab-org/gitlab-runner.git",
-      tag:      "v14.4.0",
-      revision: "4b9e985ab8986c344903898ef682a122718f9632"
+      tag:      "v15.6.1",
+      revision: "133d7e769491ed802f3d0bed68338d74357f6159"
   license "MIT"
-  head "https://gitlab.com/gitlab-org/gitlab-runner.git"
+  head "https://gitlab.com/gitlab-org/gitlab-runner.git", branch: "main"
 
   livecheck do
     url :stable
@@ -13,12 +13,14 @@ class GitlabRunner < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ff7fcb67c66534a36b32d043c573005421ebc26fe87fe09937cdc9164708b900"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1313bb413961d78b9fde57a3a14dc8642dee3f7d3ddf4fefb354dc95fe49ea76"
-    sha256 cellar: :any_skip_relocation, monterey:       "4f997780c8add77429da13d9bf3cbdfb51f44c042f8e27cbbf3a4a88b3f684fc"
-    sha256 cellar: :any_skip_relocation, big_sur:        "d20050b6390ae734ba30c7dce568323ea9714b9b0c9eff7154268a1028a73aa7"
-    sha256 cellar: :any_skip_relocation, catalina:       "e5302f85731f53752c309fcc8f1157ea58e7aac8453fcd4a331a9e35e5a18b4c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1a565ac79ccb691a2af326e15c3d10ae92c4355cbcfa8687b1b88a176dcf815f"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "874ebb925c04d86a733280e3e6dbf1fac3cd174490d92906d6aac0f2303b36d4"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "08bdd01d1fe3be0716ad5eac56a0acc6010df4f18d3e431e46a003ea9da13144"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "42810815b6b64a65046eb3cda9691ce2247e490a278a7a88edd8bd1c44318db7"
+    sha256 cellar: :any_skip_relocation, ventura:        "60f552404eaf275a379f1599c2b39fa3f3b348d686a801ba636790f040e9a52a"
+    sha256 cellar: :any_skip_relocation, monterey:       "7306436288118bac19f6c668531de621fc33ca1602be7d572e4e48cf8b9a4fda"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b2b568d01aeb0268d2d2bb0748c97ca82a72f965ea6259146916fabaf583e80e"
+    sha256 cellar: :any_skip_relocation, catalina:       "5029a21da509d8f366d3e8d8f5dd922cf631b2ded5d9b762755218e31e50f969"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "61ffcfacbe3104d07215514252e0b1a16bdbcee245bdf9d14092f8f7e1a3f9db"
   end
 
   depends_on "go" => :build
@@ -31,16 +33,17 @@ class GitlabRunner < Formula
       -X #{proj}/common.REVISION=#{Utils.git_short_head(length: 8)}
       -X #{proj}/common.BRANCH=#{version.major}-#{version.minor}-stable
       -X #{proj}/common.BUILT=#{time.strftime("%Y-%m-%dT%H:%M:%S%:z")}
-    ].join(" ")
+    ]
     system "go", "build", *std_go_args(ldflags: ldflags)
   end
 
   service do
     run [opt_bin/"gitlab-runner", "run", "--syslog"]
     environment_variables PATH: std_service_path_env
-    working_dir ENV["HOME"]
+    working_dir Dir.home
     keep_alive true
     macos_legacy_timers true
+    process_type :interactive
   end
 
   test do

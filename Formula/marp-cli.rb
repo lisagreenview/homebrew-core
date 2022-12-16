@@ -3,17 +3,19 @@ require "language/node"
 class MarpCli < Formula
   desc "Easily convert Marp Markdown files into static HTML/CSS, PDF, PPT and images"
   homepage "https://github.com/marp-team/marp-cli"
-  url "https://registry.npmjs.org/@marp-team/marp-cli/-/marp-cli-1.4.2.tgz"
-  sha256 "44ba2ec584cdb5091ecb76efda633f51389a66f91fcc83823d834256d2d458e6"
+  url "https://registry.npmjs.org/@marp-team/marp-cli/-/marp-cli-2.2.2.tgz"
+  sha256 "c0c60dfa925e2a687ca2d203340d3d02ae9531f6b1cd830a4ec39ad24e8a2701"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "90957118931efffab0929a71f771d6769b87167db966815dc72be1ca7ffa354a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "90957118931efffab0929a71f771d6769b87167db966815dc72be1ca7ffa354a"
-    sha256 cellar: :any_skip_relocation, monterey:       "e62f64281546d7dca7170f7550c7de87ccece8b2ae675c1bbf6a16dedade800c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e62f64281546d7dca7170f7550c7de87ccece8b2ae675c1bbf6a16dedade800c"
-    sha256 cellar: :any_skip_relocation, catalina:       "e62f64281546d7dca7170f7550c7de87ccece8b2ae675c1bbf6a16dedade800c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1f8385d143f38ea1894be22449be34fb593b29a11d67aba47561584e12dc9da4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7d3709b152ec1ae5a4c93ce8a1d0ad8b5b2345782a293b7c81bff408d19df8f8"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7d3709b152ec1ae5a4c93ce8a1d0ad8b5b2345782a293b7c81bff408d19df8f8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7d3709b152ec1ae5a4c93ce8a1d0ad8b5b2345782a293b7c81bff408d19df8f8"
+    sha256 cellar: :any_skip_relocation, ventura:        "57e645d5295baa70bd7b8fab37a415ba0a09936dcb63d01cec72b7abce136ca1"
+    sha256 cellar: :any_skip_relocation, monterey:       "57e645d5295baa70bd7b8fab37a415ba0a09936dcb63d01cec72b7abce136ca1"
+    sha256 cellar: :any_skip_relocation, big_sur:        "57e645d5295baa70bd7b8fab37a415ba0a09936dcb63d01cec72b7abce136ca1"
+    sha256 cellar: :any_skip_relocation, catalina:       "57e645d5295baa70bd7b8fab37a415ba0a09936dcb63d01cec72b7abce136ca1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3afd350be8f362579de77f5b2e0a7113375f94f691141be8dd983b88e6e504de"
   end
 
   depends_on "node"

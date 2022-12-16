@@ -4,17 +4,18 @@ class SimpleAmqpClient < Formula
   url "https://github.com/alanxz/SimpleAmqpClient/archive/v2.5.1.tar.gz"
   sha256 "057c56b29390ec7659de1527f9ccbadb602e3e73048de79594521b3141ab586d"
   license "MIT"
+  revision 3
   head "https://github.com/alanxz/SimpleAmqpClient.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "7b53ef2193ba97547ba50f2103cdd8817aabf0a5042defcd2b43d7c414bdd796"
-    sha256 cellar: :any,                 arm64_big_sur:  "f66fc5dd89e9899a536b516486a88484a9f6e375ff2a452c686812fe2dadbc23"
-    sha256 cellar: :any,                 monterey:       "9a1d90af13c1877a7400c0aff0542d4e9c9fac3d19c154f86be0a1151f74c29c"
-    sha256 cellar: :any,                 big_sur:        "f2dd44e2182fa7da6d5e9dcc255ad06138b09be9e0619ecd07135e6fc2c35405"
-    sha256 cellar: :any,                 catalina:       "97ceed4ae134cb5f01dc3c5efdafaccf3374aee7c748217eba9bb8624edb74dc"
-    sha256 cellar: :any,                 mojave:         "42bf1dcae157dc5e3ad6c274cfff63e0599d1c1fa2ed634696a26ec499e6b18f"
-    sha256 cellar: :any,                 high_sierra:    "0df2d53228ce5b30d670a67b36b8440158d4773c55c206456fc2762c7e820cec"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d1b3f446e95fe780934b1fde99b9bd2f880d6516910d76ca3a98ddbac5340a25"
+    sha256 cellar: :any,                 arm64_ventura:  "81e37926ad2b168fada2fede3893e482c149b8eff7cc6545c4fadd0b0a9ab2f0"
+    sha256 cellar: :any,                 arm64_monterey: "98e88b317c98418541f136c5a4258ac0a55811ab3930ce764f81b59cbeb2377f"
+    sha256 cellar: :any,                 arm64_big_sur:  "0c8874f465e52174070b0458134ba72778c244297b482d34549823d353efd4fb"
+    sha256 cellar: :any,                 ventura:        "de1ca3ebd077c11b64e08b03fe0721e644ef1ecca58b34b4f103ebed20a3d69a"
+    sha256 cellar: :any,                 monterey:       "a2da20f175d9b66adc2b792574bc97f7ee52786c2c874a105fdc4a6ffdb3c09e"
+    sha256 cellar: :any,                 big_sur:        "843b97c2ec5bc775a71375bee1890b6e64e11839965ea87d92fe90e575791392"
+    sha256 cellar: :any,                 catalina:       "aca58f6eefbc489a0e1e5d630d888efc9116355485f7891ad5759e5b4db5deb2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "30d2f03df8695f2416b6b0882030f23a36754fa3da8a3815003fed880b44fea9"
   end
 
   depends_on "cmake" => :build

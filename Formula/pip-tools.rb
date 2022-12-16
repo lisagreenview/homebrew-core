@@ -3,39 +3,45 @@ class PipTools < Formula
 
   desc "Locking and sync for Pip requirements files"
   homepage "https://pip-tools.readthedocs.io"
-  url "https://files.pythonhosted.org/packages/57/c1/26473668860f7436d101c99a4fad707be802d26f254ef7147a65f7d2e7c9/pip-tools-6.4.0.tar.gz"
-  sha256 "65553a15b1ba34be5e43889345062e38fb9b219ffa23b084ca0d4c4039b6f53b"
+  url "https://files.pythonhosted.org/packages/35/72/91b0284111ca3d43e14caa879bd1aeceb9480f81a679d40ce2ab7481969d/pip-tools-6.12.0.tar.gz"
+  sha256 "f441603c63b16f4af0dd5026f7522a49eddec2bc8a4a4979af44e1f6b0a1c13e"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b47371326f06f1c9598058df4212dfd803e5969efdeeed0c7cb9e1fa39146eaa"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f14ebaa026ffc43f0dbf5b039c205ba96bb957a912346d80451ff74bbe1b538e"
-    sha256 cellar: :any_skip_relocation, monterey:       "385978df36d819bfca87b9993a3cb9c17fd8922d9afcaade05eac0c948333a49"
-    sha256 cellar: :any_skip_relocation, big_sur:        "d40c9ae044aed7106dd09fbb0095d7f9bcb872e07872a431aca58f108827b653"
-    sha256 cellar: :any_skip_relocation, catalina:       "7de1775230fc40a2e4b266b8918d048fa825f09f6cf0c60fd9312aacd89d28e0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b957574f88e386d443f05c3e5aae8c5b22d87b595d6357deb38196cbe9bd4995"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "a579ee92d160c845472c275c273291449e37285b9f9b1fd9119120dea5cab32d"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "32351090149ba890933b9bd253072cebbc43423a4af75335b0a8751c316fcd94"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5643fabdf2197ec5dbcacc1b37b59b6df51eb07a948dd36e9a1aa2bb7afca6e6"
+    sha256 cellar: :any_skip_relocation, ventura:        "416eb45c658e54a359974df1f8fa566bdf6be12a64f4a6b47c374a1e17a5e92e"
+    sha256 cellar: :any_skip_relocation, monterey:       "c9eb5f78b3190a6f90f2f543b84e723626bf28200cf98b6ed0f85171551893d1"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7e03b439f3bf8e63274e5b3d77a6199a1db252a1e5285f928474adf45d6e940c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b41ae2c82351a8a429f013cfc8baa89483a441cd4be74383179f8e80eac63fb5"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+
+  resource "build" do
+    url "https://files.pythonhosted.org/packages/0f/61/aaf43fbb36cc4308be8ac8088f52db9622b0dbf1f0880c1016ae6aa03f46/build-0.9.0.tar.gz"
+    sha256 "1a07724e891cbd898923145eb7752ee7653674c511378eb9c7691aab1612bc3c"
+  end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/f4/09/ad003f1e3428017d1c3da4ccc9547591703ffea548626f47ec74509c5824/click-8.0.3.tar.gz"
-    sha256 "410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b"
+    url "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz"
+    sha256 "7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"
+  end
+
+  resource "packaging" do
+    url "https://files.pythonhosted.org/packages/6b/f7/c240d7654ddd2d2f3f328d8468d4f1f876865f6b9038b146bec0a6737c65/packaging-22.0.tar.gz"
+    sha256 "2198ec20bd4c017b8f9717e00f0c8714076fc2fd93816750ab48e2c41de2cfd3"
   end
 
   resource "pep517" do
-    url "https://files.pythonhosted.org/packages/0a/65/6e656d49c679136edfba25f25791f45ffe1ea4ae2ec1c59fe9c35e061cd1/pep517-0.12.0.tar.gz"
-    sha256 "931378d93d11b298cf511dd634cf5ea4cb249a28ef84160b3247ee9afb4e8ab0"
-  end
-
-  resource "tomli" do
-    url "https://files.pythonhosted.org/packages/aa/5b/62165da80cbc6e1779f342234c7ddc6c6bc9e64cef149046a9c0456f912b/tomli-1.2.2.tar.gz"
-    sha256 "c6ce0015eb38820eaf32b5db832dbc26deb3dd427bd5f6556cf0acac2c214fee"
+    url "https://files.pythonhosted.org/packages/4d/19/e11fcc88288f68ae48e3aa9cf5a6fd092a88e629cb723465666c44d487a0/pep517-0.13.0.tar.gz"
+    sha256 "ae69927c5c172be1add9203726d4b84cf3ebad1edcd5f71fcdc746e66e829f59"
   end
 
   resource "wheel" do
-    url "https://files.pythonhosted.org/packages/4e/be/8139f127b4db2f79c8b117c80af56a3078cc4824b5b94250c7f81a70e03b/wheel-0.37.0.tar.gz"
-    sha256 "e2ef7239991699e3355d54f8e968a21bb940a1dbf34a4d226741e64462516fad"
+    url "https://files.pythonhosted.org/packages/a2/b8/6a06ff0f13a00fc3c3e7d222a995526cbca26c1ad107691b6b1badbbabf1/wheel-0.38.4.tar.gz"
+    sha256 "965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac"
   end
 
   def install

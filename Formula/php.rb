@@ -2,11 +2,10 @@ class Php < Formula
   desc "General-purpose scripting language"
   homepage "https://www.php.net/"
   # Should only be updated if the new version is announced on the homepage, https://www.php.net/
-  url "https://www.php.net/distributions/php-8.0.13.tar.xz"
-  mirror "https://fossies.org/linux/www/php-8.0.13.tar.xz"
-  sha256 "cd976805ec2e9198417651027dfe16854ba2c2c388151ab9d4d268513d52ed52"
+  url "https://www.php.net/distributions/php-8.2.0.tar.xz"
+  mirror "https://fossies.org/linux/www/php-8.2.0.tar.xz"
+  sha256 "6ea4c2dfb532950fd712aa2a08c1412a6a81cd1334dd0b0bf88a8e44c2b3a943"
   license "PHP-3.01"
-  revision 1
 
   livecheck do
     url "https://www.php.net/downloads"
@@ -14,12 +13,13 @@ class Php < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "5e8e562c74584798172ad38b133ebb697d2aad05ef864943b03775edb00677ce"
-    sha256 arm64_big_sur:  "65f85437a8c83d56ecc117d80608ea888031defae926fd39422c2c17a41b6527"
-    sha256 monterey:       "77bf294ebd73b374e914a4224a050698b1a2534a5bc39b01b600a28380b83720"
-    sha256 big_sur:        "b85115ff05fcae0b688d3fd941c99991511748d720ff36e5cc3147fc9d849afa"
-    sha256 catalina:       "47c1c304eb20b686f097841095b8c14d75d51dbd385532971a234a14fe2a0f6a"
-    sha256 x86_64_linux:   "dcbe5be8ab4acff8dd28ccab2eb59dfb642c49ec6e86645485bb447d75f04aba"
+    sha256 arm64_ventura:  "1cd68cd16bad12a23e4e3f8ab4be87455ff3e35d58ba22212cb8a3f0be5e83f5"
+    sha256 arm64_monterey: "3a6df9ae8fc672c12df1db29eaa7585d3f482fa1142cea0c751a79573028a1ba"
+    sha256 arm64_big_sur:  "f305c6a7053e819ce2a1afa0397debd97737fbccf013ed62f742778fc0596882"
+    sha256 ventura:        "f1b15af07a08e7e494d1ee469784fdd32f1a703b7a47f08198d44b7a062b681f"
+    sha256 monterey:       "b2776587333c8755a0a30249ff13110e8ae30ee461a0306424a2d5af66571038"
+    sha256 big_sur:        "1d4a3e676be4aefd7b2f95e6aaaf6c5c19768f38fcf937b863d05ca471460946"
+    sha256 x86_64_linux:   "8afad2a52f4fa331f0853c96533ce379c6c9b7dcf741491ecf9b5a6079cab2ef"
   end
 
   head do
@@ -43,7 +43,6 @@ class Php < Formula
   depends_on "gmp"
   depends_on "icu4c"
   depends_on "krb5"
-  depends_on "libffi"
   depends_on "libpq"
   depends_on "libsodium"
   depends_on "libzip"
@@ -58,6 +57,7 @@ class Php < Formula
   uses_from_macos "xz" => :build
   uses_from_macos "bzip2"
   uses_from_macos "libedit"
+  uses_from_macos "libffi", since: :catalina
   uses_from_macos "libxml2"
   uses_from_macos "libxslt"
   uses_from_macos "zlib"
@@ -69,11 +69,6 @@ class Php < Formula
   end
 
   def install
-    if OS.mac? && (MacOS.version == :el_capitan || MacOS.version == :sierra)
-      # Ensure that libxml2 will be detected correctly in older MacOS
-      ENV["SDKROOT"] = MacOS.sdk_path
-    end
-
     # buildconf required due to system library linking bug patch
     system "./buildconf", "--force"
 
@@ -93,8 +88,8 @@ class Php < Formula
     # possible to recompile as suggested in the original message
     inreplace "sapi/apache2handler/sapi_apache2.c",
               "You need to recompile PHP.",
-              "Homebrew PHP does not support a thread-safe php binary. "\
-              "To use the PHP apache sapi please change "\
+              "Homebrew PHP does not support a thread-safe php binary. " \
+              "To use the PHP apache sapi please change " \
               "your httpd config to use the prefork MPM"
 
     inreplace "sapi/fpm/php-fpm.conf.in", ";daemonize = yes", "daemonize = no"
@@ -142,7 +137,6 @@ class Php < Formula
       --enable-pcntl
       --enable-phpdbg
       --enable-phpdbg-readline
-      --enable-phpdbg-webhelper
       --enable-shmop
       --enable-soap
       --enable-sockets
@@ -183,7 +177,6 @@ class Php < Formula
       --with-sqlite3
       --with-tidy=#{Formula["tidy-html5"].opt_prefix}
       --with-unixODBC
-      --with-xmlrpc
       --with-xsl
       --with-zip
       --with-zlib
@@ -208,18 +201,23 @@ class Php < Formula
     extension_dir = Utils.safe_popen_read("#{bin}/php-config", "--extension-dir").chomp
     orig_ext_dir = File.basename(extension_dir)
     inreplace bin/"php-config", lib/"php", prefix/"pecl"
-    inreplace "php.ini-development", %r{; ?extension_dir = "\./"},
-      "extension_dir = \"#{HOMEBREW_PREFIX}/lib/php/pecl/#{orig_ext_dir}\""
+    %w[development production].each do |mode|
+      inreplace "php.ini-#{mode}", %r{; ?extension_dir = "\./"},
+        "extension_dir = \"#{HOMEBREW_PREFIX}/lib/php/pecl/#{orig_ext_dir}\""
+    end
 
     # Use OpenSSL cert bundle
     openssl = Formula["openssl@1.1"]
-    inreplace "php.ini-development", /; ?openssl\.cafile=/,
-      "openssl.cafile = \"#{openssl.pkgetc}/cert.pem\""
-    inreplace "php.ini-development", /; ?openssl\.capath=/,
-      "openssl.capath = \"#{openssl.pkgetc}/certs\""
+    %w[development production].each do |mode|
+      inreplace "php.ini-#{mode}", /; ?openssl\.cafile=/,
+        "openssl.cafile = \"#{openssl.pkgetc}/cert.pem\""
+      inreplace "php.ini-#{mode}", /; ?openssl\.capath=/,
+        "openssl.capath = \"#{openssl.pkgetc}/certs\""
+    end
 
     config_files = {
       "php.ini-development"   => "php.ini",
+      "php.ini-production"    => "php.ini-production",
       "sapi/fpm/php-fpm.conf" => "php-fpm.conf",
       "sapi/fpm/www.conf"     => "php-fpm.d/www.conf",
     }
@@ -256,6 +254,7 @@ class Php < Formula
 
     # Custom location for extensions installed via pecl
     pecl_path = HOMEBREW_PREFIX/"lib/php/pecl"
+    pecl_path.mkpath
     ln_s pecl_path, prefix/"pecl" unless (prefix/"pecl").exist?
     extension_dir = Utils.safe_popen_read("#{bin}/php-config", "--extension-dir").chomp
     php_basename = File.basename(extension_dir)
@@ -331,9 +330,9 @@ class Php < Formula
       "Zend OPCache extension not loaded")
     # Test related to libxml2 and
     # https://github.com/Homebrew/homebrew-core/issues/28398
-    on_macos do
+    if OS.mac?
       assert_includes MachO::Tools.dylibs("#{bin}/php"),
-        "#{Formula["libpq"].opt_lib}/libpq.5.dylib"
+              "#{Formula["libpq"].opt_lib}/libpq.5.dylib"
     end
 
     system "#{sbin}/php-fpm", "-t"

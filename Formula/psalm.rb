@@ -1,17 +1,18 @@
 class Psalm < Formula
   desc "PHP Static Analysis Tool"
   homepage "https://psalm.dev"
-  url "https://github.com/vimeo/psalm/releases/download/4.13.1/psalm.phar"
-  sha256 "7605fae9a6e1b9ffa6e88ad077cec56a19454e5ec1a7192f387ce76472dd73b4"
+  url "https://github.com/vimeo/psalm/releases/download/5.2.0/psalm.phar"
+  sha256 "ca5baa3929361181119d2d33ee89038d97a59c9c39bf48ba438205800e13334c"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b89b1dc38a7137dda873dfd7d0bd398b709eb6f373e8bc2f5c0cf8abeaada8d9"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b89b1dc38a7137dda873dfd7d0bd398b709eb6f373e8bc2f5c0cf8abeaada8d9"
-    sha256 cellar: :any_skip_relocation, monterey:       "59e0d0e54b9c73e3528ab447541deed14879b65c65e46ab145b37955bb5d6b85"
-    sha256 cellar: :any_skip_relocation, big_sur:        "59e0d0e54b9c73e3528ab447541deed14879b65c65e46ab145b37955bb5d6b85"
-    sha256 cellar: :any_skip_relocation, catalina:       "59e0d0e54b9c73e3528ab447541deed14879b65c65e46ab145b37955bb5d6b85"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b89b1dc38a7137dda873dfd7d0bd398b709eb6f373e8bc2f5c0cf8abeaada8d9"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "1ea235a79fed84a5bf2d3c27b73ee4bd1adf35605a4397ae3ffc05f088da60fc"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1ea235a79fed84a5bf2d3c27b73ee4bd1adf35605a4397ae3ffc05f088da60fc"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1ea235a79fed84a5bf2d3c27b73ee4bd1adf35605a4397ae3ffc05f088da60fc"
+    sha256 cellar: :any_skip_relocation, ventura:        "afe95b32fe7b3d1b13f0ff62fccbd2718b6ec6f554724c49d051722c89a255c4"
+    sha256 cellar: :any_skip_relocation, monterey:       "afe95b32fe7b3d1b13f0ff62fccbd2718b6ec6f554724c49d051722c89a255c4"
+    sha256 cellar: :any_skip_relocation, big_sur:        "afe95b32fe7b3d1b13f0ff62fccbd2718b6ec6f554724c49d051722c89a255c4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1ea235a79fed84a5bf2d3c27b73ee4bd1adf35605a4397ae3ffc05f088da60fc"
   end
 
   depends_on "composer" => :test
@@ -19,7 +20,9 @@ class Psalm < Formula
 
   # Keg-relocation breaks the formula when it replaces `/usr/local` with a non-default prefix
   on_macos do
-    pour_bottle? only_if: :default_prefix if Hardware::CPU.intel?
+    on_intel do
+      pour_bottle? only_if: :default_prefix
+    end
   end
 
   def install

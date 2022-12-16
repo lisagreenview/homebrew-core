@@ -1,8 +1,8 @@
 class Oil < Formula
   desc "Bash-compatible Unix shell with more consistent syntax and semantics"
   homepage "https://www.oilshell.org/"
-  url "https://www.oilshell.org/download/oil-0.9.4.tar.gz"
-  sha256 "a94cc6b83f459f0517a69d1f43629b9efdc8ba456c9e1b922c642a28c40d958f"
+  url "https://www.oilshell.org/download/oil-0.12.5.tar.gz"
+  sha256 "e7fad0b14deb64fa28e9db40060dcfa8288f04f0f019acf8d15fc85b60ea5770"
   license "Apache-2.0"
 
   livecheck do
@@ -11,12 +11,14 @@ class Oil < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "cdd879f2254a34987c7128521294168b0d370808dbdbf3bac8365ab4da1b852e"
-    sha256 arm64_big_sur:  "27204d21705651ddb5404b7bef1fb6ba545ef36be79f06e36efb179c22fe9bd4"
-    sha256 monterey:       "e08b9d7d99f4619dec16a79a4a76206dc2352dbef57fa9b165370d2d714c57ad"
-    sha256 big_sur:        "b9124be06181631ec93536e04efc7da4528822dc83a1cfbe2f5c8183b1ea3952"
-    sha256 catalina:       "dd582393bc065529f3ee22bce30bd3a01e8c948020661b109e65b3fdf22294a5"
-    sha256 x86_64_linux:   "cdf734db883ab2a0c0040c3886fa49ef1afd14c97b2eff5232c1bce799f03ba8"
+    sha256 arm64_ventura:  "2079930421898c514a2da59fa6dfda59397f5db927c9f18394f66d29a637ae6d"
+    sha256 arm64_monterey: "a7308a9553f7f55c0cda7182612c0875f8c6a4a17103705671a9831b79ffbc5a"
+    sha256 arm64_big_sur:  "af1df7bb8ee26ce3cd7c6e142f6ea32b2da3c5b2f84fa4e2625456ef2d96f075"
+    sha256 ventura:        "84d915ebdf4a754943a8d0856ee564bdc697f1779ebfc0a6bb6c6b3d12a62a11"
+    sha256 monterey:       "aaa395c37c92e5973470ecc6562efb8c26a1a60fa15b693633ad500c075dbbb5"
+    sha256 big_sur:        "b5cae372631f127c873c1f39c048d5330420b6e7d48841db8f1d27a9522b2b0b"
+    sha256 catalina:       "c68663d0b15935329bc228454102cd7db844a17bd305decb672f2dad3607d19e"
+    sha256 x86_64_linux:   "5737d146a46cd681452de528d1e71800eaa533453ae06a4bf52fa5bcd74a7b6e"
   end
 
   depends_on "readline"
@@ -34,7 +36,7 @@ class Oil < Formula
     system "#{bin}/osh", "-c", "shopt -q parse_backticks"
     assert_equal testpath.to_s, shell_output("#{bin}/osh -c 'echo `pwd -P`'").strip
 
-    system "#{bin}/oil", "-c", "shopt -q parse_equals"
+    system "#{bin}/oil", "-c", "shopt -u parse_equals"
     assert_equal "bar", shell_output("#{bin}/oil -c 'var foo = \"bar\"; write $foo'").strip
   end
 end

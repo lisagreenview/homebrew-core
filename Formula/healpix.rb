@@ -1,16 +1,20 @@
 class Healpix < Formula
   desc "Hierarchical Equal Area isoLatitude Pixelization of a sphere"
   homepage "https://healpix.jpl.nasa.gov"
-  url "https://downloads.sourceforge.net/project/healpix/Healpix_3.80/Healpix_3.80_2021Jun22.tar.gz"
-  version "3.80"
-  sha256 "8de4aabaa3d55e0c63a62c621bfd77298732c6b75782016217f5659143acbcf5"
+  url "https://downloads.sourceforge.net/project/healpix/Healpix_3.82/Healpix_3.82_2022Jul28.tar.gz"
+  version "3.82"
+  sha256 "47629f057a2daf06fca3305db1c6950edb9e61bbe2d7ed4d98ff05809da2a127"
   license "GPL-2.0-or-later"
+  revision 1
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "90a28baa2cde6ca4e323d752775350bbcbce427c761200a2f2f31743aeef182a"
-    sha256 cellar: :any, big_sur:       "70fd0a39e1eb0378c04a372b19d3e87ec7ac640a6a47e7f070c6bc35b3eacade"
-    sha256 cellar: :any, catalina:      "513f76002bb4bb76327dbfab205750d31f0ddd7e6b9e46e86d2b9cfe91f0d4ea"
-    sha256 cellar: :any, mojave:        "cbb907c16bb946f4fab1ee58bf279256fc2f7d80d9d551f5800a404b0b915677"
+    sha256 cellar: :any,                 arm64_ventura:  "cee714500355c2f6d2974df7c1942d7d04dc1a99e7c6b729d2c0dfb3e346d680"
+    sha256 cellar: :any,                 arm64_monterey: "2c20fec2724b39f5216682928570fa0b397bde0b5967fcdba09220381900211e"
+    sha256 cellar: :any,                 arm64_big_sur:  "60149b975f08c9843300573050067fff1cd11c0cb37dfcd622099c2b71094791"
+    sha256 cellar: :any,                 ventura:        "f668b103ad5eac9949f2bd52c1a694056cc7e716ace0d4b66829b856f86aa068"
+    sha256 cellar: :any,                 monterey:       "b69b3a3ea09a205f5f753f2984e29de6052fae940b31d8a97dc3f6c502a78ed5"
+    sha256 cellar: :any,                 big_sur:        "b4d35b6aedb577fa29673b4f5e6211c61675683fc9a328bcf186826d67a0dc1e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "21947253baf912a6367c4ee798a53c6b3b517c4e8774bd9b3edc2aeb2bff3de5"
   end
 
   depends_on "autoconf" => :build

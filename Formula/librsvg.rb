@@ -1,17 +1,26 @@
 class Librsvg < Formula
   desc "Library to render SVG files using Cairo"
   homepage "https://wiki.gnome.org/Projects/LibRsvg"
-  url "https://download.gnome.org/sources/librsvg/2.50/librsvg-2.50.7.tar.xz"
-  sha256 "fffb61b08cd5282aaae147a02b305166a7426fad22a8b9427708f0f2fc426ebc"
+  url "https://download.gnome.org/sources/librsvg/2.55/librsvg-2.55.1.tar.xz"
+  sha256 "6baf48a9d3a56fd13bbfbb9f1f76759b240b70a1fa220fd238474d66a926f98c"
   license "LGPL-2.1-or-later"
 
+  # We use a common regex because librsvg doesn't use GNOME's "even-numbered
+  # minor is stable" version scheme (at least as a "trial" for 2.55.x).
+  livecheck do
+    url :stable
+    regex(/librsvg[._-]v?(\d+(?:\.\d+)+)\.t/i)
+  end
+
   bottle do
-    sha256                               arm64_big_sur: "373e91782be11de752c5d738a19c4b0b7631319612982fa9366e5477d4f444b2"
-    sha256                               monterey:      "3753625c61c6f0753a816bed581b6acb54be4dd8d17049dcecf52c2ed9e825bb"
-    sha256                               big_sur:       "7849cab410dfd63c3f8f635e0a0152cf34425524f728c2f01a36d7631f34688b"
-    sha256                               catalina:      "454d94e2c72567744613b69a9d879dde0a0bd9593c32929d520266b04f6b51b8"
-    sha256                               mojave:        "312d0f2fade5525cfe58f0c0e16cccc1e9c73925bb2fc8f1c320d3a0f8a3f4fc"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "48c4693a1f62fc8c870f3831867d9f082d0f9f42cb3151f0be77733b4c3e7ac4"
+    sha256                               arm64_ventura:  "ab87ef72c0f3772c7073f34cd88138ae60a9a6d1da7e9200ba4f1596c0715eee"
+    sha256                               arm64_monterey: "7677c86c5a390ef740e1ecc43ed9dd5aac71942181d444d09d68420bf140cbb0"
+    sha256                               arm64_big_sur:  "94df281def54411823fae7dd450a7befd8f2bfb1d23fd02c3c75379abbf82a4f"
+    sha256                               ventura:        "31d0589c5cd74542298c0c95da64e0a8e09d2bd101dd1083d0d5fdf15cceb53a"
+    sha256                               monterey:       "a60462f0695f53a813c1c1f68a38a48fcf8d55c94ee80c6992a169bf775b0d26"
+    sha256                               big_sur:        "a8d34f5378591f386148ad96a8f6a359a525483383c4894d93791a58460490fc"
+    sha256                               catalina:       "491d993ed584eb8c4e2c7e3818ff871b38783fa6ed076233fc93d5546e55f038"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "93be523ec2aa4953ce6965abbfd46097fb73e1fe224649bcc8ea277da3c97a19"
   end
 
   depends_on "gobject-introspection" => :build
@@ -94,9 +103,7 @@ class Librsvg < Formula
       -lm
       -lrsvg-2
     ]
-    on_macos do
-      flags << "-lintl"
-    end
+    flags << "-lintl" if OS.mac?
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"
   end

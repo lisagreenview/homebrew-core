@@ -1,51 +1,56 @@
 class JenkinsJobBuilder < Formula
+  include Language::Python::Virtualenv
+
   desc "Configure Jenkins jobs with YAML files stored in Git"
   homepage "https://docs.openstack.org/infra/jenkins-job-builder/"
-  url "https://files.pythonhosted.org/packages/ff/0a/5ed164f5e10ff7841e6f408aaf29eac4a2ca4f5288aaf9cc2d7478d6b1a4/jenkins-job-builder-3.11.0.tar.gz"
-  sha256 "42ea423f44beafee0e985009124968e300447f6e3be4180e83568cf21520d1b1"
+  url "https://files.pythonhosted.org/packages/45/9b/bf0f284d27fd41707d849126b5bac29a1a02919304372a334ed869613318/jenkins-job-builder-4.1.0.tar.gz"
+  sha256 "e630a5b5da260f8bb92d9ad824550707fb0b3915d8b96a1e24e6a501c8b4f974"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "35c8d22a60495e29b450dfd2220ee6f10aa77aad50bce893bd39a5433c285a6a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9ba53ae0b7014810b81813161316c9071c86b82600581ff5a70e24bec9f93fca"
-    sha256 cellar: :any_skip_relocation, monterey:       "5016bc64c99ba56bab09a61065c500bd1ad481f375df0dcffd0e8c80530e3f7f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "110cb98febf8d9ffd03b562cb79f3bf2fa992cb9b036c3e0d74c3a8437e50431"
-    sha256 cellar: :any_skip_relocation, catalina:       "37b7ddb8ab5d198557b9d6000ab2d9210e9686f9f37325973a6ecdbd987673e0"
-    sha256 cellar: :any_skip_relocation, mojave:         "d4ec72cb626e3fd091c3ba0d077ce28914923e85dc6b23e40978faeef6ade89b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2682dcc83eb3304d98410c8844728d78acf496228c912d2b722c2feea4d7c287"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "1db587e3f2322b6b3cf75ab30993008b12e2c4f2c3eab6a9941211b85dc84c2c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e68aeb1306e7d5b3b07d1e6c6eb4121f11a3306a082250b6da684702fd0f2afb"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "cae82ede6ac57d56ae9f8e507bd890365036fb45bb989f7a829a5241e8a68d35"
+    sha256 cellar: :any_skip_relocation, ventura:        "2a6ccbc82b33735df0e64039044d486ffb5579363eae888146c9a40435513192"
+    sha256 cellar: :any_skip_relocation, monterey:       "325fc32604dd452eee660da4be8e10d0635cb0c86542b64b0805a54fc09fdf9b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "63042b584656c8f987289298d8723778bab8af7461d118c1cd42f49cf8958f01"
+    sha256 cellar: :any_skip_relocation, catalina:       "dbb9684dc8dce274e52388e7d89b0617e376eb63a2e7cf0aea8d63272cf9679c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d9ebeb0bb6b29520e93048a242bfbce9a241dafa7b8d7d762e243f5cd9ac1dab"
   end
 
-  depends_on "python@3.9"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
   depends_on "six"
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6c/ae/d26450834f0acc9e3d1f74508da6df1551ceab6c2ce0766a593362d6d57f/certifi-2021.10.8.tar.gz"
-    sha256 "78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/9f/c5/334c019f92c26e59637bb42bd14a190428874b2b2de75a355da394cf16c1/charset-normalizer-2.0.7.tar.gz"
-    sha256 "e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "fasteners" do
-    url "https://files.pythonhosted.org/packages/28/e4/2888d41cdbd405828ccdb9a8536c5919939c2f4c6ab9b2ba63e9bd2570d5/fasteners-0.16.3.tar.gz"
-    sha256 "b1ab4e5adfbc28681ce44b3024421c4f567e705cc3963c732bf1cba3348307de"
+    url "https://files.pythonhosted.org/packages/f5/9a/e613fc7f7fa157bea028d8d823a13ba5583a49a2dea926ca86b6cbf0fd00/fasteners-0.18.tar.gz"
+    sha256 "cb7c13ef91e0c7e4fe4af38ecaf6b904ec3f5ce0dda06d34924b6b74b869d953"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/62/08/e3fc7c8161090f742f504f40b1bccbfc544d4a4e09eb774bf40aafce5436/idna-3.3.tar.gz"
-    sha256 "9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "Jinja2" do
-    url "https://files.pythonhosted.org/packages/f8/86/7c0eb6e8b05385d1ce682abc0f994abd1668e148fb52603fa86e15d4c110/Jinja2-3.0.2.tar.gz"
-    sha256 "827a0e32839ab1600d4eb1c4c33ec5a8edfbc5cb42dafa13b81f182f97784b45"
+    url "https://files.pythonhosted.org/packages/7a/ff/75c28576a1d900e87eb6335b063fab47a8ef3c8b4d88524c4bf78f670cce/Jinja2-3.1.2.tar.gz"
+    sha256 "31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"
   end
 
   resource "MarkupSafe" do
-    url "https://files.pythonhosted.org/packages/bf/10/ff66fea6d1788c458663a84d88787bae15d45daa16f6b3ef33322a51fc7e/MarkupSafe-2.0.1.tar.gz"
-    sha256 "594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"
+    url "https://files.pythonhosted.org/packages/1d/97/2288fe498044284f39ab8950703e88abbac2abbdf65524d576157af70556/MarkupSafe-2.1.1.tar.gz"
+    sha256 "7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"
   end
 
   resource "multi_key_dict" do
@@ -54,8 +59,8 @@ class JenkinsJobBuilder < Formula
   end
 
   resource "pbr" do
-    url "https://files.pythonhosted.org/packages/35/8c/69ed04ae31ad498c9bdea55766ed4c0c72de596e75ac0d70b58aa25e0acf/pbr-5.6.0.tar.gz"
-    sha256 "42df03e7797b796625b1029c0400279c7c34fd7df24a7d7818a1abb5b38710dd"
+    url "https://files.pythonhosted.org/packages/52/fb/630d52aaca8fc7634a0711b6ae12a0e828b6f9264bd8051225025c3ed075/pbr-5.11.0.tar.gz"
+    sha256 "b97bc6695b2aff02144133c2e7399d5885223d42b7912ffaec2ca3898e673bfe"
   end
 
   resource "python-jenkins" do
@@ -63,53 +68,33 @@ class JenkinsJobBuilder < Formula
     sha256 "deed8fa79d32769a615984a5dde5e01eda04914d3f4091bd9a23d30474695106"
   end
 
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
-  end
-
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "stevedore" do
-    url "https://files.pythonhosted.org/packages/f9/57/328653fd8a631d81b2d71261e471a102d5b64a95c1b1dda1a55b053bf0db/stevedore-3.4.0.tar.gz"
-    sha256 "59b58edb7f57b11897f150475e7bc0c39c5381f0b8e3fa9f5c20ce6c89ec4aa1"
+    url "https://files.pythonhosted.org/packages/62/4c/5445ea215b920e55f40a4f519571d5bfffb81c2f0c9ba4f2c70b1b501954/stevedore-4.1.0.tar.gz"
+    sha256 "02518a8f0d6d29be8a445b7f2ac63753ff29e8f2a2faa01777568d5500d777a6"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
+    url "https://files.pythonhosted.org/packages/b2/56/d87d6d3c4121c0bcec116919350ca05dc3afd2eeb7dc88d07e8083f8ea94/urllib3-1.26.12.tar.gz"
+    sha256 "3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"
   end
 
   def install
-    xy = Language::Python.major_minor_version "python3"
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python#{xy}/site-packages"
-    resources.each do |resource|
-      resource.stage do
-        system "python3", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
-
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
-    system "python3", *Language::Python.setup_install_args(libexec)
-
-    bin.install Dir[libexec/"bin/*"]
-    bin.env_script_all_files(libexec/"bin", PYTHONPATH: ENV["PYTHONPATH"])
+    virtualenv_install_with_resources
   end
 
   test do
-    on_macos do
-      assert_match("Managed by Jenkins Job Builder",
-                   pipe_output("#{bin}/jenkins-jobs test /dev/stdin",
-                               "- job:\n    name: test-job\n\n", 0))
-    end
-
-    on_linux do
-      assert_match("WARNING:jenkins_jobs.config:Config file",
-               pipe_output("#{bin}/jenkins-jobs test /dev/stdin 2>&1",
-                           "- job:\n    name: test-job\n\n", 1))
+    command = "#{bin}/jenkins-jobs test /dev/stdin 2>&1"
+    if OS.mac?
+      output = pipe_output(command, "- job: { name: test-job }", 0)
+      assert_match "Managed by Jenkins Job Builder", output
+    else
+      output = pipe_output(command, "- job: { name: test-job }", 1)
+      assert_match "WARNING:jenkins_jobs.config:Config file", output
     end
   end
 end

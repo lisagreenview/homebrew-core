@@ -1,8 +1,8 @@
 class Ospray < Formula
   desc "Ray-tracing-based rendering engine for high-fidelity visualization"
   homepage "https://www.ospray.org/"
-  url "https://github.com/ospray/ospray/archive/v2.8.0.tar.gz"
-  sha256 "2dabc75446a0e2e970952d325f930853a51a9b4d1868c8135f05552a4ae04d39"
+  url "https://github.com/ospray/ospray/archive/v2.10.0.tar.gz"
+  sha256 "bd478284f48d2cb775fc41a2855a9d9f5ea16c861abda0f8dc94e02ea7189cb8"
   license "Apache-2.0"
   head "https://github.com/ospray/ospray.git", branch: "master"
 
@@ -12,11 +12,13 @@ class Ospray < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "27d5cd84fdcb61aed73615c0b712f429a0f1b7df85d40315cb590ace93114d9f"
-    sha256 cellar: :any, arm64_big_sur:  "56e3d6f2fb3397da3e5851734d249e27e0d3a977a18bd56efac86450a187e645"
-    sha256 cellar: :any, monterey:       "5b04ca98dc320b067be01c21ee939bd00e41004d38875f08931170e26208d61e"
-    sha256 cellar: :any, big_sur:        "e7aeb214fa4838ade69c27e42da80b52864fab318463096cd0e616e0699a3123"
-    sha256 cellar: :any, catalina:       "e06589b30ff8480d2bab0cc0e4696a16ea20fb10dae9ada2c031995a98dc7e4c"
+    sha256 cellar: :any, arm64_ventura:  "cb94bb7a2fc99013ebdce7544aa87136149bc69fce5cb0fe1b8838788f672c4c"
+    sha256 cellar: :any, arm64_monterey: "f606fa09b7f0d87d95bec188727b7bd058373e726527d5d5a06a3dff132c160e"
+    sha256 cellar: :any, arm64_big_sur:  "474b623582aa113ad7fce11aaf505bae0acf9a2a47e92560e94fd7ab2b8803c2"
+    sha256 cellar: :any, ventura:        "3a9e0d4a366aece63173b15d5a172a32577bca88d376deb44b66ff23e4355841"
+    sha256 cellar: :any, monterey:       "394583d69bea8efcd6eaa991b1a8c31e1b51bd691e7634bd7e5dace7a17680a8"
+    sha256 cellar: :any, big_sur:        "6bb8ebb044c15a0dc5cad82c3f97bff0c7d36537bb46c7fc326e874e5d5fe8fd"
+    sha256 cellar: :any, catalina:       "91a644692ca74faa2a124c6a32c6d09a1fa0c57dd86043c2bb438722b8b556b4"
   end
 
   depends_on "cmake" => :build
@@ -26,13 +28,13 @@ class Ospray < Formula
   depends_on "tbb"
 
   resource "rkcommon" do
-    url "https://github.com/ospray/rkcommon/archive/v1.8.0.tar.gz"
-    sha256 "f037c15f7049610ef8bca37500b2ab00775af60ebbb9d491ba5fc2e5c04a7794"
+    url "https://github.com/ospray/rkcommon/archive/v1.10.0.tar.gz"
+    sha256 "57a33ce499a7fc5a5aaffa39ec7597115cf69ed4ff773546b5b71ff475ee4730"
   end
 
   resource "openvkl" do
-    url "https://github.com/openvkl/openvkl/archive/v1.1.0.tar.gz"
-    sha256 "d193c75a2c57acd764649215b244c432694a0169da374a9d769a81b02a9132e9"
+    url "https://github.com/openvkl/openvkl/archive/v1.3.0.tar.gz"
+    sha256 "c6d4d40e6d232839c278b53dee1e7bd3bd239c3ccac33f49b465fc65a0692be9"
   end
 
   def install

@@ -3,14 +3,14 @@ require "language/node"
 class Emscripten < Formula
   desc "LLVM bytecode to JavaScript compiler"
   homepage "https://emscripten.org/"
-  url "https://github.com/emscripten-core/emscripten/archive/2.0.34.tar.gz"
-  sha256 "a182b0c9d96b3a326f37b8126efe213ad78cfcc25e2eb246ee476ca199590fd6"
+  url "https://github.com/emscripten-core/emscripten/archive/3.1.28.tar.gz"
+  sha256 "0f8b25cac5b2a55007a45c5bfa2b918add1df90bf624bb47510d8bc887c39901"
   license all_of: [
     "Apache-2.0", # binaryen
     "Apache-2.0" => { with: "LLVM-exception" }, # llvm
     any_of: ["MIT", "NCSA"], # emscripten
   ]
-  head "https://github.com/emscripten-core/emscripten.git"
+  head "https://github.com/emscripten-core/emscripten.git", branch: "main"
 
   livecheck do
     url :stable
@@ -18,40 +18,44 @@ class Emscripten < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "be1b19322710722562dead9c70406ba8ec415d3098d4d4a49d2261d1921f0b9f"
-    sha256 cellar: :any,                 arm64_big_sur:  "a1bf80f456ffa8166bd7d50f10af0c7112dcf00d8136f11286c9cfc62dc26eb6"
-    sha256 cellar: :any,                 monterey:       "eab8555c6ade9ac821d69f8be7692b474e307d2f09b57bb60d84048fed42369f"
-    sha256 cellar: :any,                 big_sur:        "cf09e4ebae00f1193a6b8eca5b0f7f71ef21020ca189510dd875844660e892ee"
-    sha256 cellar: :any,                 catalina:       "0d27a56a352908fded355189e34573a9bf9cb853c48a996870f9eedc3e95ceea"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9b3bd0b1b7f36b49462acea938897aa54a17edfdd5b10a9fabb80924fbac85c6"
+    sha256 cellar: :any,                 arm64_ventura:  "3f4377fe90df7892c8acc281b52488c4ad31fbd58d864f864df7040f619b70e7"
+    sha256 cellar: :any,                 arm64_monterey: "125750bd27b2d95519ca2dd4cb4eb3ed0a4fd1d7c0a362f50e0c85c6072139e8"
+    sha256 cellar: :any,                 arm64_big_sur:  "3858e405bbf24e4d7bf65a16ec546045cdb6d2f547ae4e7f4f3f961ef5ba8336"
+    sha256 cellar: :any,                 ventura:        "2ead493969e47b2aea1d3be13d810ab4b2f94a473eef767a4095753939f5eb3d"
+    sha256 cellar: :any,                 monterey:       "4a6bf4c019800b2863eb4e2c185d4acc297f209a784904a8354087b1bc305db2"
+    sha256 cellar: :any,                 big_sur:        "bf6c2227071df366ac6dff7344ec65bb256663290fb7eff5a0f749d11aa0e3d6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "19f7e5f90610c27bf13365acfe58f8f1271d6ed14286130fb700c1ea3caf02ec"
   end
 
   depends_on "cmake" => :build
   depends_on "node"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "yuicompressor"
 
   # OpenJDK is needed as a dependency on Linux and ARM64 for google-closure-compiler,
   # an emscripten dependency, because the native GraalVM image will not work.
   on_macos do
-    depends_on "openjdk" if Hardware::CPU.arm?
+    on_arm do
+      depends_on "openjdk"
+    end
   end
 
   on_linux do
-    depends_on "gcc"
     depends_on "openjdk"
   end
 
   fails_with gcc: "5"
 
   # Use emscripten's recommended binaryen revision to avoid build failures.
+  # https://github.com/emscripten-core/emscripten/issues/12252
   # See llvm resource below for instructions on how to update this.
   resource "binaryen" do
     url "https://github.com/WebAssembly/binaryen.git",
-        revision: "ab66e9ab1210a87d1db8ebe93cf8463eafe34e33"
+        revision: "2cb5cefb6392619d908ce2ab683815d7e22ac9a5"
   end
 
-  # emscripten needs argument '-fignore-exceptions', which is only available in llvm >= 12
+  # emscripten does not support using the stable version of LLVM.
+  # https://github.com/emscripten-core/emscripten/issues/11362
   # To find the correct llvm revision, find a corresponding commit at:
   # https://github.com/emscripten-core/emsdk/blob/main/emscripten-releases-tags.json
   # Then take this commit and go to:
@@ -59,16 +63,24 @@ class Emscripten < Formula
   # Then use the listed llvm_project_revision for the resource below.
   resource "llvm" do
     url "https://github.com/llvm/llvm-project.git",
-        revision: "3d39612b3dd3f6b67ee63da305d30606abbe7287"
+        revision: "ea4be70cea8509520db8638bb17bcd7b5d8d60ac"
   end
 
   def install
-    ENV.cxx11
+    # Avoid hardcoding the executables we pass to `write_env_script` below.
+    # Prefer executables without `.py` extensions, but include those with `.py`
+    # extensions if there isn't a matching executable without the `.py` extension.
+    emscripts = buildpath.children.select do |pn|
+      pn.file? && pn.executable? && !(pn.extname == ".py" && pn.basename(".py").exist?)
+    end.map(&:basename)
 
     # All files from the repository are required as emscripten is a collection
     # of scripts which need to be installed in the same layout as in the Git
     # repository.
-    libexec.install Dir["*"]
+    libexec.install buildpath.children
+
+    # Remove unneded files. See `tools/install.py`.
+    (libexec/"test/third_party").rmtree
 
     # emscripten needs an llvm build with the following executables:
     # https://github.com/emscripten-core/emscripten/blob/#{version}/docs/packaging.md#dependencies
@@ -83,54 +95,65 @@ class Emscripten < Formula
         WebAssembly
       ]
 
-      llvmpath = Pathname.pwd/"llvm"
-
       # Apple's libstdc++ is too old to build LLVM
       ENV.libcxx if ENV.compiler == :clang
 
-      # compiler-rt has some iOS simulator features that require i386 symbols
-      # I'm assuming the rest of clang needs support too for 32-bit compilation
-      # to work correctly, but if not, perhaps universal binaries could be
-      # limited to compiler-rt. llvm makes this somewhat easier because compiler-rt
-      # can almost be treated as an entirely different build from llvm.
-      ENV.permit_arch_flags
-
-      args = std_cmake_args.reject { |s| s["CMAKE_INSTALL_PREFIX"] } + %W[
-        -DCMAKE_INSTALL_PREFIX=#{libexec}/llvm
-        -DLLVM_ENABLE_PROJECTS=#{projects.join(";")}
-        -DLLVM_TARGETS_TO_BUILD=#{targets.join(";")}
-        -DLLVM_LINK_LLVM_DYLIB=ON
-        -DLLVM_BUILD_LLVM_DYLIB=ON
+      # See upstream configuration in `src/build.py` at
+      # https://chromium.googlesource.com/emscripten-releases/
+      args = %W[
+        -DLLVM_ENABLE_LIBXML2=OFF
         -DLLVM_INCLUDE_EXAMPLES=OFF
+        -DLLVM_LINK_LLVM_DYLIB=OFF
+        -DLLVM_BUILD_LLVM_DYLIB=OFF
+        -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON
+        -DLLVM_ENABLE_BINDINGS=OFF
+        -DLLVM_TOOL_LTO_BUILD=OFF
+        -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON
+        -DLLVM_TARGETS_TO_BUILD=#{targets.join(";")}
+        -DLLVM_ENABLE_PROJECTS=#{projects.join(";")}
+        -DLLVM_ENABLE_TERMINFO=#{!OS.linux?}
+        -DCLANG_ENABLE_ARCMT=OFF
+        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         -DLLVM_INCLUDE_TESTS=OFF
         -DLLVM_INSTALL_UTILS=OFF
+        -DLLVM_ENABLE_ZSTD=OFF
+        -DLLVM_ENABLE_Z3_SOLVER=OFF
       ]
+      args << "-DLLVM_ENABLE_LIBEDIT=OFF" if OS.linux?
 
-      sdk = MacOS.sdk_path_if_needed
-      args << "-DDEFAULT_SYSROOT=#{sdk}" if sdk
+      system "cmake", "-S", "llvm", "-B", "build",
+                      "-G", "Unix Makefiles",
+                      *args, *std_cmake_args(install_prefix: libexec/"llvm")
+      system "cmake", "--build", "build"
+      system "cmake", "--build", "build", "--target", "install"
 
-      if MacOS.version == :mojave && MacOS::CLT.installed?
-        # Mojave CLT linker via software update is older than Xcode.
-        # Use it to retain compatibility.
-        args << "-DCMAKE_LINKER=/Library/Developer/CommandLineTools/usr/bin/ld"
-      end
+      # Remove unneeded tools. Taken from upstream `src/build.py`.
+      unneeded = %w[
+        check cl cpp extef-mapping format func-mapping import-test offload-bundler refactor rename scan-deps
+      ].map { |suffix| "clang-#{suffix}" }
+      unneeded += %w[lld-link ld.lld ld64.lld llvm-lib ld64.lld.darwinnew ld64.lld.darwinold]
+      (libexec/"llvm/bin").glob("{#{unneeded.join(",")}}").map(&:unlink)
+      (libexec/"llvm/lib").glob("libclang.{dylib,so.*}").map(&:unlink)
 
-      mkdir llvmpath/"build" do
-        # We can use `make` and `make install` here, but prefer these commands
-        # for consistency with the llvm formula.
-        system "cmake", "-G", "Unix Makefiles", "..", *args
-        system "cmake", "--build", "."
-        system "cmake", "--build", ".", "--target", "install"
+      # Include needed tools omitted by `LLVM_INSTALL_TOOLCHAIN_ONLY`.
+      # Taken from upstream `src/build.py`.
+      extra_tools = %w[FileCheck llc llvm-as llvm-dis llvm-link llvm-mc
+                       llvm-nm llvm-objdump llvm-readobj llvm-size opt
+                       llvm-dwarfdump llvm-dwp]
+      (libexec/"llvm/bin").install extra_tools.map { |tool| "build/bin/#{tool}" }
+
+      %w[clang clang++].each do |compiler|
+        (libexec/"llvm/bin").install_symlink compiler => "wasm32-#{compiler}"
+        (libexec/"llvm/bin").install_symlink compiler => "wasm32-wasi-#{compiler}"
+        bin.install_symlink libexec/"llvm/bin/wasm32-#{compiler}"
+        bin.install_symlink libexec/"llvm/bin/wasm32-wasi-#{compiler}"
       end
     end
 
     resource("binaryen").stage do
-      args = std_cmake_args.reject { |s| s["CMAKE_INSTALL_PREFIX"] } + %W[
-        -DCMAKE_INSTALL_PREFIX=#{libexec}/binaryen
-      ]
-
-      system "cmake", ".", *args
-      system "make", "install"
+      system "cmake", "-S", ".", "-B", "build", *std_cmake_args(install_prefix: libexec/"binaryen")
+      system "cmake", "--build", "build"
+      system "cmake", "--install", "build"
     end
 
     cd libexec do
@@ -146,29 +169,46 @@ class Emscripten < Formula
 
     # Add JAVA_HOME to env_script on ARM64 macOS and Linux, so that google-closure-compiler
     # can find OpenJDK
-    emscript_env = { PYTHON: Formula["python@3.9"].opt_bin/"python3" }
+    emscript_env = { PYTHON: Formula["python@3.11"].opt_bin/"python3.11" }
     emscript_env.merge! Language::Java.overridable_java_home_env if OS.linux? || Hardware::CPU.arm?
 
-    %w[em++ em-config emar emcc emcmake emconfigure emlink.py emmake
-       emranlib emrun emscons].each do |emscript|
+    emscripts.each do |emscript|
       (bin/emscript).write_env_script libexec/emscript, emscript_env
     end
   end
 
   def post_install
-    system bin/"emcc", "--check"
-    if File.exist?(libexec/".emscripten") && !File.exist?(libexec/".homebrew")
-      touch libexec/".homebrew"
-      inreplace "#{libexec}/.emscripten" do |s|
-        s.gsub!(/^(LLVM_ROOT.*)/, "#\\1\nLLVM_ROOT = \"#{opt_libexec}/llvm/bin\"\\2")
-        s.gsub!(/^(BINARYEN_ROOT.*)/, "#\\1\nBINARYEN_ROOT = \"#{opt_libexec}/binaryen\"\\2")
-      end
+    return if File.exist?("#{Dir.home}/.emscripten")
+    return if (libexec/".emscripten").exist?
+
+    system bin/"emcc", "--generate-config"
+    inreplace libexec/".emscripten" do |s|
+      s.change_make_var! "LLVM_ROOT", "'#{libexec}/llvm/bin'"
+      s.change_make_var! "BINARYEN_ROOT", "'#{libexec}/binaryen'"
+      s.change_make_var! "NODE_JS", "'#{Formula["node"].opt_bin}/node'"
+      s.change_make_var! "JAVA", "'#{Formula["openjdk"].opt_bin}/java'"
     end
   end
 
+  def caveats
+    return unless File.exist?("#{Dir.home}/.emscripten")
+    return if (libexec/".emscripten").exist?
+
+    <<~EOS
+      You have a ~/.emscripten configuration file, so the default configuration
+      file was not generated. To generate the default configuration:
+        rm ~/.emscripten
+        brew postinstall emscripten
+    EOS
+  end
+
   test do
-    # Fixes "Unsupported architecture" Xcode prepocessor error
+    # We're targetting WASM, so we don't want to use the macOS SDK here.
+    ENV.remove_macosxsdk if OS.mac?
+    # Avoid errors on Linux when other formulae like `sdl12-compat` are installed
     ENV.delete "CPATH"
+
+    ENV["NODE_OPTIONS"] = "--no-experimental-fetch"
 
     (testpath/"test.c").write <<~EOS
       #include <stdio.h>

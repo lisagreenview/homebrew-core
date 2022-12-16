@@ -1,8 +1,8 @@
 class ShairportSync < Formula
   desc "AirTunes emulator that adds multi-room capability"
   homepage "https://github.com/mikebrady/shairport-sync"
-  url "https://github.com/mikebrady/shairport-sync/archive/3.3.8.tar.gz"
-  sha256 "c92f9a2d86dd1138673abc66e0010c94412ad6a46da8f36c3d538f4fa6b9faca"
+  url "https://github.com/mikebrady/shairport-sync/archive/4.1.tar.gz"
+  sha256 "951fc9f33a631736fe49d2ed040b27a417c93ffdf05a2d13116c6dda7628ea86"
   license "MIT"
   head "https://github.com/mikebrady/shairport-sync.git", branch: "master"
 
@@ -12,12 +12,14 @@ class ShairportSync < Formula
   end
 
   bottle do
-    rebuild 2
-    sha256 arm64_big_sur: "5ba3c8e5edb375fc0704715f2af591a95bccc371d30f19d6af77b27069de80c5"
-    sha256 big_sur:       "f901fdd19cf7effc603519cc071703014c52264434d6da2eac51da37323a12ce"
-    sha256 catalina:      "f7e414e4106c07a4ec3db03f1d0219280d47eedbef5c65f30ac3c488e5978cd4"
-    sha256 mojave:        "7258fbd051a45b0fd5524b1017c6435be4471c4ccaef63b4c733c2ed2efb31ac"
-    sha256 x86_64_linux:  "0502a7c91fe4f656ce22633c52de830d1f7a783b31af0740234f808d0ce16dde"
+    sha256 arm64_ventura:  "03ef9ebb5c0da4599f88228b1c6824e20358ea90062895f3a936d3adb1ace7ea"
+    sha256 arm64_monterey: "99c9ba0682a45d3e6f4284dd6668e821a906739f03f3c39e6fbbf104e76a4f6d"
+    sha256 arm64_big_sur:  "e4bd13797604863009acbe319d8250f2d8aca37836470ced7558af2526ef29de"
+    sha256 ventura:        "bedba4e50131e42f9c33aaca83985799f0bd4c395c4fd23354d47ba21d07abd2"
+    sha256 monterey:       "117f047708faea0c9592fe3b7dde5adf16737ba2c79bfb236dbb498528e68a33"
+    sha256 big_sur:        "8cc299dfaf1e33c3d5068f5679a5ebb15e86949c79ba393436228d9cea1cc2e7"
+    sha256 catalina:       "894fc1015d0b7398656745aa695082e7f5ece775fc727cebc36718365e6dc80a"
+    sha256 x86_64_linux:   "fd5ef974569026717ff24a9533d39334f333968c25cd6831336deb113be17000"
   end
 
   depends_on "autoconf" => :build
@@ -67,10 +69,9 @@ class ShairportSync < Formula
 
   test do
     output = shell_output("#{bin}/shairport-sync -V")
-    on_macos do
+    if OS.mac?
       assert_match "libdaemon-OpenSSL-dns_sd-ao-pa-stdout-pipe-soxr-metadata", output
-    end
-    on_linux do
+    else
       assert_match "OpenSSL-ao-pa-stdout-pipe-soxr-metadata-sysconfdir", output
     end
   end

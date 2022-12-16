@@ -6,7 +6,7 @@ class Landscaper < Formula
       revision: "1199b098bcabc729c885007d868f38b2cf8d2370"
   license "Apache-2.0"
   revision 1
-  head "https://github.com/Eneco/landscaper.git"
+  head "https://github.com/Eneco/landscaper.git", branch: "master"
 
   bottle do
     sha256 cellar: :any_skip_relocation, arm64_monterey: "835b3c32293b1725d2065652ecd2a0017ba2387351f586936230ff96030f79cb"
@@ -20,7 +20,7 @@ class Landscaper < Formula
   end
 
   # also depends on helm@2 (which failed to build)
-  deprecate! date: "2020-04-22", because: :repo_archived
+  disable! date: "2022-07-31", because: :repo_archived
 
   depends_on "dep" => :build
   depends_on "go" => :build

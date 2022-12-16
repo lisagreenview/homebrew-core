@@ -2,7 +2,7 @@ class Collectd < Formula
   desc "Statistics collection and monitoring daemon"
   homepage "https://collectd.org/"
   license "MIT"
-  revision 1
+  revision 5
 
   stable do
     url "https://collectd.org/files/collectd-5.12.0.tar.bz2"
@@ -21,17 +21,18 @@ class Collectd < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "1a82ae21e794db579661851b68e64f8b5308b970314e9904c291b33810c54ed5"
-    sha256 arm64_big_sur:  "c0a9e32a3407d094ae4fe5f8bf0fc19d0b4f5f0bb40f8ce6335fe4d2241a72b3"
-    sha256 monterey:       "f80f9f9a0d15884d587de0631f1d573d2a194e90e88bd579191825c7a58ea781"
-    sha256 big_sur:        "73233ee8e731722660a1098db2a72ae276508b8b09475f101f50a8d5ddc49251"
-    sha256 catalina:       "33f0fa042a98883dbf363865a66d64fd53e2eaebc330829257e2d5c87c7b5a4d"
-    sha256 mojave:         "a38f5912b4ed2b48e37e7285e0dd6e4f97d31799e5e7c47f438cddd7806a1252"
-    sha256 x86_64_linux:   "9b7b93198f1b6008763a8012fa7209c108b5e179a0b38da1599234b6fe06523a"
+    sha256 arm64_ventura:  "17ef602f303744b198fa038d7b7aea63147e4da61d756614d7765aed9b8c1e16"
+    sha256 arm64_monterey: "dcc3153be48b21d9ed70ad1f73a4ef3e85f4d0a05df1a66f740837b98812f4f4"
+    sha256 arm64_big_sur:  "9b6ef1f192b583587b38842eeb4487472cc120ab113884af1badd94d7f81d718"
+    sha256 ventura:        "b43512984ffee809d62ae814d028b6eb838675da3f2a9d2c0209bec4d7718c1f"
+    sha256 monterey:       "fa6fb93745bfa378667bf760f47dfbdca543979b51e354921639a3e279cb3139"
+    sha256 big_sur:        "722677e0ee31b375470ec75e6bfe40c67ea6e57549eb918e40a0a5a8861984db"
+    sha256 catalina:       "52ee6f9dceeda3c68fbb3f12c585d5725dfdfd7815a6bfcf866ac72d00d884e8"
+    sha256 x86_64_linux:   "11b0e03c4fbf06b9f467d7bb98427a8e0e0a9efc70c376a7c766afce668f4909"
   end
 
   head do
-    url "https://github.com/collectd/collectd.git"
+    url "https://github.com/collectd/collectd.git", branch: "main"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
@@ -43,19 +44,17 @@ class Collectd < Formula
   depends_on "net-snmp"
   depends_on "riemann-client"
 
-  uses_from_macos "bison"
-  uses_from_macos "flex"
+  uses_from_macos "bison" => :build
+  uses_from_macos "flex" => :build
   uses_from_macos "perl"
 
   def install
-    args = %W[
-      --disable-debug
-      --disable-dependency-tracking
-      --prefix=#{prefix}
+    args = std_configure_args + %W[
       --localstatedir=#{var}
       --disable-java
       --enable-write_riemann
     ]
+    args << "--with-perl-bindings=PREFIX=#{prefix} INSTALLSITEMAN3DIR=#{man3}" if OS.linux?
 
     system "./build.sh" if build.head?
     system "./configure", *args

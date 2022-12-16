@@ -1,29 +1,31 @@
 class Pillow < Formula
   desc "Friendly PIL fork (Python Imaging Library)"
   homepage "https://python-pillow.org"
-  url "https://files.pythonhosted.org/packages/7d/2a/2fc11b54e2742db06297f7fa7f420a0e3069fdcf0e4b57dfec33f0b08622/Pillow-8.4.0.tar.gz"
-  sha256 "b8e2f83c56e141920c39464b852de3719dfbfb6e3c99a2d8da0edf4fb33176ed"
+  url "https://files.pythonhosted.org/packages/16/11/da8d395299ca166aa56d9436e26fe8440e5443471de16ccd9a1d06f5993a/Pillow-9.3.0.tar.gz"
+  sha256 "c935a22a557a560108d780f9a0fc426dd7459940dc54faa49d83249c8d3e760f"
   license "HPND"
+  revision 1
   head "https://github.com/python-pillow/Pillow.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "5b957e5afdd859268f4451665d142f7b8a1ed9186f6b36f22fe901891affa2dd"
-    sha256 cellar: :any, arm64_big_sur:  "b3ef0a8ef99c29d197ff4735a75d5dfcd7dba93d85f6957367da187b65fb5a3d"
-    sha256 cellar: :any, monterey:       "b5ca0c6fb4391f2d9e5e9f5d6984b034b0ccf0051225524ccf029c0ad5cd44e2"
-    sha256 cellar: :any, big_sur:        "59e29e62a00a1a7c743af405f5ca86919d4a72c266f03498a035e025a6a9e70c"
-    sha256 cellar: :any, catalina:       "7d202a4c71e5c3ecd5508e34a89082496441dcf4cbabd47174edaf1c6fb06dd8"
-    sha256 cellar: :any, mojave:         "7d9654f09ff31d8caf4363b25a11da203cd3c2725014fdbb8df6e1a7a9a91399"
-    sha256               x86_64_linux:   "af8b0493c459338a4cc5f7ac4a8bc6a88cee2640577e142557524e039accaa2e"
+    sha256 cellar: :any, arm64_ventura:  "74fb00c6613b82b5f07fb122b1eac331a917873f7ef69278bfde0c4aafba568a"
+    sha256 cellar: :any, arm64_monterey: "52677d7845bdeb5527bd390af5e098b307403909d7decefea5e4358756e97b84"
+    sha256 cellar: :any, arm64_big_sur:  "f7fb3cea71579546a10700bb1da39410067483a178184b5f4cbf08313be88f42"
+    sha256 cellar: :any, ventura:        "3ae69dba678e02c10bef796034fdc17475a982578b909b3a7d0af05bb27c912d"
+    sha256 cellar: :any, monterey:       "ddd5e92ef50ac3be9df10e2331efab57fc46b55bba8a4fea5181845173cc1c6d"
+    sha256 cellar: :any, big_sur:        "a000ad0cf374d660e89d30c2a6994c07afc5c94f015db0a06700fc4a6a89922f"
+    sha256 cellar: :any, catalina:       "465b0e189d713ff8d66b655783d9090d9f13733a8bbff0676ec00faff135de80"
+    sha256               x86_64_linux:   "a887300e582a3615e8f2d6572e2dc4e36389e8bb412ac6a95d4dde4007e54b32"
   end
 
   depends_on "pkg-config" => :build
   depends_on "python@3.10" => [:build, :test]
-  depends_on "python@3.8" => [:build, :test]
-  depends_on "python@3.9" => [:build, :test]
-  depends_on "jpeg"
+  depends_on "python@3.11" => [:build, :test]
+  depends_on "jpeg-turbo"
   depends_on "libimagequant"
   depends_on "libraqm"
   depends_on "libtiff"
+  depends_on "libxcb"
   depends_on "little-cms2"
   depends_on "openjpeg"
   depends_on "tcl-tk"
@@ -31,19 +33,14 @@ class Pillow < Formula
 
   uses_from_macos "zlib"
 
-  on_macos do
-    depends_on "python@3.7" => [:build, :test] unless Hardware::CPU.arm?
-  end
-
   def pythons
     deps.map(&:to_formula)
-        .select { |f| f.name.match?(/python@\d\.\d+/) }
-        .map(&:opt_bin)
-        .map { |bin| bin/"python3" }
+        .select { |f| f.name.match?(/^python@\d\.\d+$/) }
+        .map { |f| f.opt_libexec/"bin/python" }
   end
 
   def install
-    pre_args = %w[
+    build_ext_args = %w[
       --enable-tiff
       --enable-freetype
       --enable-lcms
@@ -51,19 +48,28 @@ class Pillow < Formula
       --enable-xcb
     ]
 
-    post_args = %W[
-      --prefix=#{prefix}
-      --install-scripts=#{bin}
+    install_args = %w[
       --single-version-externally-managed
       --record=installed.txt
     ]
 
     ENV["MAX_CONCURRENCY"] = ENV.make_jobs.to_s
-    ENV.prepend "CPPFLAGS", "-I#{Formula["tcl-tk"].opt_include}"
-    ENV.prepend "LDFLAGS", "-L#{Formula["tcl-tk"].opt_lib}"
+    deps.each do |dep|
+      next if dep.build? || dep.test?
+
+      ENV.prepend "CPPFLAGS", "-I#{dep.to_formula.opt_include}"
+      ENV.prepend "LDFLAGS", "-L#{dep.to_formula.opt_lib}"
+    end
+
+    # Useful in case of build failures.
+    inreplace "setup.py", "DEBUG = False", "DEBUG = True"
 
     pythons.each do |python|
-      system python, "setup.py", "build_ext", *pre_args, "install", *post_args
+      prefix_site_packages = prefix/Language::Python.site_packages(python)
+      system python, "setup.py",
+                     "build_ext", *build_ext_args,
+                     "install", *install_args,
+                     "--install-lib=#{prefix_site_packages}"
     end
   end
 

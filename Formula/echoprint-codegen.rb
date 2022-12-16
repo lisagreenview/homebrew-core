@@ -5,7 +5,7 @@ class EchoprintCodegen < Formula
   sha256 "dc80133839195838975757c5f6cada01d8e09d0aac622a8a4aa23755a5a9ae6d"
   license "MIT"
   revision 2
-  head "https://github.com/echonest/echoprint-codegen.git"
+  head "https://github.com/echonest/echoprint-codegen.git", branch: "master"
 
   bottle do
     rebuild 2
@@ -16,7 +16,7 @@ class EchoprintCodegen < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:  "0ede691a8c9591206e178e97174fe8e647d428d6a6f208233396ec1a6c06ff41"
   end
 
-  deprecate! date: "2021-02-09", because: :unmaintained
+  disable! date: "2022-07-31", because: :unmaintained
 
   depends_on "boost"
   depends_on "ffmpeg"

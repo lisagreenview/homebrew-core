@@ -10,18 +10,19 @@
 class Mutt < Formula
   desc "Mongrel of mail user agents (part elm, pine, mush, mh, etc.)"
   homepage "http://www.mutt.org/"
-  url "https://bitbucket.org/mutt/mutt/downloads/mutt-2.1.3.tar.gz"
-  sha256 "ef759cc94b921b099a3ee88085d384fd3564c97f511e907bc83cf9812dd5e47c"
+  url "https://bitbucket.org/mutt/mutt/downloads/mutt-2.2.9.tar.gz"
+  sha256 "fa531b231d58fe1f30ceda0ed626683ea9ebdfb76ce47ef8bb27c2f77422cffb"
   license "GPL-2.0-or-later"
 
   bottle do
-    sha256 arm64_monterey: "caa0f91976aba5f78e7b309ea284d2751efd58e6bf7552020aa3868802dd7583"
-    sha256 arm64_big_sur:  "c70db2e71d8bf54e10c7513002143fca8adbb76e007fa58c7181ee98f89fe930"
-    sha256 monterey:       "bdaa263db5150dfb05816c47b2a57c939f56424b0720052b39effe17f532ad00"
-    sha256 big_sur:        "9ddba3353c0f8e3622d0aa71246a0a4fb044675ec3ed8d80b0ee3ddd2347484d"
-    sha256 catalina:       "cd3dcd087d082cc773b91e9d0fe0212911ff58e151ae94cbd0d8af15a8e90f5b"
-    sha256 mojave:         "0dca11043abfbb86f140a6ffea0cce0a72c7daf3f0463d5d4b28efa1ce1c9ecd"
-    sha256 x86_64_linux:   "7d997a85f2de7bd36fb70b37e98814dcbe479abc44d29fd67ad69df600019c34"
+    sha256 arm64_ventura:  "5fa6f5259600067cd92062db1b39eab0ead4d3948cf8d75632a71aea39dab1ee"
+    sha256 arm64_monterey: "7581dde4cd1e5a1d212a4717501fe1aa583da29e73311a2ba99e7345bd30c074"
+    sha256 arm64_big_sur:  "e8d25146c9af852f3a42e67ad5f2f4220a602c03e2d4473d04b742422d6cc4d3"
+    sha256 ventura:        "4ad6d9e2cacf4ae7b55ea8d8aaffa4c408249d55fe6ca2e95512e964012c1233"
+    sha256 monterey:       "aa5fd22d5e6cc922b8ce772da71f0983cdc0970dac08755e32a8a55afbc0fa4f"
+    sha256 big_sur:        "dea8564bdac672468fc03e7f56bf763efcf6b6b8449edcd927dea5e34f3c2343"
+    sha256 catalina:       "2c58602698841548996bec5ce6e5e4eb03b829e870706273f889fb0c00b90b0d"
+    sha256 x86_64_linux:   "64c5c039490d0c9c4524c429b230df0cd42301ae6a5abf407d9b8b44049743e3"
   end
 
   head do

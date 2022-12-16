@@ -1,8 +1,8 @@
 class Fontconfig < Formula
   desc "XML-based font configuration API for X Windows"
   homepage "https://wiki.freedesktop.org/www/Software/fontconfig/"
-  url "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.1.tar.bz2"
-  sha256 "f655dd2a986d7aa97e052261b36aa67b0a64989496361eca8d604e6414006741"
+  url "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.1.tar.xz"
+  sha256 "298e883f6e11d2c5e6d53c8a8394de58d563902cfab934e6be12fb5a5f361ef0"
   license "MIT"
 
   livecheck do
@@ -11,16 +11,14 @@ class Fontconfig < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "7b4e599e0ba2f56b5b3e22b83bebb1dc4e38c10b00d231c9c38319df31c7f65c"
-    sha256 arm64_big_sur:  "19dd1db44a74a3fedf20bc6576f81469d0ba6c4301fc865a56c3bbda2733d519"
-    sha256 monterey:       "7c40dab2076798df8b741c132bfc294f1c3fe3535c683d293b6711f2574d8675"
-    sha256 big_sur:        "ee5961891c9e943c8bea6ad280d2346caa2d3efafdbd726670e663d0bdfdb010"
-    sha256 catalina:       "64ff208b28613dfe2a65b9d74fd9b0129f3ca7e423db78329144cdaf51b36f70"
-    sha256 mojave:         "1c704a5a4249252bf42dc4f2a458f911a7858a931858ad257d9ec39978ca5095"
-    sha256 high_sierra:    "3b763143a4d6e3c74b3a8b237d2e5a383696347ea3599d07957f73a3f6521d23"
-    sha256 sierra:         "631531c4eb502bd97e4a5bef30760d1eef87dd50306ef2defb9460ac3338cfe1"
-    sha256 el_capitan:     "40d70137a970e257de5cf1251b10d56d7db835faee88a9f4c020b4a4e4f82eb1"
-    sha256 x86_64_linux:   "eccabe463fb0ecc1537d19628240caec276095a4afbbbc80233ac03c841cd4fe"
+    sha256 arm64_ventura:  "d0dc5e1f28f8c7ded2351b6da95dc10c483f6a302390660b2b861a3b94c6cd18"
+    sha256 arm64_monterey: "decbdcc8765f8aa654452570b3f2b151e319944210479a5637d6614a44dc0947"
+    sha256 arm64_big_sur:  "143b68331a6332cc0e1e3883e2863d65139869ac5bf1823bbe49fd2127d2c7f5"
+    sha256 ventura:        "356fe902b2f81d7f039e6f5a7a0eddaa9f84553a660f54894bbf25034119aa6b"
+    sha256 monterey:       "e910d7850f921d5d0b5bdd50080c3985213e2a0eff0181bab4fd6f375d386862"
+    sha256 big_sur:        "8479e4d4cb8c71606a221e9fad0c0d1d7089302eaece07e47489429a5dac1fd3"
+    sha256 catalina:       "1d6767bcdcf4390f88c120ca0beff6104d3339880950342802ad8b4b51520a6e"
+    sha256 x86_64_linux:   "0c84e31071c824f713407a666947cc4c6968c8a6c2a8733dd7818cfbab469749"
   end
 
   head do
@@ -36,6 +34,7 @@ class Fontconfig < Formula
   depends_on "freetype"
 
   uses_from_macos "gperf" => :build
+  uses_from_macos "python" => :build, since: :catalina
   uses_from_macos "bzip2"
   uses_from_macos "expat"
 
@@ -43,13 +42,6 @@ class Fontconfig < Formula
     depends_on "gettext" => :build
     depends_on "json-c" => :build
     depends_on "util-linux"
-  end
-
-  # Fix crash issues on arm64.
-  # Remove with the next release.
-  patch do
-    url "https://github.com/freedesktop/fontconfig/commit/6def66164a36eed968aae872d76acfac3173d44a.patch?full_index=1"
-    sha256 "1dbe6247786c75f2b3f5a7e21133a3f9c09189f59fff08b2df7cb15389b0e405"
   end
 
   def install

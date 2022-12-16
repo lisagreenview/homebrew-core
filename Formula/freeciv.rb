@@ -1,8 +1,8 @@
 class Freeciv < Formula
   desc "Free and Open Source empire-building strategy game"
   homepage "http://freeciv.org"
-  url "https://downloads.sourceforge.net/project/freeciv/Freeciv%202.6/2.6.5/freeciv-2.6.5.tar.bz2"
-  sha256 "2e64e1c74dae12acb17bbf5daa980efc7e9fd57820afed5135319ca95291ec59"
+  url "https://downloads.sourceforge.net/project/freeciv/Freeciv%203.0/3.0.4/freeciv-3.0.4.tar.xz"
+  sha256 "d9a83fe9268e6b9d0fbe933f1f8b5c391b7e3ad72333d2d4e35cfb2e3ce9adb9"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Freeciv < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "dc27602cdb795f299647d4262758409775599ee932606aad9fa34a78a8d102aa"
-    sha256 monterey:      "bdae2e778459cc59055d375a7664351db7abdb5e31fc90d50e89258276f20cc3"
-    sha256 big_sur:       "fa1955a0573dfabfb99742ca216f2caad95053e5909975990504097063ff239f"
-    sha256 catalina:      "e93e825aebcb5c046e1b8114a366d8010f9e30a35120543327dbb7f14303cd75"
-    sha256 mojave:        "5365cbee42fe93a79db42fe7d1f9690f523090d9b612ef5f508a70ed83063179"
-    sha256 x86_64_linux:  "4da618352125e2a2fbe8a2567ca18e8ac55271a0c2e244a000b7f72867ebb620"
+    sha256 arm64_ventura:  "e1c759f0a52bc1e257df771e19b21c4b6d0344e86c4c8865989d5a59716a05a3"
+    sha256 arm64_monterey: "d61fc79817b2c8b56cdea063ce11e9e90bb6f1ba88c412aff600369e81bd7d9b"
+    sha256 arm64_big_sur:  "58c8d87468b729f7faaf89233902f74f984c6bc9ae1580905fb6b37386133c22"
+    sha256 ventura:        "3dd05f6772b3e0563f3eadfdb4ae7a5b3cc6a40981b7707104fb5a500f037bb6"
+    sha256 monterey:       "0c9142560d9004315f4ae7dad894681e038dab5a4dff2a05dd14c63a2bb1830c"
+    sha256 big_sur:        "c9571c33afaf58c10542ef8cd1b996bf58992c50463b39291d89a6cf230f6431"
+    sha256 catalina:       "4c7be3976d09319dcbefb794fc574d427c2f370de0d84a57a7657ab20dec97b4"
+    sha256 x86_64_linux:   "e778ee2ab8f1aca3ff12845c5f71fa69e107f99c87561ddc3b1eb7dc6dbb80d5"
   end
 
   head do
@@ -43,6 +45,7 @@ class Freeciv < Formula
   depends_on "readline"
   depends_on "sdl2"
   depends_on "sdl2_mixer"
+  depends_on "sqlite" # try to change to uses_from_macos after python is not a dependency
 
   uses_from_macos "bzip2"
   uses_from_macos "curl"
@@ -79,7 +82,7 @@ class Freeciv < Formula
 
   test do
     system bin/"freeciv-manual"
-    assert_predicate testpath/"classic6.mediawiki", :exist?
+    assert_predicate testpath/"civ2civ36.mediawiki", :exist?
 
     fork do
       system bin/"freeciv-server", "-l", testpath/"test.log"

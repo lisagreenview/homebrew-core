@@ -3,7 +3,8 @@ class Libvisio < Formula
   homepage "https://wiki.documentfoundation.org/DLP/Libraries/libvisio"
   url "https://dev-www.libreoffice.org/src/libvisio/libvisio-0.1.7.tar.xz"
   sha256 "8faf8df870cb27b09a787a1959d6c646faa44d0d8ab151883df408b7166bea4c"
-  revision 4
+  license "MPL-2.0"
+  revision 6
 
   livecheck do
     url "https://dev-www.libreoffice.org/src/"
@@ -11,12 +12,14 @@ class Libvisio < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "eb2af5e8a4c4c1289e4b8e1db77de18ff78c99b0f6ed68ffed3d6c3a2cb0abc9"
-    sha256 cellar: :any, arm64_big_sur:  "9dbc60f38f0b2cf07e5df55fcc4a67d9d31a8698cfdc8f411b269d1e3daae0bf"
-    sha256 cellar: :any, monterey:       "131e5afcfde4ba63620ca6820c657209e1f4c51dca3b95cc3db4bae23bdddb0a"
-    sha256 cellar: :any, big_sur:        "09a9e29742cf5667ad9f935a7d686641b54383c1ff8d5581c1a7c145a966760d"
-    sha256 cellar: :any, catalina:       "e431e0e6e96f2ac918d37e4e10f264cf23b7af0dbc54d3f82ab80b309efbd079"
-    sha256 cellar: :any, mojave:         "af67f5b493aebbe8c072fd0254e47bd8b205a00eb29049ea38046a9065fe8876"
+    sha256 cellar: :any,                 arm64_ventura:  "c6ed6d06f96f740d06f6ef0689587262eea573e875af753893c0f5aa807edbf5"
+    sha256 cellar: :any,                 arm64_monterey: "b6914749c1bda7f6796c1f2908dda35f564860830cfc202ed9bb9f1652ce3562"
+    sha256 cellar: :any,                 arm64_big_sur:  "ee945d14878160dba16e983ede8c3fefbc5c82b028d340851d5c8b2ce486e0b9"
+    sha256 cellar: :any,                 ventura:        "435ce0970c018853d9c9fd6c0a5bfe4b2d9c8ca63e3f56c7c65a54e531aebd0c"
+    sha256 cellar: :any,                 monterey:       "9db99dc5397773cd0628ed1ce6c183eea4c0deab7aee30f483eb96941cfa2a24"
+    sha256 cellar: :any,                 big_sur:        "2153b5bd416812b4d5448e5f38554dd93d4baf82cf21672abb24215669f21e5f"
+    sha256 cellar: :any,                 catalina:       "99d2f84618430bdc6a7876512a65a365da8cdeb94aa6198193b2eb933aeb8556"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "728b3e6817c2d78dd463de90ebdbde10d5e8a468357b7d6b66759444da0286ab"
   end
 
   depends_on "cppunit" => :build
@@ -24,6 +27,9 @@ class Libvisio < Formula
   depends_on "boost"
   depends_on "icu4c"
   depends_on "librevenge"
+
+  uses_from_macos "gperf" => :build
+  uses_from_macos "libxml2"
 
   def install
     # Needed for Boost 1.59.0 compatibility.

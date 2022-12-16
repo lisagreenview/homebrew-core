@@ -1,8 +1,8 @@
 class Knot < Formula
   desc "High-performance authoritative-only DNS server"
   homepage "https://www.knot-dns.cz/"
-  url "https://secure.nic.cz/files/knot-dns/knot-3.1.4.tar.xz"
-  sha256 "05ebca053b4ce62205a095b6885ed1a1167c629ccac2b3c8dcc431bd2deedf70"
+  url "https://secure.nic.cz/files/knot-dns/knot-3.2.4.tar.xz"
+  sha256 "299e8de918f9fc7ecbe625b41cb085e47cdda542612efbd51cd5ec60deb9dd13"
   license all_of: ["GPL-3.0-or-later", "0BSD", "BSD-3-Clause", "LGPL-2.0-or-later", "MIT"]
 
   livecheck do
@@ -11,12 +11,13 @@ class Knot < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "aee36fa6d6c2fdb39eb437ed8f8e828654b1a457ab3dddd3ca1b1efe51f342fb"
-    sha256 arm64_big_sur:  "796db763f53b328b0cdc0a6877183ad927ad7a568e260692b6512ad1016b5d26"
-    sha256 monterey:       "0d2a1b911c7e026911f2077a4865b08839769548f850dc5ba96eba3f32c3b61f"
-    sha256 big_sur:        "44c7309fb96ca0439046100c55e6008f622ed197aa7ed5b18d307d7d470f7f92"
-    sha256 catalina:       "4e3770dfd45d1c2d96545feac26b86a85a4d5fdc1b7ee0bff9ec3462f6b50d61"
-    sha256 x86_64_linux:   "ad746ccfc7c71cc26b866cd8113551901926a9cd2925cd8b4686a1bf53c6468a"
+    sha256 arm64_ventura:  "0ed5b8ecc4d1cb7391e582e21159004203a78fcfca55a0a831e18de898ba7b4d"
+    sha256 arm64_monterey: "28445f1d2be1f59a9bc4b8b071f1c86ccbc606ad245a056852670ca8a58ed992"
+    sha256 arm64_big_sur:  "a65d3037c98cb3ed8de7fa69a998b6554acd94b9067a8d3516058fc66347bec4"
+    sha256 ventura:        "0eb514a1db1362748928c06cee7a9933591b798bc587c07e5ce2582109368afd"
+    sha256 monterey:       "e93d86198cb560326d87274d85fb1dc294fbcffeff8a2b74c770ec6d20f6f120"
+    sha256 big_sur:        "a7d6a12f9cad98538f26774d019485c29fd7114586509f8bc205f3ef5d496316"
+    sha256 x86_64_linux:   "92f05c29e74cabc87c1b993931eb29f5f76efaa0da974574c29cf4ce345c37a7"
   end
 
   head do
@@ -48,7 +49,8 @@ class Knot < Formula
                           "--with-rundir=#{var}/run/knot",
                           "--prefix=#{prefix}",
                           "--with-module-dnstap",
-                          "--enable-dnstap"
+                          "--enable-dnstap",
+                          "--enable-quic"
 
     inreplace "samples/Makefile", "install-data-local:", "disable-install-data-local:"
 
@@ -92,7 +94,7 @@ class Knot < Formula
   end
 
   test do
-    system bin/"kdig", "www.knot-dns.cz"
+    system bin/"kdig", "@94.140.14.140", "www.knot-dns.cz", "+quic"
     system bin/"khost", "brew.sh"
     system sbin/"knotc", "conf-check"
   end

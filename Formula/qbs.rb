@@ -1,8 +1,8 @@
 class Qbs < Formula
   desc "Build tool for developing projects across multiple platforms"
   homepage "https://wiki.qt.io/Qbs"
-  url "https://download.qt.io/official_releases/qbs/1.20.1/qbs-src-1.20.1.tar.gz"
-  sha256 "3a3b486a68bc00a670101733cdcdce647cfdc36588366d8347bc28fd11cc6a0b"
+  url "https://download.qt.io/official_releases/qbs/1.24.0/qbs-src-1.24.0.tar.gz"
+  sha256 "73c9ecb9de766ecbe245a7aac683bd7809f8a5e33a922686b9475fe8f45e467c"
   license :cannot_represent
   head "https://code.qt.io/qbs/qbs.git", branch: "master"
 
@@ -12,15 +12,20 @@ class Qbs < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "67dfbdb18377e3bba450d7e607a4a226ee0ddb813f1bf708508892f8d8468a59"
-    sha256 cellar: :any, arm64_big_sur:  "92aac9bdcf321990f97af795af823b02b0f3e747e32b96e2f55f2be34ba5e31f"
-    sha256 cellar: :any, big_sur:        "c3d85f2b1e1f08d4f1eafa5635f892d2fd30929b61b78a350904f2e94eb5ccb4"
-    sha256 cellar: :any, catalina:       "13e3ffaf58f1778c57fd83eb8da7949dfadd639a25ca259fab7197411cf16cdb"
-    sha256 cellar: :any, mojave:         "7e224f3dc560b76aef993ed1b72c8dd51a839928fa3351e77cec37b333b3d534"
+    sha256 cellar: :any,                 arm64_ventura:  "a628930a930a6ae3071eec4b21042251527854bc7a354fb7d41cc4a8cbc7330a"
+    sha256 cellar: :any,                 arm64_monterey: "6604f19798d5ac7ba45cbbca0d658c03dd76ad74379edafda35dea199ee02bed"
+    sha256 cellar: :any,                 arm64_big_sur:  "3646df419c8ccdecd847bbf39c6acac7fe2fe2b38cc7f5f36d9add60f241feb7"
+    sha256 cellar: :any,                 ventura:        "850f72158b239df054ed87c46b601e323a1892854d2b8d3fdc8f8aad429e1558"
+    sha256 cellar: :any,                 monterey:       "a9a91161f9711ba9854355380e8547ca29ba77e619567fc559f987104c19a08c"
+    sha256 cellar: :any,                 big_sur:        "b1f0b1a4e33df0edf23f1f733319429cfaab01c77051edeeacaf5861488ac4e9"
+    sha256 cellar: :any,                 catalina:       "887de87ffddffda4613f41a8375a437053eba0b43def2f806459c9c6a7fcd61b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f5521ca054e370bcb1853e2ee657d3fc9e7535d944a4617599f23e1b698ce145"
   end
 
   depends_on "cmake" => :build
   depends_on "qt@5"
+
+  fails_with gcc: "5"
 
   def install
     qt5 = Formula["qt@5"].opt_prefix

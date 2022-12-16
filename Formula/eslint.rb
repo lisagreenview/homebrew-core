@@ -3,17 +3,18 @@ require "language/node"
 class Eslint < Formula
   desc "AST-based pattern checker for JavaScript"
   homepage "https://eslint.org"
-  url "https://registry.npmjs.org/eslint/-/eslint-8.3.0.tgz"
-  sha256 "c82ba7a1bff44b2e250811b4b60a8f5fd0fa6ec689744d03733f7d60e8fea693"
+  url "https://registry.npmjs.org/eslint/-/eslint-8.29.0.tgz"
+  sha256 "358922f489f4c6cca00ed41bfc2f05336851fcd3aba0f9b48335585f5faa1a24"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e5b06ef5166773a2ced68d2271fad53b9747dd3edfc6833eafa0c8efcfdb069e"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e5b06ef5166773a2ced68d2271fad53b9747dd3edfc6833eafa0c8efcfdb069e"
-    sha256 cellar: :any_skip_relocation, monterey:       "1847ca55430c13936aee6e7a949662780590b6219d3796efd596cb4be4ddf766"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1847ca55430c13936aee6e7a949662780590b6219d3796efd596cb4be4ddf766"
-    sha256 cellar: :any_skip_relocation, catalina:       "1847ca55430c13936aee6e7a949662780590b6219d3796efd596cb4be4ddf766"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e5b06ef5166773a2ced68d2271fad53b9747dd3edfc6833eafa0c8efcfdb069e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "0d2f5d933ea57b78476604dafaee8121bf4020a2d9abd04fd139378b741a039d"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "0d2f5d933ea57b78476604dafaee8121bf4020a2d9abd04fd139378b741a039d"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0d2f5d933ea57b78476604dafaee8121bf4020a2d9abd04fd139378b741a039d"
+    sha256 cellar: :any_skip_relocation, ventura:        "3ee6aab298f62af3031a99b35b34a4777fa906de0322b94829cc0bf9ac86d7bb"
+    sha256 cellar: :any_skip_relocation, monterey:       "3ee6aab298f62af3031a99b35b34a4777fa906de0322b94829cc0bf9ac86d7bb"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3ee6aab298f62af3031a99b35b34a4777fa906de0322b94829cc0bf9ac86d7bb"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0d2f5d933ea57b78476604dafaee8121bf4020a2d9abd04fd139378b741a039d"
   end
 
   depends_on "node"

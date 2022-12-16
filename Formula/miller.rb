@@ -1,33 +1,26 @@
 class Miller < Formula
   desc "Like sed, awk, cut, join & sort for name-indexed data such as CSV"
   homepage "https://github.com/johnkerl/miller"
-  url "https://github.com/johnkerl/miller/releases/download/v5.10.3/miller-5.10.3.tar.gz"
-  sha256 "bbab4555c2bc207297554b0593599ea2cd030a48ad1350d00e003620e8d3c0ea"
+  url "https://github.com/johnkerl/miller/releases/download/v6.5.0/miller-6.5.0.tar.gz"
+  sha256 "682f1583863ab0f1bfabf713e0e66f2ff656da96a0eab2b58ab9a7e933f46cc9"
   license "BSD-2-Clause"
-  head "https://github.com/johnkerl/miller.git"
+  head "https://github.com/johnkerl/miller.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "745c0e00c92719c72c3f456dbe1156b635a6f5d02846a91afb685ff40de4eb84"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5c6c8eabb55854dd768fec35d68f5a3c51cc74bcbd969f547a9efaba752ad420"
-    sha256 cellar: :any_skip_relocation, monterey:       "6077eff1c560d0ffb82c57d63cfea591ceb6c848fc9d14876b671343a4e0279f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f0b5eea480a0c744e16ddf6982dd5c883aac77033ea5b96c4539834901c86187"
-    sha256 cellar: :any_skip_relocation, catalina:       "4aba0073513fd6104e8df701372f21facb78205f5453bf3a871d4a67613bf746"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cdf09268c39fe5dcb7764352c2ba331a295dff401e8b533986b8a8cb0f186cdd"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3afc7891143e22c593ec5e4ef175cefc4ef0db4d7bf0a4bbe1511b1e0a7949cf"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "4393e4ce4de6efcc524c82d1f8c268ba39248049791647d1f4167c8d563ecdb9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3319c03ea55df7e7ff479c69321231d04b02c59a65413c6d0531921657d787f1"
+    sha256 cellar: :any_skip_relocation, ventura:        "ab0d54332443160bfee6d203034ce61cab506ec5a7bbab4757335f1eb0aa0465"
+    sha256 cellar: :any_skip_relocation, monterey:       "7324df686c39375d013806d8b25d52a36fad492eee6c9890bc69b5be9b43905d"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ac539d4b131fb13b8228e41b42c6d353b7c41cb31828f7b04c087ad5b7fdfd51"
+    sha256 cellar: :any_skip_relocation, catalina:       "100d297cae7f388856ad7c511d004d5ddf82b18944c53f936b2afe4dace0087b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "78defeda11d9dfa01b996acfd5824ccfb835e055f934b27a7bf1ab88b7b9eb14"
   end
 
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
-  depends_on "libtool" => :build
-
-  uses_from_macos "flex" => :build
+  depends_on "go" => :build
 
   def install
-    # Profiling build fails with Xcode 11, remove it
-    inreplace "c/Makefile.am", /noinst_PROGRAMS=\s*mlrg/, ""
-    system "autoreconf", "-fvi"
-
-    system "./configure", "--prefix=#{prefix}", "--disable-silent-rules",
-                          "--disable-dependency-tracking"
+    system "./configure", "--prefix=#{prefix}"
     system "make"
     system "make", "install"
   end

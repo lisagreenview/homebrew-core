@@ -1,8 +1,8 @@
 class AmqpCpp < Formula
   desc "C++ library for communicating with a RabbitMQ message broker"
   homepage "https://github.com/CopernicaMarketingSoftware/AMQP-CPP"
-  url "https://github.com/CopernicaMarketingSoftware/AMQP-CPP/archive/v4.3.15.tar.gz"
-  sha256 "21e6ae69dcf535cd1be49b272c3ff019134dddc7d812c0050e5d7bf4e19d0c3b"
+  url "https://github.com/CopernicaMarketingSoftware/AMQP-CPP/archive/v4.3.18.tar.gz"
+  sha256 "cc2c1fc5da00a1778c2804306e06bdedc782a5f74762b9d9b442d3a498dd0c4f"
   license "Apache-2.0"
   head "https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git", branch: "master"
 
@@ -12,27 +12,28 @@ class AmqpCpp < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "9bdc4d7d2dd2500415bb158572fa1a3af71e170e83498f002ff0e390fc397f99"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "78924eacf7c24bfb70d6c3ff041427fbb57b476321e274535e3e5b06e45278e9"
-    sha256 cellar: :any_skip_relocation, monterey:       "70d0b0c6181d4bc0bbc1101b9479cc1a57eccb70ccb1cbcd1c2d454e1f346415"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b246ab5a6bfb862ee23c89fbf0ebca57eeb99314e219c7c6d9c5a1bb42c81ce2"
-    sha256 cellar: :any_skip_relocation, catalina:       "fd48a53d76c86b10729b81bffe84af39435db4c221c9aa0cd021849a6a194f21"
-    sha256 cellar: :any_skip_relocation, mojave:         "580fa1d90bac47c4edec0e5ee1b34c1db4953a51fc2ac5ca7022fae2ec0bef3c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4ed9d8149c436e2e1aa3cc000ec637dd3afd1748845e45c22b4b1c88520f1b7d"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "827e422fe2c209e48d781dd11881ddb11ecabda55f06ba1095019f7e667b5d35"
+    sha256 cellar: :any,                 arm64_monterey: "d6823017b0bbbddc0490d68c7a73beaa580b22bab360784baf60a4ff0d9046fb"
+    sha256 cellar: :any,                 arm64_big_sur:  "ae9cf4ec980c8cc699ebb1c70a785139d26759e703324ad1df8151c90aa18461"
+    sha256 cellar: :any,                 ventura:        "24ed76c164ad89e3a24e60909a85814c1ee446fec47b800bec2b41c400deb440"
+    sha256 cellar: :any,                 monterey:       "32e68fbfaeee7409a6b7e8fe4dd742d4589762cb601e0800e235acb2c326e3a4"
+    sha256 cellar: :any,                 big_sur:        "f0222f1ff29774ba9e39d11c92797f465cb066529cc7255e5c65f508e3ca3d46"
+    sha256 cellar: :any,                 catalina:       "7b8abc464785804e5ee792e480baef60e565d4567bb6b330230ccd99e5e63473"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e4b54f0272c3d9e660443bec29e24b785a9987835bd8c7fff4e6b6c7efaa17dc"
   end
 
   depends_on "cmake" => :build
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
-    ENV.cxx11
-
-    system "cmake", "-DBUILD_SHARED=ON",
-                    "-DCMAKE_MACOSX_RPATH=1",
+    system "cmake", "-S", ".", "-B", "build",
+                    "-DAMQP-CPP_BUILD_SHARED=ON",
                     "-DAMQP-CPP_LINUX_TCP=ON",
+                    "-DCMAKE_MACOSX_RPATH=1",
                     *std_cmake_args
-    system "make"
-    system "make", "install"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

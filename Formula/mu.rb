@@ -4,9 +4,10 @@
 class Mu < Formula
   desc "Tool for searching e-mail messages stored in the maildir-format"
   homepage "https://www.djcbsoftware.nl/code/mu/"
-  url "https://github.com/djcb/mu/releases/download/1.6.8/mu-1.6.8.tar.xz"
-  sha256 "d175272bec399c956393c8e2afa5e16f503b65417edc7e3224b50edd6d1f9750"
+  url "https://github.com/djcb/mu/releases/download/v1.8.13/mu-1.8.13.tar.xz"
+  sha256 "20d69c1a918c1e48e6dbf5375d87ef3ed358bb6b3b7d0a120e93a88b16d5a026"
   license "GPL-3.0-or-later"
+  head "https://github.com/djcb/mu.git", branch: "master"
 
   # We restrict matching to versions with an even-numbered minor version number,
   # as an odd-numbered minor version number indicates a development version:
@@ -17,45 +18,40 @@ class Mu < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "abbbacf5eb2983c03fc209bd497bb828cf0c0077f0e1ec2d02710e86145db41a"
-    sha256 cellar: :any,                 big_sur:       "3babbb7a81106cce91530c94be1e66f7184a65e67119d06d14e1641146487eea"
-    sha256 cellar: :any,                 catalina:      "fb0ee00fbe19850a2edf6f88514a7179392f674fff26246a067ea60d2e570626"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "db2624e44332ca7e4a4916786db3129394f21f963f10e7b1c4320df4b6f3a21a"
-  end
-
-  head do
-    url "https://github.com/djcb/mu.git"
-
-    depends_on "autoconf" => :build
-    depends_on "autoconf-archive" => :build
-    depends_on "automake" => :build
+    sha256 arm64_ventura:  "90fd3e0bf68e9d068837ec62e9c7995820b4d5efdd9c97fe57f0d93f4bcdd91a"
+    sha256 arm64_monterey: "4912edec797751cbcc299c803cc923f9dc43a98c0bebfde4bbda06cd7c11178c"
+    sha256 arm64_big_sur:  "c2f7c55d2d21d0afeb64d1a17e9ad52c3b0dd57790329a401168335c9b1875ab"
+    sha256 ventura:        "c59786b25c71cc1a0e6a12cb27cc1921076aa5f4a98a623dbbf5f697284105cf"
+    sha256 monterey:       "4a6917251e981252fc3d93251811b8c345da6daa769aba17b625b5d78a6cc9b1"
+    sha256 big_sur:        "6aedc6e3fd0cd6dfc1972dc2290decda236c8ec29b935854269e759653fa0c1b"
+    sha256 x86_64_linux:   "e553af9084e9b538e88094978a245b5feaa8414f451de41e3e6edf855e66dc37"
   end
 
   depends_on "emacs" => :build
   depends_on "libgpg-error" => :build
   depends_on "libtool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
   depends_on "gmime"
   depends_on "xapian"
 
-  uses_from_macos "texinfo" => :build
-
-  on_linux do
-    depends_on "gcc"
+  on_system :linux, macos: :ventura_or_newer do
+    depends_on "texinfo" => :build
   end
+
+  conflicts_with "mu-repo", because: "both install `mu` binaries"
 
   fails_with gcc: "5"
 
   def install
-    system "autoreconf", "-ivf" if build.head?
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-guile",
-                          "--prefix=#{prefix}",
-                          "--with-lispdir=#{elisp}"
-    system "make"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", *std_meson_args, "-Dlispdir=#{elisp}", ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   # Regression test for:

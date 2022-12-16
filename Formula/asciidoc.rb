@@ -3,9 +3,9 @@ class Asciidoc < Formula
 
   desc "Formatter/translator for text files to numerous formats"
   homepage "https://asciidoc-py.github.io/"
-  url "https://files.pythonhosted.org/packages/c2/d0/5334f7d8205aa11f2e4751f4137466c8d8a36b148dcf3874db87b40ce72e/asciidoc-10.0.2.tar.gz"
-  sha256 "1800699c579038bcf68e760e9358304b69a19ef04c9bf0b4faa76b729dcf7dbf"
-  license "GPL-2.0-only"
+  url "https://files.pythonhosted.org/packages/8a/57/50180e0430fdb552539da9b5f96f1da6f09c4bfa951b39a6e1b4fbe37d75/asciidoc-10.2.0.tar.gz"
+  sha256 "91ff1dd4c85af7b235d03e0860f0c4e79dd1ff580fb610668a39b5c77b4ccace"
+  license "GPL-2.0-or-later"
   head "https://github.com/asciidoc-py/asciidoc-py.git", branch: "main"
 
   livecheck do
@@ -14,16 +14,19 @@ class Asciidoc < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "59bc4ac9a515e3b9fb04413170253db01735afda37468487bc7c4e05c56cda7d"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "59bc4ac9a515e3b9fb04413170253db01735afda37468487bc7c4e05c56cda7d"
-    sha256 cellar: :any_skip_relocation, monterey:       "03ab2d49198b047f011cdacdfbb9f08260d4ecab0657b3b74dc99034db6085c7"
-    sha256 cellar: :any_skip_relocation, big_sur:        "03ab2d49198b047f011cdacdfbb9f08260d4ecab0657b3b74dc99034db6085c7"
-    sha256 cellar: :any_skip_relocation, catalina:       "03ab2d49198b047f011cdacdfbb9f08260d4ecab0657b3b74dc99034db6085c7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d64213d02fb9f66ef08fb25987477d3d1c0b3e876ba8a74ae2153610a269f1e3"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "1e2f219174f367e4f191679e888c14db8391a531f99e5830a491ca7a5a38d5a9"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1e2f219174f367e4f191679e888c14db8391a531f99e5830a491ca7a5a38d5a9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1e2f219174f367e4f191679e888c14db8391a531f99e5830a491ca7a5a38d5a9"
+    sha256 cellar: :any_skip_relocation, ventura:        "ef0ff79ca1a2494626667efc995c8e3ff75993889d75312fd46d9acb408d0e4c"
+    sha256 cellar: :any_skip_relocation, monterey:       "ef0ff79ca1a2494626667efc995c8e3ff75993889d75312fd46d9acb408d0e4c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ef0ff79ca1a2494626667efc995c8e3ff75993889d75312fd46d9acb408d0e4c"
+    sha256 cellar: :any_skip_relocation, catalina:       "ef0ff79ca1a2494626667efc995c8e3ff75993889d75312fd46d9acb408d0e4c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4791ddff487d774346c8e313b7b3bee367ca06cdc79bef543da253166401cbab"
   end
 
   depends_on "docbook"
-  depends_on "python@3.10"
+  depends_on "python@3.11"
   depends_on "source-highlight"
 
   def install

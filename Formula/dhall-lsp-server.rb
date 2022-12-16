@@ -1,22 +1,29 @@
 class DhallLspServer < Formula
   desc "Language Server Protocol (LSP) server for Dhall"
   homepage "https://github.com/dhall-lang/dhall-haskell/tree/master/dhall-lsp-server"
-  url "https://hackage.haskell.org/package/dhall-lsp-server-1.0.16/dhall-lsp-server-1.0.16.tar.gz"
-  sha256 "78b2cfd45a6c3a9489d03719f3af230c8fbc4055d96b62e80951912bd79e4413"
+  # TODO: Switch `ghc@9.2` to `ghc` once cborg has a new release that supports
+  # ghc-prim 0.9.0. PR ref: https://github.com/well-typed/cborg/pull/304
+  url "https://hackage.haskell.org/package/dhall-lsp-server-1.1.2/dhall-lsp-server-1.1.2.tar.gz"
+  sha256 "f013992d7dfd8f40d149737d04a8772308014ccc5d52c27d72dc1c1185882bf3"
   license "BSD-3-Clause"
-  head "https://github.com/dhall-lang/dhall-haskell.git"
+  head "https://github.com/dhall-lang/dhall-haskell.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "79e2124c41514651a7eb1da835e35957ab9aee3958341361f92f9bc258fef064"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "040c4961a15ce28cbfb896a0057b26d5b6ad155df4543d9efc9edcf518343aa1"
-    sha256 cellar: :any_skip_relocation, monterey:       "198b8fc3aaf6a535057e52c075bc3269d60cdf8dfd83276d24f04b4db8875dee"
-    sha256 cellar: :any_skip_relocation, big_sur:        "8fd9acfed2ce6997a2a16435372b7d012a67fcb427a031cf24595c153d13c63a"
-    sha256 cellar: :any_skip_relocation, catalina:       "2ef242fd1a6d231fcfa4cb37df3e58004da2d8e1a98452b0e5e82e3708f424bf"
-    sha256 cellar: :any_skip_relocation, mojave:         "b8d9503c6462a3e0739001212ae5bebaf80d653df9de6b10f788f3f1eb623115"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "adb8be04b6c9fdc8afae4a867181df4d4ed5486f7db5d1a5a520802946b5bade"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "3b72ed07724e2a92a852dea0e273b97a63bc692488c5ed7ce0bb2efec4cab0ff"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c53f6489869ca6ffdc02b9d40145984b774f03b8673bb6c45df20d3e4008cf06"
+    sha256 cellar: :any_skip_relocation, ventura:        "b4108e823d0f29c52f5573d9abc2be44bbeb24ed8e14990f4231f139bde9e59b"
+    sha256 cellar: :any_skip_relocation, monterey:       "92ff21362d7b3daee2fbbce6b7737b7d50f797bc94f9cdbdc538cf3873e7afb3"
+    sha256 cellar: :any_skip_relocation, big_sur:        "46c142ac36a95e268ff69e3005c80e5030ae5b61845ff20cb16f347f824e3bf8"
+    sha256 cellar: :any_skip_relocation, catalina:       "fb38e31c566cade3020e4b6ec3af2c050f79b99a9888452ef39495704326f84e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7efca8ee9de111302481c7dc9a862c68c62ccf435740d3607646fcaceb01e812"
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc" => :build
+  depends_on "ghc@9.2" => :build
+
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
 
   def install
     system "cabal", "v2-update"
@@ -29,7 +36,13 @@ class DhallLspServer < Formula
       "\r\n" \
       "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"" \
       "processId\":88075,\"rootUri\":null,\"capabilities\":{},\"trace\":\"ver" \
-      "bose\",\"workspaceFolders\":null}}\r\n"
+      "bose\",\"workspaceFolders\":null}}\r\n" \
+      "Content-Length: 46\r\n" \
+      "\r\n" \
+      "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"shutdown\"}\r\n" \
+      "Content-Length: 42\r\n" \
+      "\r\n" \
+      "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"exit\"}\r\n"
 
     output = pipe_output("#{bin}/dhall-lsp-server", input, 0)
 

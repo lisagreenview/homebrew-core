@@ -1,33 +1,34 @@
 class Imagemagick < Formula
   desc "Tools and libraries to manipulate images in many formats"
   homepage "https://imagemagick.org/index.php"
-  url "https://www.imagemagick.org/download/releases/ImageMagick-7.1.0-16.tar.xz"
-  sha256 "770219ae4087cc9a107dde04473ba7a932a374f310f9ec9ff6a545798e9da039"
+  url "https://imagemagick.org/archive/releases/ImageMagick-7.1.0-54.tar.xz"
+  sha256 "6d0d952000217b677276a342a4c609776386d0daf2ccf354b6ed8dbc07d22ef7"
   license "ImageMagick"
   head "https://github.com/ImageMagick/ImageMagick.git", branch: "main"
 
   livecheck do
-    url "https://download.imagemagick.org/ImageMagick/download/"
+    url "https://imagemagick.org/archive/"
     regex(/href=.*?ImageMagick[._-]v?(\d+(?:\.\d+)+-\d+)\.t/i)
   end
 
   bottle do
-    sha256 arm64_monterey: "120866de5a58500b06735cf5395f649923348d793c5c73543ac9f3bd2d9c20df"
-    sha256 arm64_big_sur:  "572cfc7dd3f75fbcead5cb12f4c34189a3e46ef4a8fbc144148bbfc3c43a4398"
-    sha256 monterey:       "78e4f8f469b80b1d6690a7918864d5fd4de9c0a55e2cf75fdee03e16c65236f9"
-    sha256 big_sur:        "e44312c8507608c539cce756cc3bef4a60e619b5b13427ade8603591579ab2a9"
-    sha256 catalina:       "b7330b8c5ac9519b0e2428cb58177c5f5876902bb0a56597e608f49b15f82578"
-    sha256 x86_64_linux:   "2204bf535b38b4a5b25e77918791a4e6725ea96acc10a7fe6d39f069ef6c2ffb"
+    sha256 arm64_ventura:  "e18f4100558f4a3306fadce757cf74dfbd2c5bdc5377a1cc27605e7e830fd8a8"
+    sha256 arm64_monterey: "96709cdf93062b6281910d721237f9ae280732aeb7688163b0ed9b56a9c584e0"
+    sha256 arm64_big_sur:  "78c7756c3cb3c8cf5cadc9b4f9ce594728011ffdfefa6b008f3d5bd71e7310a3"
+    sha256 ventura:        "be480a0bf17246905781cb0030666735efe011cef8cf377c5a976cf7b1fac371"
+    sha256 monterey:       "6565336a8b88383f167676c16da5f26511582e7114ab88d9f9c9243d86c91937"
+    sha256 big_sur:        "152fdac12f8555e112ccc2dfbb785e4313b7c0069997e40a46fd5005191ab9d0"
+    sha256 x86_64_linux:   "4c8ade9f5a6320f2808472d494ea28a5c2aced88c88f5e03b4ef4bba66e7dfdb"
   end
 
   depends_on "pkg-config" => :build
   depends_on "freetype"
   depends_on "ghostscript"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libheif"
   depends_on "liblqr"
-  depends_on "libomp"
   depends_on "libpng"
+  depends_on "libraw"
   depends_on "libtiff"
   depends_on "libtool"
   depends_on "little-cms2"
@@ -39,6 +40,10 @@ class Imagemagick < Formula
   uses_from_macos "bzip2"
   uses_from_macos "libxml2"
   uses_from_macos "zlib"
+
+  on_macos do
+    depends_on "libomp"
+  end
 
   on_linux do
     depends_on "libx11"
@@ -65,6 +70,7 @@ class Imagemagick < Formula
       "--with-openexr",
       "--with-webp=yes",
       "--with-heic=yes",
+      "--with-raw=yes",
       "--with-gslib",
       "--with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts",
       "--with-lqr",
@@ -72,12 +78,16 @@ class Imagemagick < Formula
       "--without-pango",
       "--without-wmf",
       "--enable-openmp",
-      "ac_cv_prog_c_openmp=-Xpreprocessor -fopenmp",
-      "ac_cv_prog_cxx_openmp=-Xpreprocessor -fopenmp",
-      "LDFLAGS=-lomp -lz",
     ]
-
-    args << "--without-x" if OS.mac?
+    if OS.mac?
+      args += [
+        "--without-x",
+        # Work around "checking for clang option to support OpenMP... unsupported"
+        "ac_cv_prog_c_openmp=-Xpreprocessor -fopenmp",
+        "ac_cv_prog_cxx_openmp=-Xpreprocessor -fopenmp",
+        "LDFLAGS=-lomp -lz",
+      ]
+    end
 
     # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_BASE_VERSION}", "${PACKAGE_NAME}"
@@ -87,11 +97,18 @@ class Imagemagick < Formula
 
   test do
     assert_match "PNG", shell_output("#{bin}/identify #{test_fixtures("test.png")}")
+
     # Check support for recommended features and delegates.
-    features = shell_output("#{bin}/convert -version")
-    %w[Modules freetype jpeg png tiff].each do |feature|
+    features = shell_output("#{bin}/magick -version")
+    %w[Modules freetype heic jpeg png raw tiff].each do |feature|
       assert_match feature, features
     end
-    assert_match "Helvetica", shell_output("#{bin}/identify -list font")
+
+    # Check support for a few specific image formats, mostly to ensure LibRaw linked correctly.
+    formats = shell_output("#{bin}/magick -list format")
+    ["AVIF  HEIC      rw+", "ARW  DNG       r--", "DNG  DNG       r--"].each do |format|
+      assert_match format, formats
+    end
+    assert_match "Helvetica", shell_output("#{bin}/magick -list font")
   end
 end

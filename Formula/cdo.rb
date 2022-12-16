@@ -1,8 +1,8 @@
 class Cdo < Formula
   desc "Climate Data Operators"
   homepage "https://code.mpimet.mpg.de/projects/cdo"
-  url "https://code.mpimet.mpg.de/attachments/download/26370/cdo-2.0.0.tar.gz"
-  sha256 "6bca54e9d69d8c1f072f1996547b7347a65743d15ba751967e9bb16e0ff7a843"
+  url "https://code.mpimet.mpg.de/attachments/download/27654/cdo-2.1.1.tar.gz"
+  sha256 "c29d084ccbda931d71198409fb2d14f99930db6e7a3654b3c0243ceb304755d9"
   license "GPL-2.0-only"
 
   livecheck do
@@ -11,17 +11,21 @@ class Cdo < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "e8a2c300fc12730c53ff16a367d4d35cc16054e8d1235db672c51e514cfe0e75"
-    sha256 cellar: :any,                 big_sur:       "417654ac0fca8a9602e9c118bd591cec46e572da2335f6165883178edbff2993"
-    sha256 cellar: :any,                 catalina:      "c5c85ae53d96d4a8528fc3b44b16eec050f80e6db3cd18b556f6b563181dc898"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "5856256bb19b7b07e76564aeab37eb02c4582ec1daaf6dd971fa81ce15fd4598"
+    sha256 cellar: :any,                 arm64_ventura:  "d89b12fc78dff63d66f0bf87310d76216a149116d4cd006698c991a576f04cad"
+    sha256 cellar: :any,                 arm64_monterey: "83eac588cd73706edfef31b63cb85e2966f762a4f0a02ca366da2f5edce38851"
+    sha256 cellar: :any,                 arm64_big_sur:  "0494b5787eae90ea304241a55cef9228a03af0dc51d2c58a19b9ce0fcc282205"
+    sha256 cellar: :any,                 ventura:        "fcd1c9fb8575d852d2e27d0ceb136c3fe376e0ae391ba9d009f3a0b8b501ba13"
+    sha256 cellar: :any,                 monterey:       "080c0418533dc364d20b1016fd4787185dc157400a24eb25fe8392ec296765f5"
+    sha256 cellar: :any,                 big_sur:        "db7e6646f014c87d67c6b6a6c61c58a951c31aeb4879c13b1833157cc8627bf3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8a527a90f90a6539f701eb1dec2887f85155fd87351316b09a0d5b9bc7665360"
   end
 
   depends_on "eccodes"
   depends_on "hdf5"
+  depends_on "libaec"
   depends_on "netcdf"
   depends_on "proj"
-  depends_on "szip"
+  uses_from_macos "python" => :build
 
   def install
     args = %W[
@@ -30,7 +34,7 @@ class Cdo < Formula
       --with-eccodes=#{Formula["eccodes"].opt_prefix}
       --with-netcdf=#{Formula["netcdf"].opt_prefix}
       --with-hdf5=#{Formula["hdf5"].opt_prefix}
-      --with-szlib=#{Formula["szip"].opt_prefix}
+      --with-szlib=#{Formula["libaec"].opt_prefix}
     ]
 
     system "./configure", *args

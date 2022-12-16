@@ -1,8 +1,8 @@
 class Gromacs < Formula
   desc "Versatile package for molecular dynamics calculations"
   homepage "https://www.gromacs.org/"
-  url "https://ftp.gromacs.org/pub/gromacs/gromacs-2021.4.tar.gz"
-  sha256 "cb708a3e3e83abef5ba475fdb62ef8d42ce8868d68f52dafdb6702dc9742ba1d"
+  url "https://ftp.gromacs.org/pub/gromacs/gromacs-2022.4.tar.gz"
+  sha256 "c511be602ff29402065b50906841def98752639b92a95f1b0a1060d9b5e27297"
   license "LGPL-2.1-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Gromacs < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "868c44fe226c1477257e21172fc4ad47556aea3cc91a2a45d15e1e32e8798b74"
-    sha256 arm64_big_sur:  "6d44ead96dff4f78c2c7e31a6862786a96079f310643c8e04e0557379ddecfbc"
-    sha256 monterey:       "fb13ce47fa8f22941e92495cbcbcc6a2bd629ccfb282dfc005d6e32d0cbf8776"
-    sha256 big_sur:        "fd89af8cd2ebd8f6d782464377118d5183c67b88892a315967a164d4a133e490"
-    sha256 catalina:       "bfc7d70c8556de5421a3203a5c44b653e4fcc24940fe520f53651eb0497a3b08"
-    sha256 x86_64_linux:   "a7bc30f7ad8c3c42a1045326e3b369b64baa639c8711e32a2561e73e6ce9229e"
+    sha256 arm64_ventura:  "4c11b01249186a6984cdaf3062969c457d59438e42eb9497ffa73adb7836395b"
+    sha256 arm64_monterey: "06c18fe289340416d188eb55fff50a2808d223f16b690fff1bb02ba233cd0a5f"
+    sha256 arm64_big_sur:  "61c09e6ba0d3799ff637dc7c0af1b781dcbf4c102c205081803b044265931848"
+    sha256 ventura:        "1d429bb615beba8b5007eb42bf060a56bd367667acc3a8a8a215e86261a1ad77"
+    sha256 monterey:       "ba1472ad7282316737271f920c9c1dbebf7c157119a957813727e8f7cf68e67b"
+    sha256 big_sur:        "741c47df9987fac450f9fce8984f0fcc918983e3e522bc7524f9dd2fcc8b3505"
+    sha256 catalina:       "de3e440a66779a4dcbc55c4190d7bca01d8bb44170206339c1647ee85e8447b8"
+    sha256 x86_64_linux:   "6aa6b4b23b8ce02729917cb948c25ff156186f5ecce07e89870bd4ed4357944a"
   end
 
   depends_on "cmake" => :build
@@ -37,7 +39,7 @@ class Gromacs < Formula
     gcc = Formula["gcc"]
     cc = gcc.opt_bin/"gcc-#{gcc.any_installed_version.major}"
     cxx = gcc.opt_bin/"g++-#{gcc.any_installed_version.major}"
-    inreplace "src/gromacs/gromacs-toolchain.cmake.cmakein" do |s|
+    inreplace "src/gromacs/gromacs-hints.in.cmake" do |s|
       s.gsub! "@CMAKE_LINKER@", "/usr/bin/ld"
       s.gsub! "@CMAKE_C_COMPILER@", cc
       s.gsub! "@CMAKE_CXX_COMPILER@", cxx
@@ -50,11 +52,15 @@ class Gromacs < Formula
 
     inreplace "src/gromacs/gromacs-config.cmake.cmakein", "@GROMACS_CXX_COMPILER@", cxx
 
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args, "-DGROMACS_CXX_COMPILER=#{cxx}",
-                                             "-DGMX_VERSION_STRING_OF_FORK=#{tap.user}"
-      system "make", "install"
-    end
+    args = %W[
+      -DGROMACS_CXX_COMPILER=#{cxx}
+      -DGMX_VERSION_STRING_OF_FORK=#{tap.user}
+    ]
+    # Force SSE2/SSE4.1 for compatibility when building Intel bottles
+    args << "-DGMX_SIMD=#{MacOS.version.requires_sse41? ? "SSE4.1" : "SSE2"}" if Hardware::CPU.intel? && build.bottle?
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args, *args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
 
     bash_completion.install "build/scripts/GMXRC" => "gromacs-completion.bash"
     bash_completion.install bin/"gmx-completion-gmx.bash" => "gmx-completion-gmx.bash"

@@ -1,26 +1,33 @@
 class Jimtcl < Formula
   desc "Small footprint implementation of Tcl"
   homepage "http://jim.tcl.tk/index.html"
-  url "https://github.com/msteveb/jimtcl/archive/0.80.tar.gz"
-  sha256 "9e79a960de925552eeb4df51121f0ea017e34409568117b1ac461f4c3071289e"
+  url "https://github.com/msteveb/jimtcl/archive/0.81.tar.gz"
+  sha256 "ab7eb3680ba0d16f4a9eb1e05b7fcbb7d23438e25185462c55cd032a1954a985"
   license "BSD-2-Clause"
+  revision 1
 
   bottle do
-    sha256 arm64_monterey: "660fb1ab526378adfc2960732548ce9d0bfc905cecae74f67a5fd4faf2c272a7"
-    sha256 arm64_big_sur:  "194b77f5eaea45ef59c1c4f7c458a6cb2840867aab53fda18201a9034beab3d9"
-    sha256 monterey:       "edda70c3e5bef14643c61051f11032e364193d4d50aad5e92f0fe9902a066608"
-    sha256 big_sur:        "f2cd0d86c21972a004859681810edd946bff3e87a5c7582b2222ad29b93a562f"
-    sha256 catalina:       "fc4750e0deaf8025402e6a2ed78bd28bcddb98f39012bf3d0c9c8413480505c7"
-    sha256 mojave:         "d9ae5a5d397bf13c6c9c6f355a007454ef05d00e82938d75cdcc549fd7538c0d"
-    sha256 high_sierra:    "4ba0d399f6622e3ce37433c43f314a5cb8546d0a08f2700cb45d67a04d6f1706"
-    sha256 x86_64_linux:   "ae69bc936ae765f61e0c14ccde362c95054c57492fc3650536df4b30b8674f5f"
+    sha256 arm64_ventura:  "5321ca61c00bae61155f8d7a4a6abf91d491f5dd7e627092b2fb200d08cce243"
+    sha256 arm64_monterey: "82285abcd9d5a13cf8e0d1731aa4264d228229dde326d6177e9bce929fb32a9c"
+    sha256 arm64_big_sur:  "0ee14e7cebf6c60666a28d04b7e27cc5ce2f085f7ee0dbb9299842869f2dd8ea"
+    sha256 ventura:        "470113fc5affb8ca59af84456c772738ffbcd083d942e3f61d1aa705c43cf4e7"
+    sha256 monterey:       "d56d56810fbee5428e98522f2aadb7301e9fdb18f7fc23e6d7ca28043c11555e"
+    sha256 big_sur:        "2d72063f3c5525f61ef02ac050ed04d4d9aa56b413185fe1d5f6946b8fb41fc5"
+    sha256 catalina:       "8cc4a39c25b1e60ef0c8d77d6144eb40f7b937b3c862277b4ed3edb5fc20bc66"
+    sha256 x86_64_linux:   "011dcf9066667d0128c44db11e115f1f9636fae1ad9ab28a7a7ea6158096b7a6"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
   depends_on "readline"
 
   uses_from_macos "sqlite"
   uses_from_macos "zlib"
+
+  # Fix EOF detection with openssl@3. Remove in the next release.
+  patch do
+    url "https://github.com/msteveb/jimtcl/commit/b0271cca8e335a1ebe4e3d6a8889bd4d7d5e30e6.patch?full_index=1"
+    sha256 "dbeeb8bb9a1174c4c0d44d8dafc1958994417014176c12d959daa8b31aa4b5b0"
+  end
 
   def install
     system "./configure", "--disable-debug",

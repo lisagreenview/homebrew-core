@@ -1,18 +1,19 @@
 class Libx11 < Formula
   desc "X.Org: Core X11 protocol client library"
   homepage "https://www.x.org/"
-  url "https://www.x.org/archive/individual/lib/libX11-1.7.2.tar.bz2"
-  sha256 "1cfa35e37aaabbe4792e9bb690468efefbfbf6b147d9c69d6f90d13c3092ea6c"
+  url "https://www.x.org/archive/individual/lib/libX11-1.8.2.tar.gz"
+  sha256 "f1bc56187bee0f830e1179ac5068ac93b78c51ace94eb27702ffb2efd116587b"
   license "MIT"
 
   bottle do
-    sha256 arm64_monterey: "48e179ebf398452e95cf2664973153f2f0f1f0d96690e1a65beefa0bac63277f"
-    sha256 arm64_big_sur:  "07000e94eab9193f9306fa2fd097ad8910e937c5573e77360d53bd9f9db64e7c"
-    sha256 monterey:       "279e4b31afc2771f59e2528dd795c2894732e786c07ecefc7cfc336e1ae6bed8"
-    sha256 big_sur:        "7aee5576a2669a20c9c0421a5afdce633130aeebe3f610c646f15dd5fe299f34"
-    sha256 catalina:       "d7dede7503227acecc6992b96b2c14472d704cf6a7c71d81efd9a8ea710ba089"
-    sha256 mojave:         "fc897d1f8a8619461f8e50cb7fe20682cd3021393cac7fd3ec94fa4c3c3ee7fd"
-    sha256 x86_64_linux:   "035f49996ae8031ba4531113482e789feb51abeb8877eb8c0681ea615ff8cd93"
+    sha256 arm64_ventura:  "996724436ae47440832ffe2caa9bec0d0f374f8885f83925453895fcfc80d8c2"
+    sha256 arm64_monterey: "8d08dd29849612785db12fd469c707b136328bdfd4115d79b6afdfc1b13c9b38"
+    sha256 arm64_big_sur:  "4448aa22e8118de5775caf8488b666a211b01f50085a418fbbbcbfed2d83e517"
+    sha256 ventura:        "7d62f3b406f3ac7fad944ce6f2faaa5a496139a69f657ab467d118c4df9183db"
+    sha256 monterey:       "cbaa4ea21135fa88c816263ea1d945e9b077be7c0fbe8ccca37ff924d9abb205"
+    sha256 big_sur:        "c408a64f5e19800a746125e1ca3bec69440cf053cfd2d5e041469fbf66d16b4f"
+    sha256 catalina:       "83b5c84a2f595ddb273b9eb9790109e542da3c21832df5cc6c90a1c328050389"
+    sha256 x86_64_linux:   "d90e3f7a7ad612243113e10a31b0f71880f742d9af9fb656219a53270bfdbf67"
   end
 
   depends_on "pkg-config" => :build

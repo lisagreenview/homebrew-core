@@ -1,8 +1,8 @@
 class Libxmlsec1 < Formula
   desc "XML security library"
   homepage "https://www.aleksey.com/xmlsec/"
-  url "https://www.aleksey.com/xmlsec/download/xmlsec1-1.2.33.tar.gz"
-  sha256 "26041d35a20a245ed5a2fb9ee075f10825664d274220cb5190340fa87a4d0931"
+  url "https://www.aleksey.com/xmlsec/download/xmlsec1-1.2.37.tar.gz"
+  sha256 "5f8dfbcb6d1e56bddd0b5ec2e00a3d0ca5342a9f57c24dffde5c796b2be2871c"
   license "MIT"
 
   livecheck do
@@ -11,12 +11,14 @@ class Libxmlsec1 < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "dec6fd5829e865122d129980ef2ed3744ca8bbf5bb8e20aeccbb7ca39a0ba6d5"
-    sha256 cellar: :any,                 arm64_big_sur:  "5f7287fd477e8c9db54ca60d3ba0baccbaaa8f1223c69b468c7c3f5cea51901c"
-    sha256 cellar: :any,                 monterey:       "f95fc9af05605a1746f83322b2772e6623a560184814971473f124da8c21e3fe"
-    sha256 cellar: :any,                 big_sur:        "fe86e0105c779a17c87ff23e9d676097f01bd6c29c0e8034e523bfa502c7f02f"
-    sha256 cellar: :any,                 catalina:       "12f5f73d58175419bf06ff8d0b93da1f47638a279659609e2e2afe29f1061d3a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3f9db3f53634ffdbcc8234968e3bce2c42a32f731625506777ac1831f43735df"
+    sha256 cellar: :any,                 arm64_ventura:  "26d6ebddf4e97431819583ad699228360886d81786b332084693d0ad34aa2c72"
+    sha256 cellar: :any,                 arm64_monterey: "66646e0a3c47fe21b5d6257d2940c1cbaddd68fd71845ae21eb34275b2913db4"
+    sha256 cellar: :any,                 arm64_big_sur:  "6520bff7f714071fc7a5925dc2335c5482ce59383386500e1f51680bf3e69850"
+    sha256 cellar: :any,                 ventura:        "15faa359429f324b4d18e49c70b0832cf93eb052ad0ef74ccddf1a2db0a4aad5"
+    sha256 cellar: :any,                 monterey:       "dfc4528593b38556559a49053f7b5e3a46ae07d844ad3412a65c22214624a932"
+    sha256 cellar: :any,                 big_sur:        "d428a24cc5c8165e84718292cd4a7a21519b1ce1f46c82ffff0bc27216b8a573"
+    sha256 cellar: :any,                 catalina:       "b67b572409b3d79387f621c9f28338d0ec99342477f50643ff3a6032b58133c6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a52005111565d460c6774d5c5be9c8a0db05e0a06dc8715b7c1f59ab4a66fcb0"
   end
 
   depends_on "pkg-config" => :build
@@ -24,6 +26,7 @@ class Libxmlsec1 < Formula
   depends_on "libgcrypt"
   depends_on "libxml2"
   depends_on "openssl@1.1"
+  uses_from_macos "libxslt"
 
   on_macos do
     depends_on xcode: :build
@@ -43,6 +46,10 @@ class Libxmlsec1 < Formula
             "--prefix=#{prefix}",
             "--disable-crypto-dl",
             "--disable-apps-crypto-dl",
+            "--with-nss=no",
+            "--with-nspr=no",
+            "--enable-mscrypto=no",
+            "--enable-mscng=no",
             "--with-openssl=#{Formula["openssl@1.1"].opt_prefix}"]
 
     system "./configure", *args

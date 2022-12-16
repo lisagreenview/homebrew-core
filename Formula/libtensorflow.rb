@@ -1,30 +1,40 @@
 class Libtensorflow < Formula
   desc "C interface for Google's OS library for Machine Intelligence"
   homepage "https://www.tensorflow.org/"
-  url "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.7.0.tar.gz"
-  sha256 "bb124905c7fdacd81e7c842b287c169bbf377d29c74c9dacc04f96c9793747bb"
+  url "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.11.0.tar.gz"
+  sha256 "99c732b92b1b37fc243a559e02f9aef5671771e272758aa4aec7f34dc92dac48"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any, big_sur:  "b583cc31728cb7dc71f9208059eb31a5e6555f8b6000e80fcfca9229720b9801"
-    sha256 cellar: :any, catalina: "9c2f522b11cfba7188e8b9f1ffd49c5853c748c0ce98af0132226c097cb754ba"
+    sha256 cellar: :any,                 arm64_ventura:  "6338d2b8b3783529d2b88bc1dd2952b7be6eeb47a4fb92046773538ddb42a52f"
+    sha256 cellar: :any,                 arm64_monterey: "6338d2b8b3783529d2b88bc1dd2952b7be6eeb47a4fb92046773538ddb42a52f"
+    sha256 cellar: :any,                 arm64_big_sur:  "f7bf9ae6bbb912322dbf159a429cf8d2c02a69499def33e0d50e5fc67a103a06"
+    sha256 cellar: :any,                 ventura:        "bda2efd536cf339b515c30bc2358087cdb0ec01b79c258e7287086f6013b060b"
+    sha256 cellar: :any,                 monterey:       "bda2efd536cf339b515c30bc2358087cdb0ec01b79c258e7287086f6013b060b"
+    sha256 cellar: :any,                 big_sur:        "8cbf67ceeaf31bafcd5f567ad4476b98ba7c2b13bb16ca4856a7e46f3e0a496b"
+    sha256 cellar: :any,                 catalina:       "0e659810b7c74403b61217c99c52a95e7e812f81d9395b916f2260e7b24586ba"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9388c60f0faab1e4cff146b63b8a7870250aa2109c6cef7c218cbf3e4ed08b67"
   end
 
-  depends_on "bazel" => :build
+  depends_on "bazelisk" => :build
   depends_on "numpy" => :build
-  depends_on "python@3.9" => :build
+  depends_on "python@3.10" => :build
 
-  resource "test-model" do
+  resource "homebrew-test-model" do
     url "https://github.com/tensorflow/models/raw/v1.13.0/samples/languages/java/training/model/graph.pb"
     sha256 "147fab50ddc945972818516418942157de5e7053d4b67e7fca0b0ada16733ecb"
   end
 
   def install
-    # Allow tensorflow to use current version of bazel
-    (buildpath / ".bazelversion").atomic_write Formula["bazel"].version
-
-    ENV["PYTHON_BIN_PATH"] = Formula["python@3.9"].opt_bin/"python3"
-    ENV["CC_OPT_FLAGS"] = "-march=native"
+    optflag = if Hardware::CPU.arm? && OS.mac?
+      "-mcpu=apple-m1"
+    elsif build.bottle?
+      "-march=#{Hardware.oldest_cpu}"
+    else
+      "-march=native"
+    end
+    ENV["CC_OPT_FLAGS"] = optflag
+    ENV["PYTHON_BIN_PATH"] = which("python3.10")
     ENV["TF_IGNORE_MAX_BAZEL_VERSION"] = "1"
     ENV["TF_NEED_JEMALLOC"] = "1"
     ENV["TF_NEED_GCP"] = "0"
@@ -46,11 +56,20 @@ class Libtensorflow < Formula
     ENV["TF_CONFIGURE_IOS"] = "0"
     system "./configure"
 
-    bazel_args =%W[
+    bazel_args = %W[
       --jobs=#{ENV.make_jobs}
       --compilation_mode=opt
-      --copt=-march=native
+      --copt=#{optflag}
+      --linkopt=-Wl,-rpath,#{rpath}
+      --verbose_failures
     ]
+    if OS.linux?
+      env_path = "#{HOMEBREW_PREFIX}/bin:/usr/bin:/bin"
+      bazel_args += %W[
+        --action_env=PATH=#{env_path}
+        --host_action_env=PATH=#{env_path}
+      ]
+    end
     targets = %w[
       tensorflow:libtensorflow.so
       tensorflow:install_headers
@@ -58,7 +77,7 @@ class Libtensorflow < Formula
       tensorflow/tools/graph_transforms:summarize_graph
       tensorflow/tools/graph_transforms:transform_graph
     ]
-    system "bazel", "build", *bazel_args, *targets
+    system Formula["bazelisk"].opt_bin/"bazelisk", "build", *bazel_args, *targets
 
     lib.install Dir["bazel-bin/tensorflow/*.so*", "bazel-bin/tensorflow/*.dylib*"]
     include.install "bazel-bin/tensorflow/include/tensorflow"
@@ -85,10 +104,10 @@ class Libtensorflow < Formula
         printf("%s", TF_Version());
       }
     EOS
-    system ENV.cc, "-L#{lib}", "-ltensorflow", "-o", "test_tf", "test.c"
+    system ENV.cc, "test.c", "-L#{lib}", "-ltensorflow", "-o", "test_tf"
     assert_equal version, shell_output("./test_tf")
 
-    resource("test-model").stage(testpath)
+    resource("homebrew-test-model").stage(testpath)
 
     summarize_graph_output = shell_output("#{bin}/summarize_graph --in_graph=#{testpath}/graph.pb 2>&1")
     variables_match = /Found \d+ variables:.+$/.match(summarize_graph_output)

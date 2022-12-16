@@ -1,8 +1,8 @@
 class Dropbear < Formula
   desc "Small SSH server/client for POSIX-based system"
   homepage "https://matt.ucc.asn.au/dropbear/dropbear.html"
-  url "https://matt.ucc.asn.au/dropbear/releases/dropbear-2020.81.tar.bz2"
-  sha256 "48235d10b37775dbda59341ac0c4b239b82ad6318c31568b985730c788aac53b"
+  url "https://matt.ucc.asn.au/dropbear/releases/dropbear-2022.83.tar.bz2"
+  sha256 "bc5a121ffbc94b5171ad5ebe01be42746d50aa797c9549a4639894a16749443b"
   license "MIT"
 
   livecheck do
@@ -11,14 +11,14 @@ class Dropbear < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c358a02ddb77666f1a523422e27f6805186a07d73cc5a20faf9b4fb134f64e29"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c8681650c799bb023d972a9cc0dc9c07fd0ce37fc6f801a4b990af151f364b3b"
-    sha256 cellar: :any_skip_relocation, monterey:       "b9215fe593f1f1e709c85c05493ef7c1738cb28317e96bcaa0033ed6a7c345af"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ba4a09e7636d2629bdc11bfc5a99f9cab29eb351fb52a05c82533c76c29c87c8"
-    sha256 cellar: :any_skip_relocation, catalina:       "9659a7bdf1475748311e5a1e768ffb01d9020ddf7e19c7f8412bb62dc883d817"
-    sha256 cellar: :any_skip_relocation, mojave:         "55f1c51b6d253bcf03c6957139fae7e3b4f4cdcbdc90416ff9bd63f98d21a26d"
-    sha256 cellar: :any_skip_relocation, high_sierra:    "59f3c740122b0f90b294d8b6e465cb9685b76617056cf9ae6554c221c681ed1c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4f09dda4db15d4d21a36d0bd9218c46bd78207c0670ff7756723a1f3e4efb7e5"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "dcec1a39e5a5e4690a070e3398328890065cdd2d62b879fe0c1998f33a8a2f51"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "2453eaa6d3db311eb4c1fbfbbc015b9092d41d480fb202de62db2a9b629304e4"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b8bb3270365893e046581536ca68247bc076db996792d6e12276076043dc353b"
+    sha256 cellar: :any_skip_relocation, ventura:        "3ccd7deee49ca74c101c186ba01eb2bfbcfc0584b73beabb937bf1b95fd367d3"
+    sha256 cellar: :any_skip_relocation, monterey:       "e2fb94f5c26f62ba93143a24ede11996f1c6ed95b471012284f8c03feb764a45"
+    sha256 cellar: :any_skip_relocation, big_sur:        "156af560dbd95b6265fc5eea98d8f8c543c3273033ee92f99bff4d0128cb01d4"
+    sha256 cellar: :any_skip_relocation, catalina:       "7aab9e4151373680365e78a39474493b6a381bc8a24ad55a6c232018fe4644f8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "936ac3ad8df5dae23a2ad663ceceeaa67c9b68862dab3d92d8d13235bf0d080a"
   end
 
   head do
@@ -27,6 +27,8 @@ class Dropbear < Formula
     depends_on "autoconf" => :build
     depends_on "automake" => :build
   end
+
+  uses_from_macos "libxcrypt"
 
   on_linux do
     depends_on "linux-pam"

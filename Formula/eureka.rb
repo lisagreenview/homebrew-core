@@ -1,24 +1,25 @@
 class Eureka < Formula
   desc "CLI tool to input and store your ideas without leaving the terminal"
   homepage "https://github.com/simeg/eureka"
-  url "https://github.com/simeg/eureka/archive/v1.8.1.tar.gz"
-  sha256 "d10d412c71dea51b4973c3ded5de1503a4c5de8751be5050de989ac08eb0455e"
+  url "https://github.com/simeg/eureka/archive/v2.0.0.tar.gz"
+  sha256 "e874549e1447ee849543828f49c4c1657f7e6cfe787deea13d44241666d4aaa0"
   license "MIT"
-  head "https://github.com/simeg/eureka.git"
+  head "https://github.com/simeg/eureka.git", branch: "master"
 
   bottle do
     rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "d7f5807419b0fafbbe4aaed2140567ec9fbd7cf4ad96c7da03f47638d8ad4109"
-    sha256 cellar: :any,                 arm64_big_sur:  "528bd9719bd743bbe9e496ca2c856983c8acdf89fbf4364a6a1a349c8560aff1"
-    sha256 cellar: :any,                 monterey:       "fc90de8c735e615872b18000a8af2ce4b5c9c30ea135d674dddae304c1955205"
-    sha256 cellar: :any,                 big_sur:        "3447e5073ee6dd2026b39fcc2dac86465806fa57a263127b92d672a142efcbfe"
-    sha256 cellar: :any,                 catalina:       "616a745506e35e1ab0a7645d7d122f204cbf94e292d2fc56958795a056af0a9a"
-    sha256 cellar: :any,                 mojave:         "998ed401c748a0916768a566ccf44e4295c56cd6f23a90b156087588f23e7e2c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ee46d57066b0a55284dcf9561ec1104133aa58bb3f1900bec1dbb2b94d14486a"
+    sha256 cellar: :any,                 arm64_ventura:  "f2270ec57c74b9bcef349049f9fc3818ddfd3c4c38884973ecfdf3926b66d172"
+    sha256 cellar: :any,                 arm64_monterey: "3a9a6d7a5b0a7e599f5704bb7729285836bb25978a586243e5fb78695c30a157"
+    sha256 cellar: :any,                 arm64_big_sur:  "861dfd095945e5600666a2ca79366b52df59a72cc27e0d25e6b10a60c5781066"
+    sha256 cellar: :any,                 ventura:        "07a730ffe6b8fa6b2ca028ae4ec07adbf04ff99f5246d69c1bac809469eb3d9c"
+    sha256 cellar: :any,                 monterey:       "37888fa43d99d9740479bf57078b60a87eaaf7f082f18a790bdf81df6fb4ce8e"
+    sha256 cellar: :any,                 big_sur:        "6b50c3a975f63a84f975c16b919f775ffb163d8b7c1d40f0219ee660d12f9f88"
+    sha256 cellar: :any,                 catalina:       "0e7559a426bc893f8c14aca3e9110465658a94a0fb7561264e05fcf3c8756096"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b8df396a1e2c9e87f093dfd44dafed480bd97ff2115beac25725d12d3d028439"
   end
 
   depends_on "rust" => :build
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   uses_from_macos "zlib"
 
@@ -31,12 +32,12 @@ class Eureka < Formula
   end
 
   test do
-    assert_match "eureka [FLAGS]", shell_output("#{bin}/eureka --help 2>&1")
+    assert_match "eureka [OPTIONS]", shell_output("#{bin}/eureka --help 2>&1")
 
     (testpath/".eureka/repo_path").write <<~EOS
       homebrew
     EOS
 
-    assert_match "homebrew/README.md: No such file or directory", pipe_output("#{bin}/eureka --view 2>&1")
+    assert_match "ERROR eureka > No such file or directory", pipe_output("#{bin}/eureka --view 2>&1")
   end
 end

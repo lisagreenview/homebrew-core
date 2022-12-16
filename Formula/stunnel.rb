@@ -1,8 +1,8 @@
 class Stunnel < Formula
   desc "SSL tunneling program"
   homepage "https://www.stunnel.org/"
-  url "https://www.stunnel.org/downloads/stunnel-5.60.tar.gz"
-  sha256 "c45d765b1521861fea9b03b425b9dd7d48b3055128c0aec673bba5ef9b8f787d"
+  url "https://www.stunnel.org/downloads/stunnel-5.67.tar.gz"
+  sha256 "3086939ee6407516c59b0ba3fbf555338f9d52f459bcab6337c0f00e91ea8456"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -11,17 +11,17 @@ class Stunnel < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "8f1162bf25fb40556bffe872eec87dbfa71b9fde8ae88f0424c79991dbac42ba"
-    sha256 cellar: :any,                 arm64_big_sur:  "bfd5b6175001e46acdb8751e59d5de7a13a1222fc09309e85a67f70aa35893db"
-    sha256 cellar: :any,                 monterey:       "d52bb3778c311966be44035870dd2179b566df6e979b00a4c607a1515421314d"
-    sha256 cellar: :any,                 big_sur:        "db1410a067d25b6286f78d2e8f78f49440afeeee469e0640014e487a1516cd5a"
-    sha256 cellar: :any,                 catalina:       "b05b0d7872c0ee97edf42d1e9acfe7cc52bc8f2ba3daa06064beee068029ccb3"
-    sha256 cellar: :any,                 mojave:         "f69c90ad1073fc0e2c485e6913d39178331ece8be30a737c9078ca152b1dfed0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b03b0098fe618d67cbfccaa6aa23d09b7d7f490e968f221122ebb2b4d14db3d0"
+    sha256 cellar: :any,                 arm64_ventura:  "6b2e1a1f0cd77b6ba502eda29afd41ed4206923d98d9e49a9e12ff3dade2be61"
+    sha256 cellar: :any,                 arm64_monterey: "b6f21a7a7aae8934324cf27798f14dbe6e6d12fc33355dcc787bee438c67734e"
+    sha256 cellar: :any,                 arm64_big_sur:  "bd42513cfb34768bede1f403a525264792e9a0154371444bff812fe1240fad42"
+    sha256 cellar: :any,                 ventura:        "cca3b8088572dfdd24f3c2e9b28f3c87bc2e2485ee219d04520f743c6bba1fd8"
+    sha256 cellar: :any,                 monterey:       "ec23a90b002b6581abc3392fc1831ea1caaca2babaf325372dbb7a0f36a9cf6e"
+    sha256 cellar: :any,                 big_sur:        "17c6e31bdb6f96cf33b232654f401b60bf03eac5a2bf1b3874b36fa700bd961b"
+    sha256 cellar: :any,                 catalina:       "c568c4232dbbf3af31f3d93c15b9f8a4f8a1ff7df938b67f51809cde275689e8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f443ea4d37bfee124aac63d4160632b313c56e322751dc2156545cf2354fb1f7"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -32,14 +32,14 @@ class Stunnel < Formula
                           "--mandir=#{man}",
                           "--disable-libwrap",
                           "--disable-systemd",
-                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}"
+                          "--with-ssl=#{Formula["openssl@3"].opt_prefix}"
     system "make", "install"
 
     # This programmatically recreates pem creation used in the tools Makefile
     # which would usually require interactivity to resolve.
     cd "tools" do
       system "dd", "if=/dev/urandom", "of=stunnel.rnd", "bs=256", "count=1"
-      system "#{Formula["openssl@1.1"].opt_bin}/openssl", "req",
+      system "#{Formula["openssl@3"].opt_bin}/openssl", "req",
         "-new", "-x509",
         "-days", "365",
         "-rand", "stunnel.rnd",

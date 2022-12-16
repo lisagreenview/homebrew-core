@@ -1,29 +1,32 @@
 class Podofo < Formula
   desc "Library to work with the PDF file format"
   homepage "https://podofo.sourceforge.io"
-  url "https://downloads.sourceforge.net/project/podofo/podofo/0.9.7/podofo-0.9.7.tar.gz"
-  sha256 "7cf2e716daaef89647c54ffcd08940492fd40c385ef040ce7529396bfadc1eb8"
+  url "https://downloads.sourceforge.net/project/podofo/podofo/0.9.8/podofo-0.9.8.tar.gz"
+  sha256 "5de607e15f192b8ad90738300759d88dea0f5ccdce3bf00048a0c932bc645154"
   license all_of: ["LGPL-2.0-only", "GPL-2.0-only"]
+  revision 1
   head "svn://svn.code.sf.net/p/podofo/code/podofo/trunk"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "255cf94f4a6c121a443daf166bb604515134fdc49cbe397246363efa7b196310"
-    sha256 cellar: :any,                 arm64_big_sur:  "3e52626a449c28973ad35209a5ce61969742879f1f88fe9cad56b4a93add49a1"
-    sha256 cellar: :any,                 monterey:       "8d4025cd6338c2d6f4b5d0f2801f0c667072ef64cef470a6323f3ca276fdedfb"
-    sha256 cellar: :any,                 big_sur:        "f9078444b3bfc33019cc26e01e07d636522553d51e3b415ebf16516f7802f08f"
-    sha256 cellar: :any,                 catalina:       "845cb7626c32ac0b2202acb6f2c42313b210b1bf281afabeec41292a86bca92c"
-    sha256 cellar: :any,                 mojave:         "f7e69aa8d5061863c85a0f5208781a8f42f31e38add04136cb9987a8c3477da9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0521b30dffbb805f3fcbb42e96e67c78bf114741b5b4d91badd5c10f86d99513"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "85846bbe1ffd8c425174f29a50fe278d17ec7561f9c73afffcb7aa25035a40a8"
+    sha256 cellar: :any,                 arm64_monterey: "3f6f31c67de44012c99d67c8fd199a365f2482b4e6f5a2cf3ec835c3f16b148c"
+    sha256 cellar: :any,                 arm64_big_sur:  "c0173e0e2f363efe2f03aaef8677310f52f994966f3665814ca0dedaddd78d36"
+    sha256 cellar: :any,                 ventura:        "68ff0b120ed6e8cc5e493e0fb1fc07b7cbfb877b550b153036de612e9091782b"
+    sha256 cellar: :any,                 monterey:       "db9da10d40210749d99357f95176c5a1a5766c703262094af6b030f5e670de3f"
+    sha256 cellar: :any,                 big_sur:        "e16ce776142f7f2da35b549805c0a49e2a61f40b95b0a73357061440373ac0b5"
+    sha256 cellar: :any,                 catalina:       "0ff7fc07f1044393eb33ef3da8c0ac2f4eeda765e32172dfcf4def7818e08fe1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c27f3f2155a17424c12477cb8e084485f141a7d1b903b7a46a94e6e6253caa3d"
   end
 
   depends_on "cmake" => :build
   depends_on "fontconfig"
   depends_on "freetype"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libidn"
   depends_on "libpng"
   depends_on "libtiff"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
     args = std_cmake_args + %W[
@@ -42,10 +45,9 @@ class Podofo < Formula
       -DCMAKE_CXX_STANDARD_REQUIRED=ON
     ]
 
-    mkdir "build" do
-      system "cmake", "..", *args
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

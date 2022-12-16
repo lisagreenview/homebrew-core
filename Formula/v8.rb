@@ -2,10 +2,8 @@ class V8 < Formula
   desc "Google's JavaScript engine"
   homepage "https://github.com/v8/v8/wiki"
   # Track V8 version from Chrome stable: https://omahaproxy.appspot.com
-  # revert back to GitHub mirror tar.gz archives once it's synced again
-  url "https://chromium.googlesource.com/v8/v8.git",
-      tag:      "9.6.180.12",
-      revision: "7a8373f18e2327d7dc52600fc9e52cc2f5b6abf6"
+  url "https://github.com/v8/v8/archive/10.6.194.18.tar.gz"
+  sha256 "e852d29e06ab28ba6b97dcf0a401ccab8b2dde0d7f0c91fa487f594d57d641c2"
   license "BSD-3-Clause"
 
   livecheck do
@@ -14,16 +12,18 @@ class V8 < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "e7cd6b0efcc6d7eb1a4b57d2d4a4c4107da8ef9098385d28bad396dac30e2273"
-    sha256 cellar: :any,                 arm64_big_sur:  "9496646bef7628aead9c18cf20c31e791ad0a3fa7e2552845fa642000f9551f9"
-    sha256 cellar: :any,                 monterey:       "980388cd772387826fe7f1073dfab708f9692aade7c86184368d5139e3518eb2"
-    sha256 cellar: :any,                 big_sur:        "dffe46546bcfbaf327339979781e14e24b5a0d4a488648af722ecb425d8615cf"
-    sha256 cellar: :any,                 catalina:       "70d23194cacb0fd1ee18e2749c2131e4e578d4d0ac239b37be4c74aa7fc576f7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "042ce95864d48640c50b1dc425a99a7f765ebc61c35d312327402499f0c93ac3"
+    sha256 cellar: :any,                 arm64_ventura:  "491653864182a5fa462689c80815ab2d40bb73cb7c7c9a9a3d01f6b96801d2a6"
+    sha256 cellar: :any,                 arm64_monterey: "5fef057a6447ffa2d2ad9cd362c5c64c48d5ed7a8432834df5dca3becab4a575"
+    sha256 cellar: :any,                 arm64_big_sur:  "217d011ef57acee2c6091764a5bee4cfa61fe930e335f9ba565abb12cd944c44"
+    sha256 cellar: :any,                 ventura:        "431df01e27cb64e2f1db2cb471f85d74bebfa137a91b8e4aab7d60aca9bda62b"
+    sha256 cellar: :any,                 monterey:       "c4a343e6eac3b8f24d65836d8ba9f05a20dd8b3b3345fd6d17767100c0dd8418"
+    sha256 cellar: :any,                 big_sur:        "2a5b8a521fa1c976e9b6a951f1b26593a3d9efca6ac16d971e74a3ca70a45e82"
+    sha256 cellar: :any,                 catalina:       "fc5affb79c309a261178f6ff0984dab6b8251d2be80d2a37a2db68d907e1de9f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8939b81baa665cddf54ed9097eb9b755c27a4ae079474bc57a8dcfd778bc3644"
   end
 
   depends_on "ninja" => :build
-  depends_on "python@3.9" => :build
+  depends_on "python@3.10" => :build
 
   on_macos do
     depends_on "llvm" => :build
@@ -32,43 +32,42 @@ class V8 < Formula
 
   on_linux do
     depends_on "pkg-config" => :build
-    depends_on "gcc"
     depends_on "glib"
   end
 
   fails_with gcc: "5"
 
   # Look up the correct resource revisions in the DEP file of the specific releases tag
-  # e.g. for CIPD dependency gn: https://chromium.googlesource.com/v8/v8.git/+/refs/tags/9.6.180.12/DEPS#52
+  # e.g. for CIPD dependency gn: https://chromium.googlesource.com/v8/v8.git/+/refs/tags/10.6.194.17/DEPS#46
   resource "gn" do
     url "https://gn.googlesource.com/gn.git",
-        revision: "0153d369bbccc908f4da4993b1ba82728055926a"
+        revision: "0bcd37bd2b83f1a9ee17088037ebdfe6eab6d31a"
   end
 
-  # e.g.: https://chromium.googlesource.com/v8/v8.git/+/refs/tags/9.6.180.12/DEPS#93
+  # e.g.: https://chromium.googlesource.com/v8/v8.git/+/refs/tags/10.6.194.17/DEPS#92
   resource "v8/base/trace_event/common" do
     url "https://chromium.googlesource.com/chromium/src/base/trace_event/common.git",
-        revision: "68d816952258c9d817bba656ee2664b35507f01b"
+        revision: "2ba7a48ca6167ee8ef311a7f3bc60b5e5cf5ee79"
   end
 
   resource "v8/build" do
     url "https://chromium.googlesource.com/chromium/src/build.git",
-        revision: "ebad8533842661f66b9b905e0ee9890a32f628d5"
+        revision: "339f8c652787781e6dd39ce0624c1a012f69ece8"
   end
 
   resource "v8/third_party/googletest/src" do
     url "https://chromium.googlesource.com/external/github.com/google/googletest.git",
-        revision: "3b49be074d5c1340eeb447e6a8e78427051e675a"
+        revision: "af29db7ec28d6df1c7f0f745186884091e602e07"
   end
 
   resource "v8/third_party/icu" do
     url "https://chromium.googlesource.com/chromium/deps/icu.git",
-        revision: "3f443830bd52d3aa5fab3c1aa2b6d0848bb5039d"
+        revision: "b3070c52557323463e6b9827e2343e60e1b91f85"
   end
 
   resource "v8/third_party/jinja2" do
     url "https://chromium.googlesource.com/chromium/src/third_party/jinja2.git",
-        revision: "6db8da1615a13fdfab925688bc4bf2eb394a73af"
+        revision: "ee69aa00ee8536f61db6a451f3858745cf587de6"
   end
 
   resource "v8/third_party/markupsafe" do
@@ -78,7 +77,7 @@ class V8 < Formula
 
   resource "v8/third_party/zlib" do
     url "https://chromium.googlesource.com/chromium/src/third_party/zlib.git",
-        revision: "dfa96e81458fb3b39676e45f7e9e000dff789b05"
+        revision: "8d1d3e341948009ed8dc807a545204e7a1854c33"
   end
 
   def install
@@ -93,7 +92,7 @@ class V8 < Formula
     # Build gn from source and add it to the PATH
     (buildpath/"gn").install resource("gn")
     cd "gn" do
-      system "python3", "build/gen.py"
+      system "python3.10", "build/gen.py"
       system "ninja", "-C", "out/", "gn"
     end
     ENV.prepend_path "PATH", buildpath/"gn/out"
@@ -115,6 +114,7 @@ class V8 < Formula
       clang_use_chrome_plugins:     false, # disable the usage of Google's custom clang plugins
       use_custom_libcxx:            false, # uses system libc++ instead of Google's custom one
       treat_warnings_as_errors:     false, # ignore not yet supported clang argument warnings
+      use_lld:                      false, # upstream use LLD but this leads to build failure on ARM
     }
 
     if OS.linux?
@@ -127,10 +127,8 @@ class V8 < Formula
       gn_args[:use_rbe] = false
     end
 
-    # use clang from homebrew llvm formula, because the system clang is unreliable
-    ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["llvm"].opt_lib # but link against system libc++
     # Make sure private libraries can be found from lib
-    ENV.prepend "LDFLAGS", "-Wl,-rpath,#{libexec}"
+    ENV.prepend "LDFLAGS", "-Wl,-rpath,#{rpath(target: libexec)}"
 
     # Transform to args string
     gn_args_string = gn_args.map { |k, v| "#{k}=#{v}" }.join(" ")
@@ -141,15 +139,20 @@ class V8 < Formula
 
     # Install libraries and headers into libexec so d8 can find them, and into standard directories
     # so other packages can find them and they are linked into HOMEBREW_PREFIX
-    (libexec/"include").install Dir["include/*"]
-    include.install_symlink Dir[libexec/"include/*"]
+    libexec.install "include"
 
-    libexec.install Dir["out.gn/d8", "out.gn/icudtl.dat"]
+    # Make sure we don't symlink non-headers into `include`.
+    header_files_and_directories = (libexec/"include").children.select do |child|
+      (child.extname == ".h") || child.directory?
+    end
+    include.install_symlink header_files_and_directories
+
+    libexec.install "out.gn/d8", "out.gn/icudtl.dat"
     bin.write_exec_script libexec/"d8"
 
-    libexec.install Dir["out.gn/#{shared_library("*")}"]
-    lib.install_symlink Dir[libexec/shared_library("libv8*")]
-    rm Dir[lib/"*.TOC"] if OS.linux? # Remove symlinks to .so.TOC text files
+    libexec.install Pathname.glob("out.gn/#{shared_library("*")}")
+    lib.install_symlink libexec.glob(shared_library("libv8*"))
+    lib.glob("*.TOC").map(&:unlink) if OS.linux? # Remove symlinks to .so.TOC text files
   end
 
   test do
@@ -169,8 +172,9 @@ class V8 < Formula
     EOS
 
     # link against installed libc++
-    system ENV.cxx, "-std=c++14", "test.cpp",
-      "-I#{include}",
-      "-L#{lib}", "-lv8", "-lv8_libplatform"
+    system ENV.cxx, "-std=c++17", "test.cpp",
+                    "-I#{include}", "-L#{lib}",
+                    "-Wl,-rpath,#{libexec}",
+                    "-lv8", "-lv8_libplatform"
   end
 end

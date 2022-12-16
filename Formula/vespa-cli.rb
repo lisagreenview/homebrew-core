@@ -1,8 +1,8 @@
 class VespaCli < Formula
   desc "Command-line tool for Vespa.ai"
   homepage "https://vespa.ai"
-  url "https://github.com/vespa-engine/vespa/archive/v7.501.17.tar.gz"
-  sha256 "d4d5ebd63eb0fcf44fac6d24f627e09134a8a3f9dbf6c48d51be10339a8d9d58"
+  url "https://github.com/vespa-engine/vespa/archive/v8.98.34.tar.gz"
+  sha256 "d945c4dae1bcb4e0cd576123757bf870d2f5f458e80e213c98fbccdda000bb01"
   license "Apache-2.0"
 
   livecheck do
@@ -12,12 +12,13 @@ class VespaCli < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ff52d148b93f6130d08d7c764bbae7d66c0a4bcb2c08f5975b1fafa062cc633e"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6a5ac85f70a7aa4a09377be7bfd0d29225678bb4d8ac745fb0f203e0132da72e"
-    sha256 cellar: :any_skip_relocation, monterey:       "35a7c7ffc2314be5fe2522d7f06b45903bb3dd7b354b1db09c4b3fad534e5272"
-    sha256 cellar: :any_skip_relocation, big_sur:        "c20fed9410e4d4c24ed1b5ac481e6fea034880f95acffe5af002684873f38451"
-    sha256 cellar: :any_skip_relocation, catalina:       "8809b9cb79b9c918203ad910003b4505e58fad36dd22b80273c8fa0ada7bc16b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b20dda79a4fa541d7ffa8d4e9e12e8b930ee8a961fa0cc807ca49f72647c1f8f"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e2f8966f4c097e0947a41276a20f3258b3bfb4460b0a4a3dc75980360ce8db54"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "75684a0d3ec7aab1f987a4d825495c7adbe4537f4460df8d36c859fea0781d62"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6494f839cadedbe8646e1c462bf1568ec40248973d7155de1906594884957670"
+    sha256 cellar: :any_skip_relocation, ventura:        "65171358bfc078ec77149db286a98fc673fe737e163a9f2ecd25d2417fadbdee"
+    sha256 cellar: :any_skip_relocation, monterey:       "a43b25bcd3815c92e03fae0e63056fa423d414c0ac07d6cc7d787aac71d10e48"
+    sha256 cellar: :any_skip_relocation, big_sur:        "fb9251f6740239759a16708fd22a93c0dc5c57a659a7725ff42970f222c0e2df"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fcc7e0443371550ad873aa196775f8a7f20f6dccff4152d7caf780731b48afbb"
   end
 
   depends_on "go" => :build
@@ -29,15 +30,13 @@ class VespaCli < Formula
       end
       bin.install "bin/vespa"
       man1.install Dir["share/man/man1/vespa*.1"]
-      (bash_completion/"vespa").write Utils.safe_popen_read(bin/"vespa", "completion", "bash")
-      (fish_completion/"vespa.fish").write Utils.safe_popen_read(bin/"vespa", "completion", "fish")
-      (zsh_completion/"_vespa").write Utils.safe_popen_read(bin/"vespa", "completion", "zsh")
+      generate_completions_from_executable(bin/"vespa", "completion", base_name: "vespa")
     end
   end
 
   test do
     ENV["VESPA_CLI_HOME"] = testpath
-    assert_match "vespa version #{version}", shell_output("#{bin}/vespa version")
+    assert_match "Vespa CLI version #{version}", shell_output("#{bin}/vespa version")
     doc_id = "id:mynamespace:music::a-head-full-of-dreams"
     assert_match "Error: Request failed", shell_output("#{bin}/vespa document get #{doc_id} 2>&1", 1)
     system "#{bin}/vespa", "config", "set", "target", "cloud"

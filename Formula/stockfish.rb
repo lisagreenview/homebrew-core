@@ -1,8 +1,8 @@
 class Stockfish < Formula
   desc "Strong open-source chess engine"
   homepage "https://stockfishchess.org/"
-  url "https://github.com/official-stockfish/Stockfish/archive/sf_14.1.tar.gz"
-  sha256 "11d71018af47ba047175f846be72d8d9878df698e9b5d708ab158cf530633600"
+  url "https://github.com/official-stockfish/Stockfish/archive/sf_15.1.tar.gz"
+  sha256 "d4272657905319328294355973faee40a8c28e3eecb0e7b266ed34ff33383b76"
   license "GPL-3.0-only"
   head "https://github.com/official-stockfish/Stockfish.git", branch: "master"
 
@@ -12,19 +12,16 @@ class Stockfish < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ef5e55e732a950acb837ea3eb4adfac3fdaa2b0e1ee282d70d5f1eb2c883cc6a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "df0bfa47fc470ecde1d715f7ca949c3fd77a903f93a8eea9dba4b5a106eafbb2"
-    sha256 cellar: :any_skip_relocation, monterey:       "bed614a1f3d7d6b9ea90bd3fdc5f6186de9de856a6468b70547a5489c5adb753"
-    sha256 cellar: :any_skip_relocation, big_sur:        "11a90a078e9e3ecf881fb616d254f6ee9e921e03f382018f524d34cf09c1946f"
-    sha256 cellar: :any_skip_relocation, catalina:       "a7d63b4cde1d25c2467461e0410570c7c66c9cf0285e17f13791ce26e199f402"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "34ab8d99e0e5948551a9bea72fe37b8d6574890c0c90e84ce4a02121ae4311ac"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "53fa3f44104117cbf23416b030a53a63fb546470f41db2d3f5e8555cd2c94fe4"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e941443af58f837b53dfe7c48759754c02dfe37a7a61ac1639548efee41e8cb1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4737e766bab91fd04b9bb488f957143697287f4d21bfcdc92669109acaf0856b"
+    sha256 cellar: :any_skip_relocation, ventura:        "d3f123462496fac8824d12c3bdfbf0b8144063ff1884a7626b03e52d59484f9d"
+    sha256 cellar: :any_skip_relocation, monterey:       "e6190eb317bc6406b693e5c3f1a0536956f3616a6c65d99d8274005e8478b17a"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f2481ea1063c7d058c998b291897eab347c7bc59e14532664031836d94068653"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3eaf9bdabb2d9a7965ed16db5c39984f6a301a728600066042b937b86e764465"
   end
 
-  on_linux do
-    depends_on "gcc" # For C++17
-  end
-
-  fails_with gcc: "5"
+  fails_with gcc: "5" # For C++17
 
   def install
     arch = Hardware::CPU.arm? ? "apple-silicon" : "x86-64-modern"

@@ -3,21 +3,25 @@ class Pywhat < Formula
 
   desc "🐸 Identify anything: emails, IP addresses, and more 🧙"
   homepage "https://github.com/bee-san/pyWhat"
-  url "https://files.pythonhosted.org/packages/2a/fe/bcc4a456b49980791c2522ccb07c4d58258a38221018e1d989a6ac2da130/pywhat-5.0.0.tar.gz"
-  sha256 "03a47951ee0bc50c2d55fafd6693a54c4dd1f8dce834ea6587b0305ec3d3059e"
+  url "https://files.pythonhosted.org/packages/ae/31/57bb23df3d3474c1e0a0ae207f8571e763018fa064823310a76758eaef81/pywhat-5.1.0.tar.gz"
+  sha256 "8a6f2b3060f5ce9808802b9ca3eaf91e19c932e4eaa03a4c2e5255d0baad85c4"
   license "MIT"
+  revision 1
   head "https://github.com/bee-san/pyWhat.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "d41a324b9fb081caeb2f00123dfc792ab6fa1e9c5bb0dfbb5217ecca08461494"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "922f5c671360e9194d6db373c66b4dbee61ea0808146a8d19a51b085fc7e6916"
-    sha256 cellar: :any_skip_relocation, monterey:       "39f643dee920b765eef26aa0c48a712698321bf3506b51575ac8a156a005be91"
-    sha256 cellar: :any_skip_relocation, big_sur:        "0d05863a537b8c854d38cb45d3d9b7b3463e1268cc5ceba9f25e8437b58dac2f"
-    sha256 cellar: :any_skip_relocation, catalina:       "e8b46ef709fb70dad845cd57abbbc56603c23108de4a459485792b62fedb1ec4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0097a14d0dfedd15ad7fa2a156080dbe69975b207211a658153f33639c0ef236"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "480ba6a8c42429fac58f689d10953189fafc5e6d88af1c89cf40b1cf9615206d"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "dac74f058deb4625e95ac54d69abd24d2070d5e661bc07037706d330f88fac05"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "696e78d8044c155ad0953148b89a7e8d0f89c385b73452a0129b8db3ac8737e5"
+    sha256 cellar: :any_skip_relocation, ventura:        "a1843a509d2a5357beef1cae3b19387269868ed276d743520b94ba799c724fde"
+    sha256 cellar: :any_skip_relocation, monterey:       "3c7fa1694ce65ed22d9aeb7ef7e853f06094049c2a2af5b0d04507ee452cccc0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "97bfac5197c7b3f4af650b1862b8e3675797fecb70568154488ca27bf47aabb3"
+    sha256 cellar: :any_skip_relocation, catalina:       "11521a3f937f546818b64f33f369d6a748056853ce71f32aff13fdf0246fe938"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e175c03515ec4cb1c538c1989cabbc52686ac198969c4d545a218ef6be190808"
   end
 
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "six"
 
   resource "click" do
@@ -26,8 +30,8 @@ class Pywhat < Formula
   end
 
   resource "colorama" do
-    url "https://files.pythonhosted.org/packages/1f/bb/5d3246097ab77fa083a61bd8d3d527b7ae063c7d8e8671b1cf8c4ec10cbe/colorama-0.4.4.tar.gz"
-    sha256 "5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"
+    url "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz"
+    sha256 "08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"
   end
 
   resource "commonmark" do
@@ -36,13 +40,13 @@ class Pywhat < Formula
   end
 
   resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/b7/b3/5cba26637fe43500d4568d0ee7b7362de1fb29c0e158d50b4b69e9a40422/Pygments-2.10.0.tar.gz"
-    sha256 "f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"
+    url "https://files.pythonhosted.org/packages/e0/ef/5905cd3642f2337d44143529c941cc3a02e5af16f0f65f81cbef7af452bb/Pygments-2.13.0.tar.gz"
+    sha256 "56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"
   end
 
   resource "rich" do
-    url "https://files.pythonhosted.org/packages/4e/fd/5d40b0363467f8c87d5f5f551b7b431e234bff2becf959daab453f9d7795/rich-10.12.0.tar.gz"
-    sha256 "83fb3eff778beec3c55201455c17cccde1ccdf66d5b4dade8ef28f56b50c4bd4"
+    url "https://files.pythonhosted.org/packages/74/c3/e55ebdd66540503cee29cd3bb18a90bcfd5587a0cf3680173c368be56093/rich-10.16.2.tar.gz"
+    sha256 "720974689960e06c2efdb54327f8bf0cdbdf4eae4ad73b6c94213cad405c371b"
   end
 
   def install

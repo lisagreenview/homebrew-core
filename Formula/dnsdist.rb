@@ -1,8 +1,8 @@
 class Dnsdist < Formula
   desc "Highly DNS-, DoS- and abuse-aware loadbalancer"
   homepage "https://www.dnsdist.org/"
-  url "https://downloads.powerdns.com/releases/dnsdist-1.6.1.tar.bz2"
-  sha256 "29040a43982ae1ad5b7313f081e26519ab3a58af6bced438311da3a65370a3a5"
+  url "https://downloads.powerdns.com/releases/dnsdist-1.7.3.tar.bz2"
+  sha256 "7eaf6fac2f26565c5d8658d42a213799e05f4d3bc68e7c716e7174df41315886"
   license "GPL-2.0-only"
 
   livecheck do
@@ -11,12 +11,14 @@ class Dnsdist < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "7d06f0eba9c36eec1d240c27d38dd00041d75142ea0e41c310036bbcc11f0296"
-    sha256 arm64_big_sur:  "869de3f18ef4fd38bf91b7c1c41d38c67e5f83bf58fd891f3360549c3b6523d3"
-    sha256 monterey:       "d5d75f9ecba7ded160def73c4d5af60a864a0b717a24126aa04d28c6bbcbbe7d"
-    sha256 big_sur:        "977b8f7e4fc0869f95b4cbee33446117eff314802034a2320523d8aefbbaf51e"
-    sha256 catalina:       "6701dd21d4fee82fa13705db5f4280bb63d5c7087fee38bdcb05b338fdf6556e"
-    sha256 mojave:         "13d58a2f2ff183ae418825f54c454bf960bd9dddc6d357ce5c08025f7d1c23be"
+    sha256 cellar: :any,                 arm64_ventura:  "b2618d623a6a288fcbb58d54ec068917b7191e80a870f6accc0427bc3fe32384"
+    sha256 cellar: :any,                 arm64_monterey: "abfa99eee8c4be2d34e9ffd41a84c8e65c6587370da052b77e893b0210388d8a"
+    sha256 cellar: :any,                 arm64_big_sur:  "1525cbf43df195c3646f11dd414e9e1c406bd022745f10cbe0db89767cface3d"
+    sha256 cellar: :any,                 ventura:        "e808a27eaf447b30beb6bdf7df4966c8e689314f12fada22301ecd7111b271d6"
+    sha256 cellar: :any,                 monterey:       "d45fd758a8dc3aa9c5853dda842ac3d73f1b51a915dc23ff20787933b9d532c5"
+    sha256 cellar: :any,                 big_sur:        "ee36153f8036513e45a536cf0b5acf442707e42eb5800a430680d185cbd80cbe"
+    sha256 cellar: :any,                 catalina:       "3156bb8c2786805c491b7e8b0b9c5bfc241403edd546fbb86df0b70f3999dfc7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "601cad64e21633e94fac8e83de349e9306853496539863486c8b272fa03fedab"
   end
 
   depends_on "boost" => :build
@@ -25,17 +27,20 @@ class Dnsdist < Formula
   depends_on "fstrm"
   depends_on "h2o"
   depends_on "libsodium"
-  depends_on "luajit-openresty"
+  depends_on "luajit"
   depends_on "openssl@1.1"
   depends_on "protobuf"
   depends_on "re2"
 
   uses_from_macos "libedit"
 
-  def install
-    # error: unknown type name 'mach_port_t'
-    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra
+  on_linux do
+    depends_on "linux-headers@5.16" => :build
+  end
 
+  fails_with gcc: "5"
+
+  def install
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",

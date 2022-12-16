@@ -4,7 +4,7 @@ class Librttopo < Formula
   url "https://git.osgeo.org/gitea/rttopo/librttopo/archive/librttopo-1.1.0.tar.gz"
   sha256 "2e2fcabb48193a712a6c76ac9a9be2a53f82e32f91a2bc834d9f1b4fa9cd879f"
   license "GPL-2.0-or-later"
-  head "https://git.osgeo.org/gitea/rttopo/librttopo.git"
+  head "https://git.osgeo.org/gitea/rttopo/librttopo.git", branch: "master"
 
   livecheck do
     url :head
@@ -12,8 +12,10 @@ class Librttopo < Formula
   end
 
   bottle do
+    sha256 cellar: :any,                 arm64_ventura:  "8e6b9b8c094d303209903b45c752ee33d4463751af18871da3f23cc960d779ce"
     sha256 cellar: :any,                 arm64_monterey: "9eee7c1b207b85c576f61e416c507d7b58d657f4d9e314e26ff3a964066965a3"
     sha256 cellar: :any,                 arm64_big_sur:  "531ac2ca2e4247da1ebdacac77cbd68faaf5ea5935608de9ff842ae21aa18ce0"
+    sha256 cellar: :any,                 ventura:        "defbee65cdb51949c0d48bf62f035b55b7c148f5780478f46a3fbba47e49e382"
     sha256 cellar: :any,                 monterey:       "2eb9b1d4133a764edab33bd122c2d7326b95f983edbbb4cea9bec3888be3885f"
     sha256 cellar: :any,                 big_sur:        "59068843a454371abc25ad9421771eb2770febfaa00d41e1527476f4cbfdb05b"
     sha256 cellar: :any,                 catalina:       "9512f32068f310fc02c082828e4ebac85a698ef69f370243aa00a5b873569319"

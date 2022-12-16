@@ -1,8 +1,8 @@
 class Qca < Formula
   desc "Qt Cryptographic Architecture (QCA)"
   homepage "https://userbase.kde.org/QCA"
-  url "https://download.kde.org/stable/qca/2.3.4/qca-2.3.4.tar.xz"
-  sha256 "6b695881a7e3fd95f73aaee6eaeab96f6ad17e515e9c2b3d4b3272d7862ff5c4"
+  url "https://download.kde.org/stable/qca/2.3.5/qca-2.3.5.tar.xz"
+  sha256 "91f7d916ab3692bf5991f0a553bf8153161bfdda14bd005d480a2b4e384362e8"
   license "LGPL-2.1-or-later"
   head "https://invent.kde.org/libraries/qca.git", branch: "master"
 
@@ -12,11 +12,14 @@ class Qca < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "1078397c4e720750cfe4458356fd1d3d60b8d14c055fee9b485285b0ddae497c"
-    sha256 cellar: :any, arm64_big_sur:  "3a2f700c9fbc3f1cdb941f8547345415a312397411f1ec1df5b2867a8f139955"
-    sha256 cellar: :any, big_sur:        "8049ff19056de9b02f71ab6bcda1cee91941d7bc0d4db3a17a6039b786470ae5"
-    sha256 cellar: :any, catalina:       "ac7fc8b88014e339d556e136f73c8db0246bef6ae65abe15c8f13858c8bd95b1"
-    sha256 cellar: :any, mojave:         "fc6386d75f4474fecc8710d99887a4f6c81dace19bd5eddaac5b20270664b0ea"
+    sha256 cellar: :any,                 arm64_ventura:  "67d5097b20c620a623943308de5f36121a03b5a1c8c337a0f13d845d5a97f4a4"
+    sha256 cellar: :any,                 arm64_monterey: "72c68247c8a7073dd64124a693f5ed7322ad2814864d400318538032b9914a77"
+    sha256 cellar: :any,                 arm64_big_sur:  "3f5be21bda3c7d6c83de3a970d8973fa72de6e9e59a8a4147f943dced7205784"
+    sha256 cellar: :any,                 ventura:        "aa9f0abfbd15d417c8c0330d7691478222c414ad12395ad2e93e8bcc5e2a3f34"
+    sha256 cellar: :any,                 monterey:       "daf1cd48fba9f474cd6ff76965d3b7fc7147a2ea070a07a116f698dbc9add316"
+    sha256 cellar: :any,                 big_sur:        "d3941047481b3790b96c631c18693c5e81e15ba74478f2c242df01bd43b1ea95"
+    sha256 cellar: :any,                 catalina:       "ddfac4f0f08816d6c2f0f10b9b1b22001e21f18cf9a952852d9b8caf6511e0e8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f89b94e7bbf13f16553a66aa0e054782d8002b2315315c2fa11e29d20d15ea45"
   end
 
   depends_on "cmake" => :build
@@ -28,6 +31,8 @@ class Qca < Formula
   depends_on "openssl@1.1"
   depends_on "pkcs11-helper"
   depends_on "qt@5"
+
+  fails_with gcc: "5"
 
   def install
     args = std_cmake_args

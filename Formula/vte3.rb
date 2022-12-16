@@ -1,17 +1,18 @@
 class Vte3 < Formula
   desc "Terminal emulator widget used by GNOME terminal"
-  homepage "https://developer.gnome.org/vte/"
-  url "https://download.gnome.org/sources/vte/0.64/vte-0.64.2.tar.xz"
-  sha256 "2b3c820b65a667c1d8859ba20478be626d1519cc3159dac25f703330c6d07e18"
+  homepage "https://wiki.gnome.org/Apps/Terminal/VTE"
+  url "https://download.gnome.org/sources/vte/0.70/vte-0.70.2.tar.xz"
+  sha256 "4d15b4380de3f564d57eabd006389c407c705df5b0c70030fdcc24971a334d80"
   license "LGPL-2.0-or-later"
 
   bottle do
-    sha256 arm64_big_sur: "805b98e4a5b77ac8385fdf15c555bdbc6cfa19fa586e140d7f030366c80b1f69"
-    sha256 monterey:      "3967df10f8100cc5a5e99f740b6cade8d3f58fcb9589cc974fd6292a60a2fa4e"
-    sha256 big_sur:       "80db6f9c0b62cd99beaf9eaadde7be8cfe3c09a54eb9b385bd103891d7a12af8"
-    sha256 catalina:      "ad7a7e195ce43afdf30eff81f83e606b79e78db8e6ed39f0370ef34ebeeb39e4"
-    sha256 mojave:        "2404d321dc1eb3e61c5f6282c214395beae288e97ae62d6d6b5afe3edd9b7adf"
-    sha256 x86_64_linux:  "fb813f9bc1317086d4e1374aa003f0796084aeabc85fa077a40e0a785b877a54"
+    sha256 arm64_ventura:  "1f5fea1bc015167bd8a858ca8a149443775698cab6510f0870b6fd2100180afb"
+    sha256 arm64_monterey: "5b78a4dcc215831402e0d47a34481336ca4de251c1bb166cfb2f2e2ce5e6ae34"
+    sha256 arm64_big_sur:  "9dbefbc4873d8e55484a41e5e8452b62a1bbb86173380a5a39b94572fc43c8ed"
+    sha256 ventura:        "e232bed5063bd7ac5d8512c5b77b98bc5cca06fb04735888b3893363131a2dcc"
+    sha256 monterey:       "db6112d7be93a4004a1258ddd4e2382e3d8f573597683cbf023b4f2935bf3d71"
+    sha256 big_sur:        "a2a738d4088f107175875d91a72652c094916a3333d37bcffc7bc689d4484fe4"
+    sha256 x86_64_linux:   "edbe9ab6b18481fba3d686de975e322939d6dca526a4ca0f5e1ca61bd346bea6"
   end
 
   depends_on "gobject-introspection" => :build
@@ -22,39 +23,54 @@ class Vte3 < Formula
   depends_on "gettext"
   depends_on "gnutls"
   depends_on "gtk+3"
+  depends_on "icu4c"
   depends_on macos: :mojave
   depends_on "pcre2"
 
+  on_macos do
+    depends_on "llvm" => [:build, :test] if DevelopmentTools.clang_build_version <= 1200
+  end
+
   on_linux do
-    depends_on "linux-headers@4.15" => :build
-    depends_on "gcc" # for C++17
+    depends_on "linux-headers@5.15" => :build
     depends_on "systemd"
   end
 
-  fails_with gcc: "5"
+  fails_with :clang do
+    build 1200
+    cause "Requires C++20"
+  end
+
+  fails_with :gcc do
+    version "9"
+    cause "Requires C++20"
+  end
 
   # submitted upstream as https://gitlab.gnome.org/tschoonj/vte/merge_requests/1
   patch :DATA
 
   def install
-    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
+    ENV.llvm_clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1200)
+    ENV["XML_CATALOG_FILES"] = etc/"xml/catalog"
 
-    args = std_meson_args + %w[
-      -Dgir=true
-      -Dgtk3=true
-      -Dgnutls=true
-      -Dvapi=true
-      -D_b_symbolic_functions=false
-    ]
+    # Work around for ../src/widget.cc:765:30: error: use of undeclared identifier 'W_EXITCODE'
+    # Issue ref: https://gitlab.gnome.org/GNOME/vte/-/issues/2592
+    # TODO: Remove once issue is fixed upstream.
+    ENV.append_to_cflags "-D_DARWIN_C_SOURCE" if OS.mac?
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", *std_meson_args, "build",
+                    "-Dgir=true",
+                    "-Dgtk3=true",
+                    "-Dgnutls=true",
+                    "-Dvapi=true",
+                    "-D_b_symbolic_functions=false"
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
   end
 
   test do
+    ENV.clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1200)
+
     (testpath/"test.c").write <<~EOS
       #include <vte/vte.h>
 
@@ -124,9 +140,7 @@ class Vte3 < Formula
       -lvte-2.91
       -lz
     ]
-    on_macos do
-      flags << "-lintl"
-    end
+    flags << "-lintl" if OS.mac?
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"
   end

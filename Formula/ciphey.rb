@@ -6,14 +6,17 @@ class Ciphey < Formula
   url "https://files.pythonhosted.org/packages/a5/db/9e0411803c768cd7f5c6986c9da406ae7e4b6b6a1d8ad0dc191cff6dbdaf/ciphey-5.14.0.tar.gz"
   sha256 "302a90261e9acc9b56ea29c313192f0c6f6ce112d37f4f9d404915052e19bf09"
   license "MIT"
+  revision 2
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "2a3bc8da84e2bf093629eedaf0e499373fc5a8583a6266d462bd7525c44f286d"
-    sha256 cellar: :any, arm64_big_sur:  "113ac680f31175402967ca0c068ca1c25aa4920983749e16ee8978dfd0dc281b"
-    sha256 cellar: :any, monterey:       "b8c336658367dd5a0793699255f37b954daf6d46ac47935ffb1e7064f2c95881"
-    sha256 cellar: :any, big_sur:        "42fdf7cbf98607e785727268be58e2aa8a6c2b5d25f3fa790eb4d2d08b2935b4"
-    sha256 cellar: :any, catalina:       "e6fce300a66cbfdec79b6026b42374b42fca432307cfe59482c28e43fd2be73d"
-    sha256 cellar: :any, mojave:         "604e9f29f6dcd6cfa51b0e5580d91a293d7e5ed15296d540d3d305a47fe65197"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "a7c547b2f72a57eadfec07abb1e39223216eda3759acc91a76f3813d2e0e5fd4"
+    sha256 cellar: :any,                 arm64_monterey: "8549423a0b8f5dbae34104539e9ae4a02ee373153b1be5e51e6fb19b0e2f5d65"
+    sha256 cellar: :any,                 arm64_big_sur:  "c274722247b6a42d5d841f6aa0ff1f849f4d4f47883a93c06728a6b4136fb07f"
+    sha256 cellar: :any,                 monterey:       "e324b009c010fd48f6d1cc742bd99fcce19bc233501d46cc9b9e82bb09a317e4"
+    sha256 cellar: :any,                 big_sur:        "72e540064c7254d0e035b5ea05160b845aff94bc2a68871381315c219fda76ca"
+    sha256 cellar: :any,                 catalina:       "81c331bdaf8ff4a1a8e9cc0632a3efb293ec14ebd1c1f3d1fc46f1f7ab19a12f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1911d9ca626a6fc6b0be8b4c65ef77a4904a018a650e434b857918e6d1baa60f"
   end
 
   depends_on "boost" => :build
@@ -21,8 +24,14 @@ class Ciphey < Formula
   depends_on "poetry" => :build
   depends_on "swig" => :build
   depends_on "libyaml"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
   depends_on "six"
+
+  on_linux do
+    depends_on "rust" => :build
+  end
+
+  fails_with gcc: "5"
 
   resource "cipheycore" do
     url "https://github.com/Ciphey/CipheyCore/archive/v0.3.2.tar.gz"
@@ -159,14 +168,23 @@ class Ciphey < Formula
     sha256 "b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"
   end
 
+  def python3
+    "python3.10"
+  end
+
   def install
-    venv = virtualenv_create(libexec, Formula["python@3.9"].opt_bin/"python3")
-    xy = Language::Python.major_minor_version Formula["python@3.9"].opt_bin/"python3"
+    venv = virtualenv_create(libexec, python3)
+    xy = Language::Python.major_minor_version python3
+    python_path = if OS.mac?
+      Formula["python@#{xy}"].opt_frameworks/"Python.framework/Versions/#{xy}"
+    else
+      Formula["python@#{xy}"].opt_include/"python#{xy}"
+    end
 
     resource("cipheycore").stage do
       args = std_cmake_args + %W[
         -DCIPHEY_CORE_TEST=OFF
-        -DCIPHEY_CORE_PYTHON=#{Formula["python@3.9"].opt_frameworks}/Python.framework/Versions/#{xy}
+        -DCIPHEY_CORE_PYTHON=#{python_path}
       ]
       system "cmake", "-S", ".", "-B", "build", *args
       system "cmake", "--build", "build", "-t", "ciphey_core"
@@ -184,7 +202,7 @@ class Ciphey < Formula
     end
     venv.pip_install_and_link buildpath
 
-    site_packages = "lib/python#{xy}/site-packages"
+    site_packages = Language::Python.site_packages(python3)
     pth_contents = "import site; site.addsitedir('#{libexec/site_packages}')\n"
     (prefix/site_packages/"homebrew-ciphey.pth").write pth_contents
   end
@@ -194,7 +212,7 @@ class Ciphey < Formula
     expected_text = "Hello from Homebrew"
     assert_equal shell_output("#{bin}/ciphey -g -t #{input_string}").chomp, expected_text
 
-    system Formula["python@3.9"].opt_bin/"python3", "-c", "from ciphey import decrypt"
-    system Formula["python@3.9"].opt_bin/"python3", "-c", "from ciphey.iface import Config"
+    system python3, "-c", "from ciphey import decrypt"
+    system python3, "-c", "from ciphey.iface import Config"
   end
 end

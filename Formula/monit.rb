@@ -1,9 +1,10 @@
 class Monit < Formula
   desc "Manage and monitor processes, files, directories, and devices"
   homepage "https://mmonit.com/monit/"
-  url "https://mmonit.com/monit/dist/monit-5.29.0.tar.gz"
-  sha256 "f665e6dd1f26a74b5682899a877934167de2b2582e048652ecf036318477885f"
+  url "https://mmonit.com/monit/dist/monit-5.32.0.tar.gz"
+  sha256 "1077052d4c4e848ac47d14f9b37754d46419aecbe8c9a07e1f869c914faf3216"
   license "AGPL-3.0-or-later"
+  revision 1
 
   livecheck do
     url "https://mmonit.com/monit/dist/"
@@ -11,16 +12,20 @@ class Monit < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "73c2409840f0151d6a3f167b6621e5e8fb1935cb97fd5d1390c3c635ee4646f9"
-    sha256 cellar: :any,                 arm64_big_sur:  "e8e13392bd3adc86d94271aa6e4b0b3136c3df09b9a67a178dfcc4fbaa42615e"
-    sha256 cellar: :any,                 monterey:       "6db60230fcb1c4104ea3e3eec2fb3fe347cdd6995220f54768ef0d5ce0f85a23"
-    sha256 cellar: :any,                 big_sur:        "a7fcbcba9af41d5eb405122132dbee449c403fb74192b587614903d56344941c"
-    sha256 cellar: :any,                 catalina:       "c83d409452660f7761f7514a0f72e9262ff6a8861b8e062d41b85a0f82a6b0d1"
-    sha256 cellar: :any,                 mojave:         "ed304427db3dea3a9c18d261a1d9cc24c5ca20d5fafe5e5ae397bde10f1254b8"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "99573601eeb2e8d7377fad27e08e1a31a002eec231d84a492ec59532bfdeb49e"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "d96d0558c3c18acd5e6039e444cc6b4c7691f0b3cf33b3a5b9cc2e15b1acb000"
+    sha256 cellar: :any,                 arm64_monterey: "6577cddf4bd40aafdee0089655c5ed177741b5eddbd9a4d1344b8a6029904809"
+    sha256 cellar: :any,                 arm64_big_sur:  "d6a37cfb90af7e29627e67a46830e91c98c249ff10855f4d6fd6a101864a1e8c"
+    sha256 cellar: :any,                 ventura:        "e973a54f3aeef2057101fb9eb39d09133b59362408871ec818a74420705dac2d"
+    sha256 cellar: :any,                 monterey:       "599096912baee50637670137f35a9cf198789aaeee93ccfe6551868a804f09e9"
+    sha256 cellar: :any,                 big_sur:        "00908f29d92ea3837ed418d61f080bffb89b4c7ec01aa36348089d922e02064f"
+    sha256 cellar: :any,                 catalina:       "c6c5818e4668c4cf0383770b19ffa5baef9ce12735cbc3f3fc8d1724125c981a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0b96f96e6d435b0c083593c797e4bb424a683ec6fa13aca4401d7a5a9226b05c"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
+
+  uses_from_macos "libxcrypt"
 
   on_linux do
     depends_on "linux-pam"
@@ -30,7 +35,7 @@ class Monit < Formula
     system "./configure", "--prefix=#{prefix}",
                           "--localstatedir=#{var}/monit",
                           "--sysconfdir=#{etc}/monit",
-                          "--with-ssl-dir=#{Formula["openssl@1.1"].opt_prefix}"
+                          "--with-ssl-dir=#{Formula["openssl@3"].opt_prefix}"
     system "make"
     system "make", "install"
     etc.install "monitrc"

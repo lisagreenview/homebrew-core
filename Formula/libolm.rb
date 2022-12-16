@@ -1,18 +1,18 @@
 class Libolm < Formula
   desc "Implementation of the Double Ratchet cryptographic ratchet"
   homepage "https://gitlab.matrix.org/matrix-org/olm"
-  url "https://gitlab.matrix.org/matrix-org/olm/-/archive/3.2.6/olm-3.2.6.tar.gz"
-  sha256 "9b61bd9182bb0ae0c5a800a8b0496b69600a0a22e3a21fce0aad119d2b1c99ae"
+  url "https://gitlab.matrix.org/matrix-org/olm/-/archive/3.2.14/olm-3.2.14.tar.gz"
+  sha256 "221e2e33230e8644da89d2064851124b04e9caf846cad2aaa3626b876b42d14a"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "245688a835df1a73a40e477c19cc8874f52b36e56731af9381f3513f7e71ea97"
-    sha256 cellar: :any,                 arm64_big_sur:  "a0d40c19dde560b6c429ede66a7c549f46c36f58872a055e6fcacb24b565d72f"
-    sha256 cellar: :any,                 monterey:       "5dc746624fa4f5cc0613bca33f65ded6dfae709e0c987278cd326104a31947d1"
-    sha256 cellar: :any,                 big_sur:        "9b0fa6f2b8bcf26a480b43cf8fd38bdd474f2296d1a13a378228468811ba3876"
-    sha256 cellar: :any,                 catalina:       "dbc06704bf32fedbfd2c8aad88ba9d504e44d055c553d22677298ec877f40c8a"
-    sha256 cellar: :any,                 mojave:         "be9653954751491a58c54ea5f9c0e6284af4975a8d09f0c4248d14ec735e0d5b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3fcdb358514800ef0cf2248b20b36e57ee1faf258936514a05b2d821e5322bfd"
+    sha256 cellar: :any,                 arm64_ventura:  "a36d40b111b39b24c66c295b79f8dec191ee3a7970fdbf305a8151ffed707dfe"
+    sha256 cellar: :any,                 arm64_monterey: "4ae925a9a7dcf206e59c76408b6996f9904ea4a2f438ee80da6f4857def8af4e"
+    sha256 cellar: :any,                 arm64_big_sur:  "6224e35aead4f2be51d0f2d3ff8c72a09f8d736a637c1defce99a4b8e234852b"
+    sha256 cellar: :any,                 ventura:        "8ccae9cefef268b83627db7f1b8f6126f3db0abbed37563822cadc3e96e01686"
+    sha256 cellar: :any,                 monterey:       "3ea53f22b716377f30f0724cd7645e74b0a10ba29b810a4d0e55583c9cf74947"
+    sha256 cellar: :any,                 big_sur:        "83453551f4961c06b3e2cebd296d15f4491864ebe1c002bf968f0de05a78c39a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8b964f76b48baa96aea07e2b660a29a2a62398b59146c25bea480ab7b9628f85"
   end
 
   depends_on "cmake" => :build

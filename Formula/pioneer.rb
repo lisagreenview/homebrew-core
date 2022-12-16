@@ -1,18 +1,21 @@
 class Pioneer < Formula
   desc "Game of lonely space adventure"
   homepage "https://pioneerspacesim.net/"
-  url "https://github.com/pioneerspacesim/pioneer/archive/20210723.tar.gz"
-  sha256 "5f5d794d3095079e629980a6a3285d83b95b97e6c9b6058c73531cd06f8d082d"
+  url "https://github.com/pioneerspacesim/pioneer/archive/20220203.tar.gz"
+  sha256 "415b55bab7f011f7244348428e13006fa67a926b9be71f2c4ad24e92cfeb051c"
   license "GPL-3.0-only"
   head "https://github.com/pioneerspacesim/pioneer.git", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "cf660f08f7b18489c4a7fc5e5ff0f800f846886b48a0dcd78f6d7b3e6216a47a"
-    sha256 arm64_big_sur:  "f81b47bad4f1c6cef0655b91da3c805735c75c3111495eba83bda3bc917ce3bb"
-    sha256 monterey:       "dbb827cc837f5a275df362739ff2c2131050507f73c8026db06720fa4ea0d9d1"
-    sha256 big_sur:        "dedb56a9bf9ed68885724b45c5ff371247d9e42acbf1376bdf283e1b2bb2f301"
-    sha256 catalina:       "caf101b903a64522ee78327951b73b76499a110a9a32cea3ca1de699ff1e2574"
-    sha256 mojave:         "713fe514265cdbb7ed9f4c21fea203ba479aea835c75ac34be191f901c06eb12"
+    rebuild 1
+    sha256 arm64_ventura:  "027d68852763a927f369c9b0a500fcc0ffb221bbea1bda39b3ad8700851cb07f"
+    sha256 arm64_monterey: "b2e190f79505cc823854dcb3c46b333994fb15f065e95dc77934d4b27119aa8d"
+    sha256 arm64_big_sur:  "0ca5b9a984198c3e3d60e3e02c8f3ccc046d2082900627a9bf970610c6260d95"
+    sha256 ventura:        "c1d523715401ea5664fd3a12888ec5a275401bf13e3427a23b7f4a2f6ce07a50"
+    sha256 monterey:       "0bb70eb1bb53b649bafb3ae3a52d4743fdaf690274a3e9ee0288e03fc26bc427"
+    sha256 big_sur:        "310a48a34c8a19d9cb66bb7aa4f9a231d4519f636cfe1f3f2ecc219236ddbf1f"
+    sha256 catalina:       "9b4bf989c69c7d9c24093aa728351b2558ccaf3770891c65f3c8d28da9778bfa"
+    sha256 x86_64_linux:   "35b337ad69a13c8be0a0dc16281be604220cc3d26b247fdf90947ce51c93675a"
   end
 
   depends_on "cmake" => :build
@@ -26,11 +29,13 @@ class Pioneer < Formula
   depends_on "sdl2"
   depends_on "sdl2_image"
 
+  fails_with gcc: "5"
+
   def install
     ENV.cxx11
 
     # Set PROJECT_VERSION to be the date of release, not the build date
-    inreplace "CMakeLists.txt", "string(TIMESTAMP PROJECT_VERSION \"\%Y\%m\%d\")", "set(PROJECT_VERSION #{version})"
+    inreplace "CMakeLists.txt", "string(TIMESTAMP PROJECT_VERSION \"%Y%m%d\")", "set(PROJECT_VERSION #{version})"
     system "cmake", ".", *std_cmake_args
     system "make", "install"
   end

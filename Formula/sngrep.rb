@@ -1,18 +1,19 @@
 class Sngrep < Formula
   desc "Command-line tool for displaying SIP calls message flows"
   homepage "https://github.com/irontec/sngrep"
-  url "https://github.com/irontec/sngrep/archive/v1.4.9.tar.gz"
-  sha256 "3c6f28b5c795a5b1844a8997aa430aba72e083c8bd52939990900450c5f4c85a"
+  url "https://github.com/irontec/sngrep/archive/v1.6.0.tar.gz"
+  sha256 "fd80964d6560f2ff57b4f5bef2353d1a6f7c48d2f1a5f0a167c854bd2e801999"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "328666d36c468478d3c63ee9187b57dec4d8fd58a0554296c917f77062eb7a71"
-    sha256 cellar: :any,                 arm64_big_sur:  "449af17f3cb8673ec2beb158ba5a48bfc620739bac89bce15eeaea4297c65972"
-    sha256                               monterey:       "caf2d4342c7cb6bacdbe8e7fb2187f263db2454e626df689090db07fb44cbd73"
-    sha256                               big_sur:        "d226ad4dbc036097beeefdb5d181954c3ed8eaeef9d236189598783d03a6a4c3"
-    sha256                               catalina:       "95e8048031ea84674d2147c224aae73c14616164c74234f25d3001e15b779a35"
-    sha256                               mojave:         "20e51aa586d1a16ad0ed97aacc941649b8872a78e36f3ec34dbdb8ea2a674216"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0ce3e5f4cb6aded2538bef214778a5b4204b460421ec57f6314685e4a90085b9"
+    sha256 cellar: :any,                 arm64_ventura:  "0b7aa728a1094a767d83ce9e21be2cbe9815485d86d9aa0ceca8f5eeabe8ba77"
+    sha256 cellar: :any,                 arm64_monterey: "2bbb0e2441c8192002e427ba0b5a3e8673cee8689fd5befebd0f3ba0532e3cb2"
+    sha256 cellar: :any,                 arm64_big_sur:  "69a7368edfbff2b60ed13cf1dbd9891ca8346bc4764108441c48e28a27ff08cc"
+    sha256                               ventura:        "8be2f7a825986f7d7819b0d3aaa0881a5c636e7bb50ad1dff87bd6ea2cf39941"
+    sha256                               monterey:       "c0d3b02aa03ce6c44e7d0a14e06d34bea256934504fce358c0ad94308b4e410f"
+    sha256                               big_sur:        "d02e2bb89ebe085ba45d1bf9ccd3da89b4bb2b79dd69942bf56a1b3e70acfad4"
+    sha256                               catalina:       "f66d29b77e3a75b7824eccba63ee8e7c4d97e684afbb7cb1dccf79ce5ca8a273"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f787893debb7a1c5e9bfc7dd4d951f7806cfd6d0c9a04f53579f421c5f5bebc5"
   end
 
   depends_on "autoconf" => :build

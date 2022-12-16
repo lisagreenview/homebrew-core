@@ -1,39 +1,43 @@
 class Tio < Formula
   desc "Simple TTY terminal I/O application"
   homepage "https://tio.github.io"
-  url "https://github.com/tio/tio/releases/download/v1.32/tio-1.32.tar.xz"
-  sha256 "a8f5ed6994cacb96780baa416b19e5a6d7d67e8c162a8ea4fd9eccd64984ae44"
+  url "https://github.com/tio/tio/releases/download/v2.4/tio-2.4.tar.xz"
+  sha256 "b715e21454c5734154346486e61a9480d1e707c2c9b0cc56e4b1ba38838df8cf"
   license "GPL-2.0-or-later"
+  head "https://github.com/tio/tio.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "dd0fba8d9f5030bf11b0507832b4c51b6352630c0bc5c3d9629ffd682e087ce2"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "cd68cb38333ea9bf99d8e0cdd28cf73ce8517b834213b2f786f29c4d58ca0dd8"
-    sha256 cellar: :any_skip_relocation, monterey:       "2c4d432c3826cf3c8a235c90ffb4f8f543a5f77dcbd80f609b16ce46394f2d2b"
-    sha256 cellar: :any_skip_relocation, big_sur:        "257626785fcbbab8298a98f912c7831b1c9565536ff6425c438424fca3163d90"
-    sha256 cellar: :any_skip_relocation, catalina:       "a630b860983adbd4c2691538739850ef934aeafcfa33c5561a00e3db2b355e88"
-    sha256 cellar: :any_skip_relocation, mojave:         "f33b4bc0d653c0f2111f0c30865395d2cadfe524f33ab1c84c843e54ec432ed9"
-    sha256 cellar: :any_skip_relocation, high_sierra:    "1241b11c102b527fd43225a3283290fe5488889a9e0919e7b4b536ddcb4a4d83"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0fa7b1f65d234ea6358e451925ce7b1759ce08f35a919ae89ea5dd81182610b6"
+    sha256 cellar: :any,                 arm64_ventura:  "dd89b3e200c51927c1ba619d5707105fefecad2d2ca25d758050cd97b315e6de"
+    sha256 cellar: :any,                 arm64_monterey: "3af3b33c9cab2f14e237298ab242c33c2dd0d3c499767f0fb19e51dece9aee30"
+    sha256 cellar: :any,                 arm64_big_sur:  "6d2da82e3070c7210b465f3a62ba8c0f1615cc2b4fcfb57b741ce4120bcae5eb"
+    sha256 cellar: :any,                 ventura:        "80f6f0d39cfb712d055bb1a17fd74d34f5d359e7818ed53365495881019f9711"
+    sha256 cellar: :any,                 monterey:       "16550a044ec987d6e121b6206fa2dcb24a6b0669394dc58836d2c1f9b65dedfc"
+    sha256 cellar: :any,                 big_sur:        "f0415808fde5b207d212b678cfa40c1f2b1de1074e078acb0808c8f5ef2616bd"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7385f55b676205f42e1bf3ccab48ab73a54e2ddad41716ca82b703d222b214fe"
   end
 
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
+  depends_on "pkg-config" => :build
+  depends_on "inih"
+
   def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--with-bash-completion-dir=#{bash_completion}"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", *std_meson_args, ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   test do
     # Test that tio emits the correct error output when run with an argument that is not a tty.
     # Use `script` to run tio with its stdio attached to a PTY, otherwise it will complain about that instead.
-    test_str = "Error: Not a tty device"
-    on_macos do
-      assert_match test_str, shell_output("script -q /dev/null #{bin}/tio /dev/null", 1).strip
+    expected = "Error: Not a tty device"
+    output = if OS.mac?
+      shell_output("script -q /dev/null #{bin}/tio /dev/null", 1).strip
+    else
+      shell_output("script -q /dev/null -e -c \"#{bin}/tio /dev/null\"", 1).strip
     end
-    on_linux do
-      assert_match test_str, shell_output("script -q /dev/null -e -c \"#{bin}/tio /dev/null\"", 1).strip
-    end
+    assert_match expected, output
   end
 end

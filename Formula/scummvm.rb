@@ -1,9 +1,9 @@
 class Scummvm < Formula
   desc "Graphic adventure game interpreter"
   homepage "https://www.scummvm.org/"
-  url "https://downloads.scummvm.org/frs/scummvm/2.5.0/scummvm-2.5.0.tar.xz"
-  sha256 "b47ee4b195828d2c358e38a4088eda49886dc37a04f1cc17b981345a59e0d623"
-  license "GPL-2.0-or-later"
+  url "https://downloads.scummvm.org/frs/scummvm/2.6.1/scummvm-2.6.1.tar.xz"
+  sha256 "8fafb9efabdd1bf8adfe39eeec3fc80b22de30ceddd1fadcde180e356cd317e9"
+  license "GPL-3.0-or-later"
   head "https://github.com/scummvm/scummvm.git", branch: "master"
 
   livecheck do
@@ -12,18 +12,20 @@ class Scummvm < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "90d437657d306794297adcfaf083dd0bd951bbf437e8f7ff40c12413efa32376"
-    sha256 monterey:      "f8d5919d8dfbaffc4b818decb7859fa37b7ad8d2689adaed5e1d8e9de4f67d7a"
-    sha256 big_sur:       "f1543bc3553a0bae3a659f4c17412228cf6fb643c460ec3f488354d65ebcd27b"
-    sha256 catalina:      "07e6e6c14491af15cb9900691fd60276568bdc66ef423752dbe4cde10d5e8bc7"
-    sha256 mojave:        "b83003efb12c36548180f1bb883f02e48276078992b3916196c3495bd80bb9a9"
-    sha256 x86_64_linux:  "671cc9da5228b2e1c6500083b3508bc41d7a9fe7c0b94f525732126bae4edb2d"
+    sha256 arm64_ventura:  "ff90407f9df7e87b88aa6c24b8a052a99dee66f5d6c36a7f7ae3de763a672648"
+    sha256 arm64_monterey: "2b3ba2c5ba922367591b4e79616599d2c2bf6d50c05bfe672513d9fcc90577bf"
+    sha256 arm64_big_sur:  "ad21aa5044d5b4d388e95792905568134d30bba5472ed44e4ecc35093a41ee2f"
+    sha256 ventura:        "071b7610cce26ea2f608d69d91c333d91c04e08b3f7d9a0c2d69d331322a3d43"
+    sha256 monterey:       "0ffb233ace83d6cb367e666bf613d470b517552a0a688c8f11beac58597c1261"
+    sha256 big_sur:        "ccab79afdd3bd4d89d7d67e8e466e5b779a4a2e920d68c1c8be97fcdb3189e7e"
+    sha256 catalina:       "7f638fae6f450586f19ddef3dc430ab0b5df62ec860de3da33b3d4a37ba111cc"
+    sha256 x86_64_linux:   "4c6b6f570d81285892dfedaeae74d7e9081da55d367d6eb6e82f8e188b62888a"
   end
 
   depends_on "a52dec"
   depends_on "faad2"
   depends_on "flac"
-  depends_on "fluid-synth@2.1"
+  depends_on "fluid-synth"
   depends_on "freetype"
   depends_on "jpeg-turbo"
   depends_on "libmpeg2"
@@ -39,16 +41,14 @@ class Scummvm < Formula
                           "--with-sdl-prefix=#{Formula["sdl2"].opt_prefix}"
     system "make"
     system "make", "install"
-    (share+"pixmaps").rmtree
-    (share+"icons").rmtree
+    (share/"pixmaps").rmtree
+    (share/"icons").rmtree
   end
 
   test do
-    on_linux do
-      # Test fails on headless CI: Could not initialize SDL: No available video device
-      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
-    end
+    # Test fails on headless CI: Could not initialize SDL: No available video device
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
 
-    system "#{bin}/scummvm", "-v"
+    system bin/"scummvm", "-v"
   end
 end

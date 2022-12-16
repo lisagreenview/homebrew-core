@@ -4,19 +4,25 @@ class Field3d < Formula
   url "https://github.com/imageworks/Field3D/archive/v1.7.3.tar.gz"
   sha256 "b6168bc27abe0f5e9b8d01af7794b3268ae301ac72b753712df93125d51a0fd4"
   license "BSD-3-Clause"
-  revision 4
+  revision 8
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "b12b7bbffb37cac1a70220ad329743dbd1eb47c44e7229a8646d9b14124151f2"
-    sha256 cellar: :any, big_sur:       "90b0c9cc4ab05cfcbfa656aa634f808513d6f4e8f11a51f43d7a34abd8dd4f1f"
-    sha256 cellar: :any, catalina:      "76d498d553b562262c1654c1cd717057eaf0bc78d03bbe20dfb3e55c55f5d5a4"
-    sha256 cellar: :any, mojave:        "c5722c3960ff48af8007245cdf71a818d292ce76b85abf998c2a9623da3297a4"
+    sha256 cellar: :any,                 arm64_ventura:  "f721c232a04d8d2633c871053eab6b75531fbb65bde3ffc27090b3912610333c"
+    sha256 cellar: :any,                 arm64_monterey: "5ccab64a1d8a3f1a709b4efd84e47be950a28b468cf4315eaed9c332fc0dd0c0"
+    sha256 cellar: :any,                 arm64_big_sur:  "bdd3df3a156e09d0612b4266a4a7036baf3a8ebd99573c70fef4cb3fa3af595b"
+    sha256 cellar: :any,                 ventura:        "cc7a86c138afcffef49223cb9b65270acc147440625eaa67dd9241afd9d4d202"
+    sha256 cellar: :any,                 monterey:       "4c854331b625741ed631440767b90ceb8dae7c565b19c1b909a35068e9635c8e"
+    sha256 cellar: :any,                 big_sur:        "f7113a6ebab33c4591099ffa838d98cee8d72d8f0d2627a9e8a9c4783755fdc7"
+    sha256 cellar: :any,                 catalina:       "c74402ddc431e94001cf07efe110c4085aa486fd024a470dd2bd0d00454aba46"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "37156c96c67dcf0b5fe46027c758e6172781503495dab9364b43cad3331dc28c"
   end
 
   depends_on "cmake" => :build
   depends_on "boost"
   depends_on "hdf5"
   depends_on "ilmbase"
+
+  fails_with gcc: "5"
 
   def install
     ENV.cxx11
@@ -31,13 +37,14 @@ class Field3d < Formula
   end
 
   test do
-    system ENV.cxx, "-std=c++11", "-I#{include}", "-L#{lib}", "-lField3D",
+    system ENV.cxx, "-std=c++11", "-I#{include}",
+           pkgshare/"sample_code/create_and_write/main.cpp",
+           "-L#{lib}", "-lField3D",
            "-I#{Formula["boost"].opt_include}",
            "-L#{Formula["boost"].opt_lib}", "-lboost_system",
            "-I#{Formula["hdf5"].opt_include}",
            "-L#{Formula["hdf5"].opt_lib}", "-lhdf5",
            "-I#{Formula["ilmbase"].opt_include}",
-           pkgshare/"sample_code/create_and_write/main.cpp",
            "-o", "test"
     system "./test"
   end

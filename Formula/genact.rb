@@ -1,18 +1,19 @@
 class Genact < Formula
   desc "Nonsense activity generator"
   homepage "https://github.com/svenstaro/genact"
-  url "https://github.com/svenstaro/genact/archive/v0.11.0.tar.gz"
-  sha256 "6ec8c1e717f78968c825513ae86dfc7cf5d71798b94b97d012cb185a4ca5a0a2"
+  url "https://github.com/svenstaro/genact/archive/v1.2.2.tar.gz"
+  sha256 "72ead4b84e4ca733ae8a25614d44df3f3db5e47e54913ed9fbfecd2f5212a632"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "0c238c5d7c242238e161b58f85f37de4d1b4feb555f1fc3942ae5fc85fb302ca"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "48325385454894eddd9bf33bad8a370ca36a1ea126bc8981307c9f1d735782bf"
-    sha256 cellar: :any_skip_relocation, monterey:       "cf7ca0a51b8af32c1acdb8bf2b1ad628fd53741526a25a09bafc9cda11bb9031"
-    sha256 cellar: :any_skip_relocation, big_sur:        "faa9f1370b20ac2d6e92eaa5be5bf376f7ef8ba85dac841f735ccf491f9c4b4f"
-    sha256 cellar: :any_skip_relocation, catalina:       "4d94d3fd54d7821be5684690520cfacb13f8d9d3741edd927b0f8b9829e1d63f"
-    sha256 cellar: :any_skip_relocation, mojave:         "fb724747b034a14552cc66c88126ed22a6f4c001c9d63b3a437fdb8a4c2ad86e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f164ea3f660c60ca1071bba73b6d2b7d0ba3bc9e6e54126bfadf5ee4212d9238"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "19f959ebaa46a9693d5c477af4978b8483497444529a599bc3ade1015c45f38c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "86f8f5a41ff5310a19af6be233783006e16630d479ce4cc1d33a25b4673c2de0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a9a2cdeb2a5ba1bdbc1b9ab61255952fa9c692d747b35de07e5b5dc228d45594"
+    sha256 cellar: :any_skip_relocation, ventura:        "c2413327f10fc11695cccfc724526ba009a1e5712ba82c9eaea9e2ae80b1ebf5"
+    sha256 cellar: :any_skip_relocation, monterey:       "09b5d1c206164a5ee28d650f9cb01b5ff1698ae737680bf9fd817868916374a8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3e2604dc557d38f3ef515b270de3fb6ea4dcacb6c968d9e99953e97848cb3fb5"
+    sha256 cellar: :any_skip_relocation, catalina:       "301d8e05b78b786cd7483aca4beedd0c776f712483683b4f5ca11d56dd18ac3c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8f9c80b1ab443eacb3b3160f23b6061fa9371f21669a40c8264cac7dac9f69cf"
   end
 
   depends_on "rust" => :build

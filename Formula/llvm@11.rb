@@ -5,24 +5,16 @@ class LlvmAT11 < Formula
   sha256 "74d2529159fd118c3eac6f90107b5611bccc6f647fdea104024183e8d5e25831"
   # The LLVM Project is under the Apache License v2.0 with LLVM Exceptions
   license "Apache-2.0" => { with: "LLVM-exception" }
-  revision 3
-
-  # This should be removed when LLVM 13 is released, so we only check the
-  # current version (the `llvm` formula) and one major version before it
-  # (to catch any patch version that may appear, however uncommon).
-  livecheck do
-    url "https://releases.llvm.org/"
-    regex(/["'](11(?:\.\d+)+)["']/i)
-  end
+  revision 4
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "a0eef7340eed1570d0585eb89935f92cb9c30dc1bbee28c24750267784ddbb9c"
-    sha256 cellar: :any,                 arm64_big_sur:  "0441f32a33dc14393118ff9d047af44d8fa7b87648b09c1e2ffa5c69d3d0c032"
-    sha256 cellar: :any,                 monterey:       "2e2df0f2643ff97e9b3f7d87c610cf76b116d1b82d31e307473e1e8347ecacb6"
-    sha256 cellar: :any,                 big_sur:        "8b9e7e448f801daad56d3180cccf190486bd785c551aeb37300a5296f1d9e81b"
-    sha256 cellar: :any,                 catalina:       "47e26656712ba5efa159d2f42334972bf8c510ffa48f0c6ff35d8e55af1b9d94"
-    sha256 cellar: :any,                 mojave:         "c7cd19b7849a499acd3d68648fadf9c8283ce47bd1706931c2f3223e8c97d8ac"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0fefecb000c832d751022756e68888df5bacce3dcd442515573b080c46859834"
+    sha256 cellar: :any,                 arm64_ventura:  "3b72fa109a152db3a77e9ae88228a03f0575c913a9d45b4a840c9ea5a01cf0e3"
+    sha256 cellar: :any,                 arm64_monterey: "1f9a2e81762d314611a01ac17cafa7cd8b0c2fc92d697a5cec9555e9e1598497"
+    sha256 cellar: :any,                 arm64_big_sur:  "64552a671357b02596313def4711086027b3e49079d65588dcca75572b87108d"
+    sha256 cellar: :any,                 monterey:       "4a368a132b47fa0b3c9678927d59b5bb4fee1538d4fab9f049fc80cf83464830"
+    sha256 cellar: :any,                 big_sur:        "375a61e449b4d1bbb9b3633a4b55d1676df0eb3943b6fcef3dc3355ad50d5539"
+    sha256 cellar: :any,                 catalina:       "00b2c6b12d4603e8e7fa472aa3c16ed7283d3feae15f0799e90632d1bcf192ab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "46be09876c5a0c71d98f0d63e7eaaa323c3af97207670a691138ef743f6344de"
   end
 
   # Clang cannot find system headers if Xcode CLT is not installed
@@ -35,7 +27,7 @@ class LlvmAT11 < Formula
   # See: Homebrew/homebrew-core/issues/35513
   depends_on "cmake" => :build
   depends_on "swig" => :build
-  depends_on "python@3.9"
+  depends_on "python@3.10"
 
   uses_from_macos "libedit"
   uses_from_macos "libffi", since: :catalina
@@ -44,10 +36,10 @@ class LlvmAT11 < Formula
   uses_from_macos "zlib"
 
   on_linux do
-    depends_on "glibc" if Formula["glibc"].any_version_installed?
     depends_on "pkg-config" => :build
     depends_on "binutils" # needed for gold
     depends_on "elfutils" # openmp requires <gelf.h>
+    depends_on "glibc" if Formula["glibc"].any_version_installed?
   end
 
   patch do
@@ -89,6 +81,9 @@ class LlvmAT11 < Formula
     sha256 "744aaebcc8da875892a00cbe2ebc6bb16db97431808b49f134adf70e64cf0e91"
   end
 
+  # Fix build with GCC 11
+  patch :DATA
+
   def install
     projects = %w[
       clang
@@ -106,8 +101,9 @@ class LlvmAT11 < Formula
       libunwind
     ]
 
-    py_ver = Language::Python.major_minor_version("python3")
-    site_packages = Language::Python.site_packages("python3").delete_prefix("lib/")
+    python3 = "python3.10"
+    py_ver = Language::Python.major_minor_version(python3)
+    site_packages = Language::Python.site_packages(python3).delete_prefix("lib/")
 
     # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
@@ -318,7 +314,7 @@ class LlvmAT11 < Formula
     end
     assert_equal "Hello World!", shell_output("./testlibc++").chomp
 
-    on_linux do
+    if OS.linux?
       # Link installed libc++, libc++abi, and libunwind archives both into
       # a position independent executable (PIE), as well as into a fully
       # position independent (PIC) DSO for things like plugins that export
@@ -331,9 +327,9 @@ class LlvmAT11 < Formula
       # linking statically.
 
       system "#{bin}/clang++", "-v", "-o", "test_pie_runtimes",
-             "-pie", "-fPIC", "test.cpp", "-L#{opt_lib}",
-             "-stdlib=libc++", "-rtlib=compiler-rt",
-             "-static-libstdc++", "-lpthread", "-ldl"
+                   "-pie", "-fPIC", "test.cpp", "-L#{opt_lib}",
+                   "-stdlib=libc++", "-rtlib=compiler-rt",
+                   "-static-libstdc++", "-lpthread", "-ldl"
       assert_equal "Hello World!", shell_output("./test_pie_runtimes").chomp
       (testpath/"test_pie_runtimes").dynamically_linked_libraries.each do |lib|
         refute_match(/lib(std)?c\+\+/, lib)
@@ -416,3 +412,17 @@ class LlvmAT11 < Formula
     end
   end
 end
+
+__END__
+diff --git a/llvm/utils/benchmark/src/benchmark_register.h b/llvm/utils/benchmark/src/benchmark_register.h
+index 0705e219f2fa..4caa5ad4da07 100644
+--- a/llvm/utils/benchmark/src/benchmark_register.h
++++ b/llvm/utils/benchmark/src/benchmark_register.h
+@@ -1,6 +1,7 @@
+ #ifndef BENCHMARK_REGISTER_H
+ #define BENCHMARK_REGISTER_H
+
++#include <limits>
+ #include <vector>
+
+ #include "check.h"

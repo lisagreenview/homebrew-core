@@ -1,17 +1,20 @@
 class Findomain < Formula
   desc "Cross-platform subdomain enumerator"
-  homepage "https://github.com/Findomain/findomain"
-  url "https://github.com/Edu4rdSHL/findomain/archive/5.0.1.tar.gz"
-  sha256 "8a235bdfd5c8e63cf077929b0c3d3e0d8d704370d72103b93e701c47e524c27b"
+  homepage "https://github.com/Findomain/Findomain"
+  url "https://github.com/Findomain/Findomain/archive/8.2.1.tar.gz"
+  sha256 "93c580c9773e991e1073b9b597bb7ccf77f54cebfb9761e4b1180ff97fb15bf6"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1c9041c9951e4bee8bec2cacdb53a7ee9bd0d80069e951b6ce639d0853992c89"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "65564e2fe089095d9d55761b9d883a2395131c1c3cf072db25555999dd04f8e8"
-    sha256 cellar: :any_skip_relocation, monterey:       "54a85518b9883991b5d2d1f01abc45057f75fb667ac2f8204a3d415b8a11ea4a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "11414804127bd42a112d01cc0a817b2b1987ae2acffc7ef25df1b9859a08dac0"
-    sha256 cellar: :any_skip_relocation, catalina:       "f4cb544399f1d92d325551b3caaec9b9de590e932de43020d9bc5a28fce09e44"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3289284e97b4951040433194af545cb8f9946d2ed07717cb1f80d603ae5f43e0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "2bedeb1fbdd276df930ac27881c3efaba5c39b62587673d107352ad80eb4be4e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "466bb6d8850ef62afa5383fb4fd528fcf39a1de42f6a2bc25e3bf529b0490bc9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "af81af504a0ac10c6368b6b5cf371445a445fbb877a38d1e13b21644f77bb9a6"
+    sha256 cellar: :any_skip_relocation, ventura:        "5be0bf201066ecd19c4cd92a3d0d146f4bb9f96236efc30d8ff89d6e9aded307"
+    sha256 cellar: :any_skip_relocation, monterey:       "1627f7e3595bf79491d2df36c12b41feb7ed5454589c44de9e98ce1a182368fb"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a76c4af4f5cfd4ad9b24688a0f624fd43e1ab83ae8e7f5c34e3e1a547c8de9b5"
+    sha256 cellar: :any_skip_relocation, catalina:       "900cf89410b055cde885fe562db77ca5bb5964dd323e9681c05976485cbc096e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e026e8afe5d1c3ffbafc18051d23b02f0ea4b09241377a1e43ccf6647b6c4f5d"
   end
 
   depends_on "rust" => :build

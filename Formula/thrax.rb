@@ -3,9 +3,10 @@ class Thrax < Formula
 
   desc "Tools for compiling grammars into finite state transducers"
   homepage "https://www.openfst.org/twiki/bin/view/GRM/Thrax"
-  url "https://www.openfst.org/twiki/pub/GRM/ThraxDownload/thrax-1.3.6.tar.gz"
-  sha256 "5f00a2047674753cba6783b010ab273366dd3dffc160bdb356f7236059a793ba"
+  url "https://www.openfst.org/twiki/pub/GRM/ThraxDownload/thrax-1.3.8.tar.gz"
+  sha256 "e21c449798854f7270bb5ac723f6a8d292e149fc6bbe24fd9f345c85aabc7cd4"
   license "Apache-2.0"
+  revision 1
 
   livecheck do
     url "https://www.openfst.org/twiki/bin/view/GRM/ThraxDownload"
@@ -13,34 +14,32 @@ class Thrax < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "328d82ce4714605a2e1425733bb6a0e39e954df45f29ee2f060468fcde098542"
-    sha256 cellar: :any,                 arm64_big_sur:  "033c1195f0d64bf2844268850d006e79e410d5796f53b38606fdf6a24ba97d93"
-    sha256 cellar: :any,                 monterey:       "563c12082f7958c0facf2ea7605de585b597b161ace80d51ed7c099f56d8701f"
-    sha256 cellar: :any,                 big_sur:        "7120f61434e7851ae51ffba6ca11e7a20a5df0c90e59ed1f12bd831fab0d7bbc"
-    sha256 cellar: :any,                 catalina:       "fa9e11b34775d0e1e7f12e7b9d15f4c22577033e6eabff8cefdbc3f197c64504"
-    sha256 cellar: :any,                 mojave:         "3ab4c18556c41bec206362d9f564f82f6bc11388848fa7cd00242ce3c66118d2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e05985642a3ae9cc5922a2f8ced5f8dd15169a95a4de45980bb2cb19bfef1152"
+    sha256 cellar: :any,                 arm64_ventura:  "cc88937f398db52f848b3658c3415073a3cc3a349448f95168ba30b22d0f1689"
+    sha256 cellar: :any,                 arm64_monterey: "da67cbb76545ecb423feca1b6a3a6e3dab7251177842ad37e22c5a3f3dbfafa2"
+    sha256 cellar: :any,                 arm64_big_sur:  "c5290fa4de107eb9d7c7a283ca01d3e646dc3d14e5add34c4e6187d418af8222"
+    sha256 cellar: :any,                 ventura:        "b3c508dac05720ff2b03cf39da71257fe16bd5b863791cb8580fff4788492ab0"
+    sha256 cellar: :any,                 monterey:       "510a3aa7dfc3782dfe81735407191ab6ecbc851710dc8d6cd402629dfaef5f53"
+    sha256 cellar: :any,                 big_sur:        "1b5fcd1dcc4ff93508ddfcef21e4b280225cb9238766bc40f0551261dd1ea158"
+    sha256 cellar: :any,                 catalina:       "da9d875ee86c08a3263d6a7a7b1e2f9465c5811da56893293f387a879a2d5530"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7710590e03ff85fbf3a348d90651ca6161f7add1a2b2d986111f7b06c6a96536"
   end
+
+  # Regenerate `configure` to avoid `-flat_namespace` bug.
+  # None of our usual patches apply.
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
 
   depends_on "openfst"
-
-  on_linux do
-    depends_on "gcc"
-    depends_on "python@3.9"
-  end
+  uses_from_macos "python", since: :catalina
 
   fails_with gcc: "5"
 
-  # Fix -flat_namespace being used on Big Sur and later.
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-    sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-  end
-
   def install
+    system "autoreconf", "--force", "--install", "--verbose"
     system "./configure", *std_configure_args
     system "make", "install"
-    rewrite_shebang detected_python_shebang, bin/"thraxmakedep" if OS.linux?
+    rewrite_shebang detected_python_shebang(use_python_from_path: true), bin/"thraxmakedep"
   end
 
   test do

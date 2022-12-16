@@ -1,8 +1,8 @@
 class Spiped < Formula
   desc "Secure pipe daemon"
   homepage "https://www.tarsnap.com/spiped.html"
-  url "https://www.tarsnap.com/spiped/spiped-1.6.1.tgz"
-  sha256 "8d7089979db79a531a0ecc507b113ac6f2cf5f19305571eff1d3413e0ab33713"
+  url "https://www.tarsnap.com/spiped/spiped-1.6.2.tgz"
+  sha256 "05d4687d12d11d7f9888d43f3d80c541b7721c987038d085f71c91bb06204567"
 
   livecheck do
     url :homepage
@@ -10,21 +10,27 @@ class Spiped < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "27a4be44c3532d6c5fd3c35ad01b6d7b8aeba9430e97cd684f51b386843dd7e4"
-    sha256 cellar: :any, arm64_big_sur:  "74e0d5955ee9754f9a88798d8d0c5a2b425756d3359378c312874ccb3959421d"
-    sha256 cellar: :any, monterey:       "6bf6ffda856ddf718d621df5810af8b7c7cb2afc7f6d4df8f7b35d5c3a746b6c"
-    sha256 cellar: :any, big_sur:        "c245e8cf440207b8a2d229b8f8644ebe25da6999b52f2b8b16835c55b7f04b6e"
-    sha256 cellar: :any, catalina:       "efe2a93770708c9a8c1474651b7b0b221d263b7fbb7dc75e014ff21caf084510"
-    sha256 cellar: :any, mojave:         "44c1509c5faf96f0be69fd905525e2070cf25445afddfaf45584bd9c4a1d702c"
-    sha256 cellar: :any, high_sierra:    "b5615b6afbc743c7b8b2776c3537ec42a4f1519f1f2f3e12bd06ae4e96ce5f14"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "fb49b420bd935b728f767276c0bb19133d745d52fe07a8ebad3877ff09996dfc"
+    sha256 cellar: :any,                 arm64_monterey: "293b53d8433d104f8133539224e412209605bc40d2cacaeb253081b95eb65578"
+    sha256 cellar: :any,                 arm64_big_sur:  "f30a91f2902faec487f48d0e580a34cc628c6cf4d80bab749ec32e0f38c575f4"
+    sha256 cellar: :any,                 ventura:        "f655204362f17020c0672a494144c32a8351ff5281e49238b0341c26da065e15"
+    sha256 cellar: :any,                 monterey:       "86fc3f6a8ad438e67a726d6e181774aa7af39b664345d6c5d0efbacb1267f86c"
+    sha256 cellar: :any,                 big_sur:        "f22668dad3e0af145761bf04d604c12d05a9ac397449e6bcf3b33cb29bf41849"
+    sha256 cellar: :any,                 catalina:       "a5a8967be00fba49a628f6d18cfe2ec69f40ffdb3d860eed91bd3026225d5c99"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ce1ab53824d6e9ccd9752ab5038630ab179f73053ef8fa941c894e38ecab171f"
   end
 
-  depends_on "bsdmake" => :build
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
+
+  on_macos do
+    depends_on "bsdmake" => :build
+  end
 
   def install
     man1.mkpath
-    system "bsdmake", "BINDIR_DEFAULT=#{bin}", "MAN1DIR=#{man1}", "install"
+    make = OS.mac? ? "bsdmake" : "make"
+    system make, "BINDIR_DEFAULT=#{bin}", "MAN1DIR=#{man1}", "install"
   end
 
   test do

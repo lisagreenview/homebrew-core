@@ -1,18 +1,19 @@
 class GlibNetworking < Formula
   desc "Network related modules for glib"
   homepage "https://gitlab.gnome.org/GNOME/glib-networking"
-  url "https://download.gnome.org/sources/glib-networking/2.70/glib-networking-2.70.0.tar.xz"
-  sha256 "66b408e7afa86c582fe38963db56133869ab4b57d34e48ec56aba621940d6f35"
+  url "https://download.gnome.org/sources/glib-networking/2.74/glib-networking-2.74.0.tar.xz"
+  sha256 "1f185aaef094123f8e25d8fa55661b3fd71020163a0174adb35a37685cda613b"
   license "LGPL-2.1-or-later"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "08c801c005aa171ce6654a3a9ded3030b781a43eeb9dc719e8685d756ec13ce2"
-    sha256               arm64_big_sur:  "ba522c00fb66cdecb8ffd2a59097d40442e0d4855448a0ec35fa930511ecccb4"
-    sha256               monterey:       "c115eb3ee607478945b79058c22e63545b8f9cdcdfe750f3279f34d47f35a6c5"
-    sha256 cellar: :any, big_sur:        "eab028e138ec9fe2017f9dcf052c09469b906ccb2e5b147572487cacd9061777"
-    sha256 cellar: :any, catalina:       "a7002f6e071a68e70a0d5af8377bdcf4c9ab6f9606272cb94b94aaa0ce8a3be8"
-    sha256 cellar: :any, mojave:         "5a48d3f2012eb407b90c38ae8db334d516b53ec5d8127f58bac4ed2a571e09af"
-    sha256               x86_64_linux:   "ca7db942c847b82b7115b770d585ce8bf6791e0e09a0f06cdce9b47f8eeaadea"
+    sha256 arm64_ventura:  "c22fa8ab4004584fe047a957a78669de9a5e379ef97e543486f083d79e5f580e"
+    sha256 arm64_monterey: "87daff64339dd3b65b69fff4cbab5b416bd7af562629d2efd74dda23ed3f164a"
+    sha256 arm64_big_sur:  "e7746e5130b1b2acbefeed67c358c404469ffe936f8ea6fb9246f787b87156df"
+    sha256 ventura:        "eed2ff2cb8c8f1254128a96078d7ccb24e1ecc0dc89455b18d0ce7e438e0fabd"
+    sha256 monterey:       "45cfef96fdb0f052d437aa9bbff0d7690fdd7bb6f0176ec6485086d7bbaba1c1"
+    sha256 big_sur:        "72acd8e5bdfb0742fa8c2d4a7b4f559b1ae384ad31459bf7190abc82e6484adb"
+    sha256 catalina:       "15216a8836cd1fb584f653de86f1de693f917727eec51ca55bc7a40eb0d55181"
+    sha256 x86_64_linux:   "d466490a0c4bb6adcc338b3fad485bc25ad7d906eb1096f24b10d916859ce60d"
   end
 
   depends_on "meson" => :build
@@ -22,25 +23,18 @@ class GlibNetworking < Formula
   depends_on "gnutls"
   depends_on "gsettings-desktop-schemas"
 
-  on_linux do
-    depends_on "libidn"
-  end
-
   link_overwrite "lib/gio/modules"
 
   def install
-    # stop meson_post_install.py from doing what needs to be done in the post_install step
+    # stop gnome.post_install from doing what needs to be done in the post_install step
     ENV["DESTDIR"] = "/"
 
-    mkdir "build" do
-      system "meson", *std_meson_args,
-                      "-Dlibproxy=disabled",
-                      "-Dopenssl=disabled",
-                      "-Dgnome_proxy=disabled",
-                      ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", *std_meson_args, "build",
+                    "-Dlibproxy=disabled",
+                    "-Dopenssl=disabled",
+                    "-Dgnome_proxy=disabled"
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
   end
 
   def post_install

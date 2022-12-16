@@ -1,10 +1,9 @@
 class Ldns < Formula
   desc "DNS library written in C"
   homepage "https://nlnetlabs.nl/projects/ldns/"
-  url "https://nlnetlabs.nl/downloads/ldns/ldns-1.7.1.tar.gz"
-  sha256 "8ac84c16bdca60e710eea75782356f3ac3b55680d40e1530d7cea474ac208229"
+  url "https://nlnetlabs.nl/downloads/ldns/ldns-1.8.3.tar.gz"
+  sha256 "c3f72dd1036b2907e3a56e6acf9dfb2e551256b3c1bbd9787942deeeb70e7860"
   license "BSD-3-Clause"
-  revision 4
 
   # https://nlnetlabs.nl/downloads/ldns/ since the first-party site has a
   # tendency to lead to an `execution expired` error.
@@ -14,29 +13,30 @@ class Ldns < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "c465f15a046a754c2bfd1c637201244d1dde5eea60b622ec851915f03123b91c"
-    sha256 cellar: :any,                 arm64_big_sur:  "8bd8186ef4b0e89f852828f66a99952bb9a6635dae7090fc6a569b33e3d86667"
-    sha256 cellar: :any,                 monterey:       "715d686d4cd96158117854f1aa1850dace62a2a442f5b5a4b701f11c72fcec80"
-    sha256 cellar: :any,                 big_sur:        "311ced9ff7f664b64f10939ba335fb3458d7b020e4f293a36a9fa10c92203620"
-    sha256 cellar: :any,                 catalina:       "014c23349aa56ea585da062b287e19999ed83609e3b75626cdd4b3ca4cdb9555"
-    sha256 cellar: :any,                 mojave:         "8228a7d9fdcb7e6c5210e9b4ce3975a68c36764a6c3025ded8abd2b60bef3c49"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "886bf69bb1a7215a5e9626ac6cbb04fd52cc4ddd2cdec9769ffc77480099a4d3"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "e0d0acfb1f7f199ce05fe11177adf2db2492911a0f2d51aed693f4127b477604"
+    sha256 cellar: :any,                 arm64_monterey: "46ef12897880d4f3d53508ea397362762d6f97c68259ec67041bbd12b35edbbd"
+    sha256 cellar: :any,                 arm64_big_sur:  "251b84cfda5e8e24ca2e1dcc8bba380beb7edca524ab09b188fa2c5fbe18fa05"
+    sha256 cellar: :any,                 ventura:        "b2c4a095c0c4eb850537697ba51153c285033cb3f597ac4739a7167277ceb5bc"
+    sha256 cellar: :any,                 monterey:       "a3185a8decca00ced7e56098d8e6897e3cecf4f6a5db970d8d7dcceb24178c5d"
+    sha256 cellar: :any,                 big_sur:        "0faa2e9fc9c0fb46cfa52d539838875ffcec82e886977d0d23d91e111f29efed"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c6bc1207ee00802b2bd19648ea2da9dae3eee6da0236092c9c398f51b4fa56f1"
   end
 
   depends_on "swig" => :build
   depends_on "openssl@1.1"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
 
   conflicts_with "drill", because: "both install a `drill` binary"
 
   def install
-    args = %W[
-      --prefix=#{prefix}
+    python3 = "python3.11"
+    args = *std_configure_args + %W[
       --with-drill
       --with-examples
       --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
       --with-pyldns
-      PYTHON_SITE_PKG=#{lib}/python3.9/site-packages
+      PYTHON_SITE_PKG=#{prefix/Language::Python.site_packages(python3)}
       --disable-dane-verify
       --without-xcode-sdk
     ]
@@ -44,13 +44,14 @@ class Ldns < Formula
     # Fixes: ./contrib/python/ldns_wrapper.c:2746:10: fatal error: 'ldns.h' file not found
     inreplace "contrib/python/ldns.i", "#include \"ldns.h\"", "#include <ldns/ldns.h>"
 
-    ENV["PYTHON"] = Formula["python@3.9"].opt_bin/"python3"
+    ENV["PYTHON"] = which(python3)
     system "./configure", *args
 
     if OS.mac?
+      # FIXME: Turn this into a proper patch and send it upstream.
       inreplace "Makefile" do |s|
-        s.change_make_var! "PYTHON_LDFLAGS", "-undefined dynamic_lookup"
-        s.gsub!(/(\$\(PYTHON_LDFLAGS\).*) -no-undefined/, "\\1")
+        s.change_make_var! "PYTHON_LIBS", "-undefined dynamic_lookup"
+        s.gsub!(/(\$\(PYTHON_CFLAGS\).*) -no-undefined/, "\\1")
       end
     end
 

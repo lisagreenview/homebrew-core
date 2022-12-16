@@ -1,8 +1,11 @@
 [
-  "anjuta",
+  "couchdb-lucene",
   "hive",
-  "mpv",
+  "libgaiagraphics",
+  "librasterlite",
   "predictionio",
   "sqoop",
-  "watchman"
+  "swtpm",
+  "synergy-core",
+  "tomcat-native"
 ]

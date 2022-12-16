@@ -1,19 +1,21 @@
 class Bottom < Formula
   desc "Yet another cross-platform graphical process/system monitor"
   homepage "https://clementtsang.github.io/bottom/"
-  url "https://github.com/ClementTsang/bottom/archive/0.6.4.tar.gz"
-  sha256 "ee949805515a1b491f9434927ac3d297b9d5d9d261e3c39e036b725d807b10de"
+  url "https://github.com/ClementTsang/bottom/archive/0.6.8.tar.gz"
+  sha256 "4e4eb251972a7af8c46dd36bcf1335fea334fb670569434fbfd594208905b2d9"
   license "MIT"
   head "https://github.com/ClementTsang/bottom.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a58298102a3462857527816f20a2176961ec1c970e57aa820f2cb9a6169397af"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "858638f2ce93c5cd1f0f4b3fe5a34ad2978c1af1d1ff72fd6dd8aca954593505"
-    sha256 cellar: :any_skip_relocation, monterey:       "841153e02d47148e90e0eff96714710b63fcc0fb5fac8d4b1789e5a040d9763e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f047f6173fd9bbee11fb9ab8c3e74a57426115b41ef561cebff58890ec781b7b"
-    sha256 cellar: :any_skip_relocation, catalina:       "54c224a8df54fce11acbb473e5aa51e2a4b39b635e119c7dc49da0c7dbbba50a"
-    sha256 cellar: :any_skip_relocation, mojave:         "b4f68a0f65db30f870df86e1e2acd4eb32196f1da452c013d1e49f65aa3484a8"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "45a3ad6c888122f5e082f8ab30854c0903316d7898917c16eda01804456db0de"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "877d2e06dd2f926222b398f76d85109f518e18cabb1cd8e77d914990047c38f5"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8e7e126717b29e5317ddac5abc247bf3dc1d084f544af13af37ab4e17b66410d"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0cc0790f7611b7e50bb4ae22b1376a12619716f13b4f8bb406c0f2c67bf69232"
+    sha256 cellar: :any_skip_relocation, ventura:        "2d80542e097eacb2f75c294807fe5f0b30a7b9fb96824d5cd9d261b75dd8a18f"
+    sha256 cellar: :any_skip_relocation, monterey:       "c8572a9b69cff3a51c94131b487d783efeeccf141dc84d15c33573d46bdbfe81"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ab7573866fee9294189c90e5bec525d54652835be497a1cbf4c1c0c4b999ffa7"
+    sha256 cellar: :any_skip_relocation, catalina:       "622766c0da5d44b5b7ea85ee524b16aa7b8b96366a677c6f158b8f6e35e60243"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d31da37fed38b840c8cb34388da41be7398ae33c69725e6c36cd54b59cc265ac"
   end
 
   depends_on "rust" => :build

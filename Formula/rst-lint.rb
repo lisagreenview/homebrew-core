@@ -3,27 +3,24 @@ class RstLint < Formula
 
   desc "ReStructuredText linter"
   homepage "https://github.com/twolfson/restructuredtext-lint"
-  url "https://files.pythonhosted.org/packages/45/69/5e43d0e8c2ca903aaa2def7f755b97a3aedc5793630abbd004f2afc3b295/restructuredtext_lint-1.3.2.tar.gz"
-  sha256 "d3b10a1fe2ecac537e51ae6d151b223b78de9fafdd50e5eb6b08c243df173c80"
+  url "https://files.pythonhosted.org/packages/48/9c/6d8035cafa2d2d314f34e6cd9313a299de095b26e96f1c7312878f988eec/restructuredtext_lint-1.4.0.tar.gz"
+  sha256 "1b235c0c922341ab6c530390892eb9e92f90b9b75046063e047cacfb0f050c45"
   license "Unlicense"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "9f38f4267988a8a15da26707c04bd7fe201a12ca94c43e7ac32a054953143f49"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9f38f4267988a8a15da26707c04bd7fe201a12ca94c43e7ac32a054953143f49"
-    sha256 cellar: :any_skip_relocation, monterey:       "4e0d8defb5305731e9053120f61fba399c1fc2908367df0ce332acfc09d2550a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "4e0d8defb5305731e9053120f61fba399c1fc2908367df0ce332acfc09d2550a"
-    sha256 cellar: :any_skip_relocation, catalina:       "4e0d8defb5305731e9053120f61fba399c1fc2908367df0ce332acfc09d2550a"
-    sha256 cellar: :any_skip_relocation, mojave:         "4e0d8defb5305731e9053120f61fba399c1fc2908367df0ce332acfc09d2550a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f5492b290c6c3b00356c0d956ca4d270855c2852519114ade876c6ea5b183932"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "977a9d1c0f562445d972e95d59e883d26a7966b18ca3a124577936d8dde74018"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "977a9d1c0f562445d972e95d59e883d26a7966b18ca3a124577936d8dde74018"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "977a9d1c0f562445d972e95d59e883d26a7966b18ca3a124577936d8dde74018"
+    sha256 cellar: :any_skip_relocation, ventura:        "c8bbc56f35fe2f218241996e273e173cbb2e19535ca95dd77bf97c6ce6ca5479"
+    sha256 cellar: :any_skip_relocation, monterey:       "c8bbc56f35fe2f218241996e273e173cbb2e19535ca95dd77bf97c6ce6ca5479"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c8bbc56f35fe2f218241996e273e173cbb2e19535ca95dd77bf97c6ce6ca5479"
+    sha256 cellar: :any_skip_relocation, catalina:       "c8bbc56f35fe2f218241996e273e173cbb2e19535ca95dd77bf97c6ce6ca5479"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "680297bd09a922363c112da4ce90736e24c732d5907727684625aa639ac777c3"
   end
 
-  depends_on "python@3.10"
-
-  resource "docutils" do
-    url "https://files.pythonhosted.org/packages/2f/e0/3d435b34abd2d62e8206171892f174b180cd37b09d57b924ca5c2ef2219d/docutils-0.16.tar.gz"
-    sha256 "c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"
-  end
+  depends_on "docutils"
+  depends_on "python@3.11"
 
   def install
     virtualenv_install_with_resources

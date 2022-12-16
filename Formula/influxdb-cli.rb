@@ -2,8 +2,8 @@ class InfluxdbCli < Formula
   desc "CLI for managing resources in InfluxDB v2"
   homepage "https://influxdata.com/time-series-platform/influxdb/"
   url "https://github.com/influxdata/influx-cli.git",
-      tag:      "v2.2.1",
-      revision: "31ac78361b8aaae2aba966eb69054ea107028044"
+      tag:      "v2.6.0",
+      revision: "90e825cdd95ebc9e6cb7cfdb68a49a429e4d4efd"
   license "MIT"
   head "https://github.com/influxdata/influx-cli.git", branch: "main"
 
@@ -13,11 +13,13 @@ class InfluxdbCli < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "caf7f1fbc75839240bc0311dc94c5e34caddcc92de8784babde1bec1a6b40da6"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1a00aeb8af79afeffa06dec4b24287b364cf1900e33bdd0217e26fb5e9bb4aff"
-    sha256 cellar: :any_skip_relocation, monterey:       "abcce77b01b318d3ce600f84ad6fc2693c994f2682996a7911bfe78094071245"
-    sha256 cellar: :any_skip_relocation, big_sur:        "246ed09000d1fae897da9bf1c2d17de559c03e8ce4c6bbf83edef81fe0679365"
-    sha256 cellar: :any_skip_relocation, catalina:       "cf8474e13d6092e7e7c45df7d868d649c2c60872069704fc9988d71641a9bbb8"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "72658854161f96409b129b2f47599475c7cd98c9f981dbbbe2ffa818cdf0fc3e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "15242f7121549d66dc67493e925609d0b8a6a6dcca1e70992493de723691c037"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ffdbd796b88a0cbb3ca05540913c3574f4c0ae5d425638657d5bb5712a03ff97"
+    sha256 cellar: :any_skip_relocation, ventura:        "a07a7564f816b31a73bafe7b9a9590e22a94fe2db2c013d63edb9619f2d5a87f"
+    sha256 cellar: :any_skip_relocation, monterey:       "875dccd9c48f2a7a7bf44b9a75fa35df4b4192ac494932c58eeebc7fd3814231"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a4c16d4bc3d61d56b9a943aba0ecf69764c438744eb3db4c057da11b93e79a11"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3293a4f20e1777b12c0a7e08b0695e92323524f144072db17fd8ea5fde6ae4b8"
   end
 
   depends_on "go" => :build
@@ -30,18 +32,11 @@ class InfluxdbCli < Formula
       -X main.version=#{version}
       -X main.commit=#{Utils.git_short_head(length: 10)}
       -X main.date=#{time.iso8601}
-    ].join(" ")
+    ]
 
-    system "go", "build", *std_go_args(ldflags: ldflags),
-           "-o", bin/"influx", "./cmd/influx"
+    system "go", "build", *std_go_args(output: bin/"influx", ldflags: ldflags), "./cmd/influx"
 
-    bash_complete = buildpath/"bash-completion"
-    bash_complete.write Utils.safe_popen_read(bin/"influx", "completion", "bash")
-    bash_completion.install bash_complete => "influx"
-
-    zsh_complete = buildpath/"zsh-completion"
-    zsh_complete.write Utils.safe_popen_read(bin/"influx", "completion", "zsh")
-    zsh_completion.install zsh_complete => "_influx"
+    generate_completions_from_executable(bin/"influx", "completion", base_name: "influx", shells: [:bash, :zsh])
   end
 
   test do

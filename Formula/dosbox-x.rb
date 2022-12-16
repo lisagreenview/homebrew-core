@@ -1,40 +1,61 @@
 class DosboxX < Formula
   desc "DOSBox with accurate emulation and wide testing"
   homepage "https://dosbox-x.com/"
-  url "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v0.83.19.tar.gz"
-  sha256 "66d69ec9308dd3977f5a8911990d34eac12a30f56400534c867f8aa712b7fdda"
+  url "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v0.84.1.tar.gz"
+  sha256 "d5ba5b3d87b0dc69d70f6c9701eec36772bbc3716e0b201b74ec73d4b3ff38cc"
   license "GPL-2.0-or-later"
   version_scheme 1
-  head "https://github.com/joncampbell123/dosbox-x.git"
+  head "https://github.com/joncampbell123/dosbox-x.git", branch: "master"
 
   livecheck do
-    url :stable
-    regex(/^dosbox-x[._-]v?(\d+(?:\.\d+)+)$/i)
+    url "https://github.com/joncampbell123/dosbox-x/releases?q=prerelease%3Afalse"
+    regex(%r{href=["']?[^"' >]*?/tag/dosbox-x[._-]v?(\d+(?:\.\d+)+)["' >]}i)
+    strategy :page_match
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "95e7d90ff2e88b03a7661d107072f00c8476f42a8b19c2718eca7a871dd96d09"
-    sha256 cellar: :any, arm64_big_sur:  "68d52b75fe52e2c3dfdf132c0f47f2a730984394140c9a4dcc359c01174c96a5"
-    sha256 cellar: :any, monterey:       "9f67e25e2d1615e520a9dfb1708f2057c0088ca11f09feea92715d0d7da0f319"
-    sha256 cellar: :any, big_sur:        "2c770ad31bec193aa392d3bc098a97f88aa6d73f18ecb6b7a93bb3526c31361e"
-    sha256 cellar: :any, catalina:       "26d6fb2c103a8625d4b369ec324085e8f120b5642fcaf6a25bffa1f79ad45e7b"
+    sha256 arm64_ventura:  "d8d48cde31652f38141989d47761f98ca9244ebaa76b983219f4a47b9890db37"
+    sha256 arm64_monterey: "ba141298043ea53e91b2b5e848cdafbba932522c2a4378f516ed00c8e7900f86"
+    sha256 arm64_big_sur:  "857458e42569a07bd3672c737ada1d74c2f4540508781c7bdea836419d32f116"
+    sha256 ventura:        "05bb7c5945061bc2f6ad72591062ed598e208dc5b084559494eb1792efac586f"
+    sha256 monterey:       "48a99fb912507bfea08cb32d6d06b314ae2dd3d5d255da2a16b17e2dcf8b493b"
+    sha256 big_sur:        "897591473da3931085825289853adbf8f860c438207a0cf66f343ab51721c946"
+    sha256 catalina:       "22a718ddb857157def467dfff8d08bdb6272741d920ca05ccf6215190f5c9983"
+    sha256 x86_64_linux:   "8e685d8d1494efa8b6ded6b1fd4346cdc786cf81976e1d1d1868c35c1f63a099"
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "pkg-config" => :build
   depends_on "fluid-synth"
+  depends_on "freetype"
+  depends_on "libpng"
+  depends_on "libslirp"
   depends_on macos: :high_sierra # needs futimens
+  depends_on "sdl2"
+  uses_from_macos "zlib"
+
+  on_linux do
+    depends_on "linux-headers@5.15" => :build
+  end
+
+  fails_with gcc: "5"
 
   def install
     ENV.cxx11
 
-    args = %W[
-      --prefix=#{prefix}
-      --disable-dependency-tracking
+    # See flags in `build-macos-sdl2`.
+    args = %w[
+      --enable-core-inline
+      --enable-sdl2
+      --disable-sdl2test
+      --disable-sdl
       --disable-sdltest
     ]
-    system "./build-macosx", *args
+
+    system "./autogen.sh"
+    system "./configure", *std_configure_args, *args
+    system "make" # Needs to be called separately from `make install`.
     system "make", "install"
   end
 

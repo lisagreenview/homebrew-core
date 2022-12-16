@@ -1,6 +1,8 @@
 class Lilypond < Formula
-  desc "Music engraving program"
+  desc "Music engraving system"
   homepage "https://lilypond.org"
+  url "https://lilypond.org/download/sources/v2.24/lilypond-2.24.0.tar.gz"
+  sha256 "3cedbe3b92b02569e3a6f2f0674858967b3da278d70aa3e98aef5bdcd7f78b69"
   license all_of: [
     "GPL-3.0-or-later",
     "GPL-3.0-only",
@@ -9,20 +11,6 @@ class Lilypond < Formula
     :public_domain,
     "MIT",
   ]
-  revision 1
-
-  stable do
-    url "https://lilypond.org/download/sources/v2.22/lilypond-2.22.1.tar.gz"
-    sha256 "72ac2d54c310c3141c0b782d4e0bef9002d5519cf46632759b1f03ef6969cc30"
-
-    # Distinguishes Lilypond homebrew installation that uses Guile 2.2 while
-    # others use Guile 1.8.
-    # See https://gitlab.com/lilypond/lilypond/-/merge_requests/950
-    patch do
-      url "https://gitlab.com/lilypond/lilypond/-/commit/a6742d0aadb6ad4999dddd3b07862fe720fe4dbf.diff"
-      sha256 "2a3066c8ef90d5e92b1238ffb273a19920632b7855229810d472e2199035024a"
-    end
-  end
 
   livecheck do
     url "https://lilypond.org/source.html"
@@ -30,16 +18,19 @@ class Lilypond < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "5b5182726f7fd17fc1da720d48d093b326c3b0e60ef7f8a56598d6d142999871"
-    sha256 big_sur:       "c6d72cd49f4ea86f978d257a2e6f73f6df79f5bddaadb1c8e676e2e715fe3d5d"
-    sha256 catalina:      "d38a77136b4bd19124aa9a01bd2de4a8fedbc2b9fea9e7e6d8addb9f2a09b90d"
-    sha256 mojave:        "2fed3245ffd0ad5ad6c17ecd9512ddbd117efcde703bd40732d8b820f9185503"
-    sha256 x86_64_linux:  "cb3d3205f0526ad3182d2afd32fa28a94ec0b893a39fff466ef7372335a15b52"
+    sha256 arm64_ventura:  "8b75d616d053954f52420a608e3fe40756fb4c987ca85601e3339b6ef1b3e40e"
+    sha256 arm64_monterey: "9eb2ad5a3edef407451fc47b02e507e74849ccc805e7926fd1b7b1e6d62ee230"
+    sha256 arm64_big_sur:  "57a16379b2dd9290894eae10ab88f7b4eed12f5af2145311436e19e827142101"
+    sha256 ventura:        "1495d0ad341340b67b0a6ec179b80d62cb29e0635c56b80e4798ae61778771a4"
+    sha256 monterey:       "9af1797f65d330b0624e786f9bc47bd6f47653581f7a0ebd8fa37ef025a4ca55"
+    sha256 big_sur:        "bcc12cfa0a1959a2d38514e843de20ffd54d82c4f86f2a0da00d682e6c0aa1c9"
+    sha256 x86_64_linux:   "4c90e984dec560d2ea318351f301b5a40b20182514c31c7d34d9e4acbed105fa"
   end
 
   head do
-    url "https://git.savannah.gnu.org/git/lilypond.git", branch: "master"
+    url "https://gitlab.com/lilypond/lilypond.git", branch: "master"
     mirror "https://github.com/lilypond/lilypond.git"
+    mirror "https://git.savannah.gnu.org/git/lilypond.git"
 
     depends_on "autoconf" => :build
   end
@@ -54,31 +45,29 @@ class Lilypond < Formula
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "ghostscript"
-  depends_on "guile@2"
+  depends_on "guile"
   depends_on "pango"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
 
   uses_from_macos "flex" => :build
   uses_from_macos "perl" => :build
 
   def install
     system "./autogen.sh", "--noconfigure" if build.head?
-    system "./configure",
-            "--prefix=#{prefix}",
-            "--datadir=#{share}",
-            "--with-texgyre-dir=#{Formula["texlive"].opt_share}/texmf-dist/fonts/opentype/public/tex-gyre",
-            "--disable-documentation"
-    ENV.prepend_path "LTDL_LIBRARY_PATH", Formula["guile@2"].opt_lib
+
+    system "./configure", "--datadir=#{share}",
+                          "--disable-documentation",
+                          *std_configure_args,
+                          "--with-flexlexer-dir=#{Formula["flex"].include}",
+                          "GUILE_FLAVOR=guile-3.0"
+
     system "make"
     system "make", "install"
 
+    system "make", "bytecode"
+    system "make", "install-bytecode"
+
     elisp.install share.glob("emacs/site-lisp/*.el")
-
-    libexec.install bin/"lilypond"
-
-    (bin/"lilypond").write_env_script libexec/"lilypond",
-      GUILE_WARN_DEPRECATED: "no",
-      LTDL_LIBRARY_PATH:     "#{Formula["guile@2"].opt_lib}:$LTDL_LIBRARY_PATH"
   end
 
   test do

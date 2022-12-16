@@ -1,9 +1,10 @@
 class Fltk < Formula
   desc "Cross-platform C++ GUI toolkit"
   homepage "https://www.fltk.org/"
-  url "https://www.fltk.org/pub/fltk/1.3.7/fltk-1.3.7-source.tar.gz"
-  sha256 "5d2ccb7ad94e595d3d97509c7a931554e059dd970b7b29e6fd84cb70fd5491c6"
+  url "https://www.fltk.org/pub/fltk/1.3.8/fltk-1.3.8-source.tar.gz"
+  sha256 "f3c1102b07eb0e7a50538f9fc9037c18387165bc70d4b626e94ab725b9d4d1bf"
   license "LGPL-2.0-only" => { with: "FLTK-exception" }
+  revision 1
 
   livecheck do
     url "https://www.fltk.org/software.php"
@@ -11,21 +12,22 @@ class Fltk < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "254bcf9ef390fd486067914f90841c0abb2c863de1d245bd4f78997f64bd52eb"
-    sha256 arm64_big_sur:  "ef093c6e98b952c2e3393e124e325ad67a038a08f0ee3d88ca7c6a7b07480567"
-    sha256 monterey:       "745b3f942ec06b482727b81a15da86e938eb82ed6bec27c03055c51b26db8eba"
-    sha256 big_sur:        "d95e5a1b0dcc2537f1ac2964a348728e4a66e774f1aed1f0f5dc84a2f5564430"
-    sha256 catalina:       "691edcc9f9c48a7c5ebaba813719ef4a9bb66dae228be3a2f4ed6d29acf17dea"
-    sha256 mojave:         "550f4a444fd0b0682c154745c5a1b780ce003a3477afaa9ae25a8a846fa05900"
-    sha256 x86_64_linux:   "fa662dc910b37675897d8bee50f77ea1de928f594733f4c4df7f3b4627310486"
+    sha256 arm64_ventura:  "629a76ecd1a0cab83c01e1bf5488d85515f0115c0a1f638b0aa25dbc9f3146cd"
+    sha256 arm64_monterey: "0a4162f4f01767c76acabf13f888dc9a585b3ff72df88545704fad68ce578954"
+    sha256 arm64_big_sur:  "c5e80b820d74af67cdd25a7125b423bbe259930d35507aaabd56b82ebaca0048"
+    sha256 ventura:        "cce07824ab505a5acc47b5a3db22c3906ca88ab494216dcbba14be7a66e9b51f"
+    sha256 monterey:       "4e35b5a5e6f0c0ef134630be137142aecc42a73ce8d9ee1c1df8c7a478dacb7d"
+    sha256 big_sur:        "604d0e1beb8fb68b0dcf12b83a2209f34c7d0f9d3fc47c3b9b34222c93faa593"
+    sha256 catalina:       "ef38aabd458e85e3cbfb7bfbe1ca96949baad75397a1a4fbb25cdf299a713dfe"
+    sha256 x86_64_linux:   "310ccd7518b730389ca3d5162faa9866fc68d023f84c2c24147c7551b990dc9b"
   end
 
   head do
-    url "https://github.com/fltk/fltk.git"
+    url "https://github.com/fltk/fltk.git", branch: "master"
     depends_on "cmake" => :build
   end
 
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libpng"
 
   on_linux do

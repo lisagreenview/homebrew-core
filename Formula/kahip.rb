@@ -1,17 +1,21 @@
 class Kahip < Formula
   desc "Karlsruhe High Quality Partitioning"
   homepage "https://algo2.iti.kit.edu/documents/kahip/index.html"
-  url "https://github.com/KaHIP/KaHIP/archive/v3.12.tar.gz"
-  sha256 "df923b94b552772d58b4c1f359b3f2e4a05f7f26ab4ebd00a0ab7d2579f4c257"
+  url "https://github.com/KaHIP/KaHIP/archive/v3.14.tar.gz"
+  sha256 "9da04f3b0ea53b50eae670d6014ff54c0df2cb40f6679b2f6a96840c1217f242"
   license "MIT"
-  head "https://github.com/KaHIP/KaHIP.git"
+  revision 1
+  head "https://github.com/KaHIP/KaHIP.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "35aaeb5b6017d06d68cfe54aef25d1a745ef4fdf5f0b41bb5e544e17cc5c49ec"
-    sha256 cellar: :any,                 monterey:      "5bd59728b30733335ccb33cdadface3d183dc2e4e351104a19840495b8952ce6"
-    sha256 cellar: :any,                 big_sur:       "b9be588260c93ea0c0d20a9f96d9b646341955e8842119f6325bcb6c29d4727f"
-    sha256 cellar: :any,                 catalina:      "e71a62e66cf71370faa5108de3e8d1b21babf32974f0fe800e33885cddccaa93"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "76cc24151d1df1ac6eed61bb4f723f2013f3f9c506b790883972b043f1e8412c"
+    sha256 cellar: :any,                 arm64_ventura:  "8b999a1be4898c4e40b9aff02b62146505db291dba06db771c238cb37490d1a5"
+    sha256 cellar: :any,                 arm64_monterey: "caefdd4a209465343d4b986895d17278c811acd876f7ecce50388ab0c4e7b250"
+    sha256 cellar: :any,                 arm64_big_sur:  "a393a6470d7569acf1c2e1e0b402d5901cea07c9880a7d6f01423acdaad7262a"
+    sha256 cellar: :any,                 ventura:        "ae1e1f542691906b9321faa0ab5ff338cc3e2b87524fdc4a4e3cedb73c44d120"
+    sha256 cellar: :any,                 monterey:       "8f147b571794bbc87b050e84edaca1eb90be0b7c3ed6f0976f3f22c7a6a6ed96"
+    sha256 cellar: :any,                 big_sur:        "d6ef09d6bde208d85c59ea4d5748a0289a6eddec3e75315766a05e692b857c6d"
+    sha256 cellar: :any,                 catalina:       "f3c5fee2f01f5d4dce03a9f5c43ec8bdb6ba2199aa199c0bb09eefcffe1cb425"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6780ba35f379f397d06db1b6b6f5d1b4a236993959821400d94f5058b1686b83"
   end
 
   depends_on "cmake" => :build
@@ -21,17 +25,14 @@ class Kahip < Formula
     depends_on "gcc"
   end
 
-  def install
-    if OS.mac?
-      gcc_major_ver = Formula["gcc"].any_installed_version.major
-      ENV["CC"] = Formula["gcc"].opt_bin/"gcc-#{gcc_major_ver}"
-      ENV["CXX"] = Formula["gcc"].opt_bin/"g++-#{gcc_major_ver}"
-    end
+  fails_with :clang do
+    cause "needs OpenMP support"
+  end
 
-    mkdir "build" do
-      system "cmake", *std_cmake_args, ".."
-      system "make", "install"
-    end
+  def install
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

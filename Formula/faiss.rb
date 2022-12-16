@@ -1,8 +1,8 @@
 class Faiss < Formula
   desc "Efficient similarity search and clustering of dense vectors"
   homepage "https://github.com/facebookresearch/faiss"
-  url "https://github.com/facebookresearch/faiss/archive/v1.7.1.tar.gz"
-  sha256 "d676d3107ad41203a49e0afda2630519299dc8666f8d23322cbe1eac0c431871"
+  url "https://github.com/facebookresearch/faiss/archive/v1.7.3.tar.gz"
+  sha256 "3e4fac26d8c9e9008ecea4ae5fc414c658998fce4ba75835058b1a71d3516002"
   license "MIT"
 
   livecheck do
@@ -11,16 +11,22 @@ class Faiss < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "6c6e739ef44832c1d17f1d3bd330dde1a8f1c68ca691362061f48672d0081fa7"
-    sha256 cellar: :any, monterey:      "d95cf0e5c01bb7b748e79f95c5aff23c3f4a738cc70b6e7fc1e70ed832843c0e"
-    sha256 cellar: :any, big_sur:       "ca98be5aa73a7f48fb1e22bcae35687f0503a76f1ff00be7d56c88e0dcf6f111"
-    sha256 cellar: :any, catalina:      "d0ec19a749f8bf7a5a48cb828d7f6f1b7da9dff457d47c83b4a34cfedfb6d58a"
-    sha256 cellar: :any, mojave:        "a719758b2de8c7489bdcbd795b2d1c81780c82a191c3baf2477c71fb38c8ff2f"
+    sha256 cellar: :any,                 arm64_ventura:  "972faf5daee67d44d56e581c2cf9fb1a99f947a154b4a97c4e3b1cad4c361d31"
+    sha256 cellar: :any,                 arm64_monterey: "b01baa24f8671a527bf75830f8137a92df0777e9b6be2940b587819a490f361d"
+    sha256 cellar: :any,                 arm64_big_sur:  "cbfb1f586802bedbe45facdf35cd91d58efdfe55633372bc341557aac7056138"
+    sha256 cellar: :any,                 ventura:        "abdf023064d96bac1bada9bb6197428771a3e4991989b1851e27d516134b6d43"
+    sha256 cellar: :any,                 monterey:       "e68a7deee524d867c5393a7106efcfce02c4cdeed49deccca2df11fff9b9ce25"
+    sha256 cellar: :any,                 big_sur:        "e64aee4414f68057d77210c73a81b457872a87d9bb7231219616a6d5db82f694"
+    sha256 cellar: :any,                 catalina:       "8a94e44a680df9c862353a5cce4fbbb71fa8b52feda12d4af0ac9f9b12146069"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cbb47aff1c07d626c790e099272b0baa508404b35d59381c9816a28320920406"
   end
 
   depends_on "cmake" => :build
-  depends_on "libomp"
   depends_on "openblas"
+
+  on_macos do
+    depends_on "libomp"
+  end
 
   def install
     args = *std_cmake_args + %w[
@@ -38,7 +44,7 @@ class Faiss < Formula
 
   test do
     cp pkgshare/"demos/demo_imi_flat.cpp", testpath
-    system ENV.cxx, "-std=c++11", "-L#{lib}", "-lfaiss", "demo_imi_flat.cpp", "-o", "test"
+    system ENV.cxx, "-std=c++11", "demo_imi_flat.cpp", "-L#{lib}", "-lfaiss", "-o", "test"
     assert_match "Query results", shell_output("./test")
   end
 end

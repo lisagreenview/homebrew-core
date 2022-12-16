@@ -1,23 +1,32 @@
 class Passenger < Formula
   desc "Server for Ruby, Python, and Node.js apps via Apache/NGINX"
   homepage "https://www.phusionpassenger.com/"
-  url "https://github.com/phusion/passenger/releases/download/release-6.0.12/passenger-6.0.12.tar.gz"
-  sha256 "4d15063dea6bce195e251d2b42e7bb67fab0049b8d6c423188566bc11ce9a8ad"
+  url "https://github.com/phusion/passenger/releases/download/release-6.0.15/passenger-6.0.15.tar.gz"
+  sha256 "73fa22da5a11e4bc4ad6b95c13a0e393ba18109e6e07bd1953c45b2f0c0aae80"
   license "MIT"
+  revision 2
   head "https://github.com/phusion/passenger.git", branch: "stable-6.0"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "296191cb03c411cec4795f325f48647698409059423444509afd58c528cc1415"
-    sha256 cellar: :any, arm64_big_sur:  "713b7d300bb437a406736faf5ddace4f94167cc0594dba9377fe1b2caff2dcbe"
-    sha256 cellar: :any, monterey:       "492c5618b97c38bf9d51924d3bc1fa9db12718b5c174680f150df78f2d1319b6"
-    sha256 cellar: :any, big_sur:        "97fe534c25d9eeb8f066904fc3c6bdf0439410e48579e77d05057832c1d39a4a"
-    sha256 cellar: :any, catalina:       "d298b1575d9345f88c12adef823e264c18fbadcf18e5aa6197e7498c6dac5679"
+    sha256 cellar: :any,                 arm64_ventura:  "75c83876ed6db1efaf345e26535aca7c639edb85bf4f55df73e5c663095c77fd"
+    sha256 cellar: :any,                 arm64_monterey: "2f9a82c3a1d8033e306b789126d8b85892adb56c1952e868f5f8bc7c6929d793"
+    sha256 cellar: :any,                 arm64_big_sur:  "ed089068f2a4490131628b96af7a37807d78c91b37dd6da3d31d44c8f87b641e"
+    sha256 cellar: :any,                 ventura:        "e248420223ac512b9e9633a2e84c72a15b6c56d8b5ceacae8e68046780665f49"
+    sha256 cellar: :any,                 monterey:       "666e5759f843c33cf5558f48e6ccc1f7761f55c5da908a57ae5b1b0843377a34"
+    sha256 cellar: :any,                 big_sur:        "7862f310b701e45da3033b4d6c0f7c440734d2697fc2a1b4b79fd993d1021617"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "aff10b308621dff3e4f50290d26f184ebe5e5bbeec9fd2ce5defd548bd3b0f59"
   end
 
-  # to build nginx module
-  depends_on "nginx" => [:build, :test]
+  depends_on "httpd" => :build # to build the apache2 module
+  depends_on "nginx" => [:build, :test] # to build nginx module
+  depends_on "apr"
+  depends_on "apr-util"
   depends_on "openssl@1.1"
   depends_on "pcre"
+
+  uses_from_macos "xz" => :build
+  uses_from_macos "curl"
+  uses_from_macos "libxcrypt"
   uses_from_macos "ruby", since: :catalina
 
   def install

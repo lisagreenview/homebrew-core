@@ -1,10 +1,10 @@
 class Clazy < Formula
   desc "Qt oriented static code analyzer"
   homepage "https://www.kdab.com/"
-  url "https://download.kde.org/stable/clazy/1.10/src/clazy-1.10.tar.xz"
-  sha256 "4ce6d55ffcddacdb005d847e0c329ade88a01e8e4f7590ffd2a9da367c1ba39d"
+  url "https://download.kde.org/stable/clazy/1.11/src/clazy-1.11.tar.xz"
+  sha256 "66165df33be8785218720c8947aa9099bae6d06c90b1501953d9f95fdfa0120a"
   license "LGPL-2.0-or-later"
-  revision 1
+  revision 2
   head "https://invent.kde.org/sdk/clazy.git", branch: "master"
 
   livecheck do
@@ -13,25 +13,30 @@ class Clazy < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "c44b906300b19fd0f3fa64dd98c6edf58065a59494d040e7d1121944fd36df2e"
-    sha256 cellar: :any, arm64_big_sur:  "7d15f90dbe42c90a9920c117854b94f17908622df7def7d4d5dda8b5303ef7e5"
-    sha256 cellar: :any, monterey:       "a325c3349a7bbcde4d330a19b030a2d54c57ddfd222e66022825ca04cd9d2123"
-    sha256 cellar: :any, big_sur:        "a873bc99b80959e45cf74c388bdefd9541a985f87e42de9b35a6ad82bec5953f"
-    sha256 cellar: :any, catalina:       "57301f79bae291ae0817b4b6577f49a4ea2136849d36b8c0b949c026995ebb2a"
-    sha256 cellar: :any, mojave:         "6c2cf6029ba58ad5d7fa13098fcd18d9514315bc57e11c090f351f4e93df5350"
+    sha256 cellar: :any,                 arm64_ventura:  "a716670d3c6a16f67ac39d82813c7fd054761f4d026255f904b10457f67791fb"
+    sha256 cellar: :any,                 arm64_monterey: "e5401775aff4f1e6fad0fd459ae01f492c0398101457ffc1d6d0381d4ceb8828"
+    sha256 cellar: :any,                 arm64_big_sur:  "d022ef65ffa388d2b6db61b16077dc08a5d5b29185a2723bb631914a4da1fa75"
+    sha256 cellar: :any,                 ventura:        "5938ca0a911bb8031870f91b12915eb359eceb0f92f07bc9d5d97996be9bc952"
+    sha256 cellar: :any,                 monterey:       "90ef44a60aff61eeb80c8a14ce55954b8d952da25a632c72f255d365c03cfc11"
+    sha256 cellar: :any,                 big_sur:        "5237f20d2a267e396777e6afabd0bf7eab77ff174ce05d771aef96d5e5ce62ac"
+    sha256 cellar: :any,                 catalina:       "ca761dbfa90f36a5880bf962e68b22d44f8449c5e74083d35dd79ae2d379b4fa"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f358bdb38ce2bebd90cb2fe9a59dfb8e4a65531a72488f37e0f2473b0ba6bb6c"
   end
 
   depends_on "cmake"   => [:build, :test]
   depends_on "qt"      => :test
   depends_on "coreutils"
-  depends_on "llvm"
+  depends_on "llvm@14"
 
   uses_from_macos "libxml2"
   uses_from_macos "ncurses"
   uses_from_macos "zlib"
 
+  fails_with gcc: "5" # C++17
+
   def install
-    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    ENV.append "CXXFLAGS", "-std=gnu++17" # Fix `std::regex` support detection.
+    system "cmake", "-S", ".", "-B", "build", "-DCLAZY_LINK_CLANG_DYLIB=ON", *std_cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end
@@ -68,7 +73,8 @@ class Clazy < Formula
       int main() { return 0; }
     EOS
 
-    ENV["CLANGXX"] = Formula["llvm"].opt_bin/"clang++"
+    llvm = deps.map(&:to_formula).find { |f| f.name.match?(/^llvm(@\d+(\.\d+)*)?$/) }
+    ENV["CLANGXX"] = llvm.opt_bin/"clang++"
     system "cmake", "-DCMAKE_CXX_COMPILER=#{bin}/clazy", "."
     assert_match "warning: qgetenv().isEmpty() allocates. Use qEnvironmentVariableIsEmpty() instead",
       shell_output("make VERBOSE=1 2>&1")

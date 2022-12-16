@@ -3,18 +3,20 @@ require "language/node"
 class Serverless < Formula
   desc "Build applications with serverless architectures"
   homepage "https://www.serverless.com/"
-  url "https://github.com/serverless/serverless/archive/v2.66.2.tar.gz"
-  sha256 "7276237fbaf3c1ef101845d800d3fb0116d9d50b7243ad68e18d5d7c577623dc"
+  url "https://github.com/serverless/serverless/archive/v3.25.1.tar.gz"
+  sha256 "bee3fb5ae620ba22f5afffd813552d3ab5b254ead8a8391f4eb97da90abe45f8"
   license "MIT"
-  head "https://github.com/serverless/serverless.git", branch: "master"
+  head "https://github.com/serverless/serverless.git", branch: "main"
 
   bottle do
-    sha256                               arm64_monterey: "4eda3715aeb1152e9f487cc3dd8e8948895af23b217e47df0f02e200f5cf64ce"
-    sha256                               arm64_big_sur:  "8e898db4209b9779a527664eb14299bf79f5894330df0358a38f25fbc2abc930"
-    sha256                               monterey:       "e50b6db6ed0c1269e1fc69ee68b135caa3089803488204d8c970f5a59304aa4a"
-    sha256                               big_sur:        "5f1bd3124e60a7af3aec769ac03d096a6a893843c2f1a930bacce77c08fb0dbe"
-    sha256                               catalina:       "c60b085ef9211aec845d2ff20f71df96ada459ddaa25a19113cb7b92e9d1087d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f4c993f99f1944e0dd824350d148372158838071ba6696261039eb2c3e043cba"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "da7f205e73cf735cf8ce3bd8bb911a26a898cf6b6d816d764038f42dc73679d4"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "da7f205e73cf735cf8ce3bd8bb911a26a898cf6b6d816d764038f42dc73679d4"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "da7f205e73cf735cf8ce3bd8bb911a26a898cf6b6d816d764038f42dc73679d4"
+    sha256 cellar: :any_skip_relocation, ventura:        "17ba7e9e9a29b65947ef8e523b0f05ba0ffb21078790735ceafe0fa8d78298ad"
+    sha256 cellar: :any_skip_relocation, monterey:       "17ba7e9e9a29b65947ef8e523b0f05ba0ffb21078790735ceafe0fa8d78298ad"
+    sha256 cellar: :any_skip_relocation, big_sur:        "17ba7e9e9a29b65947ef8e523b0f05ba0ffb21078790735ceafe0fa8d78298ad"
+    sha256 cellar: :any_skip_relocation, catalina:       "17ba7e9e9a29b65947ef8e523b0f05ba0ffb21078790735ceafe0fa8d78298ad"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "63e614367da6d97b86b598df17d264574eeb6191022112ce2da72d817d9f33d7"
   end
 
   depends_on "node"
@@ -29,6 +31,9 @@ class Serverless < Formula
       .glob("sdk-py/serverless_sdk/vendor/wrapt/_wrappers.cpython-*-linux-gnu.so")
       .map(&:unlink)
       .empty? && raise("Unable to find wrapt shared library to delete.")
+
+    # Replace universal binaries with their native slices
+    deuniversalize_machos libexec/"lib/node_modules/serverless/node_modules/fsevents/fsevents.node"
   end
 
   test do
@@ -42,7 +47,7 @@ class Serverless < Formula
     EOS
 
     system("#{bin}/serverless", "config", "credentials", "--provider", "aws", "--key", "aa", "--secret", "xx")
-    output = shell_output("#{bin}/serverless package")
-    assert_match "Serverless: Packaging service...", output
+    output = shell_output("#{bin}/serverless package 2>&1")
+    assert_match "Packaging homebrew-test for stage dev", output
   end
 end

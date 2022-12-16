@@ -1,25 +1,33 @@
 class Lean < Formula
   desc "Theorem prover"
   homepage "https://leanprover-community.github.io/"
-  url "https://github.com/leanprover-community/lean/archive/v3.35.1.tar.gz"
-  sha256 "501170db2958a9302e075c6f1c849c42e12c2623fb3e7c527f3a5da3483eea93"
+  url "https://github.com/leanprover-community/lean/archive/v3.49.1.tar.gz"
+  sha256 "d586d1ec89cfa2dbbd5a7d91d4433b8d75cb42e92ebadd4a4a2c3010ad211610"
   license "Apache-2.0"
-  head "https://github.com/leanprover-community/lean.git"
+  head "https://github.com/leanprover-community/lean.git", branch: "master"
 
-  # The Lean 3 repository (https://github.com/leanprover/lean/) is archived
-  # and there won't be any new releases. Lean 4 is being developed but is still
-  # a work in progress: https://github.com/leanprover/lean4
   livecheck do
-    skip "Lean 3 is archived; add a new check once Lean 4 is stable"
+    url :stable
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
+    strategy :git do |tags, regex|
+      tags.map do |tag|
+        version = tag[regex, 1]
+        next if version == "9.9.9" # Omit a problematic version tag
+
+        version
+      end
+    end
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "0372f802742667f07f4b451db61483608adbfeb0a16fb226bdbe3d27ea6da513"
-    sha256 cellar: :any,                 arm64_big_sur:  "2e7d5d72c9341c473f6c72edf633b8eecb93e7bed78a8b72139b9d3062f285e7"
-    sha256 cellar: :any,                 monterey:       "ab53ddc187f71ed59f14e4e041346f276812c5c9c62b5a210e313fc8d0341107"
-    sha256 cellar: :any,                 big_sur:        "8fb3a11e18a2005fe146bd0253634a8b8e980d9e0e12aeda031695697c9a46e7"
-    sha256 cellar: :any,                 catalina:       "5a107a325ca89c60e138458e3a3db3e41782eed33ad602341ae26c5a0793a944"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "49f03064b4af7c9b0e2957dff1a7c737a234ed4d88a5e21c9c719cc10df3bb04"
+    sha256 cellar: :any,                 arm64_ventura:  "32e2a4d54d1c85dd63eb2ee2a99a3b6c0bd9ac297185548804672626878aaed8"
+    sha256 cellar: :any,                 arm64_monterey: "797b0c9fb80854330144a4a0593bb8779bb5bd098ef39d1665acae0ba134b089"
+    sha256 cellar: :any,                 arm64_big_sur:  "9e89d9d4179898bfdc7e99ed2486c197872ecd756e4eb51b5b2d30fcf54cb1a0"
+    sha256 cellar: :any,                 ventura:        "7bb12d3a2f6b7c5971d944cf1ccb905669317471df1c808c1fd8d557d0e178ab"
+    sha256 cellar: :any,                 monterey:       "29cd1d5d80eb91915a366f1bbafc39574a3fce11e0c830255b6af055e3a69d0b"
+    sha256 cellar: :any,                 big_sur:        "fbd1bbe836110b78c60e44612637954043a24427d75cd983cd48ada3e630e601"
+    sha256 cellar: :any,                 catalina:       "aee0f2f19db98e20ef39a030b4ebcdcff01433f9d29294efab86bc0da33a843d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bf657359b12f4fd90287821cbb638fd07bb856e7f6bd70e291555a49e9e6eb67"
   end
 
   depends_on "cmake" => :build

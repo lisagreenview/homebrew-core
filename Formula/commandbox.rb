@@ -1,8 +1,8 @@
 class Commandbox < Formula
   desc "CFML embedded server, package manager, and app scaffolding tools"
   homepage "https://www.ortussolutions.com/products/commandbox"
-  url "https://downloads.ortussolutions.com/ortussolutions/commandbox/5.4.2/commandbox-bin-5.4.2.zip"
-  sha256 "88de96d481d32fd8e42b18e12492d1d1cf6cb70a8a1368d192ba7e8f3da9829a"
+  url "https://downloads.ortussolutions.com/ortussolutions/commandbox/5.7.0/commandbox-bin-5.7.0.zip"
+  sha256 "a45c30d12dd4805c48610b9948e48ed167a5f35cd4c8ce4a5b450b0e07514baf"
   license "LGPL-3.0-or-later"
 
   livecheck do
@@ -11,15 +11,15 @@ class Commandbox < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "541d9d8e4351ce9fb9c62137cb1d77686d2542b973f1e6eb8d94d17ff4a2ed26"
+    sha256 cellar: :any_skip_relocation, all: "3a18aef55e8f1bda49d40d90d32996aeca8a67c3ab531a4031c751e5079508a1"
   end
 
   # not yet compatible with Java 17 on ARM
   depends_on "openjdk@11"
 
   resource "apidocs" do
-    url "https://downloads.ortussolutions.com/ortussolutions/commandbox/5.4.2/commandbox-apidocs-5.4.2.zip"
-    sha256 "66c040230f3a2e2d3b03023d895416b271e62a7da264f25e3df02040099e67fc"
+    url "https://downloads.ortussolutions.com/ortussolutions/commandbox/5.7.0/commandbox-apidocs-5.7.0.zip"
+    sha256 "960c8363992e7bebf8d48c20a6680d9877d345eb552b908b8406007cf2c4d9a0"
   end
 
   def install

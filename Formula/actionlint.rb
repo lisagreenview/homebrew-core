@@ -1,17 +1,19 @@
 class Actionlint < Formula
   desc "Static checker for GitHub Actions workflow files"
   homepage "https://rhysd.github.io/actionlint/"
-  url "https://github.com/rhysd/actionlint/archive/v1.6.8.tar.gz"
-  sha256 "de00a948cd5431d18f2d4e0e053b3f6027c306d468779de85d40f63c1c3dbc29"
+  url "https://github.com/rhysd/actionlint/archive/v1.6.22.tar.gz"
+  sha256 "96111115dc80569634e6c679950ea5c0df4ae000b12453bc845c4cfa80c4f400"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c006dfa8e4c35b1efaeff5234c0d873ea29a688ebb5bfc88c0f9d852aae0dbec"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c006dfa8e4c35b1efaeff5234c0d873ea29a688ebb5bfc88c0f9d852aae0dbec"
-    sha256 cellar: :any_skip_relocation, monterey:       "8c3769c93ff2881c78c436bbfb6fc9fb53345f6edcae4d4fa608919ed14dca19"
-    sha256 cellar: :any_skip_relocation, big_sur:        "8c3769c93ff2881c78c436bbfb6fc9fb53345f6edcae4d4fa608919ed14dca19"
-    sha256 cellar: :any_skip_relocation, catalina:       "8c3769c93ff2881c78c436bbfb6fc9fb53345f6edcae4d4fa608919ed14dca19"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "12317262ea5f59415f13ee49329d9e5c221c553357d3875b35aab5d1af84756a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cf287b16a1c8ce29f17645576b7a6c924330873589b297a612671cf380cc6498"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "edf9d4092f9c34170ac1c52a0ecc4025355febc28fa22068b2d305ab1accaf8e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "edf9d4092f9c34170ac1c52a0ecc4025355febc28fa22068b2d305ab1accaf8e"
+    sha256 cellar: :any_skip_relocation, ventura:        "c70521304289424f4d1394e52245a0b195934bc08abda9eaffa56d30c3df82b8"
+    sha256 cellar: :any_skip_relocation, monterey:       "38be916fb84a9dcabb58bb7f4fe587251d23cc2815b59013377f0db9d3effaaf"
+    sha256 cellar: :any_skip_relocation, big_sur:        "38be916fb84a9dcabb58bb7f4fe587251d23cc2815b59013377f0db9d3effaaf"
+    sha256 cellar: :any_skip_relocation, catalina:       "38be916fb84a9dcabb58bb7f4fe587251d23cc2815b59013377f0db9d3effaaf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e3d3bab24fe70cc23fff9372b3a1cc98cf7c69527f1a524e1d09729d36616261"
   end
 
   depends_on "go" => :build

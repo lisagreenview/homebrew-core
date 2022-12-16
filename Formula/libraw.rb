@@ -4,6 +4,7 @@ class Libraw < Formula
   url "https://www.libraw.org/data/LibRaw-0.20.2.tar.gz"
   sha256 "dc1b486c2003435733043e4e05273477326e51c3ea554c6864a4eafaff1004a6"
   license any_of: ["LGPL-2.1-only", "CDDL-1.0"]
+  revision 4
 
   livecheck do
     url "https://www.libraw.org/download/"
@@ -11,14 +12,13 @@ class Libraw < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2cd59dec94bf52c1ae7c3e3a401532ded98d823a9047cac5e21626b6a7eb4a7e"
-    sha256 cellar: :any,                 arm64_big_sur:  "91215928c6f416f820d2d73c4be22175a00a7c9aa555b2dc01a3f649d888e20f"
-    sha256 cellar: :any,                 monterey:       "06fca4f57f1358542eee753e4c0ceb1a46796c5ebada6ed9a65e579e20f8932a"
-    sha256 cellar: :any,                 big_sur:        "89a0ce1dc2548f25b9813e32b9a234b44c3dab57adaf98fa204ca35f75b2f2eb"
-    sha256 cellar: :any,                 catalina:       "465ba53999bd9b1297fed5283b8cf09ccc600fc1ca00ea4be58a6193a96910d4"
-    sha256 cellar: :any,                 mojave:         "2c62cfe8160a4cf45819255cc2a1bb77427827bfa7c4cf782a42f95ee9822112"
-    sha256 cellar: :any,                 high_sierra:    "dd4ab6f94e1dc725cb23ea1f4ee0267b632e01c7187c7a2b109053f457a17284"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "88e847382d3000609414ddce26389f6a4e19392e6209e32cd5067b8d6a05616c"
+    sha256 cellar: :any,                 arm64_ventura:  "8b4256545b2414b6aaad493155d810adb1d393b25df0169f12e95c156957e915"
+    sha256 cellar: :any,                 arm64_monterey: "d013f4cee6561de346ee4e327f9362bf9d260ba99db77e85406b93a8cfec0858"
+    sha256 cellar: :any,                 arm64_big_sur:  "8adb515b95e5497c82372c7b9b30d721e397e5667a94ab18371722d5650d4a36"
+    sha256 cellar: :any,                 ventura:        "eea5b7c0f6ab30bc90cb4c77ff63f37ec0cb5777fbe7587bf1a00b365c155854"
+    sha256 cellar: :any,                 monterey:       "5da67713d8abe8bc6ddeab64c92438dcda76b2c80493f36d7cf7283c8e4dc800"
+    sha256 cellar: :any,                 big_sur:        "518cd6c21dc988a821963dde1b871fe5fe3223664ed0c906d324430bc1289b0b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2f84a11ebca75c0a2be9b7fc2fe9c53d083fc354fc2d24e24bcb9891cce34bf1"
   end
 
   depends_on "autoconf" => :build
@@ -26,22 +26,32 @@ class Libraw < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "jasper"
-  depends_on "jpeg"
-  depends_on "libomp"
+  depends_on "jpeg-turbo"
   depends_on "little-cms2"
 
-  resource "librawtestfile" do
+  uses_from_macos "zlib"
+
+  on_macos do
+    depends_on "libomp"
+  end
+
+  resource "homebrew-librawtestfile" do
     url "https://www.rawsamples.ch/raws/nikon/d1/RAW_NIKON_D1.NEF"
     sha256 "7886d8b0e1257897faa7404b98fe1086ee2d95606531b6285aed83a0939b768f"
   end
 
   def install
-    system "autoreconf", "-fiv"
-    system "./configure", "--prefix=#{prefix}",
-                          "--disable-dependency-tracking",
-                          "ac_cv_prog_c_openmp=-Xpreprocessor -fopenmp",
-                          "ac_cv_prog_cxx_openmp=-Xpreprocessor -fopenmp",
-                          "LDFLAGS=-lomp"
+    args = []
+    if OS.mac?
+      # Work around "checking for OpenMP flag of C compiler... unknown"
+      args += [
+        "ac_cv_prog_c_openmp=-Xpreprocessor -fopenmp",
+        "ac_cv_prog_cxx_openmp=-Xpreprocessor -fopenmp",
+        "LDFLAGS=-lomp",
+      ]
+    end
+    system "autoreconf", "--force", "--install", "--verbose"
+    system "./configure", *std_configure_args, *args
     system "make"
     system "make", "install"
     doc.install Dir["doc/*"]
@@ -49,7 +59,7 @@ class Libraw < Formula
   end
 
   test do
-    resource("librawtestfile").stage do
+    resource("homebrew-librawtestfile").stage do
       filename = "RAW_NIKON_D1.NEF"
       system "#{bin}/raw-identify", "-u", filename
       system "#{bin}/simple_dcraw", "-v", "-T", filename

@@ -1,8 +1,8 @@
 class Treefrog < Formula
   desc "High-speed C++ MVC Framework for Web Application"
   homepage "https://www.treefrogframework.org/"
-  url "https://github.com/treefrogframework/treefrog-framework/archive/v2.2.0.tar.gz"
-  sha256 "9989b4f2fd5b00b603acdf293d74e0261115bd297d706e6d9af6f3dfdf5c108f"
+  url "https://github.com/treefrogframework/treefrog-framework/archive/v2.4.0.tar.gz"
+  sha256 "d7fc8459013097c0798f2b57ac1ff684077c8417c48fb536913edd94dda31738"
   license "BSD-3-Clause"
   head "https://github.com/treefrogframework/treefrog-framework.git", branch: "master"
 
@@ -12,19 +12,30 @@ class Treefrog < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "f3db6295ee07c312b61271c8f1c770231827e303855ff24e00810deaf9b2aa28"
-    sha256 arm64_big_sur:  "5abd291b07c9b01836cca2e0c77f1e6dc3efa26f6f4a9bfe5ae44dbadefaa20a"
-    sha256 monterey:       "cba31d2cef437bf03ce1870df5273b98c36c09a0a9dcb6db2312ac9755f6768d"
-    sha256 big_sur:        "8f3785e141e607b61fde6a849d6dd7b3f1b6f60040aa8b81e15a0c3c0c5d330c"
-    sha256 catalina:       "508314c683b84821d88dc5d2a0a7cf4a6f56ecb3f988e9077215e7586c915078"
+    rebuild 1
+    sha256 arm64_ventura:  "7f8a656ccc4652e2f3bb6f0a4bd9efec456987d00aeaa248b12d61eca5bd6457"
+    sha256 arm64_monterey: "50a95c4bfbbdb9b917d2fa7d48c4088d8562ab7bc0fee4577b77233beb5110ee"
+    sha256 arm64_big_sur:  "6f9ab601a283b8d09ed126ea56c211a20c6402e3a1f435bb3414106404cdf206"
+    sha256 ventura:        "c0216f4e6e281846c5364d137e4232d0aa6586c878995725bee5fa8d4b647830"
+    sha256 monterey:       "1f978cde3384620e8949fe82bf351d0c9a41cbfd305d3fb4003045ef3319a4e4"
+    sha256 big_sur:        "4cac5c40a0e13a60b65924c31fda01accdc64d4a941c70f216937abf7efd5e07"
+    sha256 catalina:       "51beca49fe3504df480e5dda142d4feefbeb4007fcdf35158cafdd71820e29fb"
+    sha256 x86_64_linux:   "c779dc8dde4b68594fc501e53a49f17b193a0c507335e608663479bde6022b35"
   end
 
   depends_on xcode: :build
   depends_on "mongo-c-driver"
   depends_on "qt"
 
+  fails_with gcc: "5"
+
   def install
-    inreplace "src/corelib.pro", "/usr/local", HOMEBREW_PREFIX
+    # src/corelib.pro hardcodes different paths for mongo-c-driver headers on macOS and Linux.
+    if OS.mac?
+      inreplace "src/corelib.pro", "/usr/local", HOMEBREW_PREFIX
+    else
+      inreplace "src/corelib.pro", "/usr/include", HOMEBREW_PREFIX/"include"
+    end
 
     system "./configure", "--prefix=#{prefix}", "--enable-shared-mongoc"
 
@@ -45,6 +56,11 @@ class Treefrog < Formula
     assert_predicate testpath/"hello", :exist?
     cd "hello" do
       assert_predicate Pathname.pwd/"hello.pro", :exist?
+      # FIXME: `qmake` has a broken mkspecs file on Linux.
+      # Remove when the following PR is merged:
+      # https://github.com/Homebrew/homebrew-core/pull/107400
+      return if OS.linux?
+
       system Formula["qt"].opt_bin/"qmake"
       assert_predicate Pathname.pwd/"Makefile", :exist?
       system "make"

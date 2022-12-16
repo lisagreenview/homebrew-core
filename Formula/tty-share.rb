@@ -1,18 +1,19 @@
 class TtyShare < Formula
   desc "Terminal sharing over the Internet"
   homepage "https://tty-share.com/"
-  url "https://github.com/elisescu/tty-share/archive/v2.2.0.tar.gz"
-  sha256 "a72cf839c10a00e65292e2de83e69cc1507b95850d949c9bd776566eae1a4f51"
+  url "https://github.com/elisescu/tty-share/archive/v2.4.0.tar.gz"
+  sha256 "90e566cd4c064a1c0b31a418c149a1766f158dd01b3563e7501c98dafd8c244f"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "388de900c99e13aad0bf35cc202a2cb23dabfc240417bda1c2dd481240c7ae4a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4207e631fd61f1e5ea1a7659d09b606cf10b5012a9b52153a956af15f5a7e160"
-    sha256 cellar: :any_skip_relocation, monterey:       "4261e0442e86cf508ffe28aa34fcfb7ebb2c0f9c92f780bcbae6a39a0850771c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "004c70273ec6b94d912745c657639878149b86cdf1f1296d9d5498460f8b01b4"
-    sha256 cellar: :any_skip_relocation, catalina:       "e02d15913aa63a1cbff110af076743dacc3c4d56cf828a0b22cf94d4e025b6e8"
-    sha256 cellar: :any_skip_relocation, mojave:         "1fe5cd2eb19d7a0b0ee61a9b0dbddc13805055752827de2af6221e53d42f1b9f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f2ceed45ef206a801e28d80ddb26c0cfd4767aa87cf07252ede2691a3eeef24b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c0a7c784ad44fcdd0d90dc72c0f755ced57104118bd40a592616598054ee748e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "cbcd192686b309a7ac1464e8d5ad9f08629b7111a1d6df176d0035f8f96c9bb2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c7466e5d42ceb6f8e44a88277a35a3da363fc4c045bdf5387356cd57be25be60"
+    sha256 cellar: :any_skip_relocation, ventura:        "e93c0812427d8ca2598bed21d0edf709f81c480b5a847a4a83ce20697d129436"
+    sha256 cellar: :any_skip_relocation, monterey:       "a026b1cc81ea6aabcbdaa66d4b1dec583346db66cefe5d2c69828aada3b37f93"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c443d3f7c93183efb992b8ea9eae1998228d9a2193d70c217a1c5840c9487be0"
+    sha256 cellar: :any_skip_relocation, catalina:       "0e202c44071ec49a25c615c91e4ea5ed41924b74a092dd7a911a0004ef953397"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0c88800f33577a7a9ef4e603a809a1c2355b9a3476a34d3f4cd7d98daf693dc0"
   end
 
   depends_on "go" => :build

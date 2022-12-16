@@ -1,31 +1,49 @@
 class Libxslt < Formula
   desc "C XSLT library for GNOME"
   homepage "http://xmlsoft.org/XSLT/"
-  url "http://xmlsoft.org/sources/libxslt-1.1.34.tar.gz"
-  sha256 "98b1bd46d6792925ad2dfe9a87452ea2adebf69dcb9919ffd55bf926a7f93f7f"
   license "X11"
-  revision 3
-  head "https://gitlab.gnome.org/GNOME/libxslt.git"
+  revision 1
 
+  stable do
+    url "https://download.gnome.org/sources/libxslt/1.1/libxslt-1.1.37.tar.xz"
+    sha256 "3a4b27dc8027ccd6146725950336f1ec520928f320f144eb5fa7990ae6123ab4"
+
+    # Fix -flat_namespace being used on Big Sur and later.
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
+      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
+    end
+  end
+
+  # We use a common regex because libxslt doesn't use GNOME's "even-numbered
+  # minor is stable" version scheme.
   livecheck do
-    url "http://xmlsoft.org/sources/"
-    regex(/href=.*?libxslt[._-]v?(\d+(?:\.\d+)+)\.t/i)
+    url :stable
+    regex(/libxslt[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "ec2551bbb89b9544e80586680db51270ccabf53be680b31178a7eb4b7a1fc6d9"
-    sha256 cellar: :any,                 big_sur:       "2ce7c3f7bbb1ffd73028662afca32211205734c5676ac743e865d9da2426bb5b"
-    sha256 cellar: :any,                 catalina:      "9afef3e030939882119df041160dbb00437c726101c7047e310abad7c354b2e9"
-    sha256 cellar: :any,                 mojave:        "a60cb3dba137da40ece1d48ed404adaa62c7a61e5be8618a03a035ac3413f03d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4644ffb9534613738889d7bf32b204c2e257a6a5154ab8e80209709a4a6f4f3f"
+    sha256 cellar: :any,                 arm64_ventura:  "84d157e4ce52a4d6ce6bbb956b52fc12828751cd18f90a78e8e42cfbfe7cfcb0"
+    sha256 cellar: :any,                 arm64_monterey: "3bdcf15cac29f738ea1d07b8e9c290a3a4eaf6c16ce3fefd13808be4556b9951"
+    sha256 cellar: :any,                 arm64_big_sur:  "3ee16dc014079c7a03d5bb3ad4b10fff9942847d518b742f843c0fe0129de631"
+    sha256 cellar: :any,                 ventura:        "018b6ed4a1eeea41daac97b7b732f4bf7b122ef070684a758025e316e753f00b"
+    sha256 cellar: :any,                 monterey:       "c34db451bd574830c369e5dcab31e54e3474e5a31f83cb10b3650d85f149794a"
+    sha256 cellar: :any,                 big_sur:        "378e59a2c69b0e06da3acd27bffc44b3906eb60d7ce3f4dd88287257a0ca0ef7"
+    sha256 cellar: :any,                 catalina:       "3da3f7f87b9ff6bb7ce4eb67e810504dfbba998d3d537e11830047f248d8f69e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "65cb6fdd515408f8b95f3cc751a629add6c2410aa89e394b356a4e3bea26fa0c"
+  end
+
+  head do
+    url "https://gitlab.gnome.org/GNOME/libxslt.git", branch: "master"
+
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "libtool" => :build
   end
 
   keg_only :provided_by_macos
 
-  # Move `autoconf`, `automake` and `libtool` to head block in the next release
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
-  depends_on "libtool" => :build
+  depends_on "icu4c"
   depends_on "libgcrypt"
   depends_on "libxml2"
 
@@ -33,25 +51,18 @@ class Libxslt < Formula
     depends_on "pkg-config" => :build
   end
 
-  # Fix configure script for libxml2
-  # Remove in the next release
-  patch do
-    url "https://gitlab.gnome.org/GNOME/libxslt/-/commit/90c34c8bb90e095a8a8fe8b2ce368bd9ff1837cc.diff"
-    sha256 "0ddf5ec74855e7e2fddcf8c963fe1d83f71462823a0131fc3a76a369d00f1851"
-  end
-
   def install
-    # Make it only for head builds (if build.head?) in the next release
-    system "autoreconf", "-fiv"
-
+    libxml2 = Formula["libxml2"]
+    system "autoreconf", "--force", "--install", "--verbose" if build.head?
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
                           "--without-python",
                           "--with-crypto",
-                          "--with-libxml-prefix=#{Formula["libxml2"].opt_prefix}"
+                          "--with-libxml-prefix=#{libxml2.opt_prefix}"
     system "make"
     system "make", "install"
+    inreplace [bin/"xslt-config", lib/"xsltConf.sh"], libxml2.prefix.realpath, libxml2.opt_prefix
   end
 
   def caveats

@@ -17,6 +17,9 @@ class Mpdviz < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux: "b8b7f4496ea24badc34b33402603a2fbba5b92d0eecdddfbf9ff23b6e7b92db5"
   end
 
+  # https://github.com/lucy/mpdviz/issues/7
+  disable! date: "2022-10-19", because: :unmaintained
+
   depends_on "go" => :build
   depends_on "pkg-config" => :build
   depends_on "fftw"

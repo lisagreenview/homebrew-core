@@ -3,37 +3,39 @@ class NeovimRemote < Formula
 
   desc "Control nvim processes using `nvr` command-line tool"
   homepage "https://github.com/mhinz/neovim-remote"
-  url "https://files.pythonhosted.org/packages/cc/d8/82aec85fc7ad0853afca2c88e73ecc7d3a50c66988c44aa9748ccbc9b689/neovim-remote-2.4.0.tar.gz"
-  sha256 "f199ebb61c3decf462feed4e7d467094ed38d8afaf43620736b5983a12fe2427"
+  url "https://files.pythonhosted.org/packages/69/50/4fe9ef6fd794929ceae73e476ac8a4ddbf3b0913fa248d834c9bb72978b7/neovim-remote-2.5.1.tar.gz"
+  sha256 "4b3cc35463544c5747c895c52a0343cfdbba15d307647d7f57f1cce0c6a27d02"
   license "MIT"
   head "https://github.com/mhinz/neovim-remote.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1903bb14294d18d5912c533aabfa46320f287cbd7044b279cf5d58fe5a05b7c0"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "eb32806679e25729e2106e7ee35082d41b460a49305e51402121a21a013f8924"
-    sha256 cellar: :any_skip_relocation, monterey:       "ca93482c64d5d855eb90da32566207d939bd02c2febf7788604e67da115b11cd"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f94e3d59bc081404b883cd5fa4e8ddd48e33d060fc25099c0070ba52e8ac9682"
-    sha256 cellar: :any_skip_relocation, catalina:       "1bb77fdf6276df0833eed58107681ff725a0b0c6746a5e19c7c98428b903799d"
-    sha256 cellar: :any_skip_relocation, mojave:         "a08d1b3bbae29235c707c59a345ce343a6994e4f9460bbcf16f8279a2e13683e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "21360429be62c3459f9181cf4ea899bd8cc077de3758f7efed86e2b7d92d3f5e"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "11cf9bbc583b6e0ab169a0f39e1383cc549162523bbe5594442f5d29259ea520"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "45102b633d6c3ea52df5a54b2aaaf9a3c86d3d8ab0e1d409e7dbe8f90f625ad3"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3c10cd5d480c570373ba7fe4d629b7a40b3a41b2cac242ce62cd7b52fac2cac2"
+    sha256 cellar: :any_skip_relocation, ventura:        "d2ed0b820e8e17e93cd3a3655ab3658f6ff8176c1dbe238b00f7a9d7ab8bdda7"
+    sha256 cellar: :any_skip_relocation, monterey:       "a60c1065aafc55524a57eebdd75facd52432a37d3a3663ed053748b8042b78d2"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c26fd309db614a1b36d08c4bee8da33444ef525903574f5575fe6964639c6a4c"
+    sha256 cellar: :any_skip_relocation, catalina:       "bad631e4f3a4393e233ae231ff191448672affe0aeea8addde4d086f4aa7192a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d06a5d88810e44a27c54469b23544650dc67d566117303a76887e0a3f5ac9f16"
   end
 
   depends_on "neovim"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
 
   resource "greenlet" do
-    url "https://files.pythonhosted.org/packages/47/6d/be10df2b141fcb1020c9605f7758881b5af706fb09a05b737e8eb7540387/greenlet-1.1.0.tar.gz"
-    sha256 "c87df8ae3f01ffb4483c796fe1b15232ce2b219f0b18126948616224d3f658ee"
+    url "https://files.pythonhosted.org/packages/fd/6a/f07b0028baff9bca61ecfcd9ee021e7e33369da8094f00eff409f2ff32be/greenlet-2.0.1.tar.gz"
+    sha256 "42e602564460da0e8ee67cb6d7236363ee5e131aa15943b6670e44e5c2ed0f67"
   end
 
   resource "msgpack" do
-    url "https://files.pythonhosted.org/packages/59/04/87fc6708659c2ed3b0b6d4954f270b6e931def707b227c4554f99bd5401e/msgpack-1.0.2.tar.gz"
-    sha256 "fae04496f5bc150eefad4e9571d1a76c55d021325dcd484ce45065ebbdd00984"
+    url "https://files.pythonhosted.org/packages/22/44/0829b19ac243211d1d2bd759999aa92196c546518b0be91de9cacc98122a/msgpack-1.0.4.tar.gz"
+    sha256 "f5d869c18f030202eb412f08b28d2afeea553d6613aee89e200d7aca7ef01f5f"
   end
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/e1/b0/7276de53321c12981717490516b7e612364f2cb372ee8901bd4a66a000d7/psutil-5.8.0.tar.gz"
-    sha256 "0c9ccb99ab76025f2f0bbecf341d4656e9c1351db8cc8a03ccd62e318ab4b5c6"
+    url "https://files.pythonhosted.org/packages/3d/7d/d05864a69e452f003c0d77e728e155a89a2a26b09e64860ddd70ad64fb26/psutil-5.9.4.tar.gz"
+    sha256 "3d7f9739eb435d4b1338944abe23f49584bde5395f27487d2ee25ad9a8774a62"
   end
 
   resource "pynvim" do

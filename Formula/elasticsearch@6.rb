@@ -1,22 +1,27 @@
 class ElasticsearchAT6 < Formula
   desc "Distributed search & analytics engine"
   homepage "https://www.elastic.co/products/elasticsearch"
-  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-6.8.20.tar.gz"
-  sha256 "3f436ef2e07697e56e6a14cc9abbf0661190d60923691dadb7de5c84476a7b8b"
+  url "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-6.8.23.tar.gz"
+  sha256 "60e77b5ca3ce11771469bcc2e009c49c8aadb831faebd170e7abcedc16b3e36d"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1a59702e05554f76d89c4f3d29559f96b908e9fb93cfaa7e8a4d8abcff6435ed"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1a59702e05554f76d89c4f3d29559f96b908e9fb93cfaa7e8a4d8abcff6435ed"
-    sha256 cellar: :any_skip_relocation, monterey:       "bbd66108c17e3232e286afe600af9351f69dbbbad03c76852f6d279717b58002"
-    sha256 cellar: :any_skip_relocation, big_sur:        "bbd66108c17e3232e286afe600af9351f69dbbbad03c76852f6d279717b58002"
-    sha256 cellar: :any_skip_relocation, catalina:       "bbd66108c17e3232e286afe600af9351f69dbbbad03c76852f6d279717b58002"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "06d6fa29d877bcfc3f5a5fe5694c4028ed7322442cc75c88a1df7932036aa8b2"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "5fb1d3e9bcae848e77b8041e8c870806d4dcf7977ad5c75c6849c4162f16f816"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5fb1d3e9bcae848e77b8041e8c870806d4dcf7977ad5c75c6849c4162f16f816"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5fb1d3e9bcae848e77b8041e8c870806d4dcf7977ad5c75c6849c4162f16f816"
+    sha256 cellar: :any_skip_relocation, ventura:        "c76ba900eb45c5187af15e086aa14b5de3455e447b926909a8e27d518cc39c00"
+    sha256 cellar: :any_skip_relocation, monterey:       "c76ba900eb45c5187af15e086aa14b5de3455e447b926909a8e27d518cc39c00"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c76ba900eb45c5187af15e086aa14b5de3455e447b926909a8e27d518cc39c00"
+    sha256 cellar: :any_skip_relocation, catalina:       "c76ba900eb45c5187af15e086aa14b5de3455e447b926909a8e27d518cc39c00"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "53077defdc696108ea6436fe66aba3b5b6eae9158b5ea2bcd10c015b8c6689b0"
   end
 
   keg_only :versioned_formula
 
-  depends_on "openjdk"
+  deprecate! date: "2022-02-10", because: :unsupported
+
+  depends_on "openjdk@17"
 
   def cluster_name
     "elasticsearch_#{ENV["USER"]}"

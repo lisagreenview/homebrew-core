@@ -3,20 +3,22 @@ class Locust < Formula
 
   desc "Scalable user load testing tool written in Python"
   homepage "https://locust.io/"
-  url "https://files.pythonhosted.org/packages/4b/1d/43d8a437f372b2bd1e6d6c5d0c184fa75cbb2d8beaad8555da4fb873c3ee/locust-2.5.0.tar.gz"
-  sha256 "975e29ad9019db3c5d29eeea7d087c5fd2b643fdbbf1161d445da9fc4308a620"
+  url "https://files.pythonhosted.org/packages/44/a0/66e91ca68dc199ce5fb571419bdd121151c2fe0159ef43e485582738b838/locust-2.14.0.tar.gz"
+  sha256 "4d558153594c3a5b4d59d8451e03a442b4b9d4c65137d5767c3575d3a1c16fcb"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "30a7bb9bffccaaa4b1ab572c61284e7457e1fbc1b39615fafd4ae72574aecfd5"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2e7edec274cef9d772bbf84218d7c9f23b66008f3f8e2876f72860c39332723a"
-    sha256 cellar: :any_skip_relocation, monterey:       "5de1b33a3ce334c7c4e1825bd660cb0276f12cd0ad946b016bf36d14a43ba502"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e67ae19b7471217117a15278de0e91eadf87b4ad06229632124806dfdc24f773"
-    sha256 cellar: :any_skip_relocation, catalina:       "3f67bcc8993aa413a9922aedc950a1209cf7353f7dacb653a1e4feee5120852a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8aba0f5beda12020094939d86a21bb6a2aae439192f323a9d1a93a112843833d"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "8d5d57bbf2597da9a1bb1c21179807de720168481e8ebc95d938d9b3403c8bc7"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "159c2c695b9e1f608073cca444518508048088a9b64cae98a97e50f68dbf7a9a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8deb23f0b54c8b241a17c7e730f158e402ecd631a5f70476a609ddf08b04e9bb"
+    sha256 cellar: :any_skip_relocation, ventura:        "e3cb027c1b3e0aa19f3fe4679ab5944de3d482fb318c9c18f3b5444da621a442"
+    sha256 cellar: :any_skip_relocation, monterey:       "4fbddf81fce9f8039a8f177eb95869a1725412fa635ce5fdd784d173cc24027f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "99aa78383eae1a95005a201f1c467e4e406b89387998a21c573e2a6d3fed43c2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3f1abfdd87a4dea1d9b9011dfe2c3da01fdb0875c77afdcae5f19bae8fac3703"
   end
 
-  depends_on "python@3.10"
+  depends_on "python-typing-extensions"
+  depends_on "python@3.11"
   depends_on "six"
 
   resource "Brotli" do
@@ -25,18 +27,18 @@ class Locust < Formula
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6c/ae/d26450834f0acc9e3d1f74508da6df1551ceab6c2ce0766a593362d6d57f/certifi-2021.10.8.tar.gz"
-    sha256 "78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"
+    url "https://files.pythonhosted.org/packages/37/f7/2b1b0ec44fdc30a3d31dfebe52226be9ddc40cd6c0f34ffc8923ba423b69/certifi-2022.12.7.tar.gz"
+    sha256 "35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/9f/c5/334c019f92c26e59637bb42bd14a190428874b2b2de75a355da394cf16c1/charset-normalizer-2.0.7.tar.gz"
-    sha256 "e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/f4/09/ad003f1e3428017d1c3da4ccc9547591703ffea548626f47ec74509c5824/click-8.0.3.tar.gz"
-    sha256 "410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b"
+    url "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz"
+    sha256 "7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"
   end
 
   resource "ConfigArgParse" do
@@ -45,8 +47,8 @@ class Locust < Formula
   end
 
   resource "Flask" do
-    url "https://files.pythonhosted.org/packages/95/40/b976286b5e7ba01794a7e7588e7e7fa27fb16c6168fa849234840bf0f61d/Flask-2.0.2.tar.gz"
-    sha256 "7b2fb8e934ddd50731893bdcdb00fc8c0315916f9fcd50d22c7cc1a95ab634e2"
+    url "https://files.pythonhosted.org/packages/69/b6/53cfa30eed5aa7343daff36622843688ba8c6fe9829bb2b92e193ab1163f/Flask-2.2.2.tar.gz"
+    sha256 "642c450d19c4ad482f96729bd2a8f6d32554aa1e231f4f6b4e7e5264b16cca2b"
   end
 
   resource "Flask-BasicAuth" do
@@ -60,78 +62,73 @@ class Locust < Formula
   end
 
   resource "gevent" do
-    url "https://files.pythonhosted.org/packages/33/2e/49317db0bbd846720ce15fd43641b17a208e6466c582ecbe845e35092ea2/gevent-21.8.0.tar.gz"
-    sha256 "43e93e1a4738c922a2416baf33f0afb0a20b22d3dba886720bc037cd02a98575"
+    url "https://files.pythonhosted.org/packages/9f/4a/e9e57cb9495f0c7943b1d5965c4bdd0d78bc4a433a7c96ee034b16c01520/gevent-22.10.2.tar.gz"
+    sha256 "1ca01da176ee37b3527a2702f7d40dbc9ffb8cfc7be5a03bfa4f9eec45e55c46"
   end
 
   resource "geventhttpclient" do
-    url "https://files.pythonhosted.org/packages/7e/52/f799b56882eb2730c09c281bcc7f71607963853302ce27f3c565aa736bc8/geventhttpclient-1.5.3.tar.gz"
-    sha256 "d80ec9ff42b7219f33558185499d0b4365597fc55ff886207b45f5632e099780"
+    url "https://files.pythonhosted.org/packages/bf/05/93c4e1e525c15890a6222833a31a1abb5df987d6d16e0dadb395796a19b5/geventhttpclient-2.0.8.tar.gz"
+    sha256 "5f782c419643f74be4d0918c0d2b63956ef6ddc7a2127f07cbb8033a75ab366f"
   end
 
   resource "greenlet" do
-    url "https://files.pythonhosted.org/packages/0c/10/754e21b5bea89d0e73f99d60c83754df7cc64db74f47d98ab187669ce341/greenlet-1.1.2.tar.gz"
-    sha256 "e30f5ea4ae2346e62cedde8794a56858a67b878dd79f7df76a0767e356b1744a"
+    url "https://files.pythonhosted.org/packages/fd/6a/f07b0028baff9bca61ecfcd9ee021e7e33369da8094f00eff409f2ff32be/greenlet-2.0.1.tar.gz"
+    sha256 "42e602564460da0e8ee67cb6d7236363ee5e131aa15943b6670e44e5c2ed0f67"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/62/08/e3fc7c8161090f742f504f40b1bccbfc544d4a4e09eb774bf40aafce5436/idna-3.3.tar.gz"
-    sha256 "9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "itsdangerous" do
-    url "https://files.pythonhosted.org/packages/58/66/d6c5859dcac92b442626427a8c7a42322068c5cd5d4a463ce78b93f730b7/itsdangerous-2.0.1.tar.gz"
-    sha256 "9e724d68fc22902a1435351f84c3fb8623f303fffcc566a4cb952df8c572cff0"
+    url "https://files.pythonhosted.org/packages/7f/a1/d3fb83e7a61fa0c0d3d08ad0a94ddbeff3731c05212617dff3a94e097f08/itsdangerous-2.1.2.tar.gz"
+    sha256 "5dbbc68b317e5e42f327f9021763545dc3fc3bfe22e6deb96aaf1fc38874156a"
   end
 
   resource "Jinja2" do
-    url "https://files.pythonhosted.org/packages/f8/86/7c0eb6e8b05385d1ce682abc0f994abd1668e148fb52603fa86e15d4c110/Jinja2-3.0.2.tar.gz"
-    sha256 "827a0e32839ab1600d4eb1c4c33ec5a8edfbc5cb42dafa13b81f182f97784b45"
+    url "https://files.pythonhosted.org/packages/7a/ff/75c28576a1d900e87eb6335b063fab47a8ef3c8b4d88524c4bf78f670cce/Jinja2-3.1.2.tar.gz"
+    sha256 "31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"
   end
 
   resource "MarkupSafe" do
-    url "https://files.pythonhosted.org/packages/bf/10/ff66fea6d1788c458663a84d88787bae15d45daa16f6b3ef33322a51fc7e/MarkupSafe-2.0.1.tar.gz"
-    sha256 "594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"
+    url "https://files.pythonhosted.org/packages/1d/97/2288fe498044284f39ab8950703e88abbac2abbdf65524d576157af70556/MarkupSafe-2.1.1.tar.gz"
+    sha256 "7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"
   end
 
   resource "msgpack" do
-    url "https://files.pythonhosted.org/packages/59/04/87fc6708659c2ed3b0b6d4954f270b6e931def707b227c4554f99bd5401e/msgpack-1.0.2.tar.gz"
-    sha256 "fae04496f5bc150eefad4e9571d1a76c55d021325dcd484ce45065ebbdd00984"
+    url "https://files.pythonhosted.org/packages/22/44/0829b19ac243211d1d2bd759999aa92196c546518b0be91de9cacc98122a/msgpack-1.0.4.tar.gz"
+    sha256 "f5d869c18f030202eb412f08b28d2afeea553d6613aee89e200d7aca7ef01f5f"
   end
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/e1/b0/7276de53321c12981717490516b7e612364f2cb372ee8901bd4a66a000d7/psutil-5.8.0.tar.gz"
-    sha256 "0c9ccb99ab76025f2f0bbecf341d4656e9c1351db8cc8a03ccd62e318ab4b5c6"
+    url "https://files.pythonhosted.org/packages/3d/7d/d05864a69e452f003c0d77e728e155a89a2a26b09e64860ddd70ad64fb26/psutil-5.9.4.tar.gz"
+    sha256 "3d7f9739eb435d4b1338944abe23f49584bde5395f27487d2ee25ad9a8774a62"
   end
 
   resource "pyzmq" do
-    url "https://files.pythonhosted.org/packages/6c/95/d37e7db364d7f569e71068882b1848800f221c58026670e93a4c6d50efe7/pyzmq-22.3.0.tar.gz"
-    sha256 "8eddc033e716f8c91c6a2112f0a8ebc5e00532b4a6ae1eb0ccc48e027f9c671c"
+    url "https://files.pythonhosted.org/packages/46/0d/b06cf99a64d4187632f4ac9ddf6be99cd35de06fe72d75140496a8e0eef5/pyzmq-24.0.1.tar.gz"
+    sha256 "216f5d7dbb67166759e59b0479bca82b8acf9bed6015b526b8eb10143fb08e77"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "roundrobin" do
-    url "https://files.pythonhosted.org/packages/3e/5d/60ce8f2ad7b8c8f7124a78eead5ecfc7f702ba80d8ad1e93b25337419a75/roundrobin-0.0.2.tar.gz"
-    sha256 "ac30cb78570a36bb0ce0db7b907af9394ec7a5610ece2ede072280e8dd867caa"
-  end
-
-  resource "typing-extensions" do
-    url "https://files.pythonhosted.org/packages/ed/12/c5079a15cf5c01d7f4252b473b00f7e68ee711be605b9f001528f0298b98/typing_extensions-3.10.0.2.tar.gz"
-    sha256 "49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"
+    url "https://files.pythonhosted.org/packages/38/97/6508c09e3af7eaee96e7b66a7dc7bbdbe8e6b85b8d2bbbb89612cf621bad/roundrobin-0.0.4.tar.gz"
+    sha256 "7e9d19a5bd6123d99993fb935fa86d25c88bb2096e493885f61737ed0f5e9abd"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
+    url "https://files.pythonhosted.org/packages/c2/51/32da03cf19d17d46cce5c731967bf58de9bd71db3a379932f53b094deda4/urllib3-1.26.13.tar.gz"
+    sha256 "c083dd0dce68dbfbe1129d5271cb90f9447dea7d52097c6e0126120c521ddea8"
   end
 
   resource "Werkzeug" do
-    url "https://files.pythonhosted.org/packages/83/3c/ecdb36f49ab06defb0d5a466cfeb4ae90a55d02cfef379f781da2801a45d/Werkzeug-2.0.2.tar.gz"
-    sha256 "aa2bb6fc8dee8d6c504c0ac1e7f5f7dc5810a9903e793b6f715a9f015bdadb9a"
+    url "https://files.pythonhosted.org/packages/f8/c1/1c8e539f040acd80f844c69a5ef8e2fccdf8b442dabb969e497b55d544e1/Werkzeug-2.2.2.tar.gz"
+    sha256 "7ea2d48322cc7c0f8b3a215ed73eabd7b5d75d0b50e31ab006286ccff9e00b8f"
   end
 
   resource "zope.event" do
@@ -140,8 +137,8 @@ class Locust < Formula
   end
 
   resource "zope.interface" do
-    url "https://files.pythonhosted.org/packages/ae/58/e0877f58daa69126a5fb325d6df92b20b77431cd281e189c5ec42b722f58/zope.interface-5.4.0.tar.gz"
-    sha256 "5dba5f530fec3f0988d83b78cc591b58c0b6eb8431a85edd1569a0539a8a5a0e"
+    url "https://files.pythonhosted.org/packages/38/6f/fbfb7dde38be7e5644bb342c4c7cdc444cd5e2ffbd70d091263b3858a8cb/zope.interface-5.5.2.tar.gz"
+    sha256 "bfee1f3ff62143819499e348f5b8a7f3aa0259f9aca5e0ddae7391d059dce671"
   end
 
   def install
@@ -163,6 +160,6 @@ class Locust < Formula
     ENV["LOCUST_HOST"] = "http://httpbin.org"
     ENV["LOCUST_USERS"] = "2"
 
-    system "locust", "--headless", "--run-time", "30s"
+    system "locust", "--headless", "--run-time", "10s"
   end
 end

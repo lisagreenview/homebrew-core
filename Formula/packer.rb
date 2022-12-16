@@ -1,10 +1,10 @@
 class Packer < Formula
   desc "Tool for creating identical machine images for multiple platforms"
   homepage "https://packer.io"
-  url "https://github.com/hashicorp/packer/archive/v1.7.8.tar.gz"
-  sha256 "7f4f3eab48f7e5b153772c079379589d208fd911a155431cf0d7d0f309418af2"
+  url "https://github.com/hashicorp/packer/archive/v1.8.5.tar.gz"
+  sha256 "4919cd8cf3b27e919c89dde6e24ef4d32b879212d26f367082fb12485a620585"
   license "MPL-2.0"
-  head "https://github.com/hashicorp/packer.git", branch: "master"
+  head "https://github.com/hashicorp/packer.git", branch: "main"
 
   livecheck do
     url "https://releases.hashicorp.com/packer/"
@@ -12,12 +12,13 @@ class Packer < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "142c8b5b4808d2350b01b3116345e96e347e492a05b6682d165c09c26c2b7b84"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c2a2ab4fb8e90aee4a29834194a3ebcf54ccc2444f80be96d13f98c622670f85"
-    sha256 cellar: :any_skip_relocation, monterey:       "36b9e8754b3c79d8a4746cdc545ec2eaf9f699779c96b12a49326c4d9a55567d"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ec225731830c3e3bdb3e2ec0a4a9d53934e6af1f7b90790f028f1d249ee79f7a"
-    sha256 cellar: :any_skip_relocation, catalina:       "063ae76c6a7d9eb1bbc55dea0066eac438230d30201a6947b4274b4e7eea7a55"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3f283572207e1e7cc001b93a0849dafc1154f29772b2087b68ba847d0330ddcd"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "1c82db540f6f65c62c4429147934837a623aeb5ca067fd5c2ffe1c2642054abb"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "456f9bf6db1c43567b15430ebe78ec046982f9679569283b0057b907122fee99"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "faf5848ca03bda5341a99d203e0f13edea148fe6d80a7cb11cac660c7d30fa61"
+    sha256 cellar: :any_skip_relocation, ventura:        "ddde9c8e23145730f223491189763045c53c93e32deaa729e635c303b71f25dd"
+    sha256 cellar: :any_skip_relocation, monterey:       "05ebd91932873bbbb37523a13deca11ea2420038304bb012d419bf616dfa018f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7e09946055acdda4431fb7a46fad27b51bb92f577708125e980ec4a24b79c630"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a0d5c387c070a3f1df02943b1c7906afd8cac70ea5565a1a2d25ffc96f40de7c"
   end
 
   depends_on "go" => :build

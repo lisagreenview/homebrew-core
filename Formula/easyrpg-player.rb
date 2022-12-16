@@ -4,24 +4,29 @@ class EasyrpgPlayer < Formula
   url "https://easyrpg.org/downloads/player/0.7.0/easyrpg-player-0.7.0.tar.xz"
   sha256 "12149f89cc84f3a7f1b412023296cf42041f314d73f683bc6775e7274a1c9fbc"
   license "GPL-3.0-or-later"
+  revision 3
 
   livecheck do
     url "https://github.com/EasyRPG/Player.git"
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "e4d6d21e250a0d98f8c655b845b648b5c4e512aeb6de9190e25dc11479933074"
-    sha256 cellar: :any,                 arm64_big_sur:  "86ba836aaad3a38cc862c39e0f41658eb1fc899d8e63763caf4e8c376ad8418a"
-    sha256 cellar: :any,                 monterey:       "9151058014064597af9c404f707a5cfad0dbf33662301822aab3541b5dd1d63b"
-    sha256 cellar: :any,                 big_sur:        "b1aa0ec02ee7b1faed7a6357aa67f6418480ae03aceddbf6581ba2d30380942b"
-    sha256 cellar: :any,                 catalina:       "bf296509905e0a781150b999881e792080687bddbca1c1570847d9a83a3656a8"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ad4a2e6397a8909e5a3964584661dd8ea0b397e14f7bae802d0bcf13f3f10c86"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "5be060696bb33df0a55eea6f9d51ce8ce559dca6a98c2df7ccd6a76b9ca1929c"
+    sha256 cellar: :any,                 arm64_monterey: "7face4d8c8de6e677f2666423c7d6351c3ed4e9a8482edf72defffccde372b62"
+    sha256 cellar: :any,                 arm64_big_sur:  "3e41830cabf00010ed53932a45b90ffe7f7632a9f53d214d6ab22c9e2a26adc2"
+    sha256 cellar: :any,                 ventura:        "6da33282f89e3cb4b826d178610ed184e6eeb916416e1244e5254f08660e47e3"
+    sha256 cellar: :any,                 monterey:       "8c5959946f1a49fc0b12ef5664dfb76ae59200e4b1789068546f6aa18e322d55"
+    sha256 cellar: :any,                 big_sur:        "5d0c23b97aa28f4cd220dffd594f58e85b9593cb8f5fd3c78b09035d19ea62f3"
+    sha256 cellar: :any,                 catalina:       "65332c983ecf0e9f4fac9e0dd8672451114ddf40ddb3d131aac6fa7c28918f79"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "423ad9c8e19c7eaec2674b4811e8dcd2e20b2f8fbd7622e2165e7b31702c5fca"
   end
 
   depends_on "cmake" => :build
   depends_on "fmt"
   depends_on "freetype"
   depends_on "harfbuzz"
+  depends_on "icu4c"
   depends_on "liblcf"
   depends_on "libpng"
   depends_on "libsndfile"

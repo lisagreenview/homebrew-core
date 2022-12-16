@@ -2,9 +2,10 @@ class ClickhouseOdbc < Formula
   desc "Official ODBC driver implementation for accessing ClickHouse as a data source"
   homepage "https://github.com/ClickHouse/clickhouse-odbc#readme"
   url "https://github.com/ClickHouse/clickhouse-odbc.git",
-      tag:      "v1.1.10.20210822",
-      revision: "c7aaff6860e448acee523f5f7d3ee97862fd07d2"
+      tag:      "v1.2.1.20220905",
+      revision: "fab6efc57d671155c3a386f49884666b2a02c7b7"
   license "Apache-2.0"
+  revision 2
   head "https://github.com/ClickHouse/clickhouse-odbc.git", branch: "master"
 
   livecheck do
@@ -13,19 +14,21 @@ class ClickhouseOdbc < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "7eadbafc340ed5a82784f324c3089c18e9d61b39960a855a75f195ab2ec2d86b"
-    sha256 cellar: :any,                 arm64_big_sur:  "f41c561476fdb934633db980241c84284cd10ee2e1b6a063c8b8bf4d1defe560"
-    sha256 cellar: :any,                 monterey:       "2b563f20b056ba7fd8c15fa6ca7a980946192fbdcf0bcd09146f12a19238c0d7"
-    sha256 cellar: :any,                 big_sur:        "e6d1f023de5da25925976a49e6e67752ca2f21e03b8830ff29f445b76d494229"
-    sha256 cellar: :any,                 catalina:       "321dd3734dac814a4e3d02a407195f700a0217a9edc5c94bc01aa0aec4b161a0"
-    sha256 cellar: :any,                 mojave:         "e2087770d6ff73e2ca07bfa972b7a59b6b38eb02a1262fc8a537282ac78b07b1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3c4e8d0d6b0e858be6367eb3a10520b9dfa99ebea2c0be44c81e6cc79f105b48"
+    sha256 cellar: :any,                 arm64_ventura:  "646ee4f8ebc0df78b212c1ee74bd7a74ca2328ff015d30e768e696bac69ad7e2"
+    sha256 cellar: :any,                 arm64_monterey: "12bbf5b2cfff9719b1b152fbaaeade5402dd00e3c1afdce26fe1038d816e62f8"
+    sha256 cellar: :any,                 arm64_big_sur:  "f2f916066c47b770a833c6f57fe454fed0651404a3d7d661fca046b0d144e95d"
+    sha256 cellar: :any,                 ventura:        "189a8c47018d91004450d3126eaa9b6b2d04916f6c7e98688481fef460213e36"
+    sha256 cellar: :any,                 monterey:       "c74cd3c21681d3ef719f093a0906b992c7f84f5da72a77e81875f97111f06a50"
+    sha256 cellar: :any,                 big_sur:        "5d9076057b916ff473394f93ba6508e5c16e9b21a9b1925466192de0f1e9f94a"
+    sha256 cellar: :any,                 catalina:       "340093f17757dc9016aea7083da93c1fbe5f51bfcb44978c3906519334951b8b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "64ef6e9358d4954126c39b069cf88a02d1164f674bd0aca7b62a0a2b49cc9018"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "icu4c"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
+  depends_on "poco"
 
   on_macos do
     depends_on "libiodbc"
@@ -33,27 +36,29 @@ class ClickhouseOdbc < Formula
 
   on_linux do
     depends_on "unixodbc"
-    depends_on "gcc"
   end
 
-  fails_with gcc: "5"
-  fails_with gcc: "6"
+  fails_with :gcc do
+    version "6"
+  end
 
   def install
-    cmake_args = std_cmake_args.dup
+    # Remove bundled libraries excluding required bundled `folly` headers
+    %w[googletest nanodbc poco ssl].each { |l| (buildpath/"contrib"/l).rmtree }
 
-    cmake_args << "-DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}"
-    cmake_args << "-DICU_ROOT=#{Formula["icu4c"].opt_prefix}"
-
-    if OS.mac?
-      cmake_args << "-DODBC_PROVIDER=iODBC"
-      cmake_args << "-DODBC_DIR=#{Formula["libiodbc"].opt_prefix}"
-    elsif OS.linux?
-      cmake_args << "-DODBC_PROVIDER=UnixODBC"
-      cmake_args << "-DODBC_DIR=#{Formula["unixodbc"].opt_prefix}"
+    args = %W[
+      -DCH_ODBC_PREFER_BUNDLED_THIRD_PARTIES=OFF
+      -DCH_ODBC_THIRD_PARTY_LINK_STATIC=OFF
+      -DICU_ROOT=#{Formula["icu4c"].opt_prefix}
+      -DOPENSSL_ROOT_DIR=#{Formula["openssl@3"].opt_prefix}
+    ]
+    args += if OS.mac?
+      ["-DODBC_PROVIDER=iODBC", "-DODBC_DIR=#{Formula["libiodbc"].opt_prefix}"]
+    else
+      ["-DODBC_PROVIDER=UnixODBC", "-DODBC_DIR=#{Formula["unixodbc"].opt_prefix}"]
     end
 
-    system "cmake", "-S", ".", "-B", "build", *cmake_args
+    system "cmake", "-S", ".", "-B", "build", *args, *std_cmake_args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end

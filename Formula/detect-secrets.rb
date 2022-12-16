@@ -3,52 +3,49 @@ class DetectSecrets < Formula
 
   desc "Enterprise friendly way of detecting and preventing secrets in code"
   homepage "https://github.com/Yelp/detect-secrets"
-  url "https://files.pythonhosted.org/packages/fc/79/c5d0c23c552934ba6305a30817652b4c17686cc20d9bd4f762480199b1fb/detect_secrets-1.1.0.tar.gz"
-  sha256 "68250b31bc108f665f05f0ecfb34f92423280e48e65adbb887fdf721ed909627"
+  url "https://files.pythonhosted.org/packages/f1/55/292f9ce52bba7f3df0a9cde65dabf458d3aeec6a63bf737e5a5fa9fe6d31/detect_secrets-1.4.0.tar.gz"
+  sha256 "d56787e339758cef48c9ccd6692f7a094b9963c979c9813580b0169e41132833"
   license "Apache-2.0"
-  revision 1
-  head "https://github.com/Yelp/detect-secrets.git"
+  head "https://github.com/Yelp/detect-secrets.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "c4a8923080d7b896ac352b5c13cbc18c0dd74cc56a6452e3d0bbcc759e12dad0"
-    sha256 cellar: :any, arm64_big_sur:  "26c83f1239a9a4232991e8c2ac0d7aa5f2657409d647f020a549cf83af96032b"
-    sha256 cellar: :any, monterey:       "78f1edcf6f4907ca46695709c13a46c58bd46098644c6ccf533fd0b3dd9edbd9"
-    sha256 cellar: :any, big_sur:        "1803df0d2f14fa8eb852f84b1ccf5e7e22da6219f001d1ec5cf617d42c3a095d"
-    sha256 cellar: :any, catalina:       "41e50c5f13445c03b7e3d4f0c97d357c5886011d5fc2dcc8a93e89e387a14345"
-    sha256 cellar: :any, mojave:         "5feaab84d7f0c91d3453f93c019abf3abd5ec04c66d22798925ecd0b27baeeb9"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7031eb88670ddce6debdd065845964eedb4e76861cd18173c4c292bf46e91894"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1622566470e48ee2ebad364f0e55ef38c15287e7ba32a0684ab8f2e2fa4cb3eb"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "183fe37e5115b2bbc4de9262ecf3bc3dd826201f45ab09e54c36fc231255fd21"
+    sha256 cellar: :any_skip_relocation, ventura:        "1f76cfc33331a7fb3b76b93d7d45b297462f20dd4ad11c0a0c8954425f9535bd"
+    sha256 cellar: :any_skip_relocation, monterey:       "eaa33b66b295b5cebfce5bc2466b0b75ce366e486103eb91d049c052d569e650"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0830609eb2780349a180dfa53ae9d0cc2c294d0ad963697365b6c0d593245be8"
+    sha256 cellar: :any_skip_relocation, catalina:       "22929cf2fb7109b11e718c01178c171bdcf639d390a0b57a133fccfe96ab0369"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6653e0c83e9a1725e6c6915fcab0f2237930b19e44dcfc05bebf04435d47f3c9"
   end
 
-  depends_on "libyaml"
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6d/78/f8db8d57f520a54f0b8a438319c342c61c22759d8f9a1cd2e2180b5e5ea9/certifi-2021.5.30.tar.gz"
-    sha256 "2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
   end
 
-  resource "chardet" do
-    url "https://files.pythonhosted.org/packages/ee/2d/9cdc2b527e127b4c9db64b86647d567985940ac3698eeabc7ffaccb4ea61/chardet-4.0.0.tar.gz"
-    sha256 "0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"
+  resource "charset-normalizer" do
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/ea/b7/e0e3c1c467636186c39925827be42f16fee389dc404ac29e930e9136be70/idna-2.10.tar.gz"
-    sha256 "b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"
-  end
-
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/6b/47/c14abc08432ab22dc18b9892252efaf005ab44066de871e72a38d6af464b/requests-2.25.1.tar.gz"
-    sha256 "27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/4f/5a/597ef5911cb8919efe4d86206aa8b2658616d676a7088f0825ca08bd7cb8/urllib3-1.26.6.tar.gz"
-    sha256 "f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"
+    url "https://files.pythonhosted.org/packages/b2/56/d87d6d3c4121c0bcec116919350ca05dc3afd2eeb7dc88d07e8083f8ea94/urllib3-1.26.12.tar.gz"
+    sha256 "3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"
   end
 
   def install

@@ -1,19 +1,19 @@
 class Glab < Formula
   desc "Open-source GitLab command-line tool"
-  homepage "https://glab.readthedocs.io/"
-  url "https://github.com/profclems/glab/archive/v1.21.1.tar.gz"
-  sha256 "878c13d064ca6010437de90ca3711962fd87441fcae39bf01cb0af5aa5efd79e"
+  homepage "https://gitlab.com/gitlab-org/cli"
+  url "https://gitlab.com/gitlab-org/cli/-/archive/v1.24.1/cli-v1.24.1.tar.gz"
+  sha256 "dc942f7806aa417714483bd5323bfcde9eceadd7ed33154f7a77038b416bdd95"
   license "MIT"
-  head "https://github.com/profclems/glab.git", branch: "trunk"
+  head "https://gitlab.com/gitlab-org/cli.git", branch: "trunk"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f30115f346654210a5580268de26a0a957193e1296d59db442d52b7854738404"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c1a989fc60ce6bf9071350d9ce9d48d59858e490d92cb23fed6c979ea3a4dfc8"
-    sha256 cellar: :any_skip_relocation, monterey:       "a33a50438b8d38c0ed7da1e040d820652caf79c60177df1755d5ca4d00d7962a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "82a903f4d6f4866fa55c93250d63467c8f83003389343cec63e8bc70e0e9dc5e"
-    sha256 cellar: :any_skip_relocation, catalina:       "766192bb22eba3e0219aae40b4898d4e0993788154a5885d865ae1e6074ac722"
-    sha256 cellar: :any_skip_relocation, mojave:         "60e7f1b0149b2c767b3324bed1719b573db47db3120250c9c596a372a639a06a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6c2494a7790d8b3a0391842bc0b70b645a459630a264501becb96d893420768e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "5699dda9cbeeac90decb14a33bc59627c430fbe26cf9ec141f856c4de5e3090a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "0a9f222fbdcb8f1fca24aab20f51464084ba3148201f35a1fc85beec8f9590c2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "593890e7997cf8e310c9a58ee8bc8ab20cbbee1ab6d203f1cebe969273a256f4"
+    sha256 cellar: :any_skip_relocation, ventura:        "c8b1c3dc337dd5a637fd40636bd7c69268a008ad1c559efab60d0cfaa77574fb"
+    sha256 cellar: :any_skip_relocation, monterey:       "69dcd7c496d799e0ce50eeadeef624b2a962e82327d54f67d9d45be97a911161"
+    sha256 cellar: :any_skip_relocation, big_sur:        "76be8817d090679e93a7b182564589b04bd2a0d5150b9b2ab93eb7f9826f6181"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "44d6143b5459492abb9e80301244724f3b026d6cc6286a0b31f9538e8c4ec803"
   end
 
   depends_on "go" => :build
@@ -23,15 +23,13 @@ class Glab < Formula
 
     system "make", "GLAB_VERSION=#{version}"
     bin.install "bin/glab"
-    (bash_completion/"glab").write Utils.safe_popen_read(bin/"glab", "completion", "--shell=bash")
-    (zsh_completion/"_glab").write Utils.safe_popen_read(bin/"glab", "completion", "--shell=zsh")
-    (fish_completion/"glab.fish").write Utils.safe_popen_read(bin/"glab", "completion", "--shell=fish")
+    generate_completions_from_executable(bin/"glab", "completion", "--shell")
   end
 
   test do
-    system "git", "clone", "https://gitlab.com/profclems/test.git"
-    cd "test" do
-      assert_match "Clement Sam", shell_output("#{bin}/glab repo contributors")
+    system "git", "clone", "https://gitlab.com/cli-automated-testing/homebrew-testing.git"
+    cd "homebrew-testing" do
+      assert_match "Matt Nohr", shell_output("#{bin}/glab repo contributors")
       assert_match "This is a test issue", shell_output("#{bin}/glab issue list --all")
     end
   end

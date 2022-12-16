@@ -6,8 +6,8 @@ class Haxe < Formula
 
   stable do
     url "https://github.com/HaxeFoundation/haxe.git",
-        tag:      "4.2.4",
-        revision: "ab0c0548ff80fcbbbc140a381a9031af13b5782c"
+        tag:      "4.2.5",
+        revision: "e5eec3122454bfc95412437d938d1d8d3e77ed68"
 
     # Remove when campl5 dependency is bumped to 8.00 in a release
     patch do
@@ -22,12 +22,14 @@ class Haxe < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2a415889b0add6993fe6472bf7618654e9e98c7ffcb8420660743681a66cb843"
-    sha256 cellar: :any,                 arm64_big_sur:  "6b2d4d39cdade8750d98fb9479f9e6cde7750309c17f499dd430409a7f7e2db7"
-    sha256 cellar: :any,                 monterey:       "9f8fdc4af9d7a2e7d445c4acf9aed881ff8b00c2f18892090984b86c30714242"
-    sha256 cellar: :any,                 big_sur:        "a7eb35ca66f6df10e83325635cb7a0ec158cc9428eb7a3a1efa279181bf63566"
-    sha256 cellar: :any,                 catalina:       "d73b00f19195cebc7d5ceb4afb81a02edaf3bddd537c078fdd095eef422d7d05"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9845b517ea9934165338a1f594e922fa94da0d78ef7a0d3ff0b1175fb0952600"
+    sha256 cellar: :any,                 arm64_ventura:  "bd27b86c1bd31a6dffef92a4b91aa89c3b74d707934dcc6321e4315119bef982"
+    sha256 cellar: :any,                 arm64_monterey: "ebb6b5472bc7408ce268e357651c2b123abaa2f614260f88838a149289423499"
+    sha256 cellar: :any,                 arm64_big_sur:  "380f0f1f640c3f4919d272a4648b2d04fb3afd93820003cec19b9f54be1cba75"
+    sha256 cellar: :any,                 ventura:        "0a66202bcbbce78adb804699957df37b2e92ae5d287a038d4e7fba9be95bbf99"
+    sha256 cellar: :any,                 monterey:       "8cdccc4df05e252d1094ecad90a97ea898659a5017b9c61c6a157629887e68ad"
+    sha256 cellar: :any,                 big_sur:        "dcb8925b9b647939dbf5abbd2ba150f26f581a525fbf8e9c1ce369de58bb6adc"
+    sha256 cellar: :any,                 catalina:       "21ddb930758328523200f2ef95d7639bfe32ca1a94a9861972a721b0c96ab968"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cce4723939b40c48dfb88f1ef06cf967aa5bb76a033a774eb207c72bb93abf12"
   end
 
   depends_on "cmake" => :build
@@ -113,9 +115,10 @@ class Haxe < Formula
     EOS
     system "#{bin}/haxe", "-js", "out.js", "-main", "HelloWorld"
 
-    cmd = "osascript -so -lJavaScript out.js 2>&1"
-    on_linux do
-      cmd = "node out.js"
+    cmd = if OS.mac?
+      "osascript -so -lJavaScript out.js 2>&1"
+    else
+      "node out.js"
     end
     assert_equal "Hello world!", shell_output(cmd).strip
   end

@@ -1,22 +1,23 @@
 class BaidupcsGo < Formula
   desc "Terminal utility for Baidu Network Disk"
   homepage "https://github.com/qjfoidnh/BaiduPCS-Go"
-  url "https://github.com/qjfoidnh/BaiduPCS-Go/archive/v3.8.4.tar.gz"
-  sha256 "11fa472cbfd1d63aee1d345784e1cb5503cf7b938d7f74f6b138c761c4f8eeca"
+  url "https://github.com/qjfoidnh/BaiduPCS-Go/archive/v3.9.0.tar.gz"
+  sha256 "de71666e961a3eeb90f8aca7b11934c3f0296d1870e036a7c086ba1decfca8ab"
   license "Apache-2.0"
   head "https://github.com/qjfoidnh/BaiduPCS-Go.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "9b3b1d16f2258b7a996c662c74d6312627e4349e853c0fd3bf5f4665ae9a8f33"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5975907ef5a45ce0ff3b3c7eea6cc5e1024b4938aab36123509ca4fb6e9e1928"
-    sha256 cellar: :any_skip_relocation, monterey:       "2a3d4259df1e56f1b33d430781ef85598f5890dd29c9d7eb288b1791ebe57f55"
-    sha256 cellar: :any_skip_relocation, big_sur:        "4bef2623ea5296a38ad6063e35f732b21e14e65a163530da18763dec9a437469"
-    sha256 cellar: :any_skip_relocation, catalina:       "a6a451cbf301960ddc61689355a4ed9d2bcb0889e2e25b0161b89358f6514000"
-    sha256 cellar: :any_skip_relocation, mojave:         "b024815371b471e0fbce20f46cd4e2b3476873cf3e0b6563d630b9cacc51443f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "92dbe6b2a76a70eea669805d35cb0a84f811c208e14950e07f034f11c4b46525"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "9a493736ddb5671e2857addd80a0cb510a777d1cb14dcd50bc7beffca420e762"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "d0a3bbc01ff311d813cbcd6a52869dfbba5209c6be099718fe91a9a206759f69"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ddf64c9ad56ed8e980d08b9f2c180fb0f746365089efc68e8999a767667818ab"
+    sha256 cellar: :any_skip_relocation, ventura:        "10d19f39051c8237bf2191efba15f6e207245f1f6983cc0060e09a4f93167b4c"
+    sha256 cellar: :any_skip_relocation, monterey:       "406b1f660ce69dc6ea9216ffd47bca8bf5522d31dad0da44edc0e2b22752e7f4"
+    sha256 cellar: :any_skip_relocation, big_sur:        "5de66cf50df5e988289591f0ccc31d49d99319fbb99e122760f6dd4f04c0db84"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5f7cc7a5a6801b05ca2f3cc0f4b696196a260060bebe1374fa2efede1f15552b"
   end
 
-  depends_on "go" => :build
+  # Bump to 1.18 on the next release, if possible.
+  depends_on "go@1.17" => :build
 
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w")

@@ -4,7 +4,7 @@ class Modd < Formula
   url "https://github.com/cortesi/modd/archive/v0.8.tar.gz"
   sha256 "04e9bacf5a73cddea9455f591700f452d2465001ccc0c8e6f37d27b8b376b6e0"
   license "MIT"
-  head "https://github.com/cortesi/modd.git"
+  head "https://github.com/cortesi/modd.git", branch: "master"
 
   bottle do
     rebuild 2
@@ -16,7 +16,7 @@ class Modd < Formula
   end
 
   # https://github.com/cortesi/modd/issues/96
-  deprecate! date: "2021-08-27", because: :unmaintained
+  disable! date: "2022-09-14", because: :unmaintained
 
   depends_on "go@1.16" => :build
 

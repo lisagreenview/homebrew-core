@@ -1,8 +1,8 @@
 class Armadillo < Formula
   desc "C++ linear algebra library"
   homepage "https://arma.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/arma/armadillo-10.7.4.tar.xz"
-  sha256 "2c1b32c5b259b05e34bc2dcde1cab589cfcbb58179c72a93c5daaea1e3950652"
+  url "https://downloads.sourceforge.net/project/arma/armadillo-11.4.2.tar.xz"
+  sha256 "e6860134f1ac9656c6a1ccc74c74b75f8c5966ac8612841f2fbf0c91ce39f4e9"
   license "Apache-2.0"
 
   livecheck do
@@ -11,19 +11,23 @@ class Armadillo < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "2c351e54b8df61e3e2ee7d784c8e76d19b4c113d3a59ec18985401b3d8c8880b"
-    sha256 cellar: :any,                 big_sur:       "8b51bd74d4276a5ea72b701e4ce2340a0a2874f72dfb58fc6d92c246a5a519b2"
-    sha256 cellar: :any,                 catalina:      "bb4c0fd752569b3004565e53c7700f2ac8dd0efd84656a82bf9d4486345c7604"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "600e4545bc1538836efd4b9f01a918f5a2193f57369ad484a6a7b916a351849a"
+    sha256 cellar: :any,                 arm64_ventura:  "79de8063069ace12ce22812c8b0b26f2b15c8cb99a07da7c5a7dbd50eb6fd3a5"
+    sha256 cellar: :any,                 arm64_monterey: "33c1474ebbb15fa5b0043c133ef4250f1c34dd718b5482a65365296805095cd7"
+    sha256 cellar: :any,                 arm64_big_sur:  "d5aaa745d3dcd454d3b1d0e581ae658e10a4b0d1c3d2411e05df5a7b76db740b"
+    sha256 cellar: :any,                 ventura:        "8a6910bbacca5c736f865b8a9b59ee588661bef6f8bbcd1725c2144bcce14ddb"
+    sha256 cellar: :any,                 monterey:       "dea49aba4c79189635ed727f1dfaa4f2901d7f3a08f88ae87a44995550655496"
+    sha256 cellar: :any,                 big_sur:        "a41d94e0025c2650a32c9223e95f70ce1ff05ea0bff7d1b336ae27b36de5b499"
+    sha256 cellar: :any,                 catalina:       "bed0f51daefcf2656c41792393b0556c4dab4ad6b724fea11c37b222826a6e8b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "69dd4939331c9c848b6893cb8e804ac1b66647ed58169198d55110b6ee3468de"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "arpack"
   depends_on "hdf5"
+  depends_on "libaec"
   depends_on "openblas"
   depends_on "superlu"
-  depends_on "szip"
 
   def install
     ENV.prepend "CXXFLAGS", "-DH5_USE_110_API -DH5Ovisit_vers=1"

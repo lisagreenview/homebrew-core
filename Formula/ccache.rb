@@ -1,18 +1,20 @@
 class Ccache < Formula
   desc "Object-file caching compiler wrapper"
   homepage "https://ccache.dev/"
-  url "https://github.com/ccache/ccache/releases/download/v4.5.1/ccache-4.5.1.tar.xz"
-  sha256 "51186ebe0326365f4e6131e1caa8911de7da4aa6718efc00680322d63a759517"
+  url "https://github.com/ccache/ccache/releases/download/v4.7.4/ccache-4.7.4.tar.xz"
+  sha256 "df0c64d15d3efaf0b4f6837dd6b1467e40eeaaa807db25ce79c3a08a46a84e36"
   license "GPL-3.0-or-later"
   head "https://github.com/ccache/ccache.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "400d5e7df0557fcd5da23b09eb2ad2a3349db05c6fd2cbed77fa9b5cb1e5842c"
-    sha256 cellar: :any,                 arm64_big_sur:  "1d03e8a6728d908b222ec0d929c848209edb0e76720959212e35205cf64e0c87"
-    sha256 cellar: :any,                 monterey:       "1cb93db06abd2a421e853a47ab40cbf57c6cf27eb51433dd1e2e51b921670585"
-    sha256 cellar: :any,                 big_sur:        "44638dde6b3c03920200fa2385456915461ce7338ac604e87ac0b234f0b72917"
-    sha256 cellar: :any,                 catalina:       "5aa9f5e03470cbc2af290f34dfdec800defc00af41ee6dc1e4348d171dcfd8f4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "84f24419115c4fa4d9b6631d49ccf957968a5defce895606fdf31ce954cfc64b"
+    sha256 cellar: :any,                 arm64_ventura:  "35341df4e3899eb409b712e1f59826fac4312c78581c016acdcd15515a454209"
+    sha256 cellar: :any,                 arm64_monterey: "ba78c3c27dfe4cfa628d0dd799c289056e848e5cbbbc847117f2fae6e33949a6"
+    sha256 cellar: :any,                 arm64_big_sur:  "237f9ce565fa10a9bd43038bec4bf035cd44b136a849c45a12a00af18397833b"
+    sha256 cellar: :any,                 ventura:        "ff337e38d7d1a17c55bc60325e0fd197aa1f05b42f34f6180e35756a87e05508"
+    sha256 cellar: :any,                 monterey:       "4e58ab93aa6690b1d754154b33c4e2fe457c6c2710aa29c208d1904cdd18f2dc"
+    sha256 cellar: :any,                 big_sur:        "927efbcf6927bd90df8e15f4495ae614f9bce3b98601569dc1158cfc9ed5d4c2"
+    sha256 cellar: :any,                 catalina:       "acde8ffc90a1c59bfe423720193dd8d4059816f850e0fa01caaa92126d96bcab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cec1be15a66689bff21cdefd5244f13149f89f134398c0f67c38d4a4a75503cb"
   end
 
   depends_on "asciidoctor" => :build
@@ -21,10 +23,6 @@ class Ccache < Formula
 
   depends_on "hiredis"
   depends_on "zstd"
-
-  on_linux do
-    depends_on "gcc"
-  end
 
   fails_with gcc: "5"
 
@@ -51,13 +49,15 @@ class Ccache < Formula
       cc
       gcc gcc2 gcc3 gcc-3.3 gcc-4.0
       gcc-4.2 gcc-4.3 gcc-4.4 gcc-4.5 gcc-4.6 gcc-4.7 gcc-4.8 gcc-4.9
-      gcc-5 gcc-6 gcc-7 gcc-8 gcc-9 gcc-10 gcc-11
+      gcc-5 gcc-6 gcc-7 gcc-8 gcc-9 gcc-10 gcc-11 gcc-12
       c++ c++3 c++-3.3 c++-4.0
       c++-4.2 c++-4.3 c++-4.4 c++-4.5 c++-4.6 c++-4.7 c++-4.8 c++-4.9
-      c++-5 c++-6 c++-7 c++-8 c++-9 c++-10 c++-11
+      c++-5 c++-6 c++-7 c++-8 c++-9 c++-10 c++-11 c++-12
       g++ g++2 g++3 g++-3.3 g++-4.0
       g++-4.2 g++-4.3 g++-4.4 g++-4.5 g++-4.6 g++-4.7 g++-4.8 g++-4.9
-      g++-5 g++-6 g++-7 g++-8 g++-9 g++-10 g++-11
+      g++-5 g++-6 g++-7 g++-8 g++-9 g++-10 g++-11 g++-12
+      i686-w64-mingw32-gcc i686-w64-mingw32-g++
+      x86_64-w64-mingw32-gcc x86_64-w64-mingw32-g++
     ].each do |prog|
       libexec.install_symlink bin/"ccache" => prog
     end

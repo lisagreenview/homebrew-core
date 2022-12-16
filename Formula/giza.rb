@@ -1,17 +1,21 @@
 class Giza < Formula
   desc "Scientific plotting library for C/Fortran built on cairo"
   homepage "https://danieljprice.github.io/giza/"
-  url "https://github.com/danieljprice/giza/archive/v1.2.1.tar.gz"
-  sha256 "8bf02828dc3e25a51ca1ac9229df41e86ba2a779af49d06c1a3077ecc4721821"
+  url "https://github.com/danieljprice/giza/archive/v1.3.2.tar.gz"
+  sha256 "080b9d20551bc6c6a779b1148830d0e89314c9a78c5a934f9ec8f02e8e541372"
   license "GPL-2.0-or-later"
-  head "https://github.com/danieljprice/giza.git"
+  revision 1
+  head "https://github.com/danieljprice/giza.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "f90bb6e21ea8fc3919706b4584995623f763b11f1961ea474e10f31b0c3fba72"
-    sha256 cellar: :any, monterey:      "215259692a128badd9e2f5ccecc743bd8f0ae1c727196f35a891cac1837023e1"
-    sha256 cellar: :any, big_sur:       "8ef54fe8593cb6dbae489f634dbe6fddb7fbfa495af95c3cea6f8bc52ac4ae5c"
-    sha256 cellar: :any, catalina:      "81bd1caa8dbc15f4f9865cd9de5956d2371c500febf10289b2fad40a60d333de"
-    sha256 cellar: :any, mojave:        "05008343af562f24851230c306ce451041465726e3d45f20da94fcbd61424e8b"
+    sha256 cellar: :any,                 arm64_ventura:  "7d5f9228ef4c9555f1af7ffa60e3fe8dccfbb61dddb60ba70968c718112d9083"
+    sha256 cellar: :any,                 arm64_monterey: "1a837d975f00941a008235124a59803141fefb8d10614582ce7802ea47a12a78"
+    sha256 cellar: :any,                 arm64_big_sur:  "f78329c4aca9780496941516a59732ceeadfc0be526e1943dce7519a2ca561de"
+    sha256 cellar: :any,                 ventura:        "d0832d92e5dc22310a01fafc89e4708185f4a3296f743f1df1451e354c7b84f5"
+    sha256 cellar: :any,                 monterey:       "4edb315ea3a02c388550881052e35fa5ef04b312896e5fcb6be580b5f3b773f7"
+    sha256 cellar: :any,                 big_sur:        "2fac6931d67da26fa46605ef00aa465e81437050e95e2d1960d05f5969383fe2"
+    sha256 cellar: :any,                 catalina:       "5346d386325e486061bdde67c5d9ff826f0304e8b71b2a5355e5a92f41330923"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ff1e1f486bbe66c1e80c394e6d6e0e92b447306dcbbad5406ff020980ce1a863"
   end
 
   depends_on "pkg-config" => :build
@@ -47,14 +51,23 @@ class Giza < Formula
 
     flags = %W[
       -I#{include}
+      -I#{Formula["cairo"].opt_include}/cairo
       -L#{lib}
+      -L#{Formula["libx11"].opt_lib}
+      -L#{Formula["cairo"].opt_lib}
+      -lX11
+      -lcairo
       -lgiza
     ]
 
-    testfiles = Dir.children("#{testpath}/C")
-
-    testfiles.first(5).each do |file|
-      system ENV.cc, "C/#{file}", *flags
+    %w[
+      test-XOpenDisplay.c
+      test-cairo-xw.c
+      test-giza-xw.c
+      test-rectangle.c
+      test-window.c
+    ].each do |file|
+      system ENV.cc, testpath/"C"/file, *flags
     end
   end
 end

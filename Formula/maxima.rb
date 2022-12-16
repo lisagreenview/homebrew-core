@@ -1,10 +1,10 @@
 class Maxima < Formula
   desc "Computer algebra system"
   homepage "https://maxima.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/maxima/Maxima-source/5.45.1-source/maxima-5.45.1.tar.gz"
-  sha256 "fe9016276970bef214a1a244348558644514d7fdfaa4fc8b9d0e87afcbb4e7dc"
+  url "https://downloads.sourceforge.net/project/maxima/Maxima-source/5.46.0-source/maxima-5.46.0.tar.gz"
+  sha256 "7390f06b48da65c9033e8b2f629b978b90056454a54022db7de70e2225aa8b07"
   license "GPL-2.0-only"
-  revision 4
+  revision 7
 
   livecheck do
     url :stable
@@ -12,10 +12,14 @@ class Maxima < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "f2b30807d9dc4138ad48a027c721d0f2efac636ba244abf81b76e3697e3c0482"
-    sha256 cellar: :any_skip_relocation, big_sur:       "7eb3ed75bfe3a2786dc959724c99769c123e9fcc9ac2293ad887c2c280d7e974"
-    sha256 cellar: :any_skip_relocation, catalina:      "ffb175c92077e3d87cc659bc888113d656c37a0c3cb75d479a385627a9cd2ce0"
-    sha256 cellar: :any_skip_relocation, mojave:        "0d18434459d1c811395e78b2c08ad797332fd34b0d35fe22aa4f409ae6e3500b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "61ba66f0e484b4aaa1115bd28188c64e2eab6827530b0927aeaf47bff1e31a6c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b56557a4d3a27cceb548fa4341885fb15c28c9df21987a2e8ae8b81495309720"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "85b39fa1a991853758490bbbe500b94a243145bd14e87a8aaac64e73f45272e1"
+    sha256 cellar: :any_skip_relocation, ventura:        "483fbe0a31d79ee37da05e597a5c97d177b377f5d6fa1e304b089b2277f69f93"
+    sha256 cellar: :any_skip_relocation, monterey:       "e8112c54d0f612c0a406b15e32a25e6bb14aa5fa209383822cc69da24b9e722b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c800d29837cf469187752ddfa92c1bd4c5309c5b135c2a07d0283c0e46f47767"
+    sha256 cellar: :any_skip_relocation, catalina:       "140e327eb5177416f846bd132435e5b294f75879cfed65acd7fa005b42312fa7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "61246ba5d9498c1fab9f06b71c1b6ccc0d8ad2a13b6a3408053190f1e7b768b9"
   end
 
   depends_on "gawk" => :build

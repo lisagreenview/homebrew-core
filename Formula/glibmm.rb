@@ -1,18 +1,19 @@
 class Glibmm < Formula
   desc "C++ interface to glib"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/glibmm/2.70/glibmm-2.70.0.tar.xz"
-  sha256 "8008fd8aeddcc867a3f97f113de625f6e96ef98cf7860379813a9c0feffdb520"
+  url "https://download.gnome.org/sources/glibmm/2.74/glibmm-2.74.0.tar.xz"
+  sha256 "2b472696cbac79db8e405724118ec945219c5b9b18af63dc8cfb7f1d89b0f1fa"
   license "LGPL-2.1-or-later"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "1ebb6889448d05a7fa6772588946d090464ba3acca808692d72ab32d2e6304cf"
-    sha256 cellar: :any, arm64_big_sur:  "85cf4f30e430474bb31b4d40331658d4abbbd6656b0fd545e83757289863545c"
-    sha256 cellar: :any, monterey:       "0a8cf3b36eef323ccfee7b4489c4783ecf4afb573ee8a74b692c36eb82801152"
-    sha256 cellar: :any, big_sur:        "edf7767c19d7af3fa0029a77b900b160856bfc1d65b789e58ad9001c40cd6552"
-    sha256 cellar: :any, catalina:       "371c5642bb40285423561696728f0bb760197d5971961819e82846f452d0659b"
-    sha256 cellar: :any, mojave:         "6b17198a3468451bf0019b02dbeffe9fa0907876964b63981cebaf53966dcbf8"
-    sha256               x86_64_linux:   "f000a536bbbfc6100c9fd63f8b7ec6e674867ab75e86e8132da1ef2b3c409988"
+    sha256 cellar: :any, arm64_ventura:  "e49ef477f2779e88d125131dbb474894fdde113cf667630ef8947821d64cb0a4"
+    sha256 cellar: :any, arm64_monterey: "9bed07ed0bc12a9eeb415a900d2a01b5163de1f595cdbdf77523c605410f7b56"
+    sha256 cellar: :any, arm64_big_sur:  "94c4d0b2ef01fa6f52f59e3eac7527f5b28c1aa71ccd60de4479402eefc7b34c"
+    sha256 cellar: :any, ventura:        "ede6b35b4de6f4ac9418f20db8b3249f3c8160257561d6d94c69663c32c62974"
+    sha256 cellar: :any, monterey:       "271bf32165f1e0c4566f7006a3d29346ed9a62f16e1bf14e2ceb710edaec0f0c"
+    sha256 cellar: :any, big_sur:        "ec798cefd26699800dd2ea6a6f0898f3c1f422b75e66eab54099b25f8ba7b0cd"
+    sha256 cellar: :any, catalina:       "7ef9ed7c63ea3d68e26f153b9bf77c1468f6811abead311f9f5c824b5eaa3550"
+    sha256               x86_64_linux:   "af31cc06c35171195312c20dbea1bcf188b6c09e770e160b0c12f64850ee57ec"
   end
 
   depends_on "meson" => :build
@@ -20,10 +21,6 @@ class Glibmm < Formula
   depends_on "pkg-config" => :build
   depends_on "glib"
   depends_on "libsigc++"
-
-  on_linux do
-    depends_on "gcc" => :build
-  end
 
   fails_with gcc: "5"
 
@@ -67,9 +64,7 @@ class Glibmm < Formula
       -lgobject-2.0
       -lsigc-3.0
     ]
-    on_macos do
-      flags << "-lintl"
-    end
+    flags << "-lintl" if OS.mac?
     system ENV.cxx, "-std=c++17", "test.cpp", "-o", "test", *flags
     system "./test"
   end

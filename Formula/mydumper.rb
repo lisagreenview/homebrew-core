@@ -1,15 +1,25 @@
 class Mydumper < Formula
   desc "How MySQL DBA & support engineer would imagine 'mysqldump' ;-)"
   homepage "https://launchpad.net/mydumper"
-  url "https://github.com/maxbube/mydumper/archive/v0.11.3.tar.gz"
-  sha256 "ddd0427f572467589cdb024a4ef746d30b4214c804954612f4e07510607cf7a7"
+  url "https://github.com/mydumper/mydumper/archive/v0.13.1-1.tar.gz"
+  sha256 "914457edc005991192b5764ba282a2999483d84bcd4457d44c12b3fc4928167a"
   license "GPL-3.0-or-later"
 
+  livecheck do
+    url :stable
+    regex(%r{href=.*?/tag/v?(\d+(?:\.\d+)+(-\d+)?)["' >]}i)
+    strategy :github_latest
+  end
+
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "3809c5584af68614529990810504ec3e5b754b103efbabbd2183ec2c6f02986e"
-    sha256 cellar: :any,                 big_sur:       "81640fc32d0cedf6ee428fdede75452f62b0404bc7195b15df1a52725d01c57e"
-    sha256 cellar: :any,                 catalina:      "2970e1b0cbe118d91cb28cbec52da2458debbdce93dc87c48009225b6c4fa3b2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "fe0119b21d41a1bd02dbd16a8a7e3fb9682e00b820e948a8d08e635a30dfa75e"
+    sha256 cellar: :any,                 arm64_ventura:  "99d08336ed03e7014d56f7ce4e142a0a92c7ecfd73a000e89f9c93ceba82b079"
+    sha256 cellar: :any,                 arm64_monterey: "1add19e1512aebcda3bfc652fd7035dd71d52bf98f239d75ad152d6849aa7a24"
+    sha256 cellar: :any,                 arm64_big_sur:  "aa7953ae5747775e4d25e0e049e993b604de6209261e410200e8f57870979d99"
+    sha256 cellar: :any,                 ventura:        "9788174460ff6db4d527281099c5a311370e23eacf570e33fe9b7cf6fb0c7f56"
+    sha256 cellar: :any,                 monterey:       "8f057b80833272b3282183ef873f4bd68b10447eddf5ecd7b165b0cb5f9a88a8"
+    sha256 cellar: :any,                 big_sur:        "56bc760d7a3ae770275db74385415640e3643778f97e185e82ba620b664b9dd5"
+    sha256 cellar: :any,                 catalina:       "e0510f19f1ee64fabc8af701a356f55190b00e56665b6ea30662e31689e72da1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "59649c143e9a8ba09c2f4ed19e2585bf838447117f06e0226f462d58f738a7ec"
   end
 
   depends_on "cmake" => :build
@@ -21,10 +31,6 @@ class Mydumper < Formula
   depends_on "pcre"
 
   uses_from_macos "zlib"
-
-  on_linux do
-    depends_on "gcc"
-  end
 
   fails_with gcc: "5"
 

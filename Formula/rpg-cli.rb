@@ -1,18 +1,20 @@
 class RpgCli < Formula
   desc "Your filesystem as a dungeon!"
   homepage "https://github.com/facundoolano/rpg-cli"
-  url "https://github.com/facundoolano/rpg-cli/archive/refs/tags/1.0.0.tar.gz"
-  sha256 "9131308732b829a9ba7bf307dea3e5fb7ede7671ae206079c89ebcdac34a7da4"
+  url "https://github.com/facundoolano/rpg-cli/archive/refs/tags/1.0.1.tar.gz"
+  sha256 "763d5a5c9219f2084d5ec6273911f84213e5424f127117ab0f1c611609663a8b"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "384a050d98cbbc63daf57e1a128a1bdfad36ceeb8c12d2ee6fa64a0a530b8b53"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "69fe52024f5c2760cdcefc1a79848b69c936609f5d06237ac543913eaf7b1e4c"
-    sha256 cellar: :any_skip_relocation, monterey:       "a898df44410ad6b3d549fe2a105fdc233e9e9a93bf135790aabc68c4e886789f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7ecfc66dc139d04795813c57df37f9c79c27d8e10d7a91cef218b90f0a8928a4"
-    sha256 cellar: :any_skip_relocation, catalina:       "95d3d612a6c9554852eb8a8edc7486a97ce1da7f39fb4f28446adee95ceb538c"
-    sha256 cellar: :any_skip_relocation, mojave:         "79088144a5a763bde83334c7749e859e6c5bed0e8ca6a953c9bd1e0073943b9a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e1a30a0095582ac0007fd4d6acb7e3f558bd962e5336a491dd70af867d502217"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "9288dfaf7d55197fd3468953aa278104a1b3d35750bbb77803cfe18131dcf292"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a1e41bc669f9d931347a38ccbbb391a2db5010060f05851a3145af651ac76052"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0766f40464ad75ead48f2ac1715964054845b3d04c118c3a6c72cd1745057862"
+    sha256 cellar: :any_skip_relocation, ventura:        "183fd627b878d49ac32869d77cb076fdb2a747e714ec04ef6458fc494ff13dcf"
+    sha256 cellar: :any_skip_relocation, monterey:       "f7356f10891390e057d8c134e2938012411b7acb3f5b9753639c1e702f5dc08e"
+    sha256 cellar: :any_skip_relocation, big_sur:        "e012c6b51e806c00b198bfd359c3f64b815380f8ffff6193910382ed02d14e7e"
+    sha256 cellar: :any_skip_relocation, catalina:       "9833ede83c62d4d39396dd15dcca7f595277dfd7c08f1be4cf29d86d24f97b87"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c1cd66774457486f7ebfdc066ec5af7109b8894aab60ac07e9419436408314f4"
   end
 
   depends_on "rust" => :build

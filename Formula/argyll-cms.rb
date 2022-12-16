@@ -1,8 +1,8 @@
 class ArgyllCms < Formula
   desc "ICC compatible color management system"
   homepage "https://www.argyllcms.com/"
-  url "https://www.argyllcms.com/Argyll_V2.2.1_src.zip"
-  sha256 "24cbef0e81a7ce8424957cbcb399cdea2f069f64866536d181e879ce1ed18ff8"
+  url "https://www.argyllcms.com/Argyll_V2.3.1_src.zip"
+  sha256 "bd0bcf58cec284824b79ff55baa242903ed361e12b1b37e12228679f9754961c"
   license "AGPL-3.0-only"
 
   livecheck do
@@ -11,18 +11,29 @@ class ArgyllCms < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "9847a3b7f40b2a075b10926264fd60abd6fe38023394aee9338548e36f88bc98"
-    sha256 cellar: :any, arm64_big_sur:  "cd01b34b8340af770348c75ba24f241c4165a343fd470e9104ce6680f9a67987"
-    sha256 cellar: :any, monterey:       "1048438b7f241d538952346e4e2f145a52743149f436cdf0b9f7c644dcf1a2f8"
-    sha256 cellar: :any, big_sur:        "23d23cf1ec9dd7d5d128ac055031a7dadfe60942cb013b90d40922dfec564ea8"
-    sha256 cellar: :any, catalina:       "48ad5563ffb6bdb54671d4e11605a14963c5c0a82e632c710e97086f650b0ae1"
-    sha256 cellar: :any, mojave:         "198c516d829ff22b66f948768ec5841228e002ed840f647a799aab79b202657f"
+    sha256 cellar: :any,                 arm64_ventura:  "97e1af541220a0aeeebd4cf5dbec4b95910d18cbe80ff7d4b1a2550baea18a03"
+    sha256 cellar: :any,                 arm64_monterey: "2eb28a59cef2bdcc142008d4d36470e586e8e22285273303802a7e16bb95d08f"
+    sha256 cellar: :any,                 arm64_big_sur:  "253c5434082b4237f8067ad31ee6fae81811048f76d2cad8e2ae3ca360d51be8"
+    sha256 cellar: :any,                 ventura:        "efc91bb914a5c0e7a66d674c06ea9f8b7c552611bb5bd16538acbdad95a30709"
+    sha256 cellar: :any,                 monterey:       "efa97d39822d0ded97541bc095e59a976eb3f893da6bd4cbb2a90a3174cd9830"
+    sha256 cellar: :any,                 big_sur:        "eb7a9fd709675ccd7f1b59ae9d3e17bc301b4f7c15857a4c32f8f71e6801dc05"
+    sha256 cellar: :any,                 catalina:       "36860658ac2513441fcf1968c16d57fa6fbb5b7385d5437df24ffebe84ed7e1b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4f4ed53c2d490076f96e3833f36d35c8629f909eba688142349489138856037c"
   end
 
   depends_on "jam" => :build
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libtiff"
+
+  on_linux do
+    depends_on "libx11"
+    depends_on "libxinerama"
+    depends_on "libxrandr"
+    depends_on "libxscrnsaver"
+    depends_on "libxxf86vm"
+    depends_on "xorgproto"
+  end
 
   conflicts_with "num-utils", because: "both install `average` binaries"
 
@@ -33,16 +44,15 @@ class ArgyllCms < Formula
   end
 
   def install
-    # dyld: lazy symbol binding failed: Symbol not found: _clock_gettime
-    # Reported 20 Aug 2017 to graeme AT argyllcms DOT com
-    if MacOS.version == :el_capitan && MacOS::Xcode.version >= "8.0"
-      inreplace "numlib/numsup.c", "CLOCK_MONOTONIC", "UNDEFINED_GIBBERISH"
-    end
-
     # These two inreplaces make sure /opt/homebrew can be found by the
     # Jamfile, which otherwise fails to locate system libraries
     inreplace "Jamtop", "/usr/include/x86_64-linux-gnu$(subd)", "#{HOMEBREW_PREFIX}/include$(subd)"
     inreplace "Jamtop", "/usr/lib/x86_64-linux-gnu", "#{HOMEBREW_PREFIX}/lib"
+    # These two inreplaces make sure the X11 headers can be found on Linux.
+    unless OS.mac?
+      inreplace "Jamtop", "/usr/X11R6/include", HOMEBREW_PREFIX/"include"
+      inreplace "Jamtop", "/usr/X11R6/lib", HOMEBREW_PREFIX/"lib"
+    end
     system "sh", "makeall.sh"
     system "./makeinstall.sh"
     rm "bin/License.txt"
@@ -55,6 +65,10 @@ class ArgyllCms < Formula
     %w[test.ti1.ps test.ti1.ti1 test.ti1.ti2].each do |f|
       assert_predicate testpath/f, :exist?
     end
+
+    # Skip this part of the test on Linux because it hangs due to lack of a display.
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
+
     assert_match "Calibrate a Display", shell_output("#{bin}/dispcal 2>&1", 1)
   end
 end

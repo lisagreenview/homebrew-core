@@ -1,9 +1,12 @@
 class Xxhash < Formula
   desc "Extremely fast non-cryptographic hash algorithm"
   homepage "https://github.com/Cyan4973/xxHash"
-  url "https://github.com/Cyan4973/xxHash/archive/v0.8.0.tar.gz"
-  sha256 "7054c3ebd169c97b64a92d7b994ab63c70dd53a06974f1f630ab782c28db0f4f"
-  license "BSD-2-Clause"
+  url "https://github.com/Cyan4973/xxHash/archive/v0.8.1.tar.gz"
+  sha256 "3bb6b7d6f30c591dd65aaaff1c8b7a5b94d81687998ca9400082c739a690436c"
+  license all_of: [
+    "BSD-2-Clause", # library
+    "GPL-2.0-or-later", # `xxhsum` command line utility
+  ]
 
   livecheck do
     url :stable
@@ -11,19 +14,21 @@ class Xxhash < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "bd1bc132d7b7b3341ec1ad45db4aeae2f73c5b197ac91cda1bcbcd92ecdb331d"
-    sha256 cellar: :any,                 arm64_big_sur:  "57d1afb3141ad913e80ab59c94941984f594d128ae0c39e210d90ecfdb6c6218"
-    sha256 cellar: :any,                 monterey:       "b475927382676c9f1d061355d3fdf6260f8a5f0e0fd037198499aa7a47565229"
-    sha256 cellar: :any,                 big_sur:        "13fd891c5e884b86cd7273192bbea63d56e4f8f8c461009ee2050af09eeb2161"
-    sha256 cellar: :any,                 catalina:       "06ea145c49451bf37f2a73139100f436b4bf9f275b77b9dadcb5d36a7b07fae1"
-    sha256 cellar: :any,                 mojave:         "df75758d4b4756b23530ec54e2289148652e3f54d6f9a8e45c43f662bc69d7c2"
-    sha256 cellar: :any,                 high_sierra:    "821f8c8df3ada242236f2f231ae72cdcaf23412a5e22458c23df453631129300"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "230c344b7024d0c96f7ced3e3cfa7d8dccd6ba2176ed12f45663b75149cb86ce"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "daf4e0c7861f6ac2addb81a87f3b511fc972a332c517a3ea0ec00afb5558ae94"
+    sha256 cellar: :any,                 arm64_monterey: "3d75964698a3beb04236d1632f6e69a2b58f1c552fee4720467c5ff47b1356b5"
+    sha256 cellar: :any,                 arm64_big_sur:  "047255a58b02b965c7a8c1a7a6216bda9c0a386fd0847b019568de321ca81c27"
+    sha256 cellar: :any,                 ventura:        "b20df383671e6eb2556e8cb31574382e6fdd58788ce843be1dbb0abcb601f6d1"
+    sha256 cellar: :any,                 monterey:       "05eaeee75ca864298a1c85c6b917401bce6b429da391c83be347c321013f298e"
+    sha256 cellar: :any,                 big_sur:        "7fbfb9c5e821cb3e373c44577f7839eb331287b84fb9ad56f048e98aff42a143"
+    sha256 cellar: :any,                 catalina:       "b04f17e55ef5a2e48b0668453d0da1ec4af00752a62f12316a178f19b0f292b3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1031dd4f8c86ee0e53242872aec9e4599be6b4f36c1ca58735651847f23c480c"
   end
 
   def install
     system "make"
     system "make", "install", "PREFIX=#{prefix}"
+    prefix.install "cli/COPYING"
   end
 
   test do

@@ -3,18 +3,20 @@ require "language/node"
 class GitlabCiLocal < Formula
   desc "Run gitlab pipelines locally as shell executor or docker executor"
   homepage "https://github.com/firecow/gitlab-ci-local"
-  url "https://registry.npmjs.org/gitlab-ci-local/-/gitlab-ci-local-4.26.3.tgz"
-  sha256 "14ddc181777100e05d2623deb867d19e091036343a42f55796869f721f9473ce"
+  url "https://registry.npmjs.org/gitlab-ci-local/-/gitlab-ci-local-4.36.1.tgz"
+  sha256 "c9cf822a1a0a8550eb13339436ca3a3e2df49e09a855baead332861a606fc592"
   license "MIT"
   head "https://github.com/firecow/gitlab-ci-local.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e25645100c96cea98f648eba520caa1eed20cdf8ac5a2c70e5d3a6ae173ec4b7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e25645100c96cea98f648eba520caa1eed20cdf8ac5a2c70e5d3a6ae173ec4b7"
-    sha256 cellar: :any_skip_relocation, monterey:       "a80c914771bbcc0158e414b6993d9fdc44e31bfca799d7ba22b173b67ef91259"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a80c914771bbcc0158e414b6993d9fdc44e31bfca799d7ba22b173b67ef91259"
-    sha256 cellar: :any_skip_relocation, catalina:       "a80c914771bbcc0158e414b6993d9fdc44e31bfca799d7ba22b173b67ef91259"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e25645100c96cea98f648eba520caa1eed20cdf8ac5a2c70e5d3a6ae173ec4b7"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "4c692bf6b8c617f277342d64d96d8f13351273ed200f202df5c5cb65221d577f"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "4c692bf6b8c617f277342d64d96d8f13351273ed200f202df5c5cb65221d577f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4c692bf6b8c617f277342d64d96d8f13351273ed200f202df5c5cb65221d577f"
+    sha256 cellar: :any_skip_relocation, ventura:        "a429b3cddb67704f58cdb0ab46da1e543b69558112e6c1555fe8f8c01bb1f7bc"
+    sha256 cellar: :any_skip_relocation, monterey:       "a429b3cddb67704f58cdb0ab46da1e543b69558112e6c1555fe8f8c01bb1f7bc"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a429b3cddb67704f58cdb0ab46da1e543b69558112e6c1555fe8f8c01bb1f7bc"
+    sha256 cellar: :any_skip_relocation, catalina:       "a429b3cddb67704f58cdb0ab46da1e543b69558112e6c1555fe8f8c01bb1f7bc"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4c692bf6b8c617f277342d64d96d8f13351273ed200f202df5c5cb65221d577f"
   end
 
   depends_on "node"
@@ -51,6 +53,8 @@ class GitlabCiLocal < Formula
     system "git", "init"
     system "git", "add", ".gitlab-ci.yml"
     system "git", "commit", "-m", "'some message'"
+    system "git", "config", "user.name", "BrewTestBot"
+    system "git", "config", "user.email", "BrewTestBot@test.com"
     rm ".git/config"
 
     (testpath/".git/config").write <<~EOS
@@ -69,10 +73,7 @@ class GitlabCiLocal < Formula
         merge = refs/heads/master
     EOS
 
-    assert_equal shell_output("#{bin}/gitlab-ci-local --list"), <<~OUTPUT
-      name              description  stage  when        allow_failure  needs
-      build                          build  on_success  false          []
-      tag-docker-image               tag    on_success  false          [build]
-    OUTPUT
+    assert_match(/name\s*?description\s*?stage\s*?when\s*?allow_failure\s*?needs\n/,
+        shell_output("#{bin}/gitlab-ci-local --list"))
   end
 end

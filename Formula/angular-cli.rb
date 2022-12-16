@@ -3,17 +3,18 @@ require "language/node"
 class AngularCli < Formula
   desc "CLI tool for Angular"
   homepage "https://cli.angular.io/"
-  url "https://registry.npmjs.org/@angular/cli/-/cli-13.0.3.tgz"
-  sha256 "ae7b1ec8c1ca14313cd1884f1a3642dc33b291496de6984bac63fa2d294fd4dd"
+  url "https://registry.npmjs.org/@angular/cli/-/cli-15.0.4.tgz"
+  sha256 "1e01b4f55486c30580dc11f4a7ed3f4e8688ca2cd50ae6fdc36cdc481234b9c4"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "840e1486f654ebbcd2a2705aa8b585e958da63d2f79cd2d644a5f0a547d3116e"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "840e1486f654ebbcd2a2705aa8b585e958da63d2f79cd2d644a5f0a547d3116e"
-    sha256 cellar: :any_skip_relocation, monterey:       "3d1b763ab5bc582bb9df6c23863c7eeb7e6bef3f6b460ed75fbddf2bf514574a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3d1b763ab5bc582bb9df6c23863c7eeb7e6bef3f6b460ed75fbddf2bf514574a"
-    sha256 cellar: :any_skip_relocation, catalina:       "3d1b763ab5bc582bb9df6c23863c7eeb7e6bef3f6b460ed75fbddf2bf514574a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "840e1486f654ebbcd2a2705aa8b585e958da63d2f79cd2d644a5f0a547d3116e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cdd4f923a0bf8562530311d49657851c31721fa4b4fb360e809389db7437d98f"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "cdd4f923a0bf8562530311d49657851c31721fa4b4fb360e809389db7437d98f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "cdd4f923a0bf8562530311d49657851c31721fa4b4fb360e809389db7437d98f"
+    sha256 cellar: :any_skip_relocation, ventura:        "37c8828b75c62040c5002dd066566831b89eb8273ce5d2ce2cc83de882ce648d"
+    sha256 cellar: :any_skip_relocation, monterey:       "37c8828b75c62040c5002dd066566831b89eb8273ce5d2ce2cc83de882ce648d"
+    sha256 cellar: :any_skip_relocation, big_sur:        "37c8828b75c62040c5002dd066566831b89eb8273ce5d2ce2cc83de882ce648d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cdd4f923a0bf8562530311d49657851c31721fa4b4fb360e809389db7437d98f"
   end
 
   depends_on "node"

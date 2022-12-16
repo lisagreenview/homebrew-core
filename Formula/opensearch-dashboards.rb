@@ -1,30 +1,52 @@
+require "language/node"
+
 class OpensearchDashboards < Formula
   desc "Open source visualization dashboards for OpenSearch"
   homepage "https://opensearch.org/docs/dashboards/index/"
   url "https://github.com/opensearch-project/OpenSearch-Dashboards.git",
-      tag:      "1.1.0",
-      revision: "44d2cb5b4f9a7c641c1fef32ec569bc48ec46979"
+      tag:      "2.4.0",
+      revision: "6e38e1c6f71e56b70f9b89a0452c19f3667995e8"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "462dc37bc221e9c30afc971d931c7d0fdd50b66b42675e02056d140d49eaf1b3"
+    sha256 cellar: :any_skip_relocation, ventura:      "ab66eb242e49c27c55506b5491ee75f7ac6904c36308fd244a50e58d7b5abf14"
+    sha256 cellar: :any_skip_relocation, monterey:     "524ca6c57a09620fcca716ce6ca23de914000d05b2a938029de0df69b157f691"
+    sha256 cellar: :any_skip_relocation, big_sur:      "524ca6c57a09620fcca716ce6ca23de914000d05b2a938029de0df69b157f691"
+    sha256 cellar: :any_skip_relocation, catalina:     "524ca6c57a09620fcca716ce6ca23de914000d05b2a938029de0df69b157f691"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "c537cf4c10cdb7a09437d7e2d3298cb9714d720160226a17aaa938c1c6c27115"
   end
 
-  depends_on "python@3.9" => :build
   depends_on "yarn" => :build
-  depends_on arch: :x86_64 # `node@10` does not support ARM
-  depends_on "node@10" # Switch to `node` after https://github.com/opensearch-project/OpenSearch-Dashboards/issues/406
+  depends_on arch: :x86_64 # https://github.com/opensearch-project/OpenSearch-Dashboards/issues/1630
+  depends_on "node@14" # use `node@16` after https://github.com/opensearch-project/OpenSearch-Dashboards/issues/406
 
   def install
-    inreplace "package.json", /"node": "10\.\d+\.\d+"/, %Q("node": "#{Formula["node@10"].version}")
+    inreplace "package.json", /"node": "14\.\d+\.\d+"/, %Q("node": "#{Formula["node@14"].version}")
+
+    # Do not download node and discard all actions related to this node
+    inreplace "src/dev/build/build_distributables.ts" do |s|
+      s.gsub! "await run(options.downloadFreshNode ? Tasks.DownloadNodeBuilds : Tasks.VerifyExistingNodeBuilds);", ""
+      s.gsub! "await run(Tasks.ExtractNodeBuilds);", ""
+    end
+    inreplace "src/dev/build/tasks/create_archives_sources_task.ts",
+              Regexp.new(<<~EOS), ""
+                \\s*await scanCopy\\(\\{
+                \\s*  source: getNodeDownloadInfo\\(config, platform\\).extractDir,
+                \\s*  destination: build.resolvePathForPlatform\\(platform, 'node'\\),
+                \\s*\\}\\);
+              EOS
+    inreplace "src/dev/notice/generate_build_notice_text.js",
+              "generateNodeNoticeText(nodeDir, nodeVersion)", "''"
 
     system "yarn", "osd", "bootstrap"
-    system "node", "scripts/build", "--release", "--skip-os-packages", "--skip-archives"
+    system "node", "scripts/build", "--release", "--skip-os-packages", "--skip-archives", "--skip-node-download"
 
-    cd "build/opensearch-dashboards-#{version}-darwin-x64" do
+    os = OS.kernel_name.downcase
+    arch = Hardware::CPU.intel? ? "x64" : Hardware::CPU.arch.to_s
+    cd "build/opensearch-dashboards-#{version}-#{os}-#{arch}" do
       inreplace Dir["bin/*"],
-                "NODE=\"${DIR}/node/bin/node\"",
-                "NODE=\"#{Formula["node@10"].opt_bin/"node"}\""
+                "\"${DIR}/node/bin/node\"",
+                "\"#{Formula["node@14"].opt_bin/"node"}\""
 
       inreplace "config/opensearch_dashboards.yml",
                 /#\s*pid\.file: .+$/,

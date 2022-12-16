@@ -1,18 +1,20 @@
 class Freeling < Formula
   desc "Suite of language analyzers"
-  homepage "http://nlp.lsi.upc.edu/freeling/"
+  homepage "https://nlp.lsi.upc.edu/freeling/"
   url "https://github.com/TALP-UPC/FreeLing/releases/download/4.2/FreeLing-src-4.2.tar.gz"
   sha256 "f96afbdb000d7375426644fb2f25baff9a63136dddce6551ea0fd20059bfce3b"
   license "AGPL-3.0-only"
-  revision 5
+  revision 9
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "b8d17a21a303a81e602c55b280ae2faad62b0096e33d536d9282bd55b96398ab"
-    sha256 cellar: :any, arm64_big_sur:  "3afa5c7621f49858902ecc79870c43fa3096c8ecaabda5aba9944d6d8c7cfb89"
-    sha256 cellar: :any, monterey:       "b0ac115a4e4354b6493f846bcef24db50d20fef9e71b2e139ab582a48c7941cd"
-    sha256 cellar: :any, big_sur:        "73891677a3843b9c57129dd369472cf609771c2cdba051b8cef0d566a3446e12"
-    sha256 cellar: :any, catalina:       "de94326810d5ed9d52ea484ab99d5e2946fbe8f514cc2c3a38fa29ea703ef3d1"
-    sha256 cellar: :any, mojave:         "1167a27ff5bf29c27c24d8e08f30e64b33834cb8a662cc2e71ddc6ec06ae1ece"
+    sha256 cellar: :any,                 arm64_ventura:  "051517f926b0161becac7bd8dbc3f3964839e044de99cefb272e014bf932864a"
+    sha256 cellar: :any,                 arm64_monterey: "526c63df3912ae9541f86bbb1e89a14c23cbc3c2233fb1b24aff9811e7994e23"
+    sha256 cellar: :any,                 arm64_big_sur:  "c6a82a3e57695acc5fa7842cc01035954ae342ad4edaee63c2ec1f58aaf4d7e7"
+    sha256 cellar: :any,                 ventura:        "e506f3d52f1f785bdfd63462f9301268a4447b1edec4f7a9816877dbd3eef909"
+    sha256 cellar: :any,                 monterey:       "dfab507ba6f80dc5985a0d976e66b8780456aa9b39c10d4ac15161e194036ca3"
+    sha256 cellar: :any,                 big_sur:        "7a9a3cc243d0617f4aec9a7b4c756a5b61e252b638200112c211cd66b9b5f3b5"
+    sha256 cellar: :any,                 catalina:       "15c7ddf25814b4a40358824aa3502a7f2f0d8fc4513963ba42e14a9db73e58b4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f40785345e0375efc61af44a27882f266732fc4e22120d4d0e7b6358c3fcd85c"
   end
 
   depends_on "cmake" => :build
@@ -43,6 +45,14 @@ class Freeling < Formula
   patch do
     url "https://github.com/TALP-UPC/FreeLing/commit/34a1a78545fb6a4ca31ee70e59fd46211fd3f651.patch?full_index=1"
     sha256 "8f7f87a630a9d13ea6daebf210b557a095b5cb8747605eb90925a3aecab97e18"
+  end
+
+  # Fixes `error: 'pow' was not declared in this scope` and
+  # `error: 'sqrt' was not declared in this scope`.
+  # Remove this and other patches with next release.
+  patch do
+    url "https://github.com/TALP-UPC/FreeLing/commit/48eb3470416cbfd0026eae9f9ca832bb68269273.patch?full_index=1"
+    sha256 "8430804b9a8695d3212946c00562b1cf2d3a0bbb5cb94ac48222f1a952401caf"
   end
 
   def install

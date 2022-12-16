@@ -1,20 +1,22 @@
 class Keydb < Formula
   desc "Multithreaded fork of Redis"
   homepage "https://keydb.dev"
-  url "https://github.com/JohnSully/KeyDB/archive/v6.2.0.tar.gz"
-  sha256 "61a2996c8d56e564930119b115674032d8a1de2b50d67a9c555be6e7975ed567"
+  url "https://github.com/Snapchat/KeyDB/archive/v6.3.1.tar.gz"
+  sha256 "851b91e14dc3e9c973a1870acdc5f2938ad51a12877e64e7716d9e9ae91ce389"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2f7e445ed9f9f4707e12e2dfebfbb339abc24e3abe2380101f960ac730f5a7e9"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6dfcf7a5b5ff5541ef7ddefe4f5571cd9e0e52a6662a001d21b718bee6f4d48d"
-    sha256 cellar: :any_skip_relocation, monterey:       "edfdfc387c388f01925310c85d71aff3cb912e793943ca3b2bb650f1d844e63f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "6a23ffe855a1778880d8dda557da1b993899a83472cfeae29822504812ded307"
-    sha256 cellar: :any_skip_relocation, catalina:       "f14d248e73516c85b53a72285301dac6a43d78fa39606787a127d7e21bda8a0f"
-    sha256 cellar: :any_skip_relocation, mojave:         "22932ae18bbe44f1f580f292ef9aceb379c0774573e6df30be20655a35161392"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6572526b3ffbd3161f8d93c32e1283ae9199286046a25d5b6b03b30074abe906"
+    sha256 cellar: :any,                 arm64_ventura:  "781e4bea2100465253106711d402b8062cad9b8969782f8f2861098d20905be0"
+    sha256 cellar: :any,                 arm64_monterey: "db45b745f6bd2ec985ac208baf993e0eaf63213b04524729fd88a989b10f9450"
+    sha256 cellar: :any,                 arm64_big_sur:  "186e3c93ffd0f867dfcabe61ef11573f886f3589429d6720cb541d0b40951dca"
+    sha256 cellar: :any,                 ventura:        "74ec03afa00c7f2fbb163e6bc20f881bab2047ae3ee452d076b236e1190440ff"
+    sha256 cellar: :any,                 monterey:       "42d02ad9f16092ad46f1897bd56f2002caf28466cb129ce0479acf0ab2ba5cbd"
+    sha256 cellar: :any,                 big_sur:        "d0956eef5c45dd5515eebce726517de432d501045f0ce3e9501e10909b002442"
+    sha256 cellar: :any,                 catalina:       "1bb8588ba5ebdbcfb4fcfe1be1884fed97e4669d431d9b972b9f92cbfc98c0de"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e586d4eab07319cddbce1a92270f31950caf3a3f45b573f5425c6f80a4025a87"
   end
 
+  depends_on "openssl@3"
   uses_from_macos "curl"
 
   on_linux do

@@ -1,9 +1,9 @@
 class X8664ElfBinutils < Formula
   desc "GNU Binutils for x86_64-elf cross development"
   homepage "https://www.gnu.org/software/binutils/"
-  url "https://ftp.gnu.org/gnu/binutils/binutils-2.37.tar.xz"
-  mirror "https://ftpmirror.gnu.org/binutils/binutils-2.37.tar.xz"
-  sha256 "820d9724f020a3e69cb337893a0b63c2db161dadcb0e06fc11dc29eb1e84a32c"
+  url "https://ftp.gnu.org/gnu/binutils/binutils-2.39.tar.xz"
+  mirror "https://ftpmirror.gnu.org/binutils/binutils-2.39.tar.xz"
+  sha256 "645c25f563b8adc0a81dbd6a41cffbf4d37083a382e02d5d3df4f65c09516d00"
   license "GPL-3.0-or-later"
 
   livecheck do
@@ -11,20 +11,24 @@ class X8664ElfBinutils < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "cc2b264def9baf925812bf75622f1132b16de47a940e4e999680ced6ce17580a"
-    sha256 arm64_big_sur:  "c1cc0eeef6981f55e0df57f0e8115956ab5b4d94d043daf805c8833ed843dc1d"
-    sha256 monterey:       "587fe762419c190b723e48506d6ea0a3ee571d0c0d479977c02225fdcba60393"
-    sha256 big_sur:        "085e8d5b89905e85c00951d3f12a6b36ea2e085b07e6af28b4138956b9c53384"
-    sha256 catalina:       "8853d7a257c9cbe3243e9cb48837222768b6a211c0a0b7733cd40effdb56cb72"
-    sha256 mojave:         "efb90bb7f3e96087317c35a824fbe46e4dda1ccaaa6cd2fc26f889b6210b4d5a"
-    sha256 x86_64_linux:   "94bb83f893103b9be998affaec0cc210691fa4b71c27d9491a7598c2c9a30576"
+    sha256 arm64_ventura:  "ea4e67219572675d602486abbd9b41aa0f72548d0abab02d13ca4b7e537366a2"
+    sha256 arm64_monterey: "eefe767e1d8a366b16f89c976825568e19e0965da3f3721672ef8391242acfe7"
+    sha256 arm64_big_sur:  "875ed5414b3fe9aff66a53bc2fcf61e456d9ecb7cc5307cb2c4dd46b4b03d423"
+    sha256 ventura:        "c24b4d9fe4626682dd01a7353eb467a21ddb61970a494160a71fa36c0049d6b3"
+    sha256 monterey:       "3293e496ede109f8052ea76ce461c670b85b4675e6b27c6c394071915ea69323"
+    sha256 big_sur:        "47da0e5bee1e895671c003662d563f8940082376c5ada8f3dc76e0a8c79ef7da"
+    sha256 catalina:       "fee28befc1cb766febab4905bfe64d3c1a8b2273e0161abe25ee68cbf5306ca6"
+    sha256 x86_64_linux:   "9ebf98d717a55e400447bebcf98d6143e8c8f8fcd8affd3912fdc04cbb85547d"
   end
 
-  uses_from_macos "texinfo"
+  on_system :linux, macos: :ventura_or_newer do
+    depends_on "texinfo" => :build
+  end
 
   def install
     target = "x86_64-elf"
     system "./configure", "--target=#{target}",
+                          "--enable-targets=x86_64-pep",
                           "--prefix=#{prefix}",
                           "--libdir=#{lib}/#{target}",
                           "--infodir=#{info}/#{target}",

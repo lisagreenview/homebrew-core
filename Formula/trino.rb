@@ -1,8 +1,10 @@
 class Trino < Formula
+  include Language::Python::Shebang
+
   desc "Distributed SQL query engine for big data"
   homepage "https://trino.io"
-  url "https://search.maven.org/remotecontent?filepath=io/trino/trino-server/364/trino-server-364.tar.gz"
-  sha256 "f6824a8a54aff9e7c07b00d637758f49ef33c0a7d9d1c8dc32d49f7fd122b132"
+  url "https://search.maven.org/remotecontent?filepath=io/trino/trino-server/403/trino-server-403.tar.gz", using: :nounzip
+  sha256 "252de4a8fd5c8cc73635fae501665e5d3f218fdee8b1476103f0af25702ed3b3"
   license "Apache-2.0"
 
   livecheck do
@@ -11,26 +13,29 @@ class Trino < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "20c08cab2d79bfa305901813d5d0f11f2a1ad118a79dc7ca41f945af56c46f2c"
+    sha256 cellar: :any_skip_relocation, all: "1a0f1f82150a6d9a093c940a32c56c82eda585f8e7664d886cccfab59d5ed7cb"
   end
 
   depends_on "gnu-tar" => :build
-  depends_on arch: :x86_64
-  depends_on :macos # test fails on Linux
   depends_on "openjdk"
+  depends_on "python@3.10"
 
   resource "trino-src" do
-    url "https://github.com/trinodb/trino/archive/364.tar.gz", using: :nounzip
-    sha256 "f672d71560078ed2a0e1c875b01f7cfdc8a1fd5ac08af85f8cdc4cbb13d374bd"
+    url "https://github.com/trinodb/trino/archive/refs/tags/403.tar.gz", using: :nounzip
+    sha256 "13a99d17518398941fb76a37d8b6db27e99ee46f837ae752a653a05867d216fc"
   end
 
   resource "trino-cli" do
-    url "https://search.maven.org/remotecontent?filepath=io/trino/trino-cli/364/trino-cli-364-executable.jar"
-    sha256 "371a047f70f9eddff1e0ad8f9e05b72e1e191b25fe8e8d5dbfebe82ad83d6aad"
+    url "https://search.maven.org/remotecontent?filepath=io/trino/trino-cli/403/trino-cli-403-executable.jar"
+    sha256 "628ed642863df606d77e5726b34bf7afdc3e19748d38ff8274a0e75195c4b3c4"
   end
 
   def install
-    libexec.install Dir["*"]
+    # Manually extract tarball to avoid losing hardlinks which increases bottle
+    # size from MBs to GBs. Remove once Homebrew is able to preserve hardlinks.
+    # Ref: https://github.com/Homebrew/brew/pull/13154
+    libexec.mkpath
+    system "tar", "-C", libexec.to_s, "--strip-components", "1", "-xzf", "trino-server-#{version}.tar.gz"
 
     # Manually untar, since macOS-bundled tar produces the error:
     #   trino-363/plugin/trino-hive/src/test/resources/<truncated>.snappy.orc.crc: Failed to restore metadata
@@ -41,8 +46,10 @@ class Trino < Formula
       (libexec/"etc").install Dir["trino-#{r.version}/core/docker/default/etc/*"]
       inreplace libexec/"etc/node.properties", "docker", tap.user.downcase
       inreplace libexec/"etc/node.properties", "/data/trino", var/"trino/data"
+      inreplace libexec/"etc/jvm.config", %r{^-agentpath:/usr/lib/trino/bin/libjvmkill.so$\n}, ""
     end
 
+    rewrite_shebang detected_python_shebang, libexec/"bin/launcher.py"
     (bin/"trino-server").write_env_script libexec/"bin/launcher", Language::Java.overridable_java_home_env
 
     resource("trino-cli").stage do
@@ -52,6 +59,8 @@ class Trino < Formula
 
     # Remove incompatible pre-built binaries
     libprocname_dirs = libexec.glob("bin/procname/*")
+    # Keep the Linux-x86_64 directory to make bottles identical
+    libprocname_dirs.reject! { |dir| dir.basename.to_s == "Linux-x86_64" } if build.bottle?
     libprocname_dirs.reject! { |dir| dir.basename.to_s == "#{OS.kernel_name}-#{Hardware::CPU.arch}" }
     libprocname_dirs.map(&:rmtree)
   end

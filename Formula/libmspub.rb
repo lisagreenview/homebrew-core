@@ -4,7 +4,7 @@ class Libmspub < Formula
   url "https://dev-www.libreoffice.org/src/libmspub/libmspub-0.1.4.tar.xz"
   sha256 "ef36c1a1aabb2ba3b0bedaaafe717bf4480be2ba8de6f3894be5fd3702b013ba"
   license "MPL-2.0"
-  revision 10
+  revision 12
 
   livecheck do
     url "https://dev-www.libreoffice.org/src/"
@@ -12,12 +12,14 @@ class Libmspub < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "ce4651e3377381fee9beb8dd9dd16dd89662861b8f95b0ac36127258f94f97b8"
-    sha256 cellar: :any, arm64_big_sur:  "6a5c5caf43755d2fb8acd3cdd99dccccd515d7da9c501e49fddbc5d5e4500190"
-    sha256 cellar: :any, monterey:       "078e46db9a27cf01f94ecbcb2d5fc977418b58a325aadc5f52248e04352a75b3"
-    sha256 cellar: :any, big_sur:        "7a42e31ac599a192f1e58d281b7e075e71d52bee9465c763520f17cc1744b173"
-    sha256 cellar: :any, catalina:       "56aebbd968cdf49b1da3d79233dab4810af0c7c16e03521db8e5e9499e867294"
-    sha256 cellar: :any, mojave:         "f32c702d3d966bc65125394b949999f1789319b2835b45c0638dbb06fbd31b70"
+    sha256 cellar: :any,                 arm64_ventura:  "de17ba29fbc8ced0a1c2023e9962ba12c323a476845e6953dbceb32dd09edbe2"
+    sha256 cellar: :any,                 arm64_monterey: "6beeba33de3a77318d2072e29a9526aec45f8402c9ebe4b9cdb2706b47318283"
+    sha256 cellar: :any,                 arm64_big_sur:  "2885a8e55e3a5f7d888c0a75a5ccc2955dd9917246531c760e5195bfc09de281"
+    sha256 cellar: :any,                 ventura:        "aba95f8a38e92ee006a775e0667a1c002c6e9881ffd919e31498a92743ec11b4"
+    sha256 cellar: :any,                 monterey:       "10616dfa83cd78355352afa80411c49054c0bd7b19eabcf51328c13d0d4124dd"
+    sha256 cellar: :any,                 big_sur:        "946974c09dc55804597ef309307ec7f5075fc2f9b94ad3325d0a9214eaa39876"
+    sha256 cellar: :any,                 catalina:       "1611d6040a54bde36839db3ba89610e375c240265d8ac757a75c5785f0ffafab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2ce7135a4964fbb0de251ee2a6ebc7b3cbf8a8412e02eea1281c69b17f38939a"
   end
 
   depends_on "boost" => :build

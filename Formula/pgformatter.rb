@@ -1,18 +1,19 @@
 class Pgformatter < Formula
   desc "PostgreSQL syntax beautifier"
   homepage "https://sqlformat.darold.net/"
-  url "https://github.com/darold/pgFormatter/archive/v5.1.tar.gz"
-  sha256 "9d9974f70002e12ea12344d4373202a637572729c297f3f85e51fb2f60519997"
+  url "https://github.com/darold/pgFormatter/archive/v5.3.tar.gz"
+  sha256 "ad709a2c92c763d54088ae3f3002276a962ea25b5aa29ae16dd57e10f51b66f9"
   license "PostgreSQL"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "bde351c61b9e139948bc1188cc1ec8a4e2f8afa97b00f5549283162cb4f935f7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5ed75c0fecbdcf5fdc4232888cecd5201b03d1d9c1640d19cf805c61931e3176"
-    sha256 cellar: :any_skip_relocation, monterey:       "9fb7acff043a08195b0f216a32b926d28e7d10bc36a72aa0977500fc4fcacb09"
-    sha256 cellar: :any_skip_relocation, big_sur:        "597a79f382e5be9ec4af90f3e1499686686912c10092943f659c65b31e97b46c"
-    sha256 cellar: :any_skip_relocation, catalina:       "34ea80e6142dfee05233d417713cc517545f7b62555ccf40997acb7b52431383"
-    sha256 cellar: :any_skip_relocation, mojave:         "34ea80e6142dfee05233d417713cc517545f7b62555ccf40997acb7b52431383"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7b7ec5b32bafedef008190142250d561b0c577081db09e8df889a101294dc0cb"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "958626095788cd522c949b42f4ef80bf79c1fd05c31c9389f5b4a1a03d28cadd"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "958626095788cd522c949b42f4ef80bf79c1fd05c31c9389f5b4a1a03d28cadd"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7eefcaea365b20a43a68c55b20aea88c660f633e92b97355bf1db0bb66a296ed"
+    sha256 cellar: :any_skip_relocation, ventura:        "e07e4d8a053f0126dfa50c082c14a589d7cec6781d2abb53fc37aa737e2b3bad"
+    sha256 cellar: :any_skip_relocation, monterey:       "e07e4d8a053f0126dfa50c082c14a589d7cec6781d2abb53fc37aa737e2b3bad"
+    sha256 cellar: :any_skip_relocation, big_sur:        "d38e00a17190b05a85276c2b77f1cdfe3c6dd79f46183a862cb383cdd4abd8b3"
+    sha256 cellar: :any_skip_relocation, catalina:       "e475bf116f1638ceafe659f0dd8685a70b9b2466256e927de8d14dd8655a7b3f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7668280d5d9f12f618f69b9af999ba49fb65adfe640e4ff0eb2551d575e3af67"
   end
 
   def install

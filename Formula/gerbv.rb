@@ -1,36 +1,43 @@
 class Gerbv < Formula
   desc "Gerber (RS-274X) viewer"
-  homepage "http://gerbv.gpleda.org/"
-  # 2.6.1 is the latest official stable release but it is very buggy and incomplete
-  url "https://downloads.sourceforge.net/project/gerbv/gerbv/gerbv-2.7.0/gerbv-2.7.0.tar.gz"
-  sha256 "c5ee808c4230ce6be3ad10ab63c547098386d43022704de25ddb9378e62053b4"
-  license "GPL-2.0"
-
-  livecheck do
-    url :stable
-    regex(%r{/gerbv/gerbv[._-]v?(\d+(?:\.\d+)+)/}i)
-  end
+  homepage "https://gerbv.github.io/"
+  url "https://github.com/gerbv/gerbv/archive/refs/tags/v2.9.5.tar.gz"
+  sha256 "a90b3e50941bed90eaf45e9b0d19b2d074eec1f433dcf3a1b3cbf14d8dc7c1ec"
+  license "GPL-2.0-or-later"
 
   bottle do
-    sha256 arm64_monterey: "6867c2ab1f095c2bd952bc294544146d98c005cb844bea396ead8655db22e92a"
-    sha256 arm64_big_sur:  "4b51c047b7ce52537ab152f477fed3fe4ba6b2218cd5445258e672f54acc8c0f"
-    sha256 monterey:       "e476fc21dd1ef61b3d6136d0e8bb1643481bfcd873f3482e11c1225906b774bc"
-    sha256 big_sur:        "529a2d42b7018cb8edc81eb32e2572c936670c1088bd7934d627d8f358b1eefc"
-    sha256 catalina:       "eb27af6bcb6cfc6203297f617d88851e656c5b72fae84b10593429158d1861d6"
-    sha256 mojave:         "5995b2ff9b132c129e9e2ca08eb205c58883f63e22eec11c4c53e24ec6dfd4e3"
-    sha256 high_sierra:    "246a26e96d930c979db7bdb533807c71418ac0ad5c74bd12749d0c08b903e409"
+    sha256 arm64_ventura:  "c078f973a81f5ca0c840cabe5d84bca8046a38e2bdd32cda2ef8bc49c24cd1e5"
+    sha256 arm64_monterey: "950b0b1ca9d3eeba0969942d3dae2cbec4763486d019487722cc499dafc1ca26"
+    sha256 arm64_big_sur:  "8b33c2b141d62e56e7f1614338b869d0f7c5c6e9b7f0d82402377f4303436b53"
+    sha256 ventura:        "722f3d5a190b233a91710c4c4a3e856423f56ff80031b9e8c79d0c62f7530f88"
+    sha256 monterey:       "7adea609399112bf9ac696eb8e5d1f6f6fda7074d6f2c4e24fbe25d613301f0a"
+    sha256 big_sur:        "95788334f0a71a78241df7e808e4563a1d8a13d9a4e0865b5369726064788fca"
+    sha256 catalina:       "09d4f39eee02503e116457a291a7252bde5da85e2951a29bae23533187a3ee88"
+    sha256 x86_64_linux:   "be57eadae3680d2486074e14762b15c3ed5473a066994b2e069662be676f0001"
   end
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "gettext" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "gtk+"
 
   def install
-    ENV.append "CPPFLAGS", "-DQUARTZ"
-    system "./configure", "--disable-debug",
+    ENV.append "CPPFLAGS", "-DQUARTZ" if OS.mac?
+    inreplace "autogen.sh", "libtool", "glibtool"
+
+    # Disable commit reference in include dir
+    inreplace "utils/git-version-gen.sh" do |s|
+      s.gsub! 'RELEASE_COMMIT=`"${GIT}" rev-parse HEAD`', "RELEASE_COMMIT=\"\""
+      s.gsub! "${PREFIX}~", "${PREFIX}"
+    end
+    system "./autogen.sh"
+    system "./configure", *std_configure_args,
                           "--disable-dependency-tracking",
-                          "--prefix=#{prefix}",
                           "--disable-update-desktop-database",
                           "--disable-schemas-compile"
+    system "make"
     system "make", "install"
   end
 
@@ -70,7 +77,7 @@ class Gerbv < Formula
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
       -I#{harfbuzz.opt_include}/harfbuzz
-      -I#{include}/gerbv-2.7.0
+      -I#{include}/gerbv-#{version}
       -I#{libpng.opt_include}/libpng16
       -I#{pango.opt_include}/pango-1.0
       -I#{pixman.opt_include}/pixman-1
@@ -85,17 +92,21 @@ class Gerbv < Formula
       -L#{pango.opt_lib}
       -latk-1.0
       -lcairo
-      -lgdk-quartz-2.0
       -lgdk_pixbuf-2.0
       -lgerbv
       -lgio-2.0
       -lglib-2.0
       -lgobject-2.0
-      -lgtk-quartz-2.0
-      -lintl
       -lpango-1.0
       -lpangocairo-1.0
     ]
+    if OS.mac?
+      flags += %w[
+        -lgdk-quartz-2.0
+        -lgtk-quartz-2.0
+        -lintl
+      ]
+    end
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"
   end

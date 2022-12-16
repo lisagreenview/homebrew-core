@@ -3,17 +3,18 @@ require "language/node"
 class Vite < Formula
   desc "Next generation frontend tooling. It's fast!"
   homepage "https://vitejs.dev/"
-  url "https://registry.npmjs.org/vite/-/vite-2.6.14.tgz"
-  sha256 "c1a37127f2e35ac7bc177f65010e33fa0fe0c6334d82718373c08b99135c1728"
+  url "https://registry.npmjs.org/vite/-/vite-4.0.1.tgz"
+  sha256 "fe79c62cd8e871ee9d0166d8a6a1ba67706b8b330c596bf9715c23e0f0c760d3"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "36cadbd6b73bc2f0cc8199bcc11b984c75861c1b31a53c7f148e0c84572cead0"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "36cadbd6b73bc2f0cc8199bcc11b984c75861c1b31a53c7f148e0c84572cead0"
-    sha256 cellar: :any_skip_relocation, monterey:       "bb34df046e536dd4338070d58e363aed3287ef40791efe54c670d1f229511bde"
-    sha256 cellar: :any_skip_relocation, big_sur:        "bb34df046e536dd4338070d58e363aed3287ef40791efe54c670d1f229511bde"
-    sha256 cellar: :any_skip_relocation, catalina:       "bb34df046e536dd4338070d58e363aed3287ef40791efe54c670d1f229511bde"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d95bbb3c309464fe88bbd31498389c0f4a8ca6116332de449a12989c1aa036d1"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "bf3c0cf86022ee5835a5f1d1c200e3bc52d7668165c55f61d1e9dac5d1451e24"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "bf3c0cf86022ee5835a5f1d1c200e3bc52d7668165c55f61d1e9dac5d1451e24"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bf3c0cf86022ee5835a5f1d1c200e3bc52d7668165c55f61d1e9dac5d1451e24"
+    sha256 cellar: :any_skip_relocation, ventura:        "d850950f4c7ebd8eb07ca59e7c4c61c440cc14c2b630c8d1c6161ed4c065568c"
+    sha256 cellar: :any_skip_relocation, monterey:       "d850950f4c7ebd8eb07ca59e7c4c61c440cc14c2b630c8d1c6161ed4c065568c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "d850950f4c7ebd8eb07ca59e7c4c61c440cc14c2b630c8d1c6161ed4c065568c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f1a6986e9e47304268026eb5c9d2f66fba5ab2ed0a086f5212edc8d6cf570f1c"
   end
 
   depends_on "node"

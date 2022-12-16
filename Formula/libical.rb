@@ -1,18 +1,19 @@
 class Libical < Formula
   desc "Implementation of iCalendar protocols and data formats"
   homepage "https://libical.github.io/libical/"
-  url "https://github.com/libical/libical/releases/download/v3.0.11/libical-3.0.11.tar.gz"
-  sha256 "1e6c5e10c5a48f7a40c68958055f0e2759d9ab3563aca17273fe35a5df7dbbf1"
+  url "https://github.com/libical/libical/releases/download/v3.0.16/libical-3.0.16.tar.gz"
+  sha256 "b44705dd71ca4538c86fb16248483ab4b48978524fb1da5097bd76aa2e0f0c33"
   license any_of: ["LGPL-2.1-or-later", "MPL-2.0"]
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "a808c0aaeb3d08c784dcb5549f6e3b3c41e558f2a98731e072eb9728ccca127b"
-    sha256 cellar: :any,                 arm64_big_sur:  "96f08215d53d105d1828320cb7992482867be06628892c1d9c38f6513008f4ba"
-    sha256 cellar: :any,                 monterey:       "3c2d986b51e7c14b32d7fbb482e54d09338b059b994c05bbef534c2bdddd3324"
-    sha256 cellar: :any,                 big_sur:        "f632f09ff759cb8ee10b877bb1e797e577a806d736fe0faeb39400e29e14eaae"
-    sha256 cellar: :any,                 catalina:       "92914c8ae64d8aa71de95e9e9172696389d9978593aae8053dc0ccf2194713a6"
-    sha256 cellar: :any,                 mojave:         "bc6181c6e46bfc8d6ee3683262f52b8948b684d66e060a468cb5d939a85ca950"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "975d3e9c770f30571fe8cce133253cf93f4436127abda56fb63b6419927dc6c1"
+    sha256 cellar: :any,                 arm64_ventura:  "9f4df4f8eb6603ca56d187d1cf728e87b43dca690419fa2e813906846ff36b9a"
+    sha256 cellar: :any,                 arm64_monterey: "591eb2b2865d474ef792519e96e5da74c2f8481b4c5aad671a79d3b940f88fd4"
+    sha256 cellar: :any,                 arm64_big_sur:  "fa58234dfd4543c3b3c4aadb6ca3419875330a276674a5af853adca6fe28393d"
+    sha256 cellar: :any,                 ventura:        "faa365367394d2e2126ad3b8dc435fa0c993b66ea4caf7021fc6318cb4ce9f5b"
+    sha256 cellar: :any,                 monterey:       "612436b983588dc3b03460ca8111afa4d909731aadd102907465ecf90d434ae0"
+    sha256 cellar: :any,                 big_sur:        "0ac780f843bcf715ae93298eb93255202af31312a106fa1a1c5ef2a17c69f67b"
+    sha256 cellar: :any,                 catalina:       "10e2448891b5aae10239d5b729af312d42de53b717a4ff3d96a5a7148ced10d9"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "44c1e71e20fbc14577b40ae7a3f1b3e7dbe91d3a96f43ee309fd881e5337e367"
   end
 
   depends_on "cmake" => :build

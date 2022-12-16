@@ -1,32 +1,31 @@
 class Zrepl < Formula
   desc "One-stop ZFS backup & replication solution"
   homepage "https://zrepl.github.io"
-  url "https://github.com/zrepl/zrepl/archive/v0.4.0.tar.gz"
-  sha256 "e7035a8a40913614f4ab24d7caad2c26419fd2b0aaa3565c16439e59214ae590"
+  url "https://github.com/zrepl/zrepl/archive/v0.6.0.tar.gz"
+  sha256 "0bf1dcf634a43af81cd9a0d7b9ae65f63a5938c35d3e6cd804177c8db52929f4"
   license "MIT"
   head "https://github.com/zrepl/zrepl.git", branch: "master"
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "303024f00388a2fced254a52a56017c6d65b75abf2a49868a23bf1d6110d5a9f"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5f7aabb2340c6245bd76de2658f2d85eefa4892787a51de411d1c5fa0e273a70"
-    sha256 cellar: :any_skip_relocation, monterey:       "7b7b42323528cfa48114e2e7bfe0e18d78ff76708099e822c25ee91d4696fc74"
-    sha256 cellar: :any_skip_relocation, big_sur:        "21706026893bdb3aef1e8b66237d500fefc92519538491d212cea68616b01e1d"
-    sha256 cellar: :any_skip_relocation, catalina:       "2725ffa8a53c33564c61e6906bfe93a0c5e510b919757822b66ccec025b251d5"
-    sha256 cellar: :any_skip_relocation, mojave:         "0341ef3fdd925a2507f7d265dee147dc3a4a7249e5da86312abec05281b500fb"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fa323fd542fdda26c040680679bcaf452306e653a91aeac5a20ca0569ff6d3fc"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "f43f61ea51db0d619e1be5e889e00f2237dc40c8529cf7bb470ae84bc6628ffb"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "78b4b5efe5764faedaed4b66d6099be51f35b78f3ae62348e143cc51b8109a31"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f69fbb9c9aeaa2dbc2f1cebdeaec0f9108c40b9d74615d80afa5ffcfb03648ad"
+    sha256 cellar: :any_skip_relocation, ventura:        "4ff1d78151426b9f1f5a3149e12f4d55a1a0ae23ebb7fb2cb8a10a6164be3c01"
+    sha256 cellar: :any_skip_relocation, monterey:       "cf954a340c8e55c54dcaf13cc928551c579f306138c673a0c66cbfc6d83053e3"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0e72ac1fb2b5fdf3a2711e2363e0ef999feeb742f21c64f4966632f5f0700d25"
+    sha256 cellar: :any_skip_relocation, catalina:       "bde1dbd82033d10cc2d23df40c8a7b33a0db666763b3c0e82ce9735691bd9d6f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "825c2d421d4690af7640e7444eab42a8e252a9a2644848b1241c908335c21e43"
   end
 
   depends_on "go" => :build
 
-  resource "sample_config" do
+  resource "homebrew-sample_config" do
     url "https://raw.githubusercontent.com/zrepl/zrepl/master/config/samples/local.yml"
     sha256 "f27b21716e6efdc208481a8f7399f35fd041183783e00c57f62b3a5520470c05"
   end
 
   def install
-    system "go", "build", *std_go_args,
-      "-ldflags", "-X github.com/zrepl/zrepl/version.zreplVersion=#{version}"
+    system "go", "build", *std_go_args(ldflags: "-s -w -X github.com/zrepl/zrepl/version.zreplVersion=#{version}")
   end
 
   def post_install

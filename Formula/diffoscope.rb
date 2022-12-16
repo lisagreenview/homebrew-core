@@ -3,31 +3,32 @@ class Diffoscope < Formula
 
   desc "In-depth comparison of files, archives, and directories"
   homepage "https://diffoscope.org"
-  url "https://files.pythonhosted.org/packages/b0/c7/ae7879af06be4db0b2440e549a03a2fa25112635faf1f91967f387eb8282/diffoscope-193.tar.gz"
-  sha256 "d836ddf24ccb4ffabd798ea1b7fcb66b87e55d5e8ff08286620bb7c64e1d829f"
+  url "https://files.pythonhosted.org/packages/ff/b1/ec60a3cf538c88eeaaa852a0df3964522a7c805ba4757c3c2b9881726e6c/diffoscope-228.tar.gz"
+  sha256 "ff5d656eb6699f0fcd077146d2af44307c34ba9190c7b531d0e5accc8aeef869"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "3c88bbca204e9dea4076ec21b539d8ee790bc2fcef874ca56388c48170d18e58"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b63fef37a8d11b059e029331657e16adac5622337869da292eb0c8423ced2c01"
-    sha256 cellar: :any_skip_relocation, monterey:       "46ab52b120369cad9689972e53e65ae7c536cb9425cadc91ab1e8d34c282314a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7b3389d2209e0e8a2e9460b072fc90388464b31ad8f787dd48be563aec9ed875"
-    sha256 cellar: :any_skip_relocation, catalina:       "e15adc5e0779098f4e26fc9a9a05514a4fb5b2d0aac983bd1eb90dcef7d11f86"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fdab27c74c03ff409e923de438be81ee55042d52cac125870dd4b72b8782a5ba"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "6107cad3e0265e67dc26d5a1eaccbd692d79d60e640e9a6b88d30f0bfe171bff"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8394bd6d54ea2f52590d092e931626f86fe8fd89450a401986b9ba191894d9d9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e1b87c4da01936b175340f6e1ac8045d0495b0746e6dfbfbb4a6e84187d76a66"
+    sha256 cellar: :any_skip_relocation, ventura:        "de2fbb39cf31a50bb4cae705d6d4b5f180f1466c86778ac4958e1febef27291c"
+    sha256 cellar: :any_skip_relocation, monterey:       "2036f94fd0e965fd6d2912bc7561edaa91347359f8d5efc35c7e6dded45da568"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3a0bca62078b0e7b533838551e1457989031a4e266443a06563e22312fcd9ea0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "252c04fb70c352f27ec8e4fccb33179d1debd20c031ec8a5d04e3e0d23c376df"
   end
 
   depends_on "libarchive"
   depends_on "libmagic"
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   resource "argcomplete" do
-    url "https://files.pythonhosted.org/packages/6a/b4/3b1d48b61be122c95f4a770b2f42fc2552857616feba4d51f34611bd1352/argcomplete-1.12.3.tar.gz"
-    sha256 "2c7dbffd8c045ea534921e63b0be6fe65e88599990d8dc408ac8c542b72a5445"
+    url "https://files.pythonhosted.org/packages/05/f8/67851ae4fe5396ba6868c5d84219b81ea6a5d53991a6853616095c30adc0/argcomplete-2.0.0.tar.gz"
+    sha256 "6372ad78c89d662035101418ae253668445b391755cfe94ea52f1b9d22425b20"
   end
 
   resource "libarchive-c" do
-    url "https://files.pythonhosted.org/packages/53/d5/bee2190570a2b4c372a022f16ebfc2313ff717a023f277f5d6f9ebf281a2/libarchive-c-3.1.tar.gz"
-    sha256 "618a7ecfbfb58ca15e11e3138d4a636498da3b6bc212811af158298530fbb87e"
+    url "https://files.pythonhosted.org/packages/93/c4/d8fa5dfcfef8aa3144ce4cfe4a87a7428b9f78989d65e9b4aa0f0beda5a8/libarchive-c-4.0.tar.gz"
+    sha256 "a5b41ade94ba58b198d778e68000f6b7de41da768de7140c984f71d7fa8416e5"
   end
 
   resource "progressbar" do
@@ -36,12 +37,12 @@ class Diffoscope < Formula
   end
 
   resource "python-magic" do
-    url "https://files.pythonhosted.org/packages/3a/70/76b185393fecf78f81c12f9dc7b1df814df785f6acb545fc92b016e75a7e/python-magic-0.4.24.tar.gz"
-    sha256 "de800df9fb50f8ec5974761054a708af6e4246b03b4bdaee993f948947b0ebcf"
+    url "https://files.pythonhosted.org/packages/da/db/0b3e28ac047452d079d375ec6798bf76a036a08182dbb39ed38116a49130/python-magic-0.4.27.tar.gz"
+    sha256 "c1ba14b08e4a5f5c31a302b7721239695b2f0f058d125bd5ce1ee36b9d9d3c3b"
   end
 
   def install
-    venv = virtualenv_create(libexec, "python3")
+    venv = virtualenv_create(libexec, "python3.11")
     venv.pip_install resources
     venv.pip_install buildpath
 
@@ -53,6 +54,6 @@ class Diffoscope < Formula
   test do
     (testpath/"test1").write "test"
     cp testpath/"test1", testpath/"test2"
-    system "#{bin}/diffoscope", "--progress", "test1", "test2"
+    system bin/"diffoscope", "--progress", "test1", "test2"
   end
 end

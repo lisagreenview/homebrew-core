@@ -1,17 +1,20 @@
 class Hdf5AT110 < Formula
   desc "File format designed to store large amounts of data"
   homepage "https://www.hdfgroup.org/HDF5"
-  url "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.7/src/hdf5-1.10.7.tar.bz2"
-  sha256 "02018fac7e5efc496d9539a303cfb41924a5dadffab05df9812096e273efa55e"
+  url "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.8/src/hdf5-1.10.8.tar.bz2"
+  sha256 "66ec544b195a4cb9f6ffed034fd82e52429d6112747c2996ab69853f606e546b"
   license "BSD-3-Clause"
   revision 1
 
   bottle do
-    sha256                               arm64_big_sur: "50f558462450a89684bf94338b6a0fe50579457fb73f16aec14b3a14250ea697"
-    sha256 cellar: :any,                 big_sur:       "aaf4050cbc4a4dea9bf6fae1c54ce4f0a93537eaf3b45f5ed9041f6771e04583"
-    sha256 cellar: :any,                 catalina:      "d89eb59b029e32ff0689c73245f0dfc3d44a7750a9b84ffbfa05a03ecd24bc2f"
-    sha256 cellar: :any,                 mojave:        "386f4217757f910b24d2f5b9f931516c0c96d6bf53b7cfbd581f204b7292a524"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4ca37238af9e72dfb071c55b682e3ece97e2fc9f1b45654439ba26be95b2e8c3"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "befeefbfcff47b7997ee6e7eda2369d5ee20a582eb78c58221c9570ed968c316"
+    sha256 cellar: :any,                 arm64_monterey: "490d7bc56417f31bf761bbc3dffd23c3123cf67099048fab728a27dc2a0684f1"
+    sha256 cellar: :any,                 arm64_big_sur:  "6ffe3a34dfdefec620aa4ddab9a129e7960a1df5fad0199c5b1842a9b9dee1c8"
+    sha256 cellar: :any,                 ventura:        "2be77115b4bc7fced0a2ecd5f5aea468ae5f70c3a4917971e87339d70d6d9cf5"
+    sha256 cellar: :any,                 monterey:       "b634aa30af2ba672e9b240b12b6242ea87a17d1b64943d9434f2344432ebdc86"
+    sha256 cellar: :any,                 big_sur:        "00ae5e5407ae574f2a9ae10ccb0d52de9a56650bde53c9328cc2e444a847b3f6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "79a9c42606ceebd728d1c7d2373f0a117e0f45a3f64db6fc00d4dc57a23d7624"
   end
 
   keg_only :versioned_formula
@@ -20,36 +23,38 @@ class Hdf5AT110 < Formula
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "gcc" # for gfortran
-  depends_on "szip"
+  depends_on "libaec"
 
   uses_from_macos "zlib"
 
   def install
     inreplace %w[c++/src/h5c++.in fortran/src/h5fc.in bin/h5cc.in],
-      "${libdir}/libhdf5.settings",
-      "#{pkgshare}/libhdf5.settings"
+              "${libdir}/libhdf5.settings",
+              "#{pkgshare}/libhdf5.settings"
 
     inreplace "src/Makefile.am",
               "settingsdir=$(libdir)",
               "settingsdir=#{pkgshare}"
 
-    system "autoreconf", "-fiv"
-
-    # necessary to avoid compiler paths that include shims directory being used
-    ENV["CC"] = "/usr/bin/cc"
-    ENV["CXX"] = "/usr/bin/c++"
+    system "autoreconf", "--force", "--install", "--verbose"
 
     args = %W[
       --disable-dependency-tracking
       --disable-silent-rules
-      --prefix=#{prefix}
-      --with-szlib=#{Formula["szip"].opt_prefix}
       --enable-build-mode=production
       --enable-fortran
       --enable-cxx
+      --prefix=#{prefix}
+      --with-szlib=#{Formula["libaec"].opt_prefix}
     ]
+    args << "--with-zlib=#{Formula["zlib"].opt_prefix}" if OS.linux?
 
     system "./configure", *args
+
+    # Avoid shims in settings file
+    inreplace "src/libhdf5.settings", Superenv.shims_path/ENV.cxx, ENV.cxx
+    inreplace "src/libhdf5.settings", Superenv.shims_path/ENV.cc, ENV.cc
+
     system "make", "install"
   end
 

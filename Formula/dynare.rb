@@ -1,10 +1,29 @@
 class Dynare < Formula
   desc "Platform for economic models, particularly DSGE and OLG models"
   homepage "https://www.dynare.org/"
-  url "https://www.dynare.org/release/source/dynare-4.6.4.tar.xz"
-  sha256 "3c2e0069a3e5c23866130d5c73c3da840a38612baa2aa3d90f42e3d984abad80"
   license "GPL-3.0-or-later"
-  revision 3
+
+  # Remove when patch is no longer needed.
+  stable do
+    url "https://www.dynare.org/release/source/dynare-5.3.tar.xz"
+    sha256 "bbbbd319f9a1cb7ffd4f7012be105a7c95842ca76d9d96e96305e1fbf8d8b585"
+
+    on_arm do
+      # Needed since we patch a `Makefile.am` below.
+      depends_on "autoconf" => :build
+      depends_on "automake" => :build
+      depends_on "bison" => :build
+      depends_on "flex" => :build
+
+      # Fixes a build error on ARM.
+      # Remove the `Hardware::CPU.arm?` in the `autoreconf` call below when this is removed.
+      patch do
+        url "https://git.dynare.org/Dynare/preprocessor/-/commit/e0c3cb72b7337a5eecd32a77183af9f1609a86ef.diff"
+        sha256 "4fe156dce78fba9ec280bceff66f263c3a9dbcd230cc5bac96b5a59c14c7554f"
+        directory "preprocessor"
+      end
+    end
+  end
 
   livecheck do
     url "https://www.dynare.org/download/"
@@ -12,12 +31,16 @@ class Dynare < Formula
   end
 
   bottle do
-    sha256 cellar: :any, big_sur:  "ccfeee1a456201d0cd60616f8f4b7e4ccb169206b83444ec7d727d60832f4a79"
-    sha256 cellar: :any, catalina: "d68b211968f201691d94ce012def75c2b1a7c0dd1b67bed8bfb5df134ceb3f9f"
+    sha256 cellar: :any, arm64_ventura:  "a9ac6537251c1086eb3ab5921a8b2ec73216e9618ae32e9eb3d3afb275000bf1"
+    sha256 cellar: :any, arm64_monterey: "8be89f7d4db802d28315a38c6fe0f9559d56359de35ec513f5ee7fa741634b40"
+    sha256 cellar: :any, arm64_big_sur:  "b24e5e0bcacd8d83c17d1af520b38519e1d93968ffcf86bee2737a6a1ee21655"
+    sha256 cellar: :any, ventura:        "5e7b62ab69c574f4cca43164b3d346d2a3bef7e4e1ea88f3acedfd22a7d25640"
+    sha256 cellar: :any, monterey:       "04fd734bddc5e529703dd37c7078c1d4c7085369f449cdccd276eba8a01ab8a6"
+    sha256 cellar: :any, big_sur:        "000899dc1e95beb0d775243815386703dc3c30b267f37e37f734a0b59dc369f6"
   end
 
   head do
-    url "https://git.dynare.org/Dynare/dynare.git"
+    url "https://git.dynare.org/Dynare/dynare.git", branch: "master"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
@@ -37,19 +60,19 @@ class Dynare < Formula
   depends_on "openblas"
   depends_on "suite-sparse"
 
-  resource "io" do
-    url "https://octave.sourceforge.io/download.php?package=io-2.6.3.tar.gz", using: :nounzip
-    sha256 "6bc63c6498d79cada01a6c4446f793536e0bb416ddec2a5201dd8d741d459e10"
-  end
-
   resource "slicot" do
     url "https://deb.debian.org/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
     sha256 "fa80f7c75dab6bfaca93c3b374c774fd87876f34fba969af9133eeaea5f39a3d"
   end
 
-  resource "statistics" do
-    url "https://octave.sourceforge.io/download.php?package=statistics-1.4.2.tar.gz", using: :nounzip
-    sha256 "7976814f837508e70367548bfb0a6d30aa9e447d4e3a66914d069efb07876247"
+  resource "homebrew-io" do
+    url "https://octave.sourceforge.io/download.php?package=io-2.6.4.tar.gz", using: :nounzip
+    sha256 "a74a400bbd19227f6c07c585892de879cd7ae52d820da1f69f1a3e3e89452f5a"
+  end
+
+  resource "homebrew-statistics" do
+    url "https://octave.sourceforge.io/download.php?package=statistics-1.4.3.tar.gz", using: :nounzip
+    sha256 "9801b8b4feb26c58407c136a9379aba1e6a10713829701bb3959d9473a67fa05"
   end
 
   def install
@@ -73,11 +96,10 @@ class Dynare < Formula
     ENV["CXX"] = Formula["gcc"].opt_bin/"g++-#{gcc_major_ver}"
     ENV.append "LDFLAGS", "-static-libgcc"
 
-    system "autoreconf", "-fvi" if build.head?
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
+    # Remove `Hardware::CPU.arm?` when the patch is no longer needed.
+    system "autoreconf", "--force", "--install", "--verbose" if build.head? || Hardware::CPU.arm?
+    system "./configure", *std_configure_args,
                           "--disable-silent-rules",
-                          "--prefix=#{prefix}",
                           "--disable-doc",
                           "--disable-matlab",
                           "--with-boost=#{Formula["boost"].prefix}",
@@ -100,13 +122,16 @@ class Dynare < Formula
   test do
     ENV.cxx11
 
-    statistics = resource("statistics")
-    io = resource("io")
+    statistics = resource("homebrew-statistics")
+    io = resource("homebrew-io")
     testpath.install statistics, io
 
     cp lib/"dynare/examples/bkk.mod", testpath
 
+    # Replace `makeinfo` with dummy command `true` to prevent generating docs
+    # that are not useful to the test.
     (testpath/"dyn_test.m").write <<~EOS
+      makeinfo_program true
       pkg prefix #{testpath}/octave
       pkg install io-#{io.version}.tar.gz
       pkg install statistics-#{statistics.version}.tar.gz

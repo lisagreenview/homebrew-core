@@ -1,8 +1,10 @@
 class Cweb < Formula
   desc "Literate documentation system for C, C++, and Java"
   homepage "https://cs.stanford.edu/~knuth/cweb.html"
-  url "https://github.com/ascherer/cweb/archive/cweb-4.5.tar.gz"
-  sha256 "5afa2bad211b60e7a3e33cf72b1ea0873b66427d24c17ec12e211b20bd1ad4aa"
+  url "https://github.com/ascherer/cweb/archive/cweb-4.8.1.tar.gz"
+  sha256 "3d1468408aaf2853bc8fbbc64b0f06e9be9c3c89638d78da907bf6f4656d52ce"
+  # See disucssions in this thread, https://github.com/ascherer/cweb/issues/29
+  license :cannot_represent
 
   livecheck do
     url :stable
@@ -10,12 +12,14 @@ class Cweb < Formula
   end
 
   bottle do
-    sha256                               arm64_monterey: "04ed26efc24fef95e690016410da0e987c64c86bbb44d7be14f57ffb51176be3"
-    sha256                               arm64_big_sur:  "90e531e4c475de1c1630fe17b0a41856abbe0aaff3f6edebdbc94deccc4b8bff"
-    sha256                               monterey:       "6353ada6affe616e9d5cfd57c860158cd238d40ae08a0f6906a2f9bd88595b47"
-    sha256                               big_sur:        "d289cbfd452407b42ed39ce37127e7c7d5187752ad8b286d5c06692460336bf3"
-    sha256                               catalina:       "65606687d8bfe11b2a441613123fa2fac30f9362e822f13695c1f168bc01b62f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d164644aba2adcb257e9316d4627b94239ecfc90cc477e8715ca6284ac416363"
+    sha256                               arm64_ventura:  "8af953f8a3f31d2c2b6cf155de4610ba7f7a4ad61e0b59bdf9a7ec190e4cd86e"
+    sha256                               arm64_monterey: "5de3449dadd66c5759b4aa073884336c9c935b3a4481d4355303b050897c3948"
+    sha256                               arm64_big_sur:  "1ae7da8bf50cadb46c67c6e3ece21e992942f354dba9e9ba4dd940b4150db086"
+    sha256                               ventura:        "b897a987d49e52c0f3746dd301400df7b39588cac36a1c0d2fa3557e0e40f2b7"
+    sha256                               monterey:       "3f29dcb1e90489af30f71b1d2080f1da44aa54523c03955a3d8390867d8fbb10"
+    sha256                               big_sur:        "5b04f2fc775e7997bd22d4fdff71bdd5d4e8776de60f7c7a79b68280b3b9df09"
+    sha256                               catalina:       "abb227be400bc74150619772ced22aa90bb2c1721b1ceca347f83259d6da6904"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7a01ccf4b26f6d1afb455970164dec856d58a0c523653726e873ca4db412ce08"
   end
 
   conflicts_with "texlive", because: "both install `cweb` binaries"

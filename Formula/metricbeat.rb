@@ -2,23 +2,24 @@ class Metricbeat < Formula
   desc "Collect metrics from your systems and services"
   homepage "https://www.elastic.co/beats/metricbeat"
   url "https://github.com/elastic/beats.git",
-      tag:      "v7.15.2",
-      revision: "fd322dad6ceafec40c84df4d2a0694ea357d16cc"
+      tag:      "v8.5.3",
+      revision: "6d03209df870c63ef9d59d609268c11dfdc835dd"
   license "Apache-2.0"
-  head "https://github.com/elastic/beats.git"
+  head "https://github.com/elastic/beats.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f0afe68820ec5233979bc019d3376d59441ff76cc04b90dc9c82020854fe8301"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0abec415cc3a756583e2ecb831d6264869d18a5ac02faae0097b5d3b141335c8"
-    sha256 cellar: :any_skip_relocation, monterey:       "3228c5a4d0963f3c56bdb128f930eb04cf5ecbce0a062ae7baa49c99d0ad9658"
-    sha256 cellar: :any_skip_relocation, big_sur:        "af1e9a8ea6438c0cb0d5eb742e5afc8b95d94f0c30ac9424ead1dc942c55e1bb"
-    sha256 cellar: :any_skip_relocation, catalina:       "e5c99b0b0a2188403979317b4911e5b5bb8521d17c84e0c449be65009f25dfbf"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7f4fadd93b78a4de8ca92ea6d463613f8c144fff093dc1341b20fdf85f4ebadc"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "9ae2e5a0129f987d5c95c7d269c04f3f6c69b196db577f9f12d4945dd4d524cb"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "9d300cf38cd26c93b1c6e773c7aeb1d39e2fbfc099b52950f7f52dff28a2a5b9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9789b025afdb9dbfac43808786cd1de3238dc391e2a9de0d52ed994a94438a3a"
+    sha256 cellar: :any_skip_relocation, ventura:        "f36d4774412136d6a353c2f74a6ff6d3111a7d9b2ef708982be7d40e004b5cde"
+    sha256 cellar: :any_skip_relocation, monterey:       "a204c61e1c305c69ac6590f2ed4d543264fce650db04560284306afb4f98aeef"
+    sha256 cellar: :any_skip_relocation, big_sur:        "599dccd11ef18b6d38ae3803f228ab2991aed5c36028eb33ec38c98cb2a3d6b5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0f3b0f75221bbd8c36bbf347b700659e2f282dde752bcbcde61278a15a4e31fc"
   end
 
   depends_on "go" => :build
   depends_on "mage" => :build
-  depends_on "python@3.9" => :build
+  depends_on "python@3.11" => :build
 
   def install
     # remove non open source files
@@ -47,6 +48,9 @@ class Metricbeat < Formula
         --path.logs #{var}/log/metricbeat \
         "$@"
     EOS
+
+    chmod 0555, bin/"metricbeat" # generate_completions_from_executable fails otherwise
+    generate_completions_from_executable(bin/"metricbeat", "completion", shells: [:bash, :zsh])
   end
 
   service do
@@ -73,7 +77,14 @@ class Metricbeat < Formula
                              testpath/"data"
     end
 
-    sleep 30
-    assert_predicate testpath/"data/metricbeat", :exist?
+    sleep 15
+
+    output = JSON.parse((testpath/"data/meta.json").read)
+    assert_includes output, "first_start"
+
+    (testpath/"data").glob("metricbeat-*.ndjson") do |file|
+      s = JSON.parse(file.read.lines.first.chomp)
+      assert_match "metricbeat", s["@metadata"]["beat"]
+    end
   end
 end

@@ -1,10 +1,10 @@
 class Openldap < Formula
   desc "Open source suite of directory software"
   homepage "https://www.openldap.org/software/"
-  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.6.0.tgz"
-  mirror "http://fresh-center.net/linux/misc/openldap-2.6.0.tgz"
-  mirror "http://fresh-center.net/linux/misc/legacy/openldap-2.6.0.tgz"
-  sha256 "b71c580eac573e9aba15d95f33dd4dd08f2ed4f0d7fc09e08ad4be7ed1e41a4f"
+  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.6.3.tgz"
+  mirror "http://fresh-center.net/linux/misc/openldap-2.6.3.tgz"
+  mirror "http://fresh-center.net/linux/misc/legacy/openldap-2.6.3.tgz"
+  sha256 "d2a2a1d71df3d77396b1c16ad7502e674df446e06072b0e5a4e941c3d06c0d46"
   license "OLDAP-2.8"
 
   livecheck do
@@ -13,12 +13,14 @@ class Openldap < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "32ca782d525e3dfa153699604c63dbe7d9e17e07ffa91f8716182099cbf4d933"
-    sha256 arm64_big_sur:  "ffbaaef1efdb003a16c58de104df6b1c7c3b4ffea7716f9bd076051254888dfe"
-    sha256 monterey:       "e620a3a13105b488ef8c240882510cd98bcdb468321785bdecd4fe4c9e78e9f6"
-    sha256 big_sur:        "c115978e2754736f9ab7390b62722aee6fccf703b050936dd09350943644fde1"
-    sha256 catalina:       "ca98ae4585a63d2f500bf989c7ce2fc769e62919dbfba1709ee54bef6c652a69"
-    sha256 x86_64_linux:   "9d36c5c8060799e903c66bef0280240e4d51359182e2c7e49fa7376b7d41777f"
+    sha256 arm64_ventura:  "db25c7e317ccf5ca1282b9ab4ef178f3bca979c0d6ace9b03161c97d1699f5f4"
+    sha256 arm64_monterey: "d3f0bdb0fdab90601339ec57ad4291aa08907733d40162a7450f3bafd3768e8a"
+    sha256 arm64_big_sur:  "9f347097480480f7df1519279a588cd68bf98e7befa11971c803a858843ebc6a"
+    sha256 ventura:        "29d558ec118be91f00f44d2f4269edb66ff4bea3107629adb671cbfbfe7beb5b"
+    sha256 monterey:       "107f7937af3e60ecf4262b4f60b7da74c38ef55c07c735c3f906f2bdb0067934"
+    sha256 big_sur:        "5881d9b771d9296d464a8d2f8e00908e76b31076df50d2c86225a9151ec64a85"
+    sha256 catalina:       "542b132bd0ae22ad6ffe2bb2f25f17c1933943ead28791bcf7e53888b48f5de1"
+    sha256 x86_64_linux:   "236b263f5d84e1c580380289599cad1719cc8c8b2bb1c78b48578aa139dc1095"
   end
 
   keg_only :provided_by_macos
@@ -33,12 +35,6 @@ class Openldap < Formula
   patch do
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
     sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-  end
-
-  # Fix https://bugs.openldap.org/show_bug.cgi?id=9733, remove in next release
-  patch do
-    url "https://git.openldap.org/openldap/openldap/-/commit/eb989be4081cf996bd7e7eb6a529bbc1dc483a59.patch"
-    sha256 "d083c2ca7c0ec5c211df53a98ffb02e1ba926abf108bbe4d88550fa6064536a4"
   end
 
   def install
@@ -65,15 +61,15 @@ class Openldap < Formula
       --enable-translucent
       --enable-unique
       --enable-valsort
+      --without-systemd
     ]
 
-    if OS.linux?
-      args << "--without-systemd"
-
+    if OS.linux? || MacOS.version >= :ventura
       # Disable manpage generation, because it requires groff which has a huge
-      # dependency tree on Linux
+      # dependency tree on Linux and isn't included on macOS since Ventura.
       inreplace "Makefile.in" do |s|
-        s.change_make_var! "SUBDIRS", "include libraries clients servers"
+        subdirs = s.get_make_var("SUBDIRS").split - ["doc"]
+        s.change_make_var! "SUBDIRS", subdirs.join(" ")
       end
     end
 

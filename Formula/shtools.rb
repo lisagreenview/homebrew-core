@@ -1,22 +1,28 @@
 class Shtools < Formula
   desc "Spherical Harmonic Tools"
   homepage "https://shtools.github.io/SHTOOLS/"
-  url "https://github.com/SHTOOLS/SHTOOLS/releases/download/v4.9.1/SHTOOLS-4.9.1.tar.gz"
-  sha256 "5c22064f9daf6e9aa08cace182146993aa6b25a6ea593d92572c59f4013d53c2"
+  url "https://github.com/SHTOOLS/SHTOOLS/releases/download/v4.10.1/SHTOOLS-4.10.1.tar.gz"
+  sha256 "f4fb5c86841fe80136b520d2040149eafd4bc2d49da6b914d8a843b812f20b61"
   license "BSD-3-Clause"
   head "https://github.com/SHTOOLS/SHTOOLS.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "fc51eae35bb14ae633451c030eadac4f4460e706aa00fb4510c943a15d555baf"
-    sha256 cellar: :any_skip_relocation, monterey:      "15aeebdacaa7cf5a698ac7eb60c82de648fdc648f32c7633a417896bf20e030c"
-    sha256 cellar: :any_skip_relocation, big_sur:       "967d6cf5bc8da7bb1f35733425670790ef7241bd21dc31bddbb1b0dd4e0d7c72"
-    sha256 cellar: :any_skip_relocation, catalina:      "143f85cefb75fc760b2cedde24fa2ca51f18503f48cac8391f02f9b2f1dcf3dd"
-    sha256 cellar: :any_skip_relocation, mojave:        "ef58dfe8056ba34bc5aff640a23e374e59bd969949c06262cd16580c9e2ca1c4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7227085a1a3038518cbd30a4b53dd0fea5d43078cbe9168c870c673aaf03856b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "038729713c3013c2c06e453ea99ff52eb83f01adcd3bfd6435e1101054d4698f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "063c1e3013bf6dfc56ae3c0dbafe3214d52c3446b84f084accc2214838cd8d46"
+    sha256 cellar: :any_skip_relocation, ventura:        "3b35f33e5756434a83142c56b5c0e6a2888c180d094ee3e9ad878665ee715be2"
+    sha256 cellar: :any_skip_relocation, monterey:       "8164fa3de31c5909455ec628c680e35c051b0858fd643e0694b10debbd85d134"
+    sha256 cellar: :any_skip_relocation, big_sur:        "170def5eead4a05b223b214bdff418edd84c62008687a246117362ea0e0f4cb3"
+    sha256 cellar: :any_skip_relocation, catalina:       "e1e43ac26408f5592cc0b2140d18dee20048d91efb55782fe93389229fceba3c"
   end
 
   depends_on "fftw"
   depends_on "gcc"
   depends_on "openblas"
+
+  on_linux do
+    depends_on "libtool" => :build
+  end
 
   def install
     system "make", "fortran"

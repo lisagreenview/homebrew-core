@@ -1,8 +1,8 @@
 class Gdal < Formula
   desc "Geospatial Data Abstraction Library"
   homepage "https://www.gdal.org/"
-  url "https://download.osgeo.org/gdal/3.3.3/gdal-3.3.3.tar.xz"
-  sha256 "1e8fc8b19c77238c7f4c27857d04857b65d8b7e8050d3aac256d70fa48a21e76"
+  url "http://download.osgeo.org/gdal/3.6.0/gdal-3.6.0.tar.xz"
+  sha256 "f7afa4aa8d32d0799e011a9f573c6a67e9471f78e70d3d0d0b45b45c8c0c1a94"
   license "MIT"
 
   livecheck do
@@ -11,18 +11,23 @@ class Gdal < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "cf24ff841159ef1e4a4dbcd1c64a543c7c806333fd7ff2ecf9122c1aff2f1560"
-    sha256 big_sur:       "1ff27b4aa2b0d3c7f21921703b95fc56d10c111ad824a8a348f8f9571ab1e7a8"
-    sha256 catalina:      "818ac10ec3a4785e92e09f527aad6c8cf69c14684275d84bfdfc4f53ab77d061"
-    sha256 x86_64_linux:  "2b6aeb16453955940fdfae76dd446bcdcd1a9610af98504077569bcaccb8bd9d"
+    sha256 arm64_ventura:  "304ae53da0f58717968108fd0954e505ba6c0ceac796f2a73680462bde66e244"
+    sha256 arm64_monterey: "6c56b6a3357a7469dbcc734aa9d9986fe02ec5b10fb5c115d4142856d101d2f0"
+    sha256 arm64_big_sur:  "8c170834628981b839c3b8ec8b8237d34d08ad0ae03b010f1f072e38d7f0ee15"
+    sha256 ventura:        "4194f540b67ba64f358e0a0d355132c69e27542004db787a7c05e5f188119175"
+    sha256 monterey:       "239e28458448dc50cd4d7ee7119b6a1d8c0a2807f16ba19976eaa7bdc8e1678c"
+    sha256 big_sur:        "afa1902f5e69c25f59876d85915baeaa2af3df8df74dbf8bf619fab1d16eb0c6"
+    sha256 x86_64_linux:   "d0ba3e8b774392d316f8415191c4d6f91a07a0d1337dbda6402c126488cc62ca"
   end
 
   head do
-    url "https://github.com/OSGeo/gdal.git"
+    url "https://github.com/OSGeo/gdal.git", branch: "master"
     depends_on "doxygen" => :build
   end
 
+  depends_on "cmake" => :build
   depends_on "pkg-config" => :build
+  depends_on "apache-arrow"
   depends_on "cfitsio"
   depends_on "epsilon"
   depends_on "expat"
@@ -30,10 +35,12 @@ class Gdal < Formula
   depends_on "geos"
   depends_on "giflib"
   depends_on "hdf5"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
+  depends_on "jpeg-xl"
   depends_on "json-c"
   depends_on "libdap"
   depends_on "libgeotiff"
+  depends_on "libheif"
   depends_on "libpng"
   depends_on "libpq"
   depends_on "libspatialite"
@@ -41,23 +48,23 @@ class Gdal < Formula
   depends_on "libxml2"
   depends_on "netcdf"
   depends_on "numpy"
+  depends_on "openexr"
   depends_on "openjpeg"
-  depends_on "pcre"
-  depends_on "poppler-qt5"
-  depends_on "proj@7"
-  depends_on "python@3.9"
-  depends_on "sqlite" # To ensure compatibility with SpatiaLite
-  depends_on "unixodbc" # macOS version is not complete enough
+  depends_on "pcre2"
+  depends_on "poppler"
+  depends_on "proj"
+  depends_on "python@3.10"
+  depends_on "sqlite"
+  depends_on "unixodbc"
   depends_on "webp"
   depends_on "xerces-c"
-  depends_on "xz" # get liblzma compression algorithm library from XZutils
+  depends_on "xz"
   depends_on "zstd"
 
   uses_from_macos "curl"
 
   on_linux do
     depends_on "util-linux"
-    depends_on "gcc"
   end
 
   conflicts_with "avce00", because: "both install a cpl_conv.h header"
@@ -65,117 +72,43 @@ class Gdal < Formula
 
   fails_with gcc: "5"
 
+  def python3
+    "python3.10"
+  end
+
   def install
     args = [
-      # Base configuration
-      "--prefix=#{prefix}",
-      "--mandir=#{man}",
-      "--disable-debug",
-      "--with-libtool",
-      "--with-local=#{prefix}",
-      "--with-threads",
-
-      # GDAL native backends
-      "--with-pam",
-      "--with-pcidsk=internal",
-      "--with-pcraster=internal",
-
-      # Homebrew backends
-      "--with-expat=#{Formula["expat"].prefix}",
-      "--with-freexl=#{Formula["freexl"].opt_prefix}",
-      "--with-geos=#{Formula["geos"].opt_prefix}/bin/geos-config",
-      "--with-geotiff=#{Formula["libgeotiff"].opt_prefix}",
-      "--with-gif=#{Formula["giflib"].opt_prefix}",
-      "--with-jpeg=#{Formula["jpeg"].opt_prefix}",
-      "--with-libjson-c=#{Formula["json-c"].opt_prefix}",
-      "--with-libtiff=#{Formula["libtiff"].opt_prefix}",
-      "--with-pg=yes",
-      "--with-png=#{Formula["libpng"].opt_prefix}",
-      "--with-spatialite=#{Formula["libspatialite"].opt_prefix}",
-      "--with-sqlite3=#{Formula["sqlite"].opt_prefix}",
-      "--with-proj=#{Formula["proj@7"].opt_prefix}",
-      "--with-zstd=#{Formula["zstd"].opt_prefix}",
-      "--with-liblzma=yes",
-      "--with-cfitsio=#{Formula["cfitsio"].opt_prefix}",
-      "--with-hdf5=#{Formula["hdf5"].opt_prefix}",
-      "--with-netcdf=#{Formula["netcdf"].opt_prefix}",
-      "--with-openjpeg",
-      "--with-xerces=#{Formula["xerces-c"].opt_prefix}",
-      "--with-odbc=#{Formula["unixodbc"].opt_prefix}",
-      "--with-dods-root=#{Formula["libdap"].opt_prefix}",
-      "--with-epsilon=#{Formula["epsilon"].opt_prefix}",
-      "--with-webp=#{Formula["webp"].opt_prefix}",
-      "--with-poppler=#{Formula["poppler"].opt_prefix}",
-
-      # Explicitly disable some features
-      "--with-armadillo=no",
-      "--with-qhull=no",
-      "--without-exr",
-      "--without-grass",
-      "--without-jasper",
-      "--without-jpeg12",
-      "--without-libgrass",
-      "--without-mysql",
-      "--without-perl",
-      "--without-python",
-
-      # Unsupported backends are either proprietary or have no compatible version
-      # in Homebrew. Podofo is disabled because Poppler provides the same
-      # functionality and then some.
-      "--without-ecw",
-      "--without-fgdb",
-      "--without-fme",
-      "--without-gta",
-      "--without-hdf4",
-      "--without-idb",
-      "--without-ingres",
-      "--without-jp2mrsid",
-      "--without-kakadu",
-      "--without-mrsid",
-      "--without-mrsid_lidar",
-      "--without-msg",
-      "--without-oci",
-      "--without-ogdi",
-      "--without-podofo",
-      "--without-rasdaman",
-      "--without-sde",
-      "--without-sosi",
+      "-DENABLE_PAM=ON",
+      "-DCMAKE_INSTALL_RPATH=#{lib}",
     ]
+    args.concat(std_cmake_args)
+    args_no_python = args.dup << "-DBUILD_PYTHON_BINDINGS=OFF"
 
-    if OS.mac?
-      args << "--with-curl=/usr/bin/curl-config"
-      args << "--with-opencl"
-    else
-      args << "--with-curl=#{Formula["curl"].opt_bin}/curl-config"
+    mkdir "build" do
+      # First, build without Python to avoid a Linux issue where the
+      # Python bindings are installed in the wrong path
+      # See https://github.com/Homebrew/homebrew-core/pull/116073#issuecomment-1320875424
+      system "cmake", "..", *args_no_python
+      system "make"
+      system "make", "install"
 
-      # The python build needs libgdal.so, which is located in .libs
-      ENV.append "LDFLAGS", "-L#{buildpath}/.libs"
-      # The python build needs gnm headers, which are located in the gnm folder
-      ENV.append "CFLAGS", "-I#{buildpath}/gnm"
+      # Next, reconfigure with Python and manually run the python build
+      args_with_python = args.dup << "-DBUILD_PYTHON_BINDINGS=ON"
+      system "cmake", "..", *args_with_python
+      system "make"
+
+      # Build Python bindings
+      cd "swig/python" do
+        system python3, *Language::Python.setup_install_args(prefix, python3)
+      end
     end
-
-    system "./configure", *args
-    system "make"
-    system "make", "install"
-
-    # Build Python bindings
-    cd "swig/python" do
-      system Formula["python@3.9"].opt_bin/"python3", *Language::Python.setup_install_args(prefix)
-    end
-    bin.install Dir["swig/python/scripts/*.py"]
-
-    system "make", "man" if build.head?
-    # Force man installation dir: https://trac.osgeo.org/gdal/ticket/5092
-    system "make", "install-man", "INST_MAN=#{man}"
-    # Clean up any stray doxygen files
-    Dir.glob("#{bin}/*.dox") { |p| rm p }
   end
 
   test do
     # basic tests to see if third-party dylibs are loading OK
-    system "#{bin}/gdalinfo", "--formats"
-    system "#{bin}/ogrinfo", "--formats"
+    system bin/"gdalinfo", "--formats"
+    system bin/"ogrinfo", "--formats"
     # Changed Python package name from "gdal" to "osgeo.gdal" in 3.2.0.
-    system Formula["python@3.9"].opt_bin/"python3", "-c", "import osgeo.gdal"
+    system python3, "-c", "import osgeo.gdal"
   end
 end

@@ -3,45 +3,46 @@ class GalleryDl < Formula
 
   desc "Command-line downloader for image-hosting site galleries and collections"
   homepage "https://github.com/mikf/gallery-dl"
-  url "https://files.pythonhosted.org/packages/bd/15/2da44a9d797c6394af00a5d06b5007e45c01057ee23a3159d417fa82d853/gallery_dl-1.19.2.tar.gz"
-  sha256 "7fec9ac69582dbd9922666e6ece3142ae52dc9679a2c4a613f6ee94ad09e5f68"
+  url "https://files.pythonhosted.org/packages/96/76/d6a7eac085cb3e7e1e7849ce8a1848b074b3e1825958b07f323730ca5b46/gallery_dl-1.24.1.tar.gz"
+  sha256 "a639b8d74693e3e2e3dcf0409626e682534f1a59818244681c083b26b203a74b"
   license "GPL-2.0-only"
-  head "https://github.com/mikf/gallery-dl.git"
+  head "https://github.com/mikf/gallery-dl.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "40e40f33d68e11a37ed91bf67141fe93872a98898285352edcaf1e1f654184be"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "40e40f33d68e11a37ed91bf67141fe93872a98898285352edcaf1e1f654184be"
-    sha256 cellar: :any_skip_relocation, monterey:       "04fe21823a7b19cb61bd999ae9bdbf50d1b37d6079063c560f483e9c3cdc4cca"
-    sha256 cellar: :any_skip_relocation, big_sur:        "04fe21823a7b19cb61bd999ae9bdbf50d1b37d6079063c560f483e9c3cdc4cca"
-    sha256 cellar: :any_skip_relocation, catalina:       "04fe21823a7b19cb61bd999ae9bdbf50d1b37d6079063c560f483e9c3cdc4cca"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ea344e039c2b476687fd008107a629b039ac1fdcb67c9656c7245ed003a6cb4f"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c84a09441d460e9ad7da31c24d2837e81ad2bb11f716675d34183cdeeeb9dbd2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "ebd570be3505150e5774cee7d0c9efcafc42550124d58dc8515b11918e342875"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b5ede384d7d38efad1720be77f409d54548fa0e1625b6dfe43440ddc38dd5779"
+    sha256 cellar: :any_skip_relocation, ventura:        "ea36350a2a149c49bd79c5a539143c231eb6f54ffcef47fba3764125a5ef9670"
+    sha256 cellar: :any_skip_relocation, monterey:       "5be69ebbd0e1d81ed820e01132ac7f18769749384984906aed3ee8b17a884554"
+    sha256 cellar: :any_skip_relocation, big_sur:        "5900d1ff9abd861f4c85013aaa37073c8c95d0ea7df0ba7abddd3eb4fa0edb0d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "36bd6fe5c914f98c85aafb270afe0207faca4e535c57e3470f6566d6deff55ae"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6c/ae/d26450834f0acc9e3d1f74508da6df1551ceab6c2ce0766a593362d6d57f/certifi-2021.10.8.tar.gz"
-    sha256 "78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/9f/c5/334c019f92c26e59637bb42bd14a190428874b2b2de75a355da394cf16c1/charset-normalizer-2.0.7.tar.gz"
-    sha256 "e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/62/08/e3fc7c8161090f742f504f40b1bccbfc544d4a4e09eb774bf40aafce5436/idna-3.3.tar.gz"
-    sha256 "9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
+    url "https://files.pythonhosted.org/packages/c2/51/32da03cf19d17d46cce5c731967bf58de9bd71db3a379932f53b094deda4/urllib3-1.26.13.tar.gz"
+    sha256 "c083dd0dce68dbfbe1129d5271cb90f9447dea7d52097c6e0126120c521ddea8"
   end
 
   def install

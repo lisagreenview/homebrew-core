@@ -1,11 +1,11 @@
 class Libgit2Glib < Formula
   desc "Glib wrapper library around libgit2 git access library"
   homepage "https://github.com/GNOME/libgit2-glib"
-  url "https://download.gnome.org/sources/libgit2-glib/0.99/libgit2-glib-0.99.0.1.tar.xz"
-  sha256 "e05a75c444d9c8d5991afc4a5a64cd97d731ce21aeb7c1c651ade1a3b465b9de"
-  license "LGPL-2.1"
-  revision 4
-  head "https://github.com/GNOME/libgit2-glib.git"
+  url "https://download.gnome.org/sources/libgit2-glib/1.0/libgit2-glib-1.0.0.1.tar.xz"
+  sha256 "460a5d6936950ca08d2d8518bfc90c12bb187cf6e674de715f7055fc58102b57"
+  license "LGPL-2.1-only"
+  revision 2
+  head "https://github.com/GNOME/libgit2-glib.git", branch: "master"
 
   livecheck do
     url :stable
@@ -13,18 +13,21 @@ class Libgit2Glib < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "14f4f4a3b09727ca9993953c5fa7e0b9d0dd991cd9f782cdd42d254e6317b974"
-    sha256 cellar: :any, monterey:      "f0882a1094ecc41ffba0e08d64de5681e7a71a0ad5126789c854d38c755cf58b"
-    sha256 cellar: :any, big_sur:       "88a012ad27e2056c313cad08039c2c2ac534ff6f383baae09363b357fcbf5e7e"
-    sha256 cellar: :any, catalina:      "804db5cc23243985293b05e7ab18c54a52e36cb4f339c5d9bbaaee5ac6ebdd39"
-    sha256 cellar: :any, mojave:        "bf0aacd695af9b723be16caaba4252e87bb1001ff4710872d4b5eceff7efe8f5"
-    sha256               x86_64_linux:  "95b4558001af9d732a9d9ab29bcb0cc096af93f7b495e196db9fb0b16a9f399a"
+    sha256 cellar: :any, arm64_ventura:  "f1f3b03757ba84f3f6b69a01f3d222fa44bab33560658b941b78c99d0dd35e90"
+    sha256 cellar: :any, arm64_monterey: "125c504581fd1b34aadab8cda48be795269e6af0c848944881db227bf9163243"
+    sha256 cellar: :any, arm64_big_sur:  "692762f5a7741277fb886352e7d359dd115102b5d1827177a339bae58bf371ff"
+    sha256 cellar: :any, ventura:        "e3a31913c1757e0d9a53fb6f7faf9a185e932cdfc447df59125ac0f3f9785f9c"
+    sha256 cellar: :any, monterey:       "f931d7b629529e10ebf2f90fa0cc4029881f8338a04ea7918c77b0c326503089"
+    sha256 cellar: :any, big_sur:        "3916e22446f0539587268585db1645c1d2e50dbe81a7a4f1e6b2c99c5b8e820a"
+    sha256 cellar: :any, catalina:       "a90784d98e2f541feab44f465c2244412315ec75f5af6a179a183c6f33a9d109"
+    sha256               x86_64_linux:   "f083f73ef071f7dbe11a419ec255511eb731a20d1421b280a2442db347266952"
   end
 
   depends_on "gobject-introspection" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
+  depends_on "python@3.10" => :build
   depends_on "vala" => :build
   depends_on "gettext"
   depends_on "glib"

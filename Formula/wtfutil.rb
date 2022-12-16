@@ -2,18 +2,20 @@ class Wtfutil < Formula
   desc "Personal information dashboard for your terminal"
   homepage "https://wtfutil.com"
   url "https://github.com/wtfutil/wtf.git",
-      tag:      "v0.40.0",
-      revision: "f20465340a7937aa24b73f25fbf36cdccc415790"
+      tag:      "v0.42.0",
+      revision: "a63329214c888cfbfc67c7ddcf31887c3c8a1c36"
   license "MPL-2.0"
   head "https://github.com/wtfutil/wtf.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "fa269f8f11c823a1bfb9bce0cf2f0d6b14e92f6d37bf4bfae640e681b21ee4d4"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ac63fe942934b8af64f084dda1386988322f4a46fe31b1895f101799fbf877c9"
-    sha256 cellar: :any_skip_relocation, monterey:       "d2ccd48fdef7ff5e979182bc53798fc995112fa3bbefabfe1c16d0f8f7427fd4"
-    sha256 cellar: :any_skip_relocation, big_sur:        "5d7ef886196dbaba38ba428a8ae8f39152175475701d89470e97e098eeb33dbe"
-    sha256 cellar: :any_skip_relocation, catalina:       "9b0741c101bec126592e676fcdccd6d962a9b46962e01da7cea719d6b09d5aa4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c0e0764599f54714457a3aa5e72a7b6176f7aa609e5fe6ea7c8b608024ad8820"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "29ce9ac3f0f4cd80a0f1d2bf2819c9c2b75313851bd0acac9a6c766c684bcaec"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b03f60d91829e8d51c3ec2c0fb673754d5ca68472fc9ab0f23260e90e043ae74"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "aed104aea6ffebb1ab51c69afbc75b3132c170f7d6d1779da1e24c6ce94e8717"
+    sha256 cellar: :any_skip_relocation, ventura:        "12f44c076779562bb3a454496c5d582e4c1d4e6cf921d6f0fad48fe2b945f143"
+    sha256 cellar: :any_skip_relocation, monterey:       "ff35df46d45719a6f42932ab619dad2ca2b287e89ef9fffbd4d682efaa65f6b2"
+    sha256 cellar: :any_skip_relocation, big_sur:        "e3e00f73dade6567164f653e0fc4cb81c3022d7b8734b224a50919f80881f71c"
+    sha256 cellar: :any_skip_relocation, catalina:       "cc59ae72e2e6ce858e5b2135c5e372439eea14d99e763d429967d867c9707be9"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "18896dc84daef54561d8a22833eca2b04a9345bf59bada7c43492d8bab5470ee"
   end
 
   depends_on "go" => :build

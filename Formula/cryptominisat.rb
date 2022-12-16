@@ -1,41 +1,46 @@
 class Cryptominisat < Formula
   desc "Advanced SAT solver"
   homepage "https://www.msoos.org/cryptominisat5/"
-  url "https://github.com/msoos/cryptominisat/archive/5.8.0.tar.gz"
-  sha256 "50153025c8503ef32f32fff847ee24871bb0fc1f0b13e17fe01aa762923f6d94"
+  url "https://github.com/msoos/cryptominisat/archive/5.11.4.tar.gz"
+  sha256 "abeecb29a73e8566ae6e9afd229ec991d95b138985565b2378af95ef1ce1d317"
   # Everything that's needed to run/build/install/link the system is MIT licensed. This allows
   # easy distribution and running of the system everywhere.
   license "MIT"
-  revision 1
 
   livecheck do
-    url "https://github.com/msoos/cryptominisat.git"
+    url :stable
     regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "cbfd9b642da561b05f4b73677892b9175b87af7c1bd43542f9326b164bfe330f"
-    sha256                               arm64_big_sur:  "8b9940bdf5011a8f060de82576726b7138a60975f56fcd7113b692e026444021"
-    sha256 cellar: :any,                 monterey:       "0f9ea0f5cc7850fcba9c5f72a13dcd03bad10f1b200d57c70aebde2c9aa9b67e"
-    sha256                               big_sur:        "ca952863f4a030cff0f60b3dc1b598c9a070460b5372577e63c8df577008e5eb"
-    sha256                               catalina:       "9314367f35d7d82790d4840b04d744fba37196f068fa38b899c7ac4c7e8f987b"
-    sha256                               mojave:         "2ad7c47169eae4780e42ddec65f1f6144fc59ee5585dd8d26ff5d270d25d9cc3"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "add4bd75d5ec2f5a1ce559282d81e207e99cd6da2b90234a2971808e3e8a222b"
+    sha256 cellar: :any,                 arm64_ventura:  "4ed00a60028407fdf43e94925600a48d17f17e25033699ab3a54f62bef5694fc"
+    sha256 cellar: :any,                 arm64_monterey: "a37911641a25c49ef4a4152531c93679f4c42694688d7695e84b31fd0f56df4a"
+    sha256 cellar: :any,                 arm64_big_sur:  "c30ac0d1f97c3138a1d75c8519718c38d9481237ef891a4aa9991de796db2927"
+    sha256 cellar: :any,                 ventura:        "59efec02543f565ec7edbc547b2162659f3a8802fe955d3257efa3affb038827"
+    sha256 cellar: :any,                 monterey:       "8432fed87a785122585fcbee69a3256fcb9c537cbd6d6a404d63226a5b15262e"
+    sha256 cellar: :any,                 big_sur:        "c4ff5942f8bfccf27d37065f8b010b72fca214641f20530ae4b95831e48d1826"
+    sha256 cellar: :any,                 catalina:       "ef55bbbfe712fe39128d4abbd1cf023a2b496b1e92029de0ea32ce5fb13914a2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5b469605be2c28104303217c39f752079c51e887b245c306ff831ccb9051a62f"
   end
 
   depends_on "cmake" => :build
+  depends_on "python@3.10" => [:build, :test]
   depends_on "boost"
-  depends_on "python@3.9"
+
+  def python3
+    "python3.10"
+  end
 
   def install
     # fix audit failure with `lib/libcryptominisat5.5.7.dylib`
     inreplace "src/GitSHA1.cpp.in", "@CMAKE_CXX_COMPILER@", ENV.cxx
 
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args, "-DNOM4RI=ON", "-DCMAKE_INSTALL_RPATH=#{rpath}"
-      system "make", "install"
-    end
+    args = %W[-DNOM4RI=ON -DMIT=ON -DCMAKE_INSTALL_RPATH=#{rpath}]
+    system "cmake", "-S", ".", "-B", "build", *args, *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
+
+    system python3, *Language::Python.setup_install_args(prefix, python3)
   end
 
   test do
@@ -57,6 +62,6 @@ class Cryptominisat < Formula
       solver.add_clause([-1, 2, 3])
       print(solver.solve()[1])
     EOS
-    assert_equal "(None, True, False, True)\n", shell_output("#{Formula["python@3.9"].opt_bin}/python3 test.py")
+    assert_equal "(None, True, False, True)\n", shell_output("#{python3} test.py")
   end
 end

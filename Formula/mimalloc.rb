@@ -1,34 +1,31 @@
 class Mimalloc < Formula
   desc "Compact general purpose allocator"
   homepage "https://github.com/microsoft/mimalloc"
-  # 2.x series is in beta and shouldn't be upgraded to until it's stable
-  url "https://github.com/microsoft/mimalloc/archive/refs/tags/v1.7.2.tar.gz"
-  sha256 "b1912e354565a4b698410f7583c0f83934a6dbb3ade54ab7ddcb1569320936bd"
+  url "https://github.com/microsoft/mimalloc/archive/refs/tags/v2.0.7.tar.gz"
+  sha256 "f23aac6c73594e417af50cb38f1efed88ef1dc14a490f0eff07c7f7b079810a4"
   license "MIT"
 
   livecheck do
     url :stable
-    regex(/^v?(1(?:\.\d+)+)$/i)
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "d8b04769cce9dc72da71bc7ea8709ab7892f9f6f224cdc079a4c810fe1530063"
-    sha256 cellar: :any,                 arm64_big_sur:  "d58eb09178145c160f13902a84cbfb555c814c764d89b03a96294ed2ff4e1375"
-    sha256 cellar: :any,                 monterey:       "d2609eff9603a69d8a111a83aeebd47c9c3093b28d100f3e3a1a2d391b0c91d1"
-    sha256 cellar: :any,                 big_sur:        "d9a90d0801403374429de0014eb0a8ce54c943bd933184a02a90312eef9fbcfa"
-    sha256 cellar: :any,                 catalina:       "f3a16ec9db7143ff17d0dafba31f952f71299fd3cf121229962f901aeb6a348b"
-    sha256 cellar: :any,                 mojave:         "1b8ccb7e87846a9625645a9c6f6fb20ff3812eb28b9dc3f35607be223c16a21c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a52e4812137cb1272b5887a554eaea818ed04bbcb69da2c49a8d2402df02fdcf"
+    sha256 cellar: :any,                 arm64_ventura:  "3628509c807ce90ddbd4f31002a9457e8f517bc8a752a1f40a2831e93f9eea5a"
+    sha256 cellar: :any,                 arm64_monterey: "b59c78d2b01ae6199bfe1d1dad6f5bbdc08a7322c4b66314ecdae1abffb06140"
+    sha256 cellar: :any,                 arm64_big_sur:  "269def3ed2318340f1d60695d4928261cb37c809d0535707af1cfd3effa48022"
+    sha256 cellar: :any,                 ventura:        "0ced178e11021557b80b1757f50f0eb7d2df234cc13b80b280d2ab566bf76a57"
+    sha256 cellar: :any,                 monterey:       "00ca941816ee794e5cb573ec832e4391d716d1b6e708d48a89ec940a4a5386f9"
+    sha256 cellar: :any,                 big_sur:        "a2e3579c97a035bfdf4e611c8a6cef68fa5e56dcb770047adb2c73f1839f1fed"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "95113a19ace175085e8bc78020b42243c375cb36e76624d947c6e7a336db396e"
   end
 
   depends_on "cmake" => :build
 
   def install
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args, "-DMI_INSTALL_TOPLEVEL=ON"
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", "-DMI_INSTALL_TOPLEVEL=ON", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
     pkgshare.install "test"
   end
 

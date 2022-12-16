@@ -1,16 +1,17 @@
 class ElanInit < Formula
   desc "Lean Theorem Prover installer and version manager"
   homepage "https://github.com/leanprover/elan"
-  url "https://github.com/leanprover/elan/archive/v1.3.1.tar.gz"
-  sha256 "8e1380a1cb20cec54f07e30519ad7bc0179d9e3d68d33c02d0476248322b5015"
-  license "Apache-2.0"
-  head "https://github.com/leanprover/elan.git"
+  url "https://github.com/leanprover/elan/archive/v1.4.2.tar.gz"
+  sha256 "d15dc93575601224b73c4744c27f28cb118655659b20d444e93ed63ba30b7def"
+  license any_of: ["Apache-2.0", "MIT"]
+  head "https://github.com/leanprover/elan.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, monterey:     "b3fe1b75cae3f28df2396ed8135c81cce9aba4983818c23cc512e9f5bf7fad1d"
-    sha256 cellar: :any_skip_relocation, big_sur:      "4f5f7dc532d5336c0cdb6842d24e47f141baaaa421234231c018606c9e640aca"
-    sha256 cellar: :any_skip_relocation, catalina:     "da690e90eb12525fb959d870768efc6aafc52bf89079b55dab286aba933cbf47"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "b911325b4e04255311dda1dab5ab19516f3196ba63b11170d782149d2a5f36c7"
+    sha256 cellar: :any_skip_relocation, ventura:      "d075ba86ef1a1bf8030d50c10ec9e6963ba774d82ed0e0012f5377db76033727"
+    sha256 cellar: :any_skip_relocation, monterey:     "a68263b2e47ea890c3494fbab60501d547ca2d7921993828b67ed3fd8deacf37"
+    sha256 cellar: :any_skip_relocation, big_sur:      "83b6e3e898f5256f01a55a5b55928d5223c1ae48046526564e3cfc27deb12e70"
+    sha256 cellar: :any_skip_relocation, catalina:     "d10145a7f26ff7d328e613092670a59cbf28c1d172c365636c749eaff08238b2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "9d562c8d7257a8d6109c251c7b92f17dccb53fa55317b5c1d1a50d1d235431f1"
   end
 
   depends_on "rust" => :build
@@ -32,12 +33,7 @@ class ElanInit < Formula
       bin.install_symlink "elan-init" => link
     end
 
-    bash_output = Utils.safe_popen_read(bin/"elan", "completions", "bash")
-    (bash_completion/"elan").write bash_output
-    zsh_output = Utils.safe_popen_read(bin/"elan", "completions", "zsh")
-    (zsh_completion/"_elan").write zsh_output
-    fish_output = Utils.safe_popen_read(bin/"elan", "completions", "fish")
-    (fish_completion/"elan.fish").write fish_output
+    generate_completions_from_executable(bin/"elan", "completions", base_name: "elan")
   end
 
   test do

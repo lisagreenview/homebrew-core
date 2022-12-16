@@ -1,8 +1,8 @@
 class Bmake < Formula
   desc "Portable version of NetBSD make(1)"
   homepage "https://www.crufty.net/help/sjg/bmake.html"
-  url "https://www.crufty.net/ftp/pub/sjg/bmake-20211024.tar.gz"
-  sha256 "b5a3305bdb328b1383982125e90785baa30bc2ff024a1b0fda3d5d5beca82ac9"
+  url "https://www.crufty.net/ftp/pub/sjg/bmake-20220928.tar.gz"
+  sha256 "c804b77de3feb8e31dee2a4c9fb1e9ec24c5a34764e7a2815c88b4ed01650e90"
   license "BSD-3-Clause"
 
   livecheck do
@@ -11,12 +11,14 @@ class Bmake < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5de0409dc0181350d36bcaa0512463e140fd4a56cd755dd0de58dcb22d9c4982"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b83a451f2a2655ef3f805e309f612b2157e592de162f916cfb5e6367d3e86e76"
-    sha256                               monterey:       "78ca4e2a547e873257b2a7631b02c602c67cf0641d1e15c93082936eabb6deea"
-    sha256                               big_sur:        "666ff7e99b1792040e47e02e61969e34e5e338fbf5ae3577ae723eb6fbc423f3"
-    sha256                               catalina:       "6182afba32e950f0f077110e3e9d6cb2fbe0017450b257cd364e8fbe68f02346"
-    sha256                               x86_64_linux:   "b6a4a7a09aacf87a1f56b5ff81b124517c023b395a275c9286886b7cd18c25a4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e536bcfc52946f631c00183164126e6fd26006acd27b21e7da7b06ab310300d4"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "6a4b5a42dadc037e158e4cfe5571b3adf9882024be07147431adfe2617a96a31"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "95a14d565b7eec3c2ca6d3ecb793d69cc2a29eddbfa4d8a891afe66e2e2ae945"
+    sha256                               ventura:        "1549aa5b240a604482f5e0b1838abcd88e40670847469d8515f6d66167be603c"
+    sha256                               monterey:       "801cbdcbe3ce5ff1e436b511923e75074a825e7d8e34cc80f7ce151a64cfbcd0"
+    sha256                               big_sur:        "d1e86cb4561374d4fa6d18c5b3e00afd4055640b10061c0c62b564ec8b522975"
+    sha256                               catalina:       "ef5c79a571b508e81a122960f1b3fa11a0640ce315c0595ed3030ea6dce100ee"
+    sha256                               x86_64_linux:   "0997b8c0c53881ead6f629f2a7d06dc88bcd6583c0ce6861d1e2351afe533e82"
   end
 
   def install

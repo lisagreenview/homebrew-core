@@ -1,8 +1,8 @@
 class Mercury < Formula
   desc "Logic/functional programming language"
   homepage "https://mercurylang.org/"
-  url "https://dl.mercurylang.org/release/mercury-srcdist-20.06.1.tar.gz"
-  sha256 "ef093ae81424c4f3fe696eff9aefb5fb66899e11bb17ae0326adfb70d09c1c1f"
+  url "https://dl.mercurylang.org/release/mercury-srcdist-22.01.4.tar.gz"
+  sha256 "7755a03142002f4a31a73effcca3c9592bba25da38a479789ff45e9cc99353ed"
   license all_of: ["GPL-2.0-only", "LGPL-2.0-only", "MIT"]
 
   livecheck do
@@ -11,27 +11,30 @@ class Mercury < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 monterey:     "529ee1af9b6aaf8a8173af8f2208007599ae96c6ef1275ddb03497181f6bb6d7"
-    sha256 cellar: :any,                 big_sur:      "8b37f68829e59efd2127a32dfbcbf80d617196b6f35c970e1d4727b5076abb39"
-    sha256 cellar: :any,                 catalina:     "2b98c59507d6aa72db55b8864d9818f302fef92b5bbdc6630287276494a3bc62"
-    sha256 cellar: :any,                 mojave:       "e0011e25fa5732a2a271f30c5589c35f1caeb7cbab44ccba2271ab7bd2632243"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "c1313fc019178406ba574ef1f9ffdf9b724a337e6831fc54b4a7aa68e02d2635"
+    sha256 cellar: :any,                 arm64_ventura:  "a5db345a7f91984e9453a5eb0ecf8dd607fb94b9a0c223fc468c24de1900d831"
+    sha256 cellar: :any,                 arm64_monterey: "dba557568c01b9133e3468ca27b9a1b64087a21345bc61b1c060e8999f1dc105"
+    sha256 cellar: :any,                 arm64_big_sur:  "ad6fcd4d465d6633392227ea1388d7f7d37df2d51f5f20657b919fa1f8823d9c"
+    sha256 cellar: :any,                 ventura:        "1dcbd0c77ec09e80866a9d28152901b09b9d77bad76926866aac70b83c9e950c"
+    sha256 cellar: :any,                 monterey:       "007f5a1b58e2c6033e3300b0f8241a60de14a63e4c26eba650e823dd59f465e7"
+    sha256 cellar: :any,                 big_sur:        "877d19a286015dcf5ea72d8633022ff83ffe7662b1ced07cdede3d751b7f0fc4"
+    sha256 cellar: :any,                 catalina:       "a294e12fed0a1752bac9f139f47dfe2676dfb871123a32bd03a3fad000a4d52c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9bd92d59afaeb95687bdf12756bf69ca7438ae153b05467961ef789f38aeb941"
   end
 
   depends_on "openjdk"
 
-  uses_from_macos "flex"
+  uses_from_macos "bison" => :build
+  uses_from_macos "flex" => :build
 
   def install
     system "./configure", "--prefix=#{prefix}",
-            "--mandir=#{man}",
-            "--infodir=#{info}",
-            "mercury_cv_is_littleender=yes" # Fix broken endianness detection
-
+                          "--mandir=#{man}",
+                          "--infodir=#{info}",
+                          "mercury_cv_is_littleender=yes" # Fix broken endianness detection
     system "make", "install", "PARALLEL=-j"
 
     # Remove batch files for windows.
-    rm Dir.glob("#{bin}/*.bat")
+    bin.glob("*.bat").map(&:unlink)
   end
 
   test do
@@ -47,12 +50,12 @@ class Mercury < Formula
           io.write_string("#{test_string}", IOState_in, IOState_out).
     EOS
 
-    system "#{bin}/mmc", "-o", "hello_c", "hello"
+    system bin/"mmc", "-o", "hello_c", "hello"
     assert_predicate testpath/"hello_c", :exist?
 
     assert_equal test_string, shell_output("#{testpath}/hello_c")
 
-    system "#{bin}/mmc", "--grade", "java", "hello"
+    system bin/"mmc", "--grade", "java", "hello"
     assert_predicate testpath/"hello", :exist?
 
     assert_equal test_string, shell_output("#{testpath}/hello")

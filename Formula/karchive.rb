@@ -1,8 +1,8 @@
 class Karchive < Formula
   desc "Reading, creating, and manipulating file archives"
   homepage "https://api.kde.org/frameworks/karchive/html/index.html"
-  url "https://download.kde.org/stable/frameworks/5.88/karchive-5.88.0.tar.xz"
-  sha256 "4b9979a3f0c1acb9822e0bea4b84e84970b9ca0a0e4daf914a35fe079f4ceae3"
+  url "https://download.kde.org/stable/frameworks/5.101/karchive-5.101.0.tar.xz"
+  sha256 "58bcb6c61bc4a3fe48a0cbeaf392d42b6b8d33e1bc4c51faf24db0912ecfa9b0"
   license all_of: [
     "BSD-2-Clause",
     "LGPL-2.0-only",
@@ -19,10 +19,13 @@ class Karchive < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "5a61c9b9805072507e5193f15d0e39370b476d889a34bc9d3628ceaea9d1abfb"
-    sha256 cellar: :any,                 big_sur:       "640341f71e945abad35ea9e64f3800c47b6c5b76c06a06300f415ea710c253ec"
-    sha256 cellar: :any,                 catalina:      "de15c7ba052897d75f386ac6c5b89096ef831677179042bf375d396c5531bd01"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "757039b15739348a506b67dae58cacb8d7a04e5438a76eec66bfac2b1d7cbaf0"
+    sha256 cellar: :any,                 arm64_ventura:  "222afc155e6c187e7aeb00932c9e4e09f5aad3f9ff0b56380b7a45d213cbee4f"
+    sha256 cellar: :any,                 arm64_monterey: "a22978e218a3034d1ed5740a94cc272e6ce61f7a5edd103bbfab08b4425d5a28"
+    sha256 cellar: :any,                 arm64_big_sur:  "37c7143acef642993aed5995edf773227cf2a147e043ff5c68b12df96f7d2a6b"
+    sha256 cellar: :any,                 ventura:        "32d42f0d4837e46463bd43b50e0cf18cac85f218db4aac6d792fa6b6261706bb"
+    sha256 cellar: :any,                 monterey:       "353caefcf5d39691951ce2f158e1dc24d24278b423c9b902556e343ace3b2cfb"
+    sha256 cellar: :any,                 big_sur:        "cda0bb66b6a25d665b99bca6ad2711a8219260ca70d96e12016a9bdc0345005b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "af7c9d50284184a7b1558f8bd74a6945d7abfa0a26f7ac808fd8a41802a4034f"
   end
 
   depends_on "cmake" => [:build, :test]
@@ -32,22 +35,21 @@ class Karchive < Formula
 
   depends_on "qt@5"
   depends_on "xz"
+  depends_on "zstd"
 
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
 
-  on_linux do
-    depends_on "gcc"
-  end
-
   fails_with gcc: "5"
 
   def install
-    args = std_cmake_args
-    args << "-DBUILD_TESTING=OFF"
-    args << "-DBUILD_QCH=ON"
+    args = std_cmake_args + %w[
+      -S .
+      -B build
+      -DBUILD_QCH=ON
+    ]
 
-    system "cmake", "-S", ".", "-B", "build", *args
+    system "cmake", *args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
@@ -56,8 +58,11 @@ class Karchive < Formula
 
   test do
     ENV.delete "CPATH"
-    args = std_cmake_args
-    args << "-DQt5Core_DIR=#{Formula["qt@5"].opt_prefix/"lib/cmake/Qt5Core"}"
+    args = std_cmake_args + %W[
+      -DQt5Core_DIR=#{Formula["qt@5"].opt_lib}/cmake/Qt5Core
+      -DQT_MAJOR_VERSION=5
+    ]
+    args << "-DCMAKE_BUILD_RPATH=#{lib}" if OS.linux?
 
     %w[bzip2gzip
        helloworld
@@ -65,8 +70,17 @@ class Karchive < Formula
        unzipper].each do |test_name|
       mkdir test_name.to_s do
         system "cmake", (pkgshare/"examples/#{test_name}"), *args
-        system "make"
+        system "cmake", "--build", "."
       end
     end
+
+    assert_match "The whole world inside a hello.", shell_output("helloworld/helloworld 2>&1")
+    assert_predicate testpath/"hello.zip", :exist?
+
+    system "unzipper/unzipper", "hello.zip"
+    assert_predicate testpath/"world", :exist?
+
+    system "tarlocalfiles/tarlocalfiles", "world"
+    assert_predicate testpath/"myFiles.tar.gz", :exist?
   end
 end

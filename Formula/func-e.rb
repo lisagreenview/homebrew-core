@@ -1,14 +1,19 @@
 class FuncE < Formula
   desc "Easily run Envoy"
   homepage "https://func-e.io"
-  url "https://github.com/tetratelabs/func-e/archive/v1.1.0.tar.gz"
-  sha256 "0e5d76b5907142800e67417684996f57b0851b55cdb464e3c79e89d54c802fc2"
+  url "https://github.com/tetratelabs/func-e/archive/v1.1.3.tar.gz"
+  sha256 "2dd1598efd743dae38a55f6943eaa62d17f2db9996be249edf5e52495338b5e9"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, big_sur:      "20d2ff6b6c91e7776e13bfdf912abbc7a1986e67c93aceb3f892bc8e8337ee0a"
-    sha256 cellar: :any_skip_relocation, catalina:     "3c558204d6d49bc30c37880179416b52c5b10d150ca3b4e4378d0823e013c75b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "f3de432998e3ddc1b559e8438798e64f4645f4d6ad23addf28a5f15dcc7d16bc"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "9e2d726b8a4d2449dee9e16294eaf14e5bbdc1e22bc4b0bb35bcc221faf8f59a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "f034e0cdc13ac07a3814ce2554298f9a66938c8116a650ead07fae49b61c445c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4f1f8fbb93ab264ec506a0f4bf7092efe15c7eebeb2034da13d987e762de6f96"
+    sha256 cellar: :any_skip_relocation, ventura:        "1976afda42dcfc3d3a572b47c8668bb374e9ff23c32609c40583456ca51a78d8"
+    sha256 cellar: :any_skip_relocation, monterey:       "95395d54f43e9399c31af694de522725e7624629563d306ae50cbe0f51070d13"
+    sha256 cellar: :any_skip_relocation, big_sur:        "088a2729824a34ce2627ac6ac501cb0d37a851ab922e1fa4d241a69e14cd040d"
+    sha256 cellar: :any_skip_relocation, catalina:       "a535b83529d5a0e2d2d66cd0809c3a4a932df13dc1d43edaccd6f936799a1c56"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ecc20185bdb618f8e4009ef9378f944be0f8de420cbfe184e31d01548d4cef2b"
   end
 
   depends_on "go" => :build
@@ -18,7 +23,7 @@ class FuncE < Formula
       -s -w
       -X main.version=#{version}
     ]
-    system "go", "build", *std_go_args(ldflags: ldflags.join(" "))
+    system "go", "build", *std_go_args(ldflags: ldflags)
   end
 
   test do

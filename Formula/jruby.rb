@@ -1,8 +1,8 @@
 class Jruby < Formula
   desc "Ruby implementation in pure Java"
   homepage "https://www.jruby.org/"
-  url "https://search.maven.org/remotecontent?filepath=org/jruby/jruby-dist/9.3.0.0/jruby-dist-9.3.0.0-bin.tar.gz"
-  sha256 "2dc1f85936d3ff3adc20d90e5f4894499c585a7ea5fedec67154e2f9ecb1bc9b"
+  url "https://search.maven.org/remotecontent?filepath=org/jruby/jruby-dist/9.3.9.0/jruby-dist-9.3.9.0-bin.tar.gz"
+  sha256 "251e6dd8d1d2f82922c8c778d7857e1bef82fe5ca2cf77bc09356421d0b05ab8"
   license any_of: ["EPL-2.0", "GPL-2.0-only", "LGPL-2.1-only"]
 
   livecheck do
@@ -11,13 +11,14 @@ class Jruby < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2370b5caecbf6b5ee27699744ee84d7101df917514e144314ef95abad66125f6"
-    sha256 cellar: :any,                 arm64_big_sur:  "4e588bf056c56b699fbe79b3f6e3f1726b9a129bd20d7e6132e18e3e7c29ce8c"
-    sha256 cellar: :any,                 monterey:       "114711466814ecaea86a7f44df271686c8a453eac705e2c6ab07f327bc3061bc"
-    sha256 cellar: :any,                 big_sur:        "b7741941d9b16c003932b4143ccfbfa0fe3e942f9bba3c8ef32f596bc29dcdd7"
-    sha256 cellar: :any,                 catalina:       "b7741941d9b16c003932b4143ccfbfa0fe3e942f9bba3c8ef32f596bc29dcdd7"
-    sha256 cellar: :any,                 mojave:         "b7741941d9b16c003932b4143ccfbfa0fe3e942f9bba3c8ef32f596bc29dcdd7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "22af5cc9e3d2a67c04669b80642c56230a0b5ae387deecf6cd1b4c9a9feca694"
+    sha256 cellar: :any,                 arm64_ventura:  "d98703ae0951da281bd384320f5b0559d16d6495f42e02532abb84a5af635bbf"
+    sha256 cellar: :any,                 arm64_monterey: "d98703ae0951da281bd384320f5b0559d16d6495f42e02532abb84a5af635bbf"
+    sha256 cellar: :any,                 arm64_big_sur:  "efca1f053f58c41f50a421d3da5735c41c1f46577c4a82833ea23ee898f8fab5"
+    sha256 cellar: :any,                 ventura:        "4cfa81cd683b6196188b607812b160bdd502472dfc229388a9c28d3d80ad906f"
+    sha256 cellar: :any,                 monterey:       "4cfa81cd683b6196188b607812b160bdd502472dfc229388a9c28d3d80ad906f"
+    sha256 cellar: :any,                 big_sur:        "4cfa81cd683b6196188b607812b160bdd502472dfc229388a9c28d3d80ad906f"
+    sha256 cellar: :any,                 catalina:       "4cfa81cd683b6196188b607812b160bdd502472dfc229388a9c28d3d80ad906f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e3da658a74a7bda127be3e2636b167593be8e28f141b0af212c1742887582097"
   end
 
   depends_on "openjdk"
@@ -28,7 +29,7 @@ class Jruby < Formula
 
     cd "bin" do
       # Prefix a 'j' on some commands to avoid clashing with other rubies
-      %w[ast rake rdoc ri racc].each { |f| mv f, "j#{f}" }
+      %w[ast bundle bundler rake rdoc ri racc].each { |f| mv f, "j#{f}" }
       # Delete some unnecessary commands
       rm "gem" # gem is a wrapper script for jgem
       rm "irb" # irb is an identical copy of jirb

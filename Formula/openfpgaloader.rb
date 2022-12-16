@@ -1,25 +1,27 @@
 class Openfpgaloader < Formula
   desc "Universal utility for programming FPGA"
   homepage "https://github.com/trabucayre/openFPGALoader"
-  url "https://github.com/trabucayre/openFPGALoader/archive/v0.5.0.tar.gz"
-  sha256 "39c9686bdfcfa96b6bb1d8b37a8a53732372c16cda562036abe9930b61b29e97"
+  url "https://github.com/trabucayre/openFPGALoader/archive/v0.9.1.tar.gz"
+  sha256 "6520475fb98491aa040f35a19dd688be0729c2b9da81857e6963360e5142d02c"
   license "Apache-2.0"
   head "https://github.com/trabucayre/openFPGALoader.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "648e0b46b3111791b7b30de236fdc8edcb0118e122d87cef7017b64751db5e64"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "77483712fb4bc07885f71696245d13d3bbb34255db2e94188588345b52f81866"
-    sha256 cellar: :any_skip_relocation, monterey:       "6a71a65727b492748b5cb8ded309a519cc0f332eeb43a609b494812266c8ece6"
-    sha256 cellar: :any_skip_relocation, big_sur:        "33f9a2c0324595ab30136b1f83e5b97db844c362f7b5543fa009796145f23f42"
-    sha256 cellar: :any_skip_relocation, catalina:       "01322e5f63e499776d44a32f7752b71c7238f633e51ef46d46a5b8aaebc73929"
-    sha256 cellar: :any_skip_relocation, mojave:         "759abeb1d7b64b34f216518ffebc9584bccd6eef7003c29eb11740cd49c38549"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d30a0f2f57e76b8e667eecdf85281fc619dcddb9d8e6f3b2ba7491bb01ca8fb8"
+    sha256 cellar: :any,                 arm64_ventura:  "9275e1d12a9ff88eeb945d361cee67b2f7058c0b8c69819391b509f992076bd7"
+    sha256 cellar: :any,                 arm64_monterey: "e4acec5a1d3896d70813ccc01f5c1283c506537db2fd4c49cd2b1c3590dba450"
+    sha256 cellar: :any,                 arm64_big_sur:  "1605fdd27f43f3c6286d04fe945383893789a6508ff3799ec662c968ba574097"
+    sha256 cellar: :any,                 ventura:        "7fcd65145765e1ca0764657225874b3f61539ed1e57bca9b20d8df966c290863"
+    sha256 cellar: :any,                 monterey:       "fc20318f66b56eea629def75b26d31dd44455518bc2d01edac6a7cab4283cd44"
+    sha256 cellar: :any,                 big_sur:        "cab3e8c82802be5e6cef1bf32d7b4de819bbecc1c4241707968efeaff9595a88"
+    sha256 cellar: :any,                 catalina:       "a9a01e282a2a577c4c20f0dd6d1266695696b9851285454c4472e701639c2d90"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bf8627addd17ad6ca20bbad18bd30f9bc59e613acf0ef5a80376d1b7d6ba659c"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "libftdi"
   depends_on "libusb"
+  uses_from_macos "zlib"
 
   def install
     system "cmake", "-S", ".", "-B", "build", *std_cmake_args

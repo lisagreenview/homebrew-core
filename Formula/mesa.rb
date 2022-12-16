@@ -3,24 +3,37 @@ class Mesa < Formula
 
   desc "Graphics Library"
   homepage "https://www.mesa3d.org/"
-  url "https://mesa.freedesktop.org/archive/mesa-21.3.0.tar.xz"
-  sha256 "a2753c09deef0ba14d35ae8a2ceff3fe5cd13698928c7bb62c2ec8736eb09ce1"
   license "MIT"
   head "https://gitlab.freedesktop.org/mesa/mesa.git", branch: "main"
 
-  bottle do
-    sha256 arm64_monterey: "c43f818be097a86009dc39c9f4f3826511f5ab783dbd3c4d307202efbf2e241b"
-    sha256 arm64_big_sur:  "e8ba6edd75b81a5639b3d700e5284e875dd76c3ce800e83b83c849172a82f2da"
-    sha256 monterey:       "1ed99c219fc789d87f997d0bc76f73e2d6498bd6a2a6a4209679bfa8c1ef5079"
-    sha256 big_sur:        "0cb0f0ea8e57c0e7c3707949e582bd20b7d9cfb03d598361095cb9a29d75f035"
-    sha256 catalina:       "cedeacee7e167fcf1295bec493384490df08cddab15b5fce0a0d957590a5edb3"
-    sha256 x86_64_linux:   "9f2538d09c8df76926d374bf224df91d96269b4519b694b676dcec2ab295ccde"
+  stable do
+    url "https://mesa.freedesktop.org/archive/mesa-22.3.0.tar.xz"
+    sha256 "644bf936584548c2b88762111ad58b4aa3e4688874200e5a4eb74e53ce301746"
+
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/f0a40cf7d70ee5a25639b91d9a8088749a2dd04e/mesa/fix-build-on-macOS.patch"
+      sha256 "a9b646e48d4e4228c3e06d8ca28f65e01e59afede91f58d4bd5a9c42a66b338d"
+    end
   end
 
+  bottle do
+    sha256 arm64_ventura:  "0ee197a6b33084712c28a0c301459c5b32fcf4ded6549dad3db3c9427ffcc8f3"
+    sha256 arm64_monterey: "ddd377f1027b8ea1c6198e276e66aecf5b28669c46a3972bb0eb5a859fb29c65"
+    sha256 arm64_big_sur:  "ba60c4a68d1619b475fe103fd6461e19977a0be7d5165c9b673f30a724b46d37"
+    sha256 ventura:        "26cb5f6e6216568dccd7ead8607059178f2857e88383c52baa528a4c5c6c66bf"
+    sha256 monterey:       "9deff26e1f7f672384bc4f45b77f8098fdeefd0459afa5b033f550b8f2eb0145"
+    sha256 big_sur:        "da8555800d3a5c1c8f0834fb2d076ae918dd39482dcaf9bafd31e8a7d5cc9b07"
+    sha256 x86_64_linux:   "4d26c18b5827c1097bd502a005c97efe4eda1f081096a9ce9070133b962dcf53"
+  end
+
+  depends_on "bison" => :build # can't use form macOS, needs '> 2.3'
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
-  depends_on "python@3.9" => :build
+  depends_on "pygments" => :build
+  depends_on "python@3.10" => :build
+  depends_on "xorgproto" => :build
+
   depends_on "expat"
   depends_on "gettext"
   depends_on "libx11"
@@ -28,7 +41,6 @@ class Mesa < Formula
   depends_on "libxdamage"
   depends_on "libxext"
 
-  uses_from_macos "bison" => :build
   uses_from_macos "flex" => :build
   uses_from_macos "llvm"
   uses_from_macos "ncurses"
@@ -36,7 +48,8 @@ class Mesa < Formula
 
   on_linux do
     depends_on "elfutils"
-    depends_on "gcc"
+    depends_on "glslang"
+    depends_on "gzip"
     depends_on "libdrm"
     depends_on "libva"
     depends_on "libvdpau"
@@ -44,7 +57,6 @@ class Mesa < Formula
     depends_on "libxrandr"
     depends_on "libxshmfence"
     depends_on "libxv"
-    depends_on "libxvmc"
     depends_on "libxxf86vm"
     depends_on "lm-sensors"
     depends_on "wayland"
@@ -54,52 +66,59 @@ class Mesa < Formula
   fails_with gcc: "5"
 
   resource "Mako" do
-    url "https://files.pythonhosted.org/packages/af/b6/42cd322ae555aa770d49e31b8c5c28a243ba1bbb57ad927e1a5f5b064811/Mako-1.1.6.tar.gz"
-    sha256 "4e9e345a41924a954251b95b4b28e14a301145b544901332e658907a7464b6b2"
+    url "https://files.pythonhosted.org/packages/05/5f/2ba6e026d33a0e6ddc1dddf9958677f76f5f80c236bd65309d280b166d3e/Mako-1.2.4.tar.gz"
+    sha256 "d60a3903dc3bb01a18ad6a89cdbe2e4eadc69c0bc8ef1e3773ba53d44c3f7a34"
+  end
+
+  resource "MarkupSafe" do
+    url "https://files.pythonhosted.org/packages/1d/97/2288fe498044284f39ab8950703e88abbac2abbdf65524d576157af70556/MarkupSafe-2.1.1.tar.gz"
+    sha256 "7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"
   end
 
   resource "glxgears.c" do
-    url "https://gitlab.freedesktop.org/mesa/demos/-/raw/faaa319d704ac677c3a93caadedeb91a4a74b7a7/src/xdemos/glxgears.c"
+    url "https://gitlab.freedesktop.org/mesa/demos/-/raw/db5ad06a346774a249b22797e660d55bde0d9571/src/xdemos/glxgears.c"
     sha256 "3873db84d708b5d8b3cac39270926ba46d812c2f6362da8e6cd0a1bff6628ae6"
   end
 
   resource "gl_wrap.h" do
-    url "https://gitlab.freedesktop.org/mesa/demos/-/raw/faaa319d704ac677c3a93caadedeb91a4a74b7a7/src/util/gl_wrap.h"
-    sha256 "c727b2341d81c2a1b8a0b31e46d24f9702a1ec55c8be3f455ddc8d72120ada72"
+    url "https://gitlab.freedesktop.org/mesa/demos/-/raw/ddc35ca0ea2f18c5011c5573b4b624c128ca7616/src/util/gl_wrap.h"
+    sha256 "41f5a84f8f5abe8ea2a21caebf5ff31094a46953a83a738a19e21c010c433c88"
   end
 
   def install
-    ENV.prepend_path "PATH", Formula["python@3.9"].opt_libexec/"bin"
+    venv_root = buildpath/"venv"
+    venv = virtualenv_create(venv_root, "python3.10")
 
-    venv_root = libexec/"venv"
-    venv = virtualenv_create(venv_root, "python3")
-    venv.pip_install resource("Mako")
+    %w[Mako MarkupSafe].each do |res|
+      venv.pip_install resource(res)
+    end
 
     ENV.prepend_path "PATH", "#{venv_root}/bin"
 
-    mkdir "build" do
-      args = ["-Db_ndebug=true"]
+    args = ["-Db_ndebug=true"]
 
-      if OS.linux?
-        args << "-Dplatforms=x11,wayland"
-        args << "-Dglx=auto"
-        args << "-Ddri3=true"
-        args << "-Ddri-drivers=auto"
-        args << "-Dgallium-drivers=auto"
-        args << "-Dgallium-omx=disabled"
-        args << "-Degl=true"
-        args << "-Dgbm=true"
-        args << "-Dopengl=true"
-        args << "-Dgles1=true"
-        args << "-Dgles2=true"
-        args << "-Dgallium-xvmc=disabled"
-        args << "-Dvalgrind=false"
-        args << "-Dtools=drm-shim,etnaviv,freedreno,glsl,nir,nouveau,xvmc,lima"
-      end
+    if OS.linux?
+      args += %w[
+        -Dplatforms=x11,wayland
+        -Dglx=auto
+        -Ddri3=true
+        -Dgallium-drivers=auto
+        -Dgallium-omx=disabled
+        -Degl=true
+        -Dgbm=true
+        -Dopengl=true
+        -Dgles1=enabled
+        -Dgles2=enabled
+        -Dvalgrind=false
+        -Dtools=drm-shim,etnaviv,freedreno,glsl,nir,nouveau,lima
+      ]
+    end
 
-      system "meson", *std_meson_args, "..", *args
-      system "ninja"
-      system "ninja", "install"
+    system "meson", "build", *args, *std_meson_args
+    system "meson", "compile", "-C", "build"
+    system "meson", "install", "-C", "build"
+    inreplace lib/"pkgconfig/dri.pc" do |s|
+      s.change_make_var! "dridriverdir", HOMEBREW_PREFIX/"lib/dri"
     end
 
     if OS.linux?

@@ -1,39 +1,35 @@
 class Maturin < Formula
   desc "Build and publish Rust crates as Python packages"
   homepage "https://github.com/PyO3/maturin"
-  url "https://github.com/PyO3/maturin/archive/refs/tags/v0.12.1.tar.gz"
-  sha256 "4ce5735356ab00ae34fbea214f1eaf1971171773c0647d93671bf985d5d16e37"
-  license "MIT"
+  url "https://github.com/PyO3/maturin/archive/refs/tags/v0.14.6.tar.gz"
+  sha256 "28ac0c34b55f938ba03aa123fec6b01ebec925e12ee37dd6967fa20d986d082c"
+  license any_of: ["Apache-2.0", "MIT"]
   head "https://github.com/PyO3/maturin.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5067311e5cf4ad2e9a55d5d0bd5df4296e608e04503b1d93ff372dfd597f88b2"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6d328bd8916d51ee9514cf2478334234d62b3cb64da77925b209222579c81225"
-    sha256 cellar: :any_skip_relocation, monterey:       "24fbb1e026116726ce1528862e804202d7231a54d8e66b7153b0030eeb0ae40b"
-    sha256 cellar: :any_skip_relocation, big_sur:        "521543575884e1099f6923d60ffb242d37e3f6542b00e69ea124fe0577c7f51a"
-    sha256 cellar: :any_skip_relocation, catalina:       "25927a7a3ee7dcbc279c2063f869ab6e9c5f6af93fb4aa9afe7e9723b082897a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "614d1bcb4a3916fce27aad2dafb8dfbe6cac7cca621342d085a8066fb075d8ef"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "db4e0aa7bb41dbb1a9b094b34db86111b3d2b148a3f0b6ab66120304f0872617"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "42b84f54f4e399cfc57cd033a18b2437023f9a73ea6e64d058a393847c759a8a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "757c5c7d546ac85dcca5c91333e3b2035b3e2405c616b3e2050bbf7ee0c06728"
+    sha256 cellar: :any_skip_relocation, ventura:        "225c8dc99b838e425fdb93d918c92be50594e2404c491300758f253c45e59353"
+    sha256 cellar: :any_skip_relocation, monterey:       "393cf5a24d7669fc15ef08151c525afe48aefdb4aff52ff541d9ebb32993be6f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "66b9da9298c835e28d312367d6eee4b3ce089c317408dc1286d6d86f3303281c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3689c3a77bcdfb78fb76b672e1ca8d58ac6e72507cc1c47ec4213b1e9edf358c"
   end
 
-  depends_on "python@3.10" => :test
+  depends_on "python@3.11" => :test
   depends_on "rust"
 
   def install
     system "cargo", "install", *std_cargo_args
 
-    bash_output = Utils.safe_popen_read(bin/"maturin", "completions", "bash")
-    (bash_completion/"maturin").write bash_output
-    zsh_output = Utils.safe_popen_read(bin/"maturin", "completions", "zsh")
-    (zsh_completion/"_maturin").write zsh_output
-    fish_output = Utils.safe_popen_read(bin/"maturin", "completions", "fish")
-    (fish_completion/"maturin.fish").write fish_output
+    generate_completions_from_executable(bin/"maturin", "completions")
   end
 
   test do
-    ENV.prepend_path "PATH", Formula["python@3.10"].opt_bin
+    python = Formula["python@3.11"].opt_bin/"python3.11"
     system "cargo", "new", "hello_world", "--bin"
     system bin/"maturin", "build", "-m", "hello_world/Cargo.toml", "-b", "bin", "-o", "dist", "--compatibility", "off"
-    system "python3", "-m", "pip", "install", "hello_world", "--no-index", "--find-links", testpath/"dist"
-    system "python3", "-m", "pip", "uninstall", "-y", "hello_world"
+    system python, "-m", "pip", "install", "hello_world", "--no-index", "--find-links", testpath/"dist"
+    system python, "-m", "pip", "uninstall", "-y", "hello_world"
   end
 end

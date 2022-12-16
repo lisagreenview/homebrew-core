@@ -1,18 +1,20 @@
 class Ots < Formula
   desc "🔐 Share end-to-end encrypted secrets with others via a one-time URL"
   homepage "https://ots.sniptt.com"
-  url "https://github.com/sniptt-official/ots/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "06bfa9ba6e4f924adefa441875c890d7190c1aca7315e54c4fb39a4010692a09"
+  url "https://github.com/sniptt-official/ots/archive/refs/tags/v0.2.0.tar.gz"
+  sha256 "77101725c2f88a67ec6e4a076c232826c4af265cf0c1348c388ccedcbc4c6492"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e57605b2337da9587cb142466c338db6f0bd9805857bb5722d1a48bbe51a7433"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bf2a5321f6c45a4c883c2667479ef8950b271276b3b0c9936d0d0f93ecfd4035"
-    sha256 cellar: :any_skip_relocation, monterey:       "a3d3400287c3bf19d456a05dd1333410299a830af3d26af822aed0dc6aa50df9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a26787dfccc678b5bd76263e6ab49ef9dc48ad0637e2fba9c95e7c6f5371fc8e"
-    sha256 cellar: :any_skip_relocation, catalina:       "2a696ca741d8de5712dac1b06bfc6199cf2e1abf686866f6880d6c91f1d8f047"
-    sha256 cellar: :any_skip_relocation, mojave:         "52bce111d1c7726ef06be50301838bf6926397d99fc39ac69d0242c32d972821"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1ab87ee0c5b202bc18eb3fff61c040816181206c0d57128a14688801754d5c97"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "9f5f84707582f95c31be184797264f4dee0b5dd24ea70425808c99e34ae120d8"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "68af7e8f449b5a6d577c5813b7557878e7f238d5788e1106f6a4e6433f89b31f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3705d1c7a9cbc6df6c147db6d1f4f6b118d35a4284a801cfa6bb86ee4f88e8ac"
+    sha256 cellar: :any_skip_relocation, ventura:        "6a2df441f1410725b8ebf4336c54c9394b42c10810b402124ac85fbab65ef49b"
+    sha256 cellar: :any_skip_relocation, monterey:       "25b7152c6a0056227e8634bf407c05e1a229a4712660dc870db4f270f95cde67"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0500a25106f7d6c5c91592e286ba700fb6855984f8e5f908897329419a569497"
+    sha256 cellar: :any_skip_relocation, catalina:       "f497591d14ee77cc308d1c266ca55d0f5c1b6dcaabdfee1116abfedaed448e86"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3df62978ffc296bd2032e03ec1e2fdb752eae3eb5b25f50e0fcc83c9e33608b1"
   end
 
   depends_on "go" => :build
@@ -20,6 +22,8 @@ class Ots < Formula
   def install
     ldflags = "-s -w -X github.com/sniptt-official/ots/build.Version=#{version}"
     system "go", "build", *std_go_args(ldflags: ldflags)
+
+    generate_completions_from_executable(bin/"ots", "completion")
   end
 
   test do

@@ -1,18 +1,19 @@
 class Cgal < Formula
   desc "Computational Geometry Algorithms Library"
   homepage "https://www.cgal.org/"
-  url "https://github.com/CGAL/cgal/releases/download/v5.3/CGAL-5.3.tar.xz"
-  sha256 "2c242e3f27655bc80b34e2fa5e32187a46003d2d9cd7dbec8fbcbc342cea2fb6"
+  url "https://github.com/CGAL/cgal/releases/download/v5.5.1/CGAL-5.5.1.tar.xz"
+  sha256 "091630def028facdcaf00eb5b68ad79eddac1b855cca6e87eef18a031566edfc"
   license "GPL-3.0-or-later"
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "4f72321be5057d3b07e5ee332b4574ddc08bb65690291778f87593ce60c1e705"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4f72321be5057d3b07e5ee332b4574ddc08bb65690291778f87593ce60c1e705"
-    sha256 cellar: :any_skip_relocation, big_sur:        "c8f0d5760001f61ed11d996ea74e94ec73c77cf46d2746e0ff828657c9dd6bab"
-    sha256 cellar: :any_skip_relocation, catalina:       "c8f0d5760001f61ed11d996ea74e94ec73c77cf46d2746e0ff828657c9dd6bab"
-    sha256 cellar: :any_skip_relocation, mojave:         "c8f0d5760001f61ed11d996ea74e94ec73c77cf46d2746e0ff828657c9dd6bab"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4f72321be5057d3b07e5ee332b4574ddc08bb65690291778f87593ce60c1e705"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "897f5c47b844d9497988a93992966d7927917e86a12ae91a1f217480bac7727e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "897f5c47b844d9497988a93992966d7927917e86a12ae91a1f217480bac7727e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "897f5c47b844d9497988a93992966d7927917e86a12ae91a1f217480bac7727e"
+    sha256 cellar: :any_skip_relocation, ventura:        "f9735a2ec181081f7dd63984266ed8ac97c337a17607c0b20fe25d267893bce8"
+    sha256 cellar: :any_skip_relocation, monterey:       "f9735a2ec181081f7dd63984266ed8ac97c337a17607c0b20fe25d267893bce8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f9735a2ec181081f7dd63984266ed8ac97c337a17607c0b20fe25d267893bce8"
+    sha256 cellar: :any_skip_relocation, catalina:       "f9735a2ec181081f7dd63984266ed8ac97c337a17607c0b20fe25d267893bce8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "897f5c47b844d9497988a93992966d7927917e86a12ae91a1f217480bac7727e"
   end
 
   depends_on "cmake" => [:build, :test]
@@ -23,7 +24,6 @@ class Cgal < Formula
   depends_on "mpfr"
 
   on_linux do
-    depends_on "gcc"
     depends_on "openssl@1.1"
   end
 

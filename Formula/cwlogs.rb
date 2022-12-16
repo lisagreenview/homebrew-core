@@ -17,7 +17,7 @@ class Cwlogs < Formula
   end
 
   # https://github.com/segmentio/cwlogs/issues/37
-  deprecate! date: "2021-02-21", because: :unmaintained
+  disable! date: "2022-07-31", because: :unmaintained
 
   depends_on "go" => :build
   depends_on "govendor" => :build
@@ -32,7 +32,7 @@ class Cwlogs < Formula
 
     cd "src/github.com/segmentio/cwlogs" do
       system "govendor", "sync"
-      system "go", "build", *std_go_args, "-ldflags", "-X main.Version=#{version}"
+      system "go", "build", *std_go_args(ldflags: "-X main.Version=#{version}")
     end
   end
 

@@ -2,19 +2,20 @@ class Etcd < Formula
   desc "Key value store for shared configuration and service discovery"
   homepage "https://github.com/etcd-io/etcd"
   url "https://github.com/etcd-io/etcd.git",
-      tag:      "v3.5.1",
-      revision: "d42e8589e1305d893eeec9e7db746f6f4a76c250"
+      tag:      "v3.5.6",
+      revision: "cecbe35ce0703cd0f8d2063dad4a9e541ae317e5"
   license "Apache-2.0"
-  head "https://github.com/etcd-io/etcd.git"
+  head "https://github.com/etcd-io/etcd.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "668aac1a566e6927021845c8b5ae1a5c35e7eda18cfb9d034f61562f07e52751"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bca67561991cf240abc578cae54aff1638b5718c9bd119afa1a6b4463a60f6f9"
-    sha256 cellar: :any_skip_relocation, monterey:       "ac2f6ea7f5dda66f52e18fa8ffef7c0e87508a8bac8285d278395a7e5a07f891"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f96ec40aac9729cf5688fa01399a76505920a79f8e5f9db957edc8b0c5b7470d"
-    sha256 cellar: :any_skip_relocation, catalina:       "876686a80092465af3b5b638b7bf573178d8328ef5c6ce92f3e044b32ca3a4ca"
-    sha256 cellar: :any_skip_relocation, mojave:         "4f8247a70bc4f030a205f839873956a3b061589aa9df88263aae279c708925f6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c548dc1167dd5161c80f0de58c2ab8f4f9826278d54881d17c6105be39b59593"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e4a29d70cf9e7c52cff3909b4c2c0cd801bbfb4d500009afb04143bd8e1de547"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e4a29d70cf9e7c52cff3909b4c2c0cd801bbfb4d500009afb04143bd8e1de547"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e4a29d70cf9e7c52cff3909b4c2c0cd801bbfb4d500009afb04143bd8e1de547"
+    sha256 cellar: :any_skip_relocation, ventura:        "06ce94b0d467b7aab8a954f5ae1018bbee16f4cd268b77215900293f2a8c3e60"
+    sha256 cellar: :any_skip_relocation, monterey:       "06ce94b0d467b7aab8a954f5ae1018bbee16f4cd268b77215900293f2a8c3e60"
+    sha256 cellar: :any_skip_relocation, big_sur:        "06ce94b0d467b7aab8a954f5ae1018bbee16f4cd268b77215900293f2a8c3e60"
+    sha256 cellar: :any_skip_relocation, catalina:       "06ce94b0d467b7aab8a954f5ae1018bbee16f4cd268b77215900293f2a8c3e60"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ff8cf0b826279321023a6f0878cbc24917b17166da75829d49dc9a47a97ab979"
   end
 
   depends_on "go" => :build
@@ -37,13 +38,11 @@ class Etcd < Formula
   test do
     test_string = "Hello from brew test!"
     etcd_pid = fork do
-      on_macos do
-        if Hardware::CPU.arm?
-          # etcd isn't officially supported on arm64
-          # https://github.com/etcd-io/etcd/issues/10318
-          # https://github.com/etcd-io/etcd/issues/10677
-          ENV["ETCD_UNSUPPORTED_ARCH"]="arm64"
-        end
+      if OS.mac? && Hardware::CPU.arm?
+        # etcd isn't officially supported on arm64
+        # https://github.com/etcd-io/etcd/issues/10318
+        # https://github.com/etcd-io/etcd/issues/10677
+        ENV["ETCD_UNSUPPORTED_ARCH"]="arm64"
       end
 
       exec bin/"etcd",

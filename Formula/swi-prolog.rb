@@ -1,8 +1,8 @@
 class SwiProlog < Formula
   desc "ISO/Edinburgh-style Prolog interpreter"
   homepage "https://www.swi-prolog.org/"
-  url "https://www.swi-prolog.org/download/stable/src/swipl-8.4.1.tar.gz"
-  sha256 "30bb6542b7767e47b94bd92e8e8a7d7a8a000061044046edf45fc864841b69c4"
+  url "https://www.swi-prolog.org/download/stable/src/swipl-9.0.0.tar.gz"
+  sha256 "d607733a776ca56b3ecb2118119d4ae08a8790ef4aaa08bbe8f2279f34fba4b8"
   license "BSD-2-Clause"
   head "https://github.com/SWI-Prolog/swipl-devel.git", branch: "master"
 
@@ -12,25 +12,30 @@ class SwiProlog < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "4af9b87b533dbb62f3d3c258545c46bb63ee70ce6179664ec262326b71dbe6d8"
-    sha256 arm64_big_sur:  "c5a8c3feaa65511402f394196b865252e2f2a83183a3580efdb90c84697bde35"
-    sha256 monterey:       "263745a44d64ec8b046f17d2b1f4b3fcd3c0ff736e2810a571f0725c94c09ea3"
-    sha256 big_sur:        "7dc70f763a0996705c79131a7b0b2702fc420d80149374046b559a8ab22001ab"
-    sha256 catalina:       "90ccd979ddc504d65ffb98bca1662074b43f01073c68fc66b7978e5e0a0c591f"
-    sha256 x86_64_linux:   "d235fcf99631b69ba0c910c08152c884a1d72643f1d7aa34244d47e4dd32aefc"
+    sha256 arm64_ventura:  "dad61a951cffa77ceb44aecafc285beafe76d08edf23b2520a1c03f3b7a631da"
+    sha256 arm64_monterey: "96a4d387468c9c72a7c156d6fb840cfca4f2801c8fd614196c137340c7223e77"
+    sha256 arm64_big_sur:  "4e979626e5e8bac0dcb34fc8312471fdc3132cfdbca9bba558b48d82fc48f521"
+    sha256 ventura:        "797bcd246f7b018e5a09de85f89c25f931a1cc08bb619ddc0edb80c1c730a421"
+    sha256 monterey:       "b30ae2ffde43ff63f9998f65546d4d02e8efa3aae0d82964173fa8ed50e3d171"
+    sha256 big_sur:        "629a08d96c0e958a3938567b07dc65e8dbc12985401396d4f74f7c0b924832cf"
+    sha256 catalina:       "268f7ae65b31dc579a80c985688a7638829af9ad73b9a6e453b5cacb89bdb0ae"
+    sha256 x86_64_linux:   "304b23b5ca22215e33415000849b0a36c267e3db3a81f13f9fd0da0aa7f896d2"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "berkeley-db"
+  depends_on "berkeley-db@4"
   depends_on "gmp"
-  depends_on "jpeg"
   depends_on "libarchive"
   depends_on "libyaml"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
   depends_on "pcre"
   depends_on "readline"
   depends_on "unixodbc"
+
+  uses_from_macos "libxcrypt"
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
 
   def install
     # Remove shim paths from binary files `swipl-ld` and `libswipl.so.*`
@@ -41,15 +46,12 @@ class SwiProlog < Formula
       end
     end
 
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args,
-                      "-DSWIPL_PACKAGES_JAVA=OFF",
-                      "-DSWIPL_PACKAGES_X=OFF",
-                      "-DCMAKE_INSTALL_PREFIX=#{libexec}"
-      system "make", "install"
-    end
+    args = ["-DSWIPL_PACKAGES_JAVA=OFF", "-DSWIPL_PACKAGES_X=OFF", "-DCMAKE_INSTALL_RPATH=#{loader_path}"]
+    system "cmake", "-S", ".", "-B", "build", *args, *std_cmake_args(install_prefix: libexec)
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
 
-    bin.write_exec_script Dir["#{libexec}/bin/*"]
+    bin.write_exec_script (libexec/"bin").children
   end
 
   test do

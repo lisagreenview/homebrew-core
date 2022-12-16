@@ -1,13 +1,15 @@
 class Phpmd < Formula
   desc "PHP Mess Detector"
   homepage "https://phpmd.org"
-  url "https://github.com/phpmd/phpmd/releases/download/2.10.2/phpmd.phar"
-  sha256 "5d16d2571ed029ce94a8dfcec2f50a280f9c896a1454eb93014474841861aa01"
+  url "https://github.com/phpmd/phpmd/releases/download/2.13.0/phpmd.phar"
+  sha256 "2cd47ba93dca22121eabd58f757546b27bb3cd7378cdefe3b83329b7529efc0d"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "5ed3d4023ff0e8fef0b07b838d75f40f42ae3f61f531a47abdb9a100dce84705"
+    sha256 cellar: :any_skip_relocation, all: "6dd2ce138c5191cb6d04b638ec16483bd642d67f21e9dd4b473417f909503f8c"
   end
+
+  depends_on "php"
 
   def install
     bin.install "phpmd.phar" => "phpmd"

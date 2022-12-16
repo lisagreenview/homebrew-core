@@ -2,32 +2,49 @@ class Agda < Formula
   desc "Dependently typed functional programming language"
   homepage "https://wiki.portal.chalmers.se/agda/"
   license "BSD-3-Clause"
-  revision 3
+  revision 2
 
   stable do
-    url "https://hackage.haskell.org/package/Agda-2.6.2/Agda-2.6.2.tar.gz"
-    sha256 "072caaad7a405b764423958d2001b68fbfd3fc8f98870cd0a5f0bcaeadfd3095"
+    url "https://hackage.haskell.org/package/Agda-2.6.2.2/Agda-2.6.2.2.tar.gz"
+    sha256 "e5be3761717b144f64e760d8589ec6fdc0dda60d40125c49cdd48f54185c527a"
+
+    # Use Hackage metadata revision to support GHC 9.4.
+    # TODO: Remove this resource on next release along with corresponding install logic
+    resource "Agda.cabal" do
+      url "https://hackage.haskell.org/package/Agda-2.6.2.2/revision/2.cabal"
+      sha256 "b69c2f317db2886cb387134af00a3e42a06fab6422686938797924d034255a55"
+    end
 
     resource "stdlib" do
-      url "https://github.com/agda/agda-stdlib/archive/v1.7.tar.gz"
-      sha256 "180302df8bdd01fd404ae5ee217d4c04376fcfbab2b70958a87109df531e299d"
+      url "https://github.com/agda/agda-stdlib/archive/v1.7.1.tar.gz"
+      sha256 "6f92ae14664e5d1217e8366c647eb23ca88bc3724278f22dc6b80c23cace01df"
+
+      # Backport upstream commits to support GHC 9.4.
+      # TODO: Remove patches when updating resource to 1.7.2 or later
+      # Ref: https://github.com/agda/agda-stdlib/commit/43c36399a8ca35e0bb2d99bf6359c931e5838990
+      patch :DATA
+      patch do
+        url "https://github.com/agda/agda-stdlib/commit/81a924e41d24669a8935cc1b7168a96f0087ac21.patch?full_index=1"
+        sha256 "8b84d751119a55db06bb88284a8e29a96cccea343cb5104e8eb38a1c22deac05"
+      end
     end
   end
 
   bottle do
-    sha256 arm64_monterey: "55cdf17997c733ff0ae3016e2d57f44cb88236d8d6a9d5a20c82be88b74d7f51"
-    sha256 arm64_big_sur:  "3b5eae987128fc6e4e4b0b12a62090fc09fea5c1c1154c352cb2c30f11675cda"
-    sha256 monterey:       "2ba3ec42d514b8076415b3193f01ef73471be8a9ed4bd29ad3948c10d568436f"
-    sha256 big_sur:        "3a61aafe0161b54464aa9fb51a3f32815580eb265d70a41c90167e76f6755f1e"
-    sha256 catalina:       "93124085f0bd4fc9e84bf162e308523f37cda6252660f9804e746ea4ed2d02cd"
-    sha256 x86_64_linux:   "510a98c8671655ae944de5f74b06507bad58e13c1e0fe81609432197e944008d"
+    sha256 arm64_ventura:  "13f390f73cc8566deef7e0cda118754858b75df3100e3b9dde94c6d87c6b5a3e"
+    sha256 arm64_monterey: "efbb34a0ee23b6aa85ea3a7f1352e4d54a6b5981c9c4712e78555bc80037f39f"
+    sha256 arm64_big_sur:  "d1315c0ec23b0344d52ed52b979e5021c9979da34bfd7da7353dd7030bcd9eae"
+    sha256 ventura:        "bc71fe33bc97c42ebfd1e633025c6c3740d45db6c902d18431d32bfc9e040cf5"
+    sha256 monterey:       "952364ac0a97c5537e31a4b1c840690683ef59f2ecd597dbea80ac736ad47ad8"
+    sha256 big_sur:        "7feaf4300ea5480b2a5f32963ab9270e46727a28b5d6facdca6ef63f3addecd0"
+    sha256 x86_64_linux:   "a8edb282b2b1778333251b332d4a7fd6f7da2a2e0f69783265717b057961a94c"
   end
 
   head do
-    url "https://github.com/agda/agda.git"
+    url "https://github.com/agda/agda.git", branch: "master"
 
     resource "stdlib" do
-      url "https://github.com/agda/agda-stdlib.git"
+      url "https://github.com/agda/agda-stdlib.git", branch: "master"
     end
   end
 
@@ -35,45 +52,20 @@ class Agda < Formula
   depends_on "emacs"
   depends_on "ghc"
 
+  uses_from_macos "ncurses"
   uses_from_macos "zlib"
 
-  resource "alex" do
-    url "https://hackage.haskell.org/package/alex-3.2.6/alex-3.2.6.tar.gz"
-    sha256 "91aa08c1d3312125fbf4284815189299bbb0be34421ab963b1f2ae06eccc5410"
-  end
-
-  resource "cpphs" do
-    url "https://hackage.haskell.org/package/cpphs-1.20.9.1/cpphs-1.20.9.1.tar.gz"
-    sha256 "7f59b10bc3374004cee3c04fa4ee4a1b90d0dca84a3d0e436d5861a1aa3b919f"
-  end
-
-  resource "happy" do
-    url "https://hackage.haskell.org/package/happy-1.20.0/happy-1.20.0.tar.gz"
-    sha256 "3b1d3a8f93a2723b554d9f07b2cd136be1a7b2fcab1855b12b7aab5cbac8868c"
-  end
-
   def install
-    ENV["CABAL_DIR"] = prefix/"cabal"
+    resource("Agda.cabal").stage { buildpath.install "2.cabal" => "Agda.cabal" } unless build.head?
+
     system "cabal", "v2-update"
-    cabal_args = std_cabal_v2_args.reject { |s| s["installdir"] }
-
-    # happy must be installed before alex
-    %w[happy alex cpphs].each do |r|
-      r_installdir = libexec/r/"bin"
-      ENV.prepend_path "PATH", r_installdir
-
-      resource(r).stage do
-        mkdir r_installdir
-        system "cabal", "v2-install", *cabal_args, "--installdir=#{r_installdir}"
-      end
-    end
-
-    system "cabal", "v2-install", "-f", "cpphs", *std_cabal_v2_args
+    system "cabal", "--store-dir=#{libexec}", "v2-install", *std_cabal_v2_args
 
     # generate the standard library's documentation and vim highlighting files
     resource("stdlib").stage lib/"agda"
     cd lib/"agda" do
-      system "cabal", "v2-install", *cabal_args, "--installdir=#{lib}/agda"
+      cabal_args = std_cabal_v2_args.reject { |s| s["installdir"] }
+      system "cabal", "--store-dir=#{libexec}", "v2-install", *cabal_args, "--installdir=#{lib}/agda"
       system "./GenerateEverything"
       system bin/"agda", "-i", ".", "-i", "src", "--html", "--vim", "README.agda"
     end
@@ -159,3 +151,36 @@ class Agda < Formula
     assert_equal "", shell_output(testpath/"IOTest")
   end
 end
+
+__END__
+diff --git a/agda-stdlib-utils.cabal b/agda-stdlib-utils.cabal
+index ceaabafdb..502bb3eb9 100644
+--- a/agda-stdlib-utils.cabal
++++ b/agda-stdlib-utils.cabal
+@@ -9,8 +9,9 @@ tested-with:     GHC == 8.0.2
+                  GHC == 8.4.4
+                  GHC == 8.6.5
+                  GHC == 8.8.4
+-                 GHC == 8.10.5
+-                 GHC == 9.0.1
++                 GHC == 8.10.7
++                 GHC == 9.0.2
++                 GHC == 9.2.1
+
+ executable GenerateEverything
+   hs-source-dirs:   .
+@@ -21,7 +22,7 @@ executable GenerateEverything
+                     , directory >= 1.0.0.0 && < 1.4
+                     , filemanip >= 0.3.6.2 && < 0.4
+                     , filepath  >= 1.4.1.0 && < 1.5
+-                    , mtl       >= 2.2.2   && < 2.3
++                    , mtl       >= 2.2.2   && < 2.4
+
+ executable AllNonAsciiChars
+   hs-source-dirs:   .
+@@ -29,4 +30,4 @@ executable AllNonAsciiChars
+   default-language: Haskell2010
+   build-depends:      base      >= 4.9.0.0 && < 4.17
+                     , filemanip >= 0.3.6.2 && < 0.4
+-                    , text      >= 1.2.3.0 && < 1.3
++                    , text      >= 1.2.3.0 && < 2.1

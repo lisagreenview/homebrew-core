@@ -1,41 +1,36 @@
 class Verilator < Formula
   desc "Verilog simulator"
   homepage "https://www.veripool.org/wiki/verilator"
-  url "https://www.veripool.org/ftp/verilator-4.200.tgz"
-  sha256 "773913f4410512a7a51de3d04964766438dc11fc22b213eab5c6c29730df3e36"
+  url "https://github.com/verilator/verilator/archive/refs/tags/v5.004.tar.gz"
+  sha256 "7d193a09eebefdbec8defaabfc125663f10cf6ab0963ccbefdfe704a8a4784d2"
   license any_of: ["LGPL-3.0-only", "Artistic-2.0"]
-  revision 1
-
-  livecheck do
-    url "https://github.com/verilator/verilator.git"
-    regex(/^v?(\d+(?:\.\d+)+)$/i)
-  end
+  head "https://github.com/verilator/verilator.git", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "745234546ac4e29afcc4ed3ec60396b66a52d5f3ee1d5c50bff0b9f7adb9e6e0"
-    sha256 arm64_big_sur:  "b4c783a956765b7cca12010b793fe3d8728942897107d7a37d805b53bb6b446f"
-    sha256 monterey:       "b8c590f31ab771bce5fe4dbf22c95cea8ee7b9bf12cb6362016e2806f7e286c0"
-    sha256 big_sur:        "2e1d4b7478d0a85ebf90aff2dfcb506ab7950a0b9469f9bd306160682c7014ee"
-    sha256 catalina:       "15d0d1d9a1b335fd8bc14b35dba77e668ad723155d91e51943a11792e243f40e"
-    sha256 x86_64_linux:   "402ad2a601e053d5d888d22a936013693c2c5e97df14b94febfd5203abf7a404"
+    sha256 arm64_ventura:  "3eb15f62df1c3bc4e746c5c87b0e5fc754c7b112cfd740a6396ecb292732f59b"
+    sha256 arm64_monterey: "6ed63f0d2c73a6a6a30f79bb1724425ff86516cc025bb90f2b6162d1e874b49d"
+    sha256 arm64_big_sur:  "885d5183c418ee06c4010af9cef9dce6145f3e88c18339e29271c7f504a24b3a"
+    sha256 ventura:        "b6cc61b640c35328200463b173f145b0879f6d0321b79091776c76b4425cf339"
+    sha256 monterey:       "4e5c87f959617510373c5b255fc54b79772338d32fce2c42793e1769ff3517e0"
+    sha256 big_sur:        "dbf9cf4ee0c3b4b2aa5ccd73948d7db0dd096375e7279fea2557581f5d0377ac"
+    sha256 x86_64_linux:   "896b28ff444f53df0f94b51162be2dfd83d7d0f029d6d2fa83570453a73bb21a"
   end
 
-  head do
-    url "https://git.veripool.org/git/verilator", using: :git
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-  end
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
 
-  depends_on "python@3.10" => :build
-
-  uses_from_macos "bison"
-  uses_from_macos "flex"
+  uses_from_macos "bison" => :build
+  uses_from_macos "flex" => :build
   uses_from_macos "perl"
+  uses_from_macos "python", since: :catalina
 
   skip_clean "bin" # Allows perl scripts to keep their executable flag
 
+  # error: specialization of 'template<class _Tp> struct std::hash' in different namespace
+  fails_with gcc: "5"
+
   def install
-    system "autoconf" if build.head?
+    system "autoconf"
     system "./configure", "--prefix=#{prefix}"
     # `make` and `make install` need to be separate for parallel builds
     system "make"
@@ -59,7 +54,7 @@ class Verilator < Formula
           exit(0);
       }
     EOS
-    system "/usr/bin/perl", bin/"verilator", "-Wall", "--cc", "test.v", "--exe", "test.cpp"
+    system bin/"verilator", "-Wall", "--cc", "test.v", "--exe", "test.cpp"
     cd "obj_dir" do
       system "make", "-j", "-f", "Vtest.mk", "Vtest"
       expected = <<~EOS

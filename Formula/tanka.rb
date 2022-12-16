@@ -2,8 +2,8 @@ class Tanka < Formula
   desc "Flexible, reusable and concise configuration for Kubernetes using Jsonnet"
   homepage "https://tanka.dev"
   url "https://github.com/grafana/tanka.git",
-      tag:      "v0.18.2",
-      revision: "2034d2db26694eb6e404a567e23c2328dc75d489"
+      tag:      "v0.23.1",
+      revision: "e53e74b26e14cfcb320602badb471d0c34a24155"
   license "Apache-2.0"
   head "https://github.com/grafana/tanka.git", branch: "main"
 
@@ -13,21 +13,26 @@ class Tanka < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "7f50cc45c72bdec5277660d40e1de06d3c40c514d2afd8ad605fdcecd2693a94"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "96ab09d0931f4d046b00d6c13501c78a49f1f82d5f6e308988791402c0f2185c"
-    sha256 cellar: :any_skip_relocation, monterey:       "225a3e8f2a862cfb066823ec17780a3753c6e4447b114b8ef16e5b8a2c1850eb"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7d419079b8bc5a8785f70c119f7a949856f527b3ad7af814012006ad03ae94c1"
-    sha256 cellar: :any_skip_relocation, catalina:       "6ab384978628615590e13b8f78b6e9d4a7d45a1fe1c26e640b27cb9bd5d909a2"
-    sha256 cellar: :any_skip_relocation, mojave:         "32608fe976b454e5a38818e213c916c0c1bc1e8b3ecb3aadb558f926073b452a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "42b31d4e7a34573e09007541637e0540f2c4eadfbbf366b7e2441016fc8ad88c"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "19ebc6c6a40455549d84339e13956678d2276a0791512e52389bee866829b493"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "924468a521b5334d2b9e9c7016dda2a91e58adbf8b09ae1d48373edc926d5174"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "924468a521b5334d2b9e9c7016dda2a91e58adbf8b09ae1d48373edc926d5174"
+    sha256 cellar: :any_skip_relocation, ventura:        "298086067176aa6b272285f5d66c54ec3b57ca939f9efb2e226c3864e195436d"
+    sha256 cellar: :any_skip_relocation, monterey:       "dd7b67cab0598b62c26ce1101fcb4208d0ded91760780cecef88e38e472d0dc6"
+    sha256 cellar: :any_skip_relocation, big_sur:        "dd7b67cab0598b62c26ce1101fcb4208d0ded91760780cecef88e38e472d0dc6"
+    sha256 cellar: :any_skip_relocation, catalina:       "dd7b67cab0598b62c26ce1101fcb4208d0ded91760780cecef88e38e472d0dc6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "38df5c3af8e10af2e9cb5d723d86527ddc04240de2265e5e780258b8927d2e6d"
   end
 
   depends_on "go" => :build
   depends_on "kubernetes-cli"
 
   def install
-    system "make", "static"
-    bin.install "tk"
+    ENV["CGO_ENABLED"] = "0"
+    ldflags = %W[
+      -s -w
+      -X github.com/grafana/tanka/pkg/tanka.CURRENT_VERSION=#{version}
+    ]
+    system "go", "build", *std_go_args(ldflags: ldflags.join(" "), output: bin/"tk"), "./cmd/tk"
   end
 
   test do

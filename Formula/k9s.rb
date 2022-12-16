@@ -2,36 +2,33 @@ class K9s < Formula
   desc "Kubernetes CLI To Manage Your Clusters In Style!"
   homepage "https://k9scli.io/"
   url "https://github.com/derailed/k9s.git",
-      tag:      "v0.25.6",
-      revision: "f0b540a350b44009b06159d7cb519f612990431a"
+      tag:      "v0.26.7",
+      revision: "37569b8772eee3ae29c3a3a1eabb34f459f0b595"
   license "Apache-2.0"
-  head "https://github.com/derailed/k9s.git"
+  head "https://github.com/derailed/k9s.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "baad0b8ddf5ac25f98adc2eff461920c2935de461bb193b6fb9d95b9e4e256a7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5248872ea9a5edac3a2ae891f988d1af0ecb176f433a817707be51236d762a7d"
-    sha256 cellar: :any_skip_relocation, monterey:       "8138e958dacda14fa9ac8e8c975cad88731c73d6ae8b5668d7ffb5414952b38a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "24e8d008edc07e6fe06462a8a064de653f4798fec1a012add21c7b1be03812f0"
-    sha256 cellar: :any_skip_relocation, catalina:       "f3d942739098b894dc38bc55604e2c91ebcaa3063b0bd30a257b11667987699b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d28548df21da18ca36af328de0505b0a9498c44f14b13b89828af4008b6c8056"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "b3668afb32b405e15d11004c7a2a11434b0ea36cfe04be1a76ad8d7ff0250c4a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "80856aad2aae79b20b5d3adbdf5d7315e279a1825f7057425a4eca9fe9d9daf8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5937b7f3885bb99fc4408cc089a0b9b996a7449b7f992c4817ac6d9b4d67bdc6"
+    sha256 cellar: :any_skip_relocation, ventura:        "f5c72f754340b83084481461759eefaddddbf70b2ef861959c92d18d82fb4948"
+    sha256 cellar: :any_skip_relocation, monterey:       "bf6715e4a599bb9d574ec0e0ac3772204ec985576dc616f89d12769af8b807cf"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9940c7d60e866786907badb5c5c8e8a6d33b5e17421e2bfd9a8ed4466e05bf26"
+    sha256 cellar: :any_skip_relocation, catalina:       "1f6dd146c63051d4f32214ccf559685039a0ffef4795a804d9a952190ed33226"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "be6e9b4e7007ffa1f7dd86de347897f7ab63df604ddd5d234cff99cbc214e63e"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", "-ldflags",
-             "-s -w -X github.com/derailed/k9s/cmd.version=#{version}
-             -X github.com/derailed/k9s/cmd.commit=#{Utils.git_head}",
-             *std_go_args
+    ldflags = %W[
+      -s -w
+      -X github.com/derailed/k9s/cmd.version=#{version}
+      -X github.com/derailed/k9s/cmd.commit=#{Utils.git_head}
+    ]
+    system "go", "build", *std_go_args(ldflags: ldflags)
 
-    bash_output = Utils.safe_popen_read(bin/"k9s", "completion", "bash")
-    (bash_completion/"k9s").write bash_output
-
-    zsh_output = Utils.safe_popen_read(bin/"k9s", "completion", "zsh")
-    (zsh_completion/"_k9s").write zsh_output
-
-    fish_output = Utils.safe_popen_read(bin/"k9s", "completion", "fish")
-    (fish_completion/"k9s.fish").write fish_output
+    generate_completions_from_executable(bin/"k9s", "completion")
   end
 
   test do

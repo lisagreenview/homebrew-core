@@ -3,30 +3,28 @@ class Jello < Formula
 
   desc "Filter JSON and JSON Lines data with Python syntax"
   homepage "https://github.com/kellyjonbrazil/jello"
-  url "https://files.pythonhosted.org/packages/9e/8c/c625f0d6c824cf955a29d6d3df537fe310c4b65ead63afbb77ec10a1c729/jello-1.4.4.tar.gz"
-  sha256 "c42d5202282fa10b57f5830b8e4a74da7a75d585f000b812bbfd90bff28c2bfc"
+  url "https://files.pythonhosted.org/packages/92/a3/44ef2dddc89de62fc248e853edbcddcf5c1d605bb89d4c741a735ca85611/jello-1.5.4.tar.gz"
+  sha256 "6e536485ffd7a30e4d187ca1e2719452e833f1939c3b34330d75a831dabfcda9"
   license "MIT"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2cf89b26555543aa7ee63d93e02df14d260fc06ba1dffb9ece2c070fadaaa6f4"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2cf89b26555543aa7ee63d93e02df14d260fc06ba1dffb9ece2c070fadaaa6f4"
-    sha256 cellar: :any_skip_relocation, monterey:       "e1c991340147788989124b846af28bfa283dccf1af47fcdf9c03f2fd2bd0299c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e1c991340147788989124b846af28bfa283dccf1af47fcdf9c03f2fd2bd0299c"
-    sha256 cellar: :any_skip_relocation, catalina:       "e1c991340147788989124b846af28bfa283dccf1af47fcdf9c03f2fd2bd0299c"
-    sha256 cellar: :any_skip_relocation, mojave:         "e1c991340147788989124b846af28bfa283dccf1af47fcdf9c03f2fd2bd0299c"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "8702c22dc4ba1bcfeaf7e0245a362bd904fc0ad86c57b95b19db36aa6e1a3330"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8702c22dc4ba1bcfeaf7e0245a362bd904fc0ad86c57b95b19db36aa6e1a3330"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8702c22dc4ba1bcfeaf7e0245a362bd904fc0ad86c57b95b19db36aa6e1a3330"
+    sha256 cellar: :any_skip_relocation, ventura:        "c6668ca389b6cd2c039515c27eee0f2e82b955d07634beba460b86062a634112"
+    sha256 cellar: :any_skip_relocation, monterey:       "c6668ca389b6cd2c039515c27eee0f2e82b955d07634beba460b86062a634112"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c6668ca389b6cd2c039515c27eee0f2e82b955d07634beba460b86062a634112"
+    sha256 cellar: :any_skip_relocation, catalina:       "c6668ca389b6cd2c039515c27eee0f2e82b955d07634beba460b86062a634112"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ae3a5c15eaefe8430f39a8b05a430f70e7d0cad61598c7bf23b3113e4f1eb1f0"
   end
 
-  depends_on "python@3.10"
-
-  resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/ba/6e/7a7c13c21d8a4a7f82ccbfe257a045890d4dbf18c023f985f565f97393e3/Pygments-2.9.0.tar.gz"
-    sha256 "a18f47b506a429f6f4b9df81bb02beab9ca21d0a5fee38ed15aef65f0545519f"
-  end
+  depends_on "pygments"
+  depends_on "python@3.11"
 
   def install
     virtualenv_install_with_resources
-    man1.install "jello/man/jello.1"
+    man1.install "man/jello.1"
   end
 
   test do

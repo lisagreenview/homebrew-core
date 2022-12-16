@@ -2,8 +2,8 @@ class SwiftFormat < Formula
   desc "Formatting technology for Swift source code"
   homepage "https://github.com/apple/swift-format"
   url "https://github.com/apple/swift-format.git",
-      tag:      "0.50500.0",
-      revision: "f872223e16742fd97fabd319fbf4a939230cc796"
+      tag:      "0.50700.0",
+      revision: "3dd9b517b9e9846435aa782d769ef5825e7c2d65"
   license "Apache-2.0"
   version_scheme 1
   head "https://github.com/apple/swift-format.git", branch: "main"
@@ -14,20 +14,32 @@ class SwiftFormat < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "53959426e357b8be149cd84141c22df630a6d0c8e5097d7353cce3cdfb3738f6"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "64fe92f2761fd21ec2377ec8cb51f9850ec9d6241390d719936bad05ac937d2e"
-    sha256 cellar: :any_skip_relocation, monterey:       "3b5dc99305ebf489c4f465bb9df393a9c9a9de40814288c4b12110a02b35d6c3"
-    sha256 cellar: :any_skip_relocation, big_sur:        "61d4b88004916e7d4456bef630017eebf0636c33cb1086958d200505c1d2a369"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "f59ef3e47e5f5dad726c372b6be145f302971104aee3ba3256587ee2f7d77337"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "355e227631c799b2c73f0f9815bf9a05e9404d0a47161d90a0d984d90c49ac97"
+    sha256 cellar: :any_skip_relocation, ventura:        "eeea265a826a6651363e2970052038a0b47e11910c112a517efd2a37ec351049"
+    sha256 cellar: :any_skip_relocation, monterey:       "6c087279fc6cb17d916e16457268ea617360079443fa11aa8a3d521fecd160bb"
+    sha256                               x86_64_linux:   "d68e4d01e9be0aeeab34f2159bd492fbc26620d323b93613cf8a7f223343ad47"
   end
 
   # The bottles are built on systems with the CLT installed, and do not work
   # out of the box on Xcode-only systems due to an incorrect sysroot.
   pour_bottle? only_if: :clt_installed
 
-  depends_on xcode: ["13.0", :build]
+  depends_on xcode: ["14.0", :build]
+
+  uses_from_macos "swift"
 
   def install
-    system "swift", "build", "--disable-sandbox", "-c", "release"
+    # Support current stable Swift.
+    # Remove with Swift 5.7.1.
+    inreplace "Package.swift", '.upToNextMinor(from: "0.50700.0")', '.exact("0.50700.0")'
+
+    # This can likely be removed with 0.50800.0
+    swift_rpath = if OS.mac?
+      ["-Xlinker", "-rpath", "-Xlinker", "/Library/Developer/CommandLineTools/usr/lib/swift/macosx"]
+    end
+
+    system "swift", "build", "--disable-sandbox", "-c", "release", *swift_rpath
     bin.install ".build/release/swift-format"
     doc.install "Documentation/Configuration.md"
   end

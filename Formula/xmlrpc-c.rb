@@ -1,16 +1,19 @@
 class XmlrpcC < Formula
   desc "Lightweight RPC library (based on XML and HTTP)"
   homepage "https://xmlrpc-c.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/xmlrpc-c/Xmlrpc-c%20Super%20Stable/1.51.08/xmlrpc-1.51.08.tgz"
-  sha256 "a48f6becfdc2897b8a90522ec506000f966a75e4a7c348c3f8b18fce828d49e6"
+  url "https://downloads.sourceforge.net/project/xmlrpc-c/Xmlrpc-c%20Super%20Stable/1.54.06/xmlrpc-c-1.54.06.tgz"
+  sha256 "ae6d0fb58f38f1536511360dc0081d3876c1f209d9eaa54357e2bacd690a5640"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "263c197c509a240444d4750945f8d7d079054844439dfa533bc0fd6d49632eac"
-    sha256 cellar: :any,                 big_sur:       "98d8880157242c495ca5f3d2c87066b52fe858d5c14dc4078d1e8c1a63b7481c"
-    sha256 cellar: :any,                 catalina:      "ea46c848e7b738b515733b89338f6e4d3a88f2ca35ba4c2188af5e165a671dac"
-    sha256 cellar: :any,                 mojave:        "88ab4b50934d1d53dc0cc44e7985a2326757883a204c531a22c7d2867293d2b9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "b9982d7f0d38a9b87fa13abbfaf64c3b2af31e2dc0361e836a9b41cdd190bf9c"
+    sha256 cellar: :any,                 arm64_ventura:  "784e39351c82ff015db8094e5be996bfc2aa421d5104d3c06a0f86eb02c4af04"
+    sha256 cellar: :any,                 arm64_monterey: "ea86fe58a1b106920a370a8c3f66c09904000a57bb6f4b8644bdde24edac41ab"
+    sha256 cellar: :any,                 arm64_big_sur:  "573d13e3dee5599d3e2abd555efc4b8c2a007d04f53d29baf706a2db6aa53d28"
+    sha256 cellar: :any,                 ventura:        "fbcf76517d21b0b006cc07ad3baac9f2a843908096b361558a021653d53d70f6"
+    sha256 cellar: :any,                 monterey:       "b6a443d43d9b76f0255b7fd43a80a921e545973f1f7348c067a75746a440cfb0"
+    sha256 cellar: :any,                 big_sur:        "cccdf3dc0450ce0efdb49f77651bf8d5263f621752e4fabc4d2db476bb5ea517"
+    sha256 cellar: :any,                 catalina:       "38ed67ec4b4aee657e5c44a1cfb7527d5a5a32cf36d2e551eeb6d5733dfdfcce"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2cd0152929227f84c1f2ec41591f0d9484b82054d75aa99a1ac908df9ac634db"
   end
 
   uses_from_macos "curl"

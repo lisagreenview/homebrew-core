@@ -1,22 +1,24 @@
 class I2pd < Formula
   desc "Full-featured C++ implementation of I2P client"
   homepage "https://i2pd.website/"
-  url "https://github.com/PurpleI2P/i2pd/archive/2.39.0.tar.gz"
-  sha256 "3ffeb614cec826e13b50e8306177018ecb8d873668dfe66aadc733ca9fcaa568"
+  url "https://github.com/PurpleI2P/i2pd/archive/2.44.0.tar.gz"
+  sha256 "b653c845ac7a16fefab2ace78e3ae496c12b05304bb66e41e776071635d4e070"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "be899cbd6346e27aa0d30ceebc5a7e198409f7050351b2f4217811904390303e"
-    sha256 cellar: :any, arm64_big_sur:  "9e13462dfd0f3cd5e6afc79979ed48c6b09a243c3c5242b399c7dee418a3e1eb"
-    sha256 cellar: :any, monterey:       "e8e8a23a976418e00c3a27026e980f717b3e5ca2c09af94acd3f4cc591a5ab6a"
-    sha256 cellar: :any, big_sur:        "e2c0afab1198c4bcdde3dd1e6559ddcb868b2e192bf0dc8cdec9c336ddfc9baa"
-    sha256 cellar: :any, catalina:       "4d3df93923c0489b44ca55cb3f7071962bd530ba73d778457cc9ae9d1602ba85"
-    sha256 cellar: :any, mojave:         "eab780040dd0391df1af3aed028ed140ab126b2f272caea80aed15bda675b36b"
+    sha256 cellar: :any,                 arm64_ventura:  "428523046ee5eb138bf0d745c7adc20604a2b8348dfd37952226c09ef717db6c"
+    sha256 cellar: :any,                 arm64_monterey: "e2a7c0001e541b027b7b969c417aa07fe66b979cd42f4f91ff94d545d92ed608"
+    sha256 cellar: :any,                 arm64_big_sur:  "fd309abd53ba63105aa276b5b5d27d561095057d9c71da25ae8fb2b1e0464933"
+    sha256 cellar: :any,                 ventura:        "5b203af6f4a7a871b49b2da92261e179f557efdefa9190889c7b64dd0de6f816"
+    sha256 cellar: :any,                 monterey:       "7da92d874561d362b3fd66a2fd413a3464c86137fe94b1cd599925b752835617"
+    sha256 cellar: :any,                 big_sur:        "55b2608f0ab14401ea035344687c757c346714a5aee34d54909c9c0d7e0910c4"
+    sha256 cellar: :any,                 catalina:       "11a7435ef5962ba2fc2f8836faa5494fa9a80780e279df004d7045a77ad96bfe"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fe5ef7064d6ba3018e64288510c5d5fd59bafd79af8ef817d51177528f767286"
   end
 
   depends_on "boost"
   depends_on "miniupnpc"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
     args = %W[
@@ -24,8 +26,9 @@ class I2pd < Formula
       HOMEBREW=1
       USE_UPNP=yes
       PREFIX=#{prefix}
+      BREWROOT=#{HOMEBREW_PREFIX}
+      SSLROOT=#{Formula["openssl@3"].opt_prefix}
     ]
-
     args << "USE_AESNI=no" if Hardware::CPU.arm?
 
     system "make", "install", *args
@@ -61,11 +64,11 @@ class I2pd < Formula
   end
 
   test do
-    pid = fork do
-      exec "#{bin}/i2pd", "--datadir=#{testpath}", "--daemon"
-    end
+    pidfile = testpath/"i2pd.pid"
+    system bin/"i2pd", "--datadir=#{testpath}", "--pidfile=#{pidfile}", "--daemon"
     sleep 5
-    Process.kill "TERM", pid
     assert_predicate testpath/"router.keys", :exist?, "Failed to start i2pd"
+    pid = pidfile.read.chomp.to_i
+    Process.kill "TERM", pid
   end
 end

@@ -5,12 +5,14 @@ class H2spec < Formula
       tag:      "v2.6.0",
       revision: "70ac2294010887f48b18e2d64f5cccd48421fad1"
   license "MIT"
-  head "https://github.com/summerwind/h2spec.git"
+  head "https://github.com/summerwind/h2spec.git", branch: "master"
 
   bottle do
     rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "85916701e8dd7c4caaef314e26c48344423369b3b2197bd80111141a9b526a38"
     sha256 cellar: :any_skip_relocation, arm64_monterey: "b2589ab8277cf827e7903a523b666e8ceb1b4fe5b494f0fcd52ac5b40706a5c6"
     sha256 cellar: :any_skip_relocation, arm64_big_sur:  "90d9e00cce2bd7659510bb75cc6735b94d7488207a4aeb665fd9aedae3ed8ca1"
+    sha256 cellar: :any_skip_relocation, ventura:        "f64b879c82616e820a77e8c39c65a6fd6b957c069aabd31ef5f2478b14101d46"
     sha256 cellar: :any_skip_relocation, monterey:       "512863844a450dba5025fa2d09c88fb9e86e72e62ac43d0a19d2cc020e0b8467"
     sha256 cellar: :any_skip_relocation, big_sur:        "ee24c3ab807d25dc92116e1b794d319365b7ad7a801f9ef9089f2992844673aa"
     sha256 cellar: :any_skip_relocation, catalina:       "c585fbaa7e8d101d280edafce5e26b4df57a1ac8ddbd7327f1efdc07d0ac17a0"
@@ -27,7 +29,7 @@ class H2spec < Formula
       -X main.VERSION=#{version}
       -X main.COMMIT=#{commit}
     ]
-    system "go", "build", *std_go_args, "-ldflags", ldflags.join(" "), "./cmd/h2spec"
+    system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/h2spec"
   end
 
   test do

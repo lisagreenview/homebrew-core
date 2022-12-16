@@ -1,18 +1,18 @@
 class Hstr < Formula
   desc "Bash and zsh history suggest box"
   homepage "https://github.com/dvorka/hstr"
-  url "https://github.com/dvorka/hstr/archive/2.3.tar.gz"
-  sha256 "c7e7408671757b3f4be9c5a59b4e2d56e7a7b601ace2a94eb6b2b61f20ee890b"
+  url "https://github.com/dvorka/hstr/archive/2.6.tar.gz"
+  sha256 "085f8a087481bcdf33e75e2fa5aaa9289931782c0bee2db3e02425b9a7d83cdf"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "0732a00ef8559bcf9674782e5d47ab13fabb7fb55edef9106667624d85707ac8"
-    sha256 cellar: :any,                 arm64_big_sur:  "6f1758717c6c34317a775a0975864d66bdd2696f491859627a00641966ce6ece"
-    sha256 cellar: :any,                 monterey:       "7050eb806ea8b03a5a70cfec84203f7e94830edeb7f2ccdd2b734ed50c4c0f3e"
-    sha256 cellar: :any,                 big_sur:        "23a7e98369fa1ef412f6f374d24a1828b5131425b39b828688004cf6e4cedda8"
-    sha256 cellar: :any,                 catalina:       "eb5a750b04ba6c1908bde96a1bd7fb8733a80632953eeb5d43ad51b7747cc191"
-    sha256 cellar: :any,                 mojave:         "723f7aec818080a72e40a3eda2aad8669d5d952927a7894718946cc0b788ff27"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ab96608841a90734f14748aa02ef5c614c1dc0f6c6b61ada6d06a736a6656689"
+    sha256 cellar: :any,                 arm64_ventura:  "05ac26217fb993171c064ff21277aef85d408b65cc229d9980c6e45bf845a758"
+    sha256 cellar: :any,                 arm64_monterey: "6792271b3544187c87c845c017996c98d10aab9e1ee5795c304365b189843e45"
+    sha256 cellar: :any,                 arm64_big_sur:  "d51d9fd2b944b73985b4582938a32f27f2ce1452113eee561f21b7722cfdda2a"
+    sha256 cellar: :any,                 ventura:        "87dc6b7a714db1cbd5abb2d32536780a202c8dc13482b34d12ae10cb497db9cd"
+    sha256 cellar: :any,                 monterey:       "875f71c5af7b2ca494653a8d8158696881dec6a75bf6922ea4804d87e0905fb5"
+    sha256 cellar: :any,                 big_sur:        "434aa15b4470803881af8ea62389a6c58cd4cea8370a2a8e9deb30412874af8c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c0596a252305581324bf2e41b9db298487385d6a7f8b584692fdec8370d426bc"
   end
 
   depends_on "autoconf" => :build

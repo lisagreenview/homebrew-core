@@ -4,15 +4,17 @@ class Zorba < Formula
   url "https://github.com/28msec/zorba/archive/3.1.tar.gz"
   sha256 "05eed935c0ff3626934a5a70724a42410fd93bc96aba1fa4821736210c7f1dd8"
   license "Apache-2.0"
-  revision 14
+  revision 16
 
   bottle do
-    sha256 arm64_monterey: "c49d833711490a7297a1f175a80ca3e2ef0c6bbdd35ba444cdd665d824a95d90"
-    sha256 arm64_big_sur:  "aa4cae0f56ef1d035d5ac36ac60b1dc6e4c0a794e97eb8aed539c5fb5f14a215"
-    sha256 monterey:       "ab8e4a76a55d1882c9597262d8dfa988a404198ebc3f6f56001da5ebb19fb014"
-    sha256 big_sur:        "dadda2e73de44c8994fa09671bda4781ce88bd5a3836c335ecdcfbd9c20f1dfc"
-    sha256 catalina:       "8c0de8c4961888f97768b0f1a9d5ce2af9fdebd7cce2626b4a0c4f9bb7508c3d"
-    sha256 mojave:         "511bab00060dd21851440ad2cc0f64e9edec6b1beef2675505baaa6745154670"
+    sha256 arm64_ventura:  "9965ca51a03f06f62ef2f88cfcf6d678a4a0a79f63a1b5d4df79fd7d6065f061"
+    sha256 arm64_monterey: "46f70d378fe9bb29b11e1e8c36a89d6e87a8edd31506414d7bdc898ee9a38f3b"
+    sha256 arm64_big_sur:  "1ec7839bf4f2c5c894ab97e022af5299411509da28b0591f5fa317cfd6b90cfd"
+    sha256 ventura:        "17314361ecb78dd79b6bf0a248da0575c2bc7af209e21edc2944a427465a501f"
+    sha256 monterey:       "e7989cc9ae5f1f69ec450cbb266eace9e9b69040360b087dd9e1f9b960429207"
+    sha256 big_sur:        "df9a7d6bd090be66e98299e32be821425ae0618ea3f865e5a3da9967149b2fb0"
+    sha256 catalina:       "3edcef6b795ce703533f54ebe944a8f0ecfc05211e3fece3d5275d887544aa56"
+    sha256 x86_64_linux:   "4cc2c7b15623b2ba658a0a50a9556d905aeb5a4f3824f713b74709f86266a89e"
   end
 
   depends_on "cmake" => :build
@@ -25,26 +27,23 @@ class Zorba < Formula
 
   conflicts_with "xqilla", because: "both supply `xqc.h`"
 
-  def install
-    # icu4c 61.1 compatibility
-    ENV.append "CXXFLAGS", "-DU_USING_ICU_NAMESPACE=1"
+  # Fixes for missing headers and namespaces from open PR in GitHub repo linked via homepage
+  # PR ref: https://github.com/zorba-processor/zorba/pull/19
+  patch do
+    url "https://github.com/zorba-processor/zorba/commit/e2fddf7bd618dad9dc1e684a2c1ad61103b6e8d2.patch?full_index=1"
+    sha256 "2c4f0ade4f83ca2fd1ee8344682326d7e0ab3037d0de89941281c90875fcd914"
+  end
 
+  def install
     # Workaround for error: use of undeclared identifier 'TRUE'
     ENV.append "CFLAGS", "-DU_DEFINE_FALSE_AND_TRUE=1"
     ENV.append "CXXFLAGS", "-DU_DEFINE_FALSE_AND_TRUE=1"
 
     ENV.cxx11
 
-    args = std_cmake_args
-
-    # dyld: lazy symbol binding failed: Symbol not found: _clock_gettime
-    # usual superenv fix doesn't work since zorba doesn't use HAVE_CLOCK_GETTIME
-    args << "-DZORBA_HAVE_CLOCKGETTIME=OFF" if MacOS.version == :el_capitan && MacOS::Xcode.version >= "8.0"
-
-    mkdir "build" do
-      system "cmake", "..", *args
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

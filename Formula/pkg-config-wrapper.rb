@@ -1,8 +1,8 @@
 class PkgConfigWrapper < Formula
   desc "Easier way to include C code in your Go program"
   homepage "https://github.com/influxdata/pkg-config"
-  url "https://github.com/influxdata/pkg-config/archive/v0.2.9.tar.gz"
-  sha256 "25843e58a3e6994bdafffbc0ef0844978a3d1f999915d6770cb73505fcf87e44"
+  url "https://github.com/influxdata/pkg-config/archive/v0.2.12.tar.gz"
+  sha256 "23b2ed6a2f04d42906f5a8c28c8d681d03d47a1c32435b5df008adac5b935f1a"
   license "MIT"
   head "https://github.com/influxdata/pkg-config.git", branch: "master"
 
@@ -12,12 +12,14 @@ class PkgConfigWrapper < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "71bf9d7c8a50247e3a9de30fb64481e0db9e886d7181dd3c05a72ab7b10a7418"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7075a7f42b2b18f55ab420d46e2bf2601815ecb9a5a196c950616006d11acf45"
-    sha256 cellar: :any_skip_relocation, monterey:       "cbe9f0cd7589661995bce4ffa59044fbfb68f7c5abc7063e5b2d658127089416"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ba0929df16ae288d5511fc76c03211ae5e0dda1745bdc7662e15a8a219354132"
-    sha256 cellar: :any_skip_relocation, catalina:       "086fb52e04ae52cc56049ebd830c99a7a967bb8def493f6a805d5d9dd4b0313a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3df85be9fce7fe749e27b381d85b774d3537f0700e64e58a2188087dbd221538"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cf1a133af5a0736c339ca03ca1e55d460835c137c9c3430a4150f04addef59ec"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "73e0e3154ccc02d0fccf377426069944d80b112e671471ea93ab852001b3cf45"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0859f0c9900ff75118937dfb5fb4c819ea946cf85b28c26e00ed17471688da2b"
+    sha256 cellar: :any_skip_relocation, ventura:        "51f080f177cfe4b81a5aa5c19921db19c2792827a873c4a0432b882faf26e848"
+    sha256 cellar: :any_skip_relocation, monterey:       "dfaba417b6359e63e6a16426f0cbf3368ed111294dadfd63f9b89435c2612003"
+    sha256 cellar: :any_skip_relocation, big_sur:        "68d05c1c5e5310b4bd7a68d6aaad6cedf9190935a47513be58dd85e06909a556"
+    sha256 cellar: :any_skip_relocation, catalina:       "d1a3561a851957ec62856bc5a1407501976c48fe54ef290abe102a3d357207d0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "61e696135462df386455fd1d33703e5a96f0830eaaee28cc7932c8cd4d93c2f6"
   end
 
   depends_on "go" => :build

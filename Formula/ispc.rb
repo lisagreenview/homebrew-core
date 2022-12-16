@@ -1,31 +1,41 @@
 class Ispc < Formula
   desc "Compiler for SIMD programming on the CPU"
   homepage "https://ispc.github.io"
-  url "https://github.com/ispc/ispc/archive/v1.16.1.tar.gz"
-  sha256 "e5dcd0d85df6ed5feb454ad9ec295083a07d7459fcaba00d5dd6266ceb476399"
+  url "https://github.com/ispc/ispc/archive/v1.18.1.tar.gz"
+  sha256 "5b004c121e7a39c8654bb61930a240e4bd3e432a80d851c6281fae49f9aca7b7"
   license "BSD-3-Clause"
-  revision 1
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "a9e533da0a8a1ad0327cbe13cf4e73712fd83d40eeff92286e9b2b404a6be58b"
-    sha256 cellar: :any, arm64_big_sur:  "816feef4722edd8866c394110c503338eaba0bb373c87ddb9a898dc56b1adac7"
-    sha256 cellar: :any, monterey:       "b0d22d24b1a89933c5ccc6b73968641c3ebc99839cb5e7fdbe2135cc9ce4673d"
-    sha256 cellar: :any, big_sur:        "a82168d4f3a51a8078eb3603a9e3810f5a81e32e131fce032f4b505d6d0147e7"
-    sha256 cellar: :any, catalina:       "168dcec41346433e47d5478793216c86b96c4e9c2a31673e21de60b5f6a95427"
-    sha256 cellar: :any, mojave:         "d19b58b941d33a38e574e351d85445c5f8aee6c9ca6a164db874a2753138ae1c"
+    sha256 cellar: :any,                 arm64_ventura:  "fae2e3b3e49e198d644de5d41d1072b1eec914de46023f59cb193cc24611e8ef"
+    sha256 cellar: :any,                 arm64_monterey: "a4cfc73e0e1cef6223f187f27ce34a503ceaa71dbed5d1a7e19763af2781b4de"
+    sha256 cellar: :any,                 arm64_big_sur:  "1dd45f53ecf4aed0641eccf04c30c9369ce77748d4d243f0dce23cc166ef853c"
+    sha256 cellar: :any,                 ventura:        "0d27a32c440fa6a4f065573cc681ca72b5710f7bdc09795631211b868d3495e5"
+    sha256 cellar: :any,                 monterey:       "f692c4a3b61a4118bfbef17d689801b8e602bf18b8ee6ce4ad8cb1a1a45b37f6"
+    sha256 cellar: :any,                 big_sur:        "b34d180813b2dec88159f38354f74c773814c0828a24cc10f81e0cd03ca9ab29"
+    sha256 cellar: :any,                 catalina:       "0efb592a2b306bf3cc1da19e5ea4455230ef1cb3699b0eb50acd15fea111698d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2a9d579f863fb0da48795d2dd53df68de831b149f43a1281f26298bd893fc08f"
   end
 
   depends_on "bison" => :build
   depends_on "cmake" => :build
   depends_on "flex" => :build
-  depends_on "python@3.9" => :build
-  depends_on "llvm@12"
+  depends_on "python@3.10" => :build
+  depends_on "llvm@14"
+
+  fails_with gcc: "5"
 
   def llvm
     deps.map(&:to_formula).find { |f| f.name.match? "^llvm" }
   end
 
   def install
+    # Force cmake to use our compiler shims instead of bypassing them.
+    inreplace "CMakeLists.txt", "set(CMAKE_C_COMPILER \"clang\")", "set(CMAKE_C_COMPILER \"#{ENV.cc}\")"
+    inreplace "CMakeLists.txt", "set(CMAKE_CXX_COMPILER \"clang++\")", "set(CMAKE_CXX_COMPILER \"#{ENV.cxx}\")"
+
+    # Disable building of i686 target on Linux, which we do not support.
+    inreplace "cmake/GenerateBuiltins.cmake", "set(target_arch \"i686\")", "return()" unless OS.mac?
+
     args = std_cmake_args + %W[
       -DISPC_INCLUDE_EXAMPLES=OFF
       -DISPC_INCLUDE_TESTS=OFF

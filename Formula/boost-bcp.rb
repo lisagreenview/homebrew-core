@@ -1,9 +1,8 @@
 class BoostBcp < Formula
   desc "Utility for extracting subsets of the Boost library"
   homepage "https://www.boost.org/doc/tools/bcp/"
-  # Please add to synced_versions_formulae.json once version synced with boost
-  url "https://boostorg.jfrog.io/artifactory/main/release/1.77.0/source/boost_1_77_0.tar.bz2"
-  sha256 "fc9f85fc030e233142908241af7a846e60630aa7388de9a5fafb1f3a26840854"
+  url "https://boostorg.jfrog.io/artifactory/main/release/1.80.0/source/boost_1_80_0.tar.bz2"
+  sha256 "1e19565d82e43bc59209a168f5ac899d3ba471d55c7610c677d4ccf2c9c500c0"
   license "BSL-1.0"
   head "https://github.com/boostorg/boost.git", branch: "master"
 
@@ -12,13 +11,14 @@ class BoostBcp < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "58fa7c3d18b6c5ac8a56475bbb315430e6f4581b39f3c6506879f4adfd8068e0"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "416173b54edea43357edb6fdd76cf2c89060015b889a9e1843e33e796b6a97c4"
-    sha256 cellar: :any_skip_relocation, monterey:       "02213b90b218fb2f4d38940a59c3ae82e612405adc7e5cc79c296ea6521273a9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "cc527cdb08563bbe1a03fd9d59085d3737ab197e753085e5b3d7c11704d7ca03"
-    sha256 cellar: :any_skip_relocation, catalina:       "5fbf373c4fb07fead636165d863be6ba56f52c929926e6e301796a1f00fca3af"
-    sha256 cellar: :any_skip_relocation, mojave:         "e483b259f0c9b6fb2fb1ff1256c3b3421d5f5c09a807819076200e114f40a0ac"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "dfa4af82624b089572d76ce463f5fc7c551bd53eeca67d4077e64bc104d28247"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "d023fa0cac69acf6f984490010af42aed546f6bf882efb21b91ff3ee7bed18ee"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "22f911d13db37f9f87c516cada4cf41b9dfaea7dfd8dd948baba5dda2b1e625e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a6a9e8880cf68faec11e18b96028043442b8fda1064049def70e6861bedf1b82"
+    sha256 cellar: :any_skip_relocation, ventura:        "a0a5d6c58ad208d5587a97aea1a6d074185a6f23785989c43c4d78d1095f9068"
+    sha256 cellar: :any_skip_relocation, monterey:       "6b01167eaa34dbe8b4736aed2f8b6a49e714c381e9d616d94d17afa48dcda6c8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "e0d714042b682b610a45519572a95086fdafda8b99973bed9f1761c4fd86b824"
+    sha256 cellar: :any_skip_relocation, catalina:       "6b3a2bb31ab835dd1c6803b163655d4f316def336cca9ad17dc49ea5d7344b5b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "59ab8de62c6d48d64bee4c41355789c68b5ace4560df58cc3650b3a1e6bfe943"
   end
 
   depends_on "boost-build" => :build

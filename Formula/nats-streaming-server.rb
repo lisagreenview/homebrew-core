@@ -1,18 +1,20 @@
 class NatsStreamingServer < Formula
   desc "Lightweight cloud messaging system"
   homepage "https://nats.io"
-  url "https://github.com/nats-io/nats-streaming-server/archive/refs/tags/v0.23.2.tar.gz"
-  sha256 "48e0eb7b3bba3e3fa04ce56dac32e79e5d1a137b5ec7dd1b151aa1fde17343d8"
+  url "https://github.com/nats-io/nats-streaming-server/archive/v0.25.2.tar.gz"
+  sha256 "f0a8baa9770d305c11b425a57383c8c0fcfa59836e30010aec19c14e54436b54"
   license "Apache-2.0"
   head "https://github.com/nats-io/nats-streaming-server.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "66c17e707563499a12fd058c8e00012d81d89877e378f7c373452fd5c68c6943"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "48628ec48eef41d6d96d59d1de8e92c3beb4fcabd0f10a20bbda8a765a2f2b0a"
-    sha256 cellar: :any_skip_relocation, monterey:       "6f58de4cfd0e0a836d4aaed79528f8103dcbb86b292139da3703095082be7f5c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "253506279ac1f0ac433dff97714455a21d9216cccd75779512e161d92be0d4eb"
-    sha256 cellar: :any_skip_relocation, catalina:       "f7b16b78e16e3400544da8c4c5f81eb1d6f88e84e0066d1dafc80383fe8501d9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "377b59c1066557d70e963b44ebc0f1963f6f1daa244105243cebd74069d80e05"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "0e3ac6b541108e9e23d9731a7fe8d6c7bc3ac8b2d5880960b82bacec3fc37619"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "2ab68ed5a2e3f798180efddf11fc983dd144e008579abab474c3da84881349e5"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "94bb667e52dbd7fadcfa1efcca2c92f4ba54395d04b2d79f521244832c4d9d3d"
+    sha256 cellar: :any_skip_relocation, ventura:        "03d584de12f34b8ca6e704cad58813d711053e93944134268a43bd2086365786"
+    sha256 cellar: :any_skip_relocation, monterey:       "1979ee5de7edb1a5b4133bdd0563974a2e49313b87b539f2f0396faba6e93831"
+    sha256 cellar: :any_skip_relocation, big_sur:        "d6604a421c7583d547927c5a5beb7f955664da49cbf51707c594c780b0626bb8"
+    sha256 cellar: :any_skip_relocation, catalina:       "aa9c7fd64d91edcf6d59badded667c0f52af54ed298c0553f38e87081c04d089"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0a8b5d70091889792474114d396c384482c8d2335933c7434e9a3a3c55540af4"
   end
 
   depends_on "go" => :build

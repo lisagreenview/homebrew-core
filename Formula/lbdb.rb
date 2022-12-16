@@ -1,8 +1,8 @@
 class Lbdb < Formula
   desc "Little brother's database for the mutt mail reader"
   homepage "https://www.spinnaker.de/lbdb/"
-  url "https://www.spinnaker.de/lbdb/download/lbdb_0.49.1.tar.gz"
-  sha256 "e2a57a2935d52ae5fbcc76d84ee06955d943c4696d0b43c7c1de5b8bc7f0f31e"
+  url "https://www.spinnaker.de/lbdb/download/lbdb-0.51.1.tar.gz"
+  sha256 "97e69fa6535e59869fc42431abe70f5cca4164890d0df2736081a94e1b3625ef"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -11,13 +11,14 @@ class Lbdb < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e087de084cff07eae814fc954fa74a74d73b0f06d0f91129977112d6558ecbac"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6c8daad11d118ab04bb0209f95c9c828392a5b260eaee63dbe73a7b5f30b8ba8"
-    sha256 cellar: :any_skip_relocation, monterey:       "41cdd85f7474a49f24cee7c69a7d5108c4ea24fb766674112415eb1b42659a0a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "d95cc4ac68303be926a5c9ca8a4a17bbc545f3ce02ce345ecebe95a613ed5484"
-    sha256 cellar: :any_skip_relocation, catalina:       "3eafefa5553d8660c6d315f15f6bb963b7e21673b485ad681a2b8e2c3c9aeb13"
-    sha256 cellar: :any_skip_relocation, mojave:         "d8292aef28eecf34b970aba54f473dfa88cd5c64b9415002e1a62ae1e2dc393c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "482715f9ab4a754a6425a34380b0388f51eff44c73b45ed1bec356566173050a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "d172ddbb9a1446876cc0b5c75c389c46589beff7a8f5a87ab9d5ec7d88ff265c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "27aaf73b84538a78fd40cfe19f8d5adff6a3277a639085a5b9510d5546caeff1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e308f798530d35ee7a77fde6a35da9ffa02a039dc2a8c18e3257c24b708b6a14"
+    sha256 cellar: :any_skip_relocation, ventura:        "20e7175726298aad67cdda62c01907454dc20e5f1931f98f1016a00aaef9e488"
+    sha256 cellar: :any_skip_relocation, monterey:       "7cd1dd2a1209d574ae112e116121414bd0bdda73094699f9bd5a87b87ca13485"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9e95deee2c312e77e6519aef3a9e78702b1e4aa693f86c390a76a078beef4de5"
+    sha256 cellar: :any_skip_relocation, catalina:       "61ebb0db54a8f0a14704c5d409917eece096fca4d936f45aa5908ce7aeec6ace"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "72d1f94b284ddd49b2c172152ea4212b821788a57dd46a43832e301379015414"
   end
 
   depends_on "abook"

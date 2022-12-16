@@ -1,17 +1,19 @@
 class Moar < Formula
   desc "Nice to use pager for humans"
   homepage "https://github.com/walles/moar"
-  url "https://github.com/walles/moar/archive/refs/tags/v1.8.4.tar.gz"
-  sha256 "00fe9ae0631d89bce109ac5b8fb3f5ed0e090df1a5fe9e26cc54fa21f0e40710"
+  url "https://github.com/walles/moar/archive/refs/tags/v1.11.1.tar.gz"
+  sha256 "e7f391eff362a94d82b1f57bb6ca9dd78a9c1ae126a3bb4aa385a7607e7dbe5b"
   license "BSD-2-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "66841021e43d87ad1ffa7d48a8cc1d673a7db326ffd5a6c513b3311c7e34e32d"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "66841021e43d87ad1ffa7d48a8cc1d673a7db326ffd5a6c513b3311c7e34e32d"
-    sha256 cellar: :any_skip_relocation, monterey:       "bb1bd388171482baf71c082ee8281f20fd79152f42fd27d4d279279eb0912519"
-    sha256 cellar: :any_skip_relocation, big_sur:        "bb1bd388171482baf71c082ee8281f20fd79152f42fd27d4d279279eb0912519"
-    sha256 cellar: :any_skip_relocation, catalina:       "bb1bd388171482baf71c082ee8281f20fd79152f42fd27d4d279279eb0912519"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "079bfc91158a3f91d3260b69d95ab27b892c35b48589584f9b42dc0a60697a89"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "54b3030ae99d1dbaeb40ad07c393e365ad41dc3503bdf34481d40ef3f802c887"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "54b3030ae99d1dbaeb40ad07c393e365ad41dc3503bdf34481d40ef3f802c887"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "54b3030ae99d1dbaeb40ad07c393e365ad41dc3503bdf34481d40ef3f802c887"
+    sha256 cellar: :any_skip_relocation, ventura:        "a1ea32537b5be165318065acec126463764061a71ca7a6c41da55a5b79cb9a86"
+    sha256 cellar: :any_skip_relocation, monterey:       "a1ea32537b5be165318065acec126463764061a71ca7a6c41da55a5b79cb9a86"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a1ea32537b5be165318065acec126463764061a71ca7a6c41da55a5b79cb9a86"
+    sha256 cellar: :any_skip_relocation, catalina:       "a1ea32537b5be165318065acec126463764061a71ca7a6c41da55a5b79cb9a86"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2d07448f00b653f19e64d55d2aceef8be2efb11eef2a8a5af19abad17b2456dc"
   end
 
   depends_on "go" => :build
@@ -19,6 +21,7 @@ class Moar < Formula
   def install
     ldflags = "-s -w -X main.versionString=v#{version}"
     system "go", "build", *std_go_args(ldflags: ldflags)
+    man1.install "moar.1"
   end
 
   test do

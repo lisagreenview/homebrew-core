@@ -1,10 +1,11 @@
 class KnotResolver < Formula
   desc "Minimalistic, caching, DNSSEC-validating DNS resolver"
   homepage "https://www.knot-resolver.cz"
-  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-5.4.2.tar.xz"
-  sha256 "ea6a219571a752056669bae3f2c0c3ed0bec58af5ab832d505a3ec9c4063a58b"
+  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-5.5.3.tar.xz"
+  sha256 "a38f57c68b7d237d662784d8406e6098aad66a148f44dcf498d1e9664c5fed2d"
   license all_of: ["CC0-1.0", "GPL-3.0-or-later", "LGPL-2.1-or-later", "MIT"]
-  head "https://gitlab.labs.nic.cz/knot/knot-resolver.git"
+  revision 1
+  head "https://gitlab.labs.nic.cz/knot/knot-resolver.git", branch: "master"
 
   livecheck do
     url "https://secure.nic.cz/files/knot-resolver/"
@@ -12,13 +13,14 @@ class KnotResolver < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "452c25e1ae99d18a9a1b46357644b43f0edb0b89460e444dbba49fbed6e39d71"
-    sha256 arm64_big_sur:  "cacea8251a555de1f374ad7a62d4b33bd73181f429e235cedc4de8be00090097"
-    sha256 monterey:       "8b61ef0569ab3a124830b8f0c71106dfdbd490a5e4b130c46cf0597da5f384de"
-    sha256 big_sur:        "91405319bf4bce33774c1ef2c42802d5405c12cb74c87637206266444de3163b"
-    sha256 catalina:       "afe54507119237bae07e93a5f975032db883061e062638dad73489afb1935dde"
-    sha256 mojave:         "d7b924de8d80867a074635aae109dc7af1814425e4a0ba159f271ba9c8b8732d"
-    sha256 x86_64_linux:   "3ac89256654cabe6135e52677a28e133997d832aceeb39e5edd4a21e1a40ed1a"
+    sha256 arm64_ventura:  "12dbcfb549ef5b68b6a6a6fcf9b7fc47602ebccc92f455086d4092efaa158f64"
+    sha256 arm64_monterey: "de3f1e1f8fea0e292f9acea823802778a1d40c1c4bda863ba343d51117acaf85"
+    sha256 arm64_big_sur:  "b3546f2546f4a2c9a62c815530eb72577050eebb74fa6051c6b4259556a8aa0d"
+    sha256 ventura:        "cb391b0b9e7392dcdcc5a2e86dcc760ae4eff483395339b4cf34ed25eb43ade3"
+    sha256 monterey:       "072de42c2782eb5022257d1c0b4f4161cc8f049fcb27b897a8d026d506f710d8"
+    sha256 big_sur:        "e0f5dea3577e23596ceaa94049c7aac2e2d80617d9cab5da3a70a3e5eb51581f"
+    sha256 catalina:       "efc2b3769d9097e9cb34c5265f105e25372502511e7eeb11efdfba804dc28f79"
+    sha256 x86_64_linux:   "937ea3e6cccfe623ac7ecb6483e5ff4c6823bd3be7a198668e84646fa0a93f4f"
   end
 
   depends_on "meson" => :build
@@ -29,7 +31,7 @@ class KnotResolver < Formula
   depends_on "libnghttp2"
   depends_on "libuv"
   depends_on "lmdb"
-  depends_on "luajit-openresty"
+  depends_on "luajit"
 
   on_linux do
     depends_on "libcap-ng"

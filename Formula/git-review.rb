@@ -3,45 +3,48 @@ class GitReview < Formula
 
   desc "Submit git branches to gerrit for review"
   homepage "https://opendev.org/opendev/git-review"
-  url "https://files.pythonhosted.org/packages/bb/0f/5eef0fc4a55d0ad2326330f183529ffb874685c9b3a69bd1093da09d2c65/git-review-2.2.0.tar.gz"
-  sha256 "fd97a00e5c15173eb097cef8e8b7915df96d878ad11eb62cb44983642b8f3a63"
+  url "https://files.pythonhosted.org/packages/8e/5c/18f534e16b193be36d140939b79a8046e07f343b426054c084b12d59cf0b/git-review-2.3.1.tar.gz"
+  sha256 "24e938136eecb6e6cbb38b5e2b034a286b70b5bb8b5a2853585c9ed23636014f"
   license "Apache-2.0"
-  head "https://opendev.org/opendev/git-review.git"
+  head "https://opendev.org/opendev/git-review.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a8a0b77015a08b8e6399d7e35e1c19f5e1dfa7581a1159bc571ca42ce2353ccd"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a8a0b77015a08b8e6399d7e35e1c19f5e1dfa7581a1159bc571ca42ce2353ccd"
-    sha256 cellar: :any_skip_relocation, monterey:       "25bca3f3539864feb6578e417f23a6b94fd98a8e78b8c319875b8736481bdc3f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "25bca3f3539864feb6578e417f23a6b94fd98a8e78b8c319875b8736481bdc3f"
-    sha256 cellar: :any_skip_relocation, catalina:       "25bca3f3539864feb6578e417f23a6b94fd98a8e78b8c319875b8736481bdc3f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "770e52b24f639c207b82b0a92434ca2e77fa1482878b2d1ae3ea95e549a0db8c"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "465665143bbad4a6e1cc00ffa3b3ddd3627ec508726f463b40d779d4e77f2a4a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7df1495c0fb807fd2337b88a71766c59c35c4ff1d1d21e17f520a6d3e597379f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9010deaf20b3c78b9ba95ed5466534552549cab39d733ab351580118178ac7d3"
+    sha256 cellar: :any_skip_relocation, ventura:        "e193a7e5655b097777bb43842558b0646a70e5a2ce4f6738d611c0dfc9052f92"
+    sha256 cellar: :any_skip_relocation, monterey:       "0a62cd57c2a5ba7452e42035cba35275755f08ad00676bfd0cf4e23fc42cf0e2"
+    sha256 cellar: :any_skip_relocation, big_sur:        "d40296f48a0f24261fc4e8dd8087807fb16d215803af8bc2fb499dc50e4875e0"
+    sha256 cellar: :any_skip_relocation, catalina:       "e3b03b93811344d8b3ed75ef01b3ae386b50fa95ba776a5cc2137c36784387d9"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a910dfac976e4a18bb859f40e7235eecabc9deef41a706c4354dc6fd39116f03"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6c/ae/d26450834f0acc9e3d1f74508da6df1551ceab6c2ce0766a593362d6d57f/certifi-2021.10.8.tar.gz"
-    sha256 "78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/9f/c5/334c019f92c26e59637bb42bd14a190428874b2b2de75a355da394cf16c1/charset-normalizer-2.0.7.tar.gz"
-    sha256 "e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/62/08/e3fc7c8161090f742f504f40b1bccbfc544d4a4e09eb774bf40aafce5436/idna-3.3.tar.gz"
-    sha256 "9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
+    url "https://files.pythonhosted.org/packages/b2/56/d87d6d3c4121c0bcec116919350ca05dc3afd2eeb7dc88d07e8083f8ea94/urllib3-1.26.12.tar.gz"
+    sha256 "3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"
   end
 
   def install

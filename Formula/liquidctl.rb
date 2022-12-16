@@ -3,32 +3,40 @@ class Liquidctl < Formula
 
   desc "Cross-platform tool and drivers for liquid coolers and other devices"
   homepage "https://github.com/liquidctl/liquidctl"
-  url "https://files.pythonhosted.org/packages/e4/f5/745cc14e5748de5d5ac3ccc1a0a9ee5e0e73858aafcc863514ce88956c0b/liquidctl-1.7.2.tar.gz"
-  sha256 "b2337e0ca3bd36de1cbf581510aacfe23183d7bb176ad0dd43904be213583de3"
+  url "https://files.pythonhosted.org/packages/7d/61/e3cfc5e1cb8f711a6da0fe813a01c01b793c594a401c3c579fc0a0e41027/liquidctl-1.11.1.tar.gz"
+  sha256 "278c1aca8d891bfe8e0c164dfe6651261a0423b29f9c24cef060c3613f2a4fd7"
   license "GPL-3.0-or-later"
   head "https://github.com/liquidctl/liquidctl.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "8b23f4d0d050a0d23265a693a95aa8136e23182d055b29900e6a472bdce0faad"
-    sha256 cellar: :any,                 arm64_big_sur:  "f328324cba24b07779199d88ce405d2f6a8a4e023021f71cb8b745b698cd675c"
-    sha256 cellar: :any,                 monterey:       "1e162bec371b1719136560651500a019b4c46b13153d4c01e813c1bcedcceb09"
-    sha256 cellar: :any,                 big_sur:        "bad09035eeea790c15be5d4f888e5e7d289f2e6d826af9e5e568907275503d70"
-    sha256 cellar: :any,                 catalina:       "c20cb061748d4bcc952ed77ab148ca73a4bed576bbe5e1c9b7595eca9a74f8e0"
-    sha256 cellar: :any,                 mojave:         "68edf5e0b19b017ab73a4381525ea5cc9b365c4284ea6ea80e00c09cbbdd7299"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d9def490100759b197a6785a095d322cd9958bbe9ecbe6b09c8da081d7cf7b51"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "08e91b45f02230e2f68085948d0347885928a201dd76eaefa8a45c6cf585024b"
+    sha256 cellar: :any,                 arm64_monterey: "2e4d32355b850474b22f0ae10650aa4b0c7f30d67f1c7e19650e3b1cb84289ed"
+    sha256 cellar: :any,                 arm64_big_sur:  "01ecf2c0c0e1e7188ad1575b4c23a8f8ee8a451962e03aca6933bcd2b920670c"
+    sha256 cellar: :any,                 ventura:        "61b662d85adfb9ec71b3316f9ee46d7990aaf2d1d6f9137888f9ea1823316578"
+    sha256 cellar: :any,                 monterey:       "b4ae93e1d49e54faf34dc20d1996ab7c7c3eb7a29a727b369efc19b5e337082b"
+    sha256 cellar: :any,                 big_sur:        "da2240aac8bc91eecf49a7f720292b40c040e5ac1fc934d91894ea084314d537"
+    sha256 cellar: :any,                 catalina:       "4484eba32f98ce6545461d1739bd0d62df0c93c9425ba6a2229e00c5f8598b53"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0e7ac28769ffee2ef0c394d52a9bb3c8e97dc18922c7eb218e6e1a6dd7d40d71"
   end
 
   depends_on "hidapi"
   depends_on "libusb"
-  depends_on "python@3.10"
+  depends_on "pillow"
+  depends_on "python@3.11"
 
   on_linux do
     depends_on "i2c-tools"
   end
 
   resource "colorlog" do
-    url "https://files.pythonhosted.org/packages/c2/42/f7a7d8eaa3420fcfc7b85c423c0800b0f2eb2241c780705f0952eafd0171/colorlog-6.5.0.tar.gz"
-    sha256 "cf62a8e389d5660d0d22be17937b25b9abef9497ddc940197d1773aa1f604339"
+    url "https://files.pythonhosted.org/packages/78/6b/4e5481ddcdb9c255b2715f54c863629f1543e97bc8c309d1c5c131ad14f2/colorlog-6.7.0.tar.gz"
+    sha256 "bd94bd21c1e13fac7bd3153f4bc3a7dc0eb0974b8bc2fdf1a989e474f6e582e5"
+  end
+
+  resource "crcmod" do
+    url "https://files.pythonhosted.org/packages/6b/b0/e595ce2a2527e169c3bcd6c33d2473c1918e0b7f6826a043ca1245dd4e5b/crcmod-1.7.tar.gz"
+    sha256 "dc7051a0db5f2bd48665a990d3ec1cc305a466a77358ca4492826f41f283601e"
   end
 
   resource "docopt" do
@@ -37,8 +45,8 @@ class Liquidctl < Formula
   end
 
   resource "hidapi" do
-    url "https://files.pythonhosted.org/packages/99/9b/5c41756461308a5b2d8dcbcd6eaa2f1c1bc60f0a6aa743b58cab756a92e1/hidapi-0.10.1.tar.gz"
-    sha256 "a1170b18050bc57fae3840a51084e8252fd319c0fc6043d68c8501deb0e25846"
+    url "https://files.pythonhosted.org/packages/ef/72/54273f701c737ae5f42d9c0adf641912d20eb955c75433f1093fa509bcc7/hidapi-0.12.0.post2.tar.gz"
+    sha256 "8ebb2117be8b27af5c780936030148e1971b6b7fda06e0581ff0bfb15e94ed76"
   end
 
   resource "pyusb" do
@@ -51,14 +59,15 @@ class Liquidctl < Formula
     ENV["DIST_NAME"] = "homebrew"
     ENV["DIST_PACKAGE"] = "liquidctl #{version}"
 
-    venv = virtualenv_create(libexec, "python3")
+    python3 = "python3.11"
+    venv = virtualenv_create(libexec, python3)
 
     resource("hidapi").stage do
       inreplace "setup.py" do |s|
         s.gsub! "/usr/include/libusb-1.0", "#{Formula["libusb"].opt_include}/libusb-1.0"
         s.gsub! "/usr/include/hidapi", "#{Formula["hidapi"].opt_include}/hidapi"
       end
-      system libexec/"bin/python3", *Language::Python.setup_install_args(libexec), "--with-system-hidapi"
+      system python3, *Language::Python.setup_install_args(libexec, python3), "--with-system-hidapi"
     end
 
     venv.pip_install resources.reject { |r| r.name == "hidapi" }

@@ -4,33 +4,35 @@ class Bpytop < Formula
 
   desc "Linux/OSX/FreeBSD resource monitor"
   homepage "https://github.com/aristocratos/bpytop"
-  url "https://github.com/aristocratos/bpytop/archive/v1.0.67.tar.gz"
-  sha256 "e3f0267bd40a58016b5ac81ed6424f1c8d953b33a537546b22dd1a2b01b07a97"
+  url "https://github.com/aristocratos/bpytop/archive/v1.0.68.tar.gz"
+  sha256 "3a936f8899efb66246e82bbcab33249bf94aabcefbe410e56f045a1ce3c9949f"
   license "Apache-2.0"
-  revision 2
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "302be18ca15e6b772a1537c906a0571015ac9147d6d9be981877831faed125c7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9d29bed4df3651ba795552146d0082d3e7ed6f0e08ff913bd25a40d0666367fa"
-    sha256 cellar: :any_skip_relocation, monterey:       "065b5739a23c2157ff3682f15fbb7e4a9653d8eea68128eadc12f806bd4a4e57"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a9124b39222c6cad1fc9f9d55c193f1ba34e26611cb1d9cb82b01834e6008643"
-    sha256 cellar: :any_skip_relocation, catalina:       "6c53a6e4e1beffda773d8f98c8ffe1f971d5a2edf90bf91b6f93db4491e61f26"
-    sha256 cellar: :any_skip_relocation, mojave:         "ba84fab69b931ddb11536521357b40c669ddc1d562d414cb524bcd11251c6fc3"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "87ef5047c7a8082a5fe12a5aaf24d410fd9eb8e7bd1c01aa807cbf488d86a4cf"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "becab23db91f8307110f48affbf8fbb7cd563687a3b2396cb8ebd6c3b495f22b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1e1e60fabfc1c12c865fce8effc365fcf76650655004d63099c3799396785034"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "de2bb84abd2e704d144218659c3e9c188304b170e9dd6187b22138158182c15c"
+    sha256 cellar: :any_skip_relocation, ventura:        "df1e0d8d3777948aece75453634ddb2746c76a1795ad1fcc452cf4119604842f"
+    sha256 cellar: :any_skip_relocation, monterey:       "0b157751f5c2a3d8e7820356d2d49e29587d98ea93c82533605ca9429c4c1e36"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f14bd5dfed41695186fce259e9c974298da36cfbd47b9598af539c0fda697d9c"
+    sha256 cellar: :any_skip_relocation, catalina:       "7ec48aedfe22ed4f1eef9a79bf824f47c8dc31729ee66546c7edd2e985c0b6c3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fdb97df09c1d785d498ff04c87f219d0b5cfebc5cde09cb0039f879198746cc7"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+
   on_macos do
     depends_on "osx-cpu-temp"
   end
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/e1/b0/7276de53321c12981717490516b7e612364f2cb372ee8901bd4a66a000d7/psutil-5.8.0.tar.gz"
-    sha256 "0c9ccb99ab76025f2f0bbecf341d4656e9c1351db8cc8a03ccd62e318ab4b5c6"
+    url "https://files.pythonhosted.org/packages/de/eb/1c01a34c86ee3b058c556e407ce5b07cb7d186ebe47b3e69d6f152ca5cc5/psutil-5.9.3.tar.gz"
+    sha256 "7ccfcdfea4fc4b0a02ca2c31de7fcd186beb9cff8207800e14ab66f79c773af6"
   end
 
   def install
-    venv = virtualenv_create(libexec, "python3")
+    venv = virtualenv_create(libexec, "python3.11")
     venv.pip_install resources
     system "make", "install", "PREFIX=#{prefix}"
     pkgshare.install "themes"

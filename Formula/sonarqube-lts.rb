@@ -1,33 +1,47 @@
 class SonarqubeLts < Formula
   desc "Manage code quality"
   homepage "https://www.sonarqube.org/"
-  url "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.9.6.zip"
-  sha256 "9991d4df42c10c181005df6a4aff6b342baf9be2f3ad0e83e52a502f44d2e2d8"
+  url "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61524.zip"
+  sha256 "9a8e1edae1a687356b2895b0d3fd60034a8e59b535e653563de605d1e2b17960"
   license "LGPL-3.0-or-later"
 
-  # Upstream doesn't distinguish LTS releases in the URL or filename, so this
-  # only matches versions for the formula's current major/minor version. This
-  # won't identify a new LTS version with a different major/minor but updating
-  # the `stable` URL with the new LTS will fix the check until the next time.
   livecheck do
-    url "https://binaries.sonarsource.com/Distribution/sonarqube/"
-    regex(/href=.*?sonarqube[._-]v?(#{Regexp.escape(version.major_minor)}(?:\.\d+)*)\.zip/i)
+    url "https://www.sonarqube.org/downloads/"
+    regex(/SonarQube\s+v?\d+(?:\.\d+)+\s+LTS.*?href=.*?sonarqube[._-]v?(\d+(?:\.\d+)+)\.(?:zip|t)/im)
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "cb7b43a7396102cfa85ab32e9647bf04ae88dfb5855104d52e664f71338cc9fc"
-    sha256 cellar: :any_skip_relocation, big_sur:       "975d8370e016c2fd615699e67787c5ea2a00cd202ed6faa259964461a57384c5"
-    sha256 cellar: :any_skip_relocation, catalina:      "975d8370e016c2fd615699e67787c5ea2a00cd202ed6faa259964461a57384c5"
-    sha256 cellar: :any_skip_relocation, mojave:        "b4ffb6a083fc4eb59d55b9fc5ddaa95dce91408a6439f905c5d92a9c44be3b20"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "790c3b1664d331817bf85ae9b99de3b960689085b9f7707ac424d73de6cee5c2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "8216e77fa076368806c31b2dd9a7407cd9b56ac1c71c8f7d9d3e9300991294df"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "ba2c787766ebc3353063d6587529ace383b8d3e1a2b3ad853d6d1603734fe89e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "df64c44ab8dfaf70244a6dcb2fe439a34b963e2cc2018f3d5aa250ba8f054d24"
+    sha256 cellar: :any_skip_relocation, ventura:        "2ae615b8a1b62dfdcbd9b0840831b03577292d6f1a5be112841b363a7158f7f1"
+    sha256 cellar: :any_skip_relocation, monterey:       "d69dd0f8179bd50bc8a017868f0c4fdc4367a20d2d0821ce408995df13f5277f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "4bff3fa4e9c6cdf563a464d2c15bc4cf41b64e1bba6caa3bdd543b32be004c28"
+    sha256 cellar: :any_skip_relocation, catalina:       "e779f6c1c826f9210c1cdab545e94965a9587a6630a7acd861e5114751d866cf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cc58a80f7dd387a6e05462def97df3db4e974427fc5a78c6809565ef162289c6"
   end
 
+  depends_on "java-service-wrapper"
   depends_on "openjdk@11"
 
   conflicts_with "sonarqube", because: "both install the same binaries"
 
   def install
+    # Use Java Service Wrapper 3.5.46 which is Apple Silicon compatible
+    # Java Service Wrapper doesn't support the  wrapper binary to be symlinked, so it's copied
+    jsw_libexec = Formula["java-service-wrapper"].opt_libexec
+    ln_s jsw_libexec/"lib/wrapper.jar", "#{buildpath}/lib/jsw/wrapper-3.5.46.jar"
+    ln_s jsw_libexec/"lib/libwrapper.dylib", "#{buildpath}/bin/macosx-universal-64/lib/"
+    cp jsw_libexec/"bin/wrapper", "#{buildpath}/bin/macosx-universal-64/"
+    cp jsw_libexec/"scripts/App.sh.in", "#{buildpath}/bin/macosx-universal-64/sonar.sh"
+    sonar_sh_file = "bin/macosx-universal-64/sonar.sh"
+    inreplace sonar_sh_file, "@app.name@", "SonarQube"
+    inreplace sonar_sh_file, "@app.long.name@", "SonarQube"
+    inreplace sonar_sh_file, "../conf/wrapper.conf", "../../conf/wrapper.conf"
+    inreplace "conf/wrapper.conf", "wrapper-3.2.3.jar", "wrapper-3.5.46.jar"
+    rm "lib/jsw/wrapper-3.2.3.jar"
+    rm "bin/macosx-universal-64/lib/libwrapper.jnilib"
+
     # Delete native bin directories for other systems
     remove, keep = if OS.mac?
       ["linux", "macosx-universal"]

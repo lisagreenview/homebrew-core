@@ -4,19 +4,17 @@ class Mpg321 < Formula
   url "https://downloads.sourceforge.net/project/mpg321/mpg321/0.3.2/mpg321_0.3.2.orig.tar.gz"
   sha256 "056fcc03e3f5c5021ec74bb5053d32c4a3b89b4086478dcf81adae650eac284e"
   license "GPL-2.0"
+  revision 2
 
   bottle do
-    sha256 arm64_monterey: "1da7ca02424159358e08a6fad616a94fa848a0a46eb5098147b8f2a2f2d90538"
-    sha256 arm64_big_sur:  "0cde599f9f7a975ff76faddcdd85606f62445c2493e201db737916fd03ec907f"
-    sha256 monterey:       "30e6b5eb8e967e4c2597d2e2c017f1a77704d42a54ddba774f7fd603c805b502"
-    sha256 big_sur:        "f21a4649c7437144d8228ce229acf7dcd36541c8475ddc9e065bf62d7f501b35"
-    sha256 catalina:       "fdea1076a22b6af12c33b02e9eb040fceb11d39ed2eaa7307574bf5331d8f8dc"
-    sha256 mojave:         "d587b58200397ad4e8f7fa8c861e01c2c5e344d89a235e78d22fb7bd5ddf04f2"
-    sha256 high_sierra:    "6a8f8f58c8bf02f99e8206a231fce4e9f2bd7333b888581dd1838246983d139f"
-    sha256 sierra:         "a69f242f57e4211f96fa56f10573777204d5ed7d61cd7b35a04e0bbd33b9064e"
-    sha256 el_capitan:     "6c8921b0703d2952b6038ce7097957c3c2bfe9b59c2d41b5caddc268e96b245d"
-    sha256 yosemite:       "48b9ac480d966fc344c4867f3dcef7cd59be1440b11fe7d8280d51134a881f78"
-    sha256 x86_64_linux:   "f0e6431c86cba77da50d3ea89267963a78b9e7e46edf95172f52c086b5313d76"
+    sha256 arm64_ventura:  "5121567767b2da54cd4eca9c38f941dcd99000c53e46c9e3e6029a82e54e5712"
+    sha256 arm64_monterey: "aae6a0f70e06529f68c1f32ae77ab30d733993989aebd4680e49f84b3c26afe2"
+    sha256 arm64_big_sur:  "f3ba496b39e008dfe0e2b92c4d5fcc55f3040eef0cf45bfb29eec86f618929de"
+    sha256 ventura:        "dc2cc77c92a01c5fe94ad0fbc467302e47f38743e8a3ac4d66d25b3e38c19a6e"
+    sha256 monterey:       "5c160696795a2cf4262e4183ca91e934c70828b6af8de77479972b3e640247e9"
+    sha256 big_sur:        "8e0c58eb4f9a91375d28cf616563733a91baa1d06dd66317826d096c48a277a6"
+    sha256 catalina:       "5ed70395deaaf283b53c951e3805df5300b19f0921e3844eb28f6176012bcd5c"
+    sha256 x86_64_linux:   "a9e308f8bda99a7df745630013f69edf11302c6cea66428b3fb71cc99d12844c"
   end
 
   depends_on "libao"

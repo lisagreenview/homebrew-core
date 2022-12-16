@@ -1,9 +1,9 @@
 class Neon < Formula
   desc "HTTP and WebDAV client library with a C interface"
   homepage "https://notroj.github.io/neon/"
-  url "https://notroj.github.io/neon/neon-0.32.1.tar.gz"
-  mirror "https://fossies.org/linux/www/neon-0.32.1.tar.gz"
-  sha256 "05c54bc115030c89e463a4fb28d3a3f8215879528ba5ca70d676d3d21bf3af52"
+  url "https://notroj.github.io/neon/neon-0.32.4.tar.gz"
+  mirror "https://fossies.org/linux/www/neon-0.32.4.tar.gz"
+  sha256 "b1e2120e4ae07df952c4a858731619733115c5f438965de4fab41d6bf7e7a508"
   license "LGPL-2.0-or-later"
 
   livecheck do
@@ -12,11 +12,14 @@ class Neon < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "86e0ca2c11f4882900d48f5c6c87f29ed437c0fd4c311d06174c9bd10ef3542c"
-    sha256 cellar: :any,                 big_sur:       "86819110b5eacedd6be7e53d202b532c4b956062217685ae98bb96e547ad58cd"
-    sha256 cellar: :any,                 catalina:      "f5385868f91943383ca9674f2589280e30b55f4156086db05efa160411738467"
-    sha256 cellar: :any,                 mojave:        "de9f23227aac7ec30b4a412d783e5dfdb788a51c51e66689f01705207270805e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "07b5a9528950d32639c71726cd22bf01e6dc9df7dea38d4dccc17ab7844798a7"
+    sha256 cellar: :any,                 arm64_ventura:  "a9fd781dc1834be9e1066f51793ba4f377d33a085ec777a2f657968e2b61d77d"
+    sha256 cellar: :any,                 arm64_monterey: "8a9d15eed842a8cde2a71a19b3fc2fae4e29213c1d356c568383350bfde14f25"
+    sha256 cellar: :any,                 arm64_big_sur:  "421c1b74a8a1d8a60d64d839d483914e65d93d1c2005d5642aac81d0dad715ff"
+    sha256 cellar: :any,                 ventura:        "403ffe3d4e963180933120bd279e5c6a17612794e56713b8e18a254ab26cdd4c"
+    sha256 cellar: :any,                 monterey:       "b480974e79ffe9f828b0cc7068db7d336a2eef8ad311ef4e3e70f08aa95ec601"
+    sha256 cellar: :any,                 big_sur:        "a06568dabaf8ebac45d53833a5bfb558aac0f97e07014fd80fe3ecb28dbff780"
+    sha256 cellar: :any,                 catalina:       "8bdcc4e6be196c4cffccee3d185154094c7938ffc40a37f43394a58b5770e113"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "eef06a3735703c5e37bdf6973045db324a21719af799c1e92809fcfb6bafe5c1"
   end
 
   depends_on "pkg-config" => :build

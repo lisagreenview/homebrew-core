@@ -1,17 +1,19 @@
 class Ortp < Formula
   desc "Real-time transport protocol (RTP, RFC3550) library"
-  homepage "https://www.linphone.org/technical-corner/ortp"
-  url "https://gitlab.linphone.org/BC/public/ortp/-/archive/5.0.51/ortp-5.0.51.tar.bz2"
-  sha256 "0ae77f40321ea8b43376b7fda9d63cda16f9ef67de8e388871d1eaa01135c69e"
+  homepage "https://linphone.org/"
+  url "https://gitlab.linphone.org/BC/public/ortp/-/archive/5.2.0/ortp-5.2.0.tar.bz2"
+  sha256 "5f511597511c450ee9bc32b95bb6038082e66899961f6a035151a44d49f7eccf"
   license "GPL-3.0-or-later"
   head "https://gitlab.linphone.org/BC/public/ortp.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "53d96d0aa1084391518ae4d7b248bd5a025b4e75f7473a0110ea63e872035686"
-    sha256 cellar: :any, arm64_big_sur:  "a490870836537a4c8a3a43e1ee3da37807b65df4518d001058ba81b2966a9f81"
-    sha256 cellar: :any, monterey:       "5fa3c2bd5cb6ceafb2ce73a050bdde95e24d6f299f23c21d1e5e5d0216207a8b"
-    sha256 cellar: :any, big_sur:        "c210089138448b9aa56868fc705f9c1b1130e527d2c6a210ae0685de3cfee861"
-    sha256 cellar: :any, catalina:       "fe373a23935ba80686198ba348cc43f0ecc0fe02c40b9f699fbdf4a6874991d1"
+    sha256 cellar: :any,                 arm64_ventura:  "7cc89d496e016a658871879f0fc73979672035594b9d69b241055ee5cb2e1473"
+    sha256 cellar: :any,                 arm64_monterey: "a0695cf68780ed1e9379e11dad9959c959e62f17c9cd343c2364006c40d4e913"
+    sha256 cellar: :any,                 arm64_big_sur:  "d36b29f77d98d9b6db3c8a8b78bf43672b3522c9c9e3474162e836ed5ea07893"
+    sha256 cellar: :any,                 ventura:        "ecab60de39134d6cbe13c1badb999e650a1afc817b403a576c7128de0b401ba4"
+    sha256 cellar: :any,                 monterey:       "f320283f68a915518b43a44aee636c29619a11a1d8f258a91da634f9ff89ac94"
+    sha256 cellar: :any,                 big_sur:        "2b3b7fca241833505544e004e80ba883751284a4d24cdbf501c498184d854420"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d96356ae6535f3fde7ab5ff8c83a0e816e363b9589d767886f5fefeebfaed2fe"
   end
 
   depends_on "cmake" => :build
@@ -21,32 +23,36 @@ class Ortp < Formula
   # bctoolbox appears to follow ortp's version. This can be verified at the GitHub mirror:
   # https://github.com/BelledonneCommunications/bctoolbox
   resource "bctoolbox" do
-    url "https://gitlab.linphone.org/BC/public/bctoolbox/-/archive/5.0.51/bctoolbox-5.0.51.tar.bz2"
-    sha256 "88068640706479c350844678e6ac554c98f7e6cb6cc4ef18e0fbb7fa5800654d"
+    # Don't forget to change both instances of the version in the URL.
+    url "https://gitlab.linphone.org/BC/public/bctoolbox/-/archive/5.2.0/bctoolbox-5.2.0.tar.bz2"
+    sha256 "7f7ca169ea7183b91836e50efe66719295a4dc8bb8ecfa7c209717fa6776b0b4"
   end
 
   def install
     resource("bctoolbox").stage do
-      args = std_cmake_args.reject { |s| s["CMAKE_INSTALL_PREFIX"] } + %W[
-        -DCMAKE_INSTALL_PREFIX=#{libexec}
-        -DENABLE_TESTS_COMPONENT=OFF
-      ]
-      system "cmake", ".", *args
-      system "make", "install"
+      system "cmake", "-S", ".", "-B", "build",
+                      "-DENABLE_TESTS_COMPONENT=OFF",
+                      *std_cmake_args(install_prefix: libexec)
+      system "cmake", "--build", "build"
+      system "cmake", "--install", "build"
     end
 
     ENV.prepend_path "PKG_CONFIG_PATH", libexec/"lib/pkgconfig"
+    ENV.append "LDFLAGS", "-Wl,-rpath,#{libexec}/lib" if OS.linux?
+    cflags = ["-I#{libexec}/include"]
+    cflags << "-Wno-error=maybe-uninitialized" if OS.linux?
 
-    args = std_cmake_args + %W[
+    args = %W[
       -DCMAKE_PREFIX_PATH=#{libexec}
-      -DCMAKE_C_FLAGS=-I#{libexec}/include
+      -DCMAKE_C_FLAGS=#{cflags.join(" ")}
       -DCMAKE_CXX_FLAGS=-I#{libexec}/include
       -DENABLE_DOC=NO
+      -DENABLE_UNIT_TESTS=NO
     ]
-    mkdir "build" do
-      system "cmake", "..", *args
-      system "make", "install"
-    end
+
+    system "cmake", "-S", ".", "-B", "build", *args, *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do
@@ -63,5 +69,8 @@ class Ortp < Formula
     system ENV.cc, "-I#{include}", "-I#{libexec}/include", "-L#{lib}", "-lortp",
            testpath/"test.c", "-o", "test"
     system "./test"
+
+    # Ensure that bctoolbox's version is identical to ortp's.
+    assert_equal version, resource("bctoolbox").version
   end
 end

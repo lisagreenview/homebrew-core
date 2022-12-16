@@ -3,22 +3,23 @@ class Yapf < Formula
 
   desc "Formatter for python code"
   homepage "https://github.com/google/yapf"
-  url "https://files.pythonhosted.org/packages/85/60/8532f7ca17cea13de00e80e2fe1e6bd59a9379856706a027536b19daf0d3/yapf-0.31.0.tar.gz"
-  sha256 "408fb9a2b254c302f49db83c59f9aa0b4b0fd0ec25be3a5c51181327922ff63d"
+  url "https://files.pythonhosted.org/packages/c2/cd/d0d1e95b8d78b8097d90ca97af92f4af7fb2e867262a2b6e37d6f48e612a/yapf-0.32.0.tar.gz"
+  sha256 "a3f5085d37ef7e3e004c4ba9f9b3e40c54ff1901cd111f05145ae313a7c67d1b"
   license "Apache-2.0"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b46a3dbefb7b1e3ff520b32d75744b90eca77200de3201a4be5a95bbd45de65e"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b46a3dbefb7b1e3ff520b32d75744b90eca77200de3201a4be5a95bbd45de65e"
-    sha256 cellar: :any_skip_relocation, monterey:       "a7a417d2b6e9a1c2cea6f5b470ad8e18687780c3c69b354d108baa85a6a50e87"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a7a417d2b6e9a1c2cea6f5b470ad8e18687780c3c69b354d108baa85a6a50e87"
-    sha256 cellar: :any_skip_relocation, catalina:       "a7a417d2b6e9a1c2cea6f5b470ad8e18687780c3c69b354d108baa85a6a50e87"
-    sha256 cellar: :any_skip_relocation, mojave:         "a7a417d2b6e9a1c2cea6f5b470ad8e18687780c3c69b354d108baa85a6a50e87"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3f401553a61944a8b9aad2059b04aac3c4e9cec64786736f5e8f39108782fb93"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "950d8ab709fa1abe814841604705099fd1a668025a1ec5c903b59f7f53c9a4ef"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "950d8ab709fa1abe814841604705099fd1a668025a1ec5c903b59f7f53c9a4ef"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "950d8ab709fa1abe814841604705099fd1a668025a1ec5c903b59f7f53c9a4ef"
+    sha256 cellar: :any_skip_relocation, ventura:        "1b0f150f316f291060663c5cd8872844c2f127c875f63f67f054a585c87bf0c5"
+    sha256 cellar: :any_skip_relocation, monterey:       "1b0f150f316f291060663c5cd8872844c2f127c875f63f67f054a585c87bf0c5"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1b0f150f316f291060663c5cd8872844c2f127c875f63f67f054a585c87bf0c5"
+    sha256 cellar: :any_skip_relocation, catalina:       "1b0f150f316f291060663c5cd8872844c2f127c875f63f67f054a585c87bf0c5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "03c422cc9a467113710a17a468443733350d8f330932b03d77c7a98d11d3e68e"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   def install
     virtualenv_install_with_resources

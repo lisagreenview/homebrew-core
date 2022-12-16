@@ -1,20 +1,21 @@
 class QtLibiodbc < Formula
   desc "Qt SQL Database Driver"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.2/6.2.1/submodules/qtbase-everywhere-src-6.2.1.tar.xz"
-  sha256 "2c5f07b5c3ea27d3fc1a46686ea3fb6724f94dddf1fb007de3eb0bdb87429079"
-  license all_of: ["GPL-2.0-only", "GPL-3.0-only", "LGPL-2.1-only", "LGPL-3.0-only"]
+  url "https://download.qt.io/official_releases/qt/6.4/6.4.1/submodules/qtbase-everywhere-src-6.4.1.tar.xz"
+  sha256 "532ad71cc0f9c8f7cb92766c47bc3d23263c60876becd9053802f9727af24fae"
+  license any_of: ["GPL-2.0-only", "GPL-3.0-only", "LGPL-3.0-only"]
 
   livecheck do
     formula "qt"
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "019936819120fb814f9e79322d77fd63f4821fc9987c60ea8253fc0086715fb2"
-    sha256 cellar: :any, arm64_big_sur:  "90ace75ce98f53d6f3ba219b3aafc795627085cc3bba5c7d17ba6ab9d640cd7e"
-    sha256 cellar: :any, monterey:       "29933c54131d6e8b5fcf5c5e9b6c6c71da3a281de8dc0aa0ba4f9e68a809a280"
-    sha256 cellar: :any, big_sur:        "dbf03e92421cee1972143c5a4877366076c5fa911326034457ea26f7323f61f1"
-    sha256 cellar: :any, catalina:       "852667c4234305a7469bfff930b514f89ada8ca6272ae8bcdd8b075876f656ce"
+    sha256 cellar: :any, arm64_ventura:  "61f06b95954426627fad90df748d351bb22579396cdd20e9eab616900efbd80a"
+    sha256 cellar: :any, arm64_monterey: "525a8d1cdb287e4a0b6468fcd9126e39ed17b1dbd3353e0e75cabdc087b77ce3"
+    sha256 cellar: :any, arm64_big_sur:  "c97a8ab821a75e9e1501131b8afae2626e722d36120040cbabe407705cbdc25f"
+    sha256 cellar: :any, ventura:        "a790ffd049b983197a497eb21c0fd7d864804419d947177213f3ba81e553aac7"
+    sha256 cellar: :any, monterey:       "1b1bef20d3d103af9888fdef27226de65cbca3ee89afade39f1cdadd79ed1ead"
+    sha256 cellar: :any, big_sur:        "6f746e8eb0019e1df218e0df587ec211b6bec0f10548be3421e6ef454a0dbe85"
   end
 
   depends_on "cmake" => [:build, :test]
@@ -24,6 +25,8 @@ class QtLibiodbc < Formula
 
   conflicts_with "qt-unixodbc",
     because: "qt-unixodbc and qt-libiodbc install the same binaries"
+
+  fails_with gcc: "5"
 
   def install
     args = std_cmake_args + %W[
@@ -76,6 +79,7 @@ class QtLibiodbc < Formula
       #include <cassert>
       int main(int argc, char *argv[])
       {
+        QCoreApplication::addLibraryPath("#{share}/qt/plugins");
         QCoreApplication a(argc, argv);
         QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");
         assert(db.isValid());

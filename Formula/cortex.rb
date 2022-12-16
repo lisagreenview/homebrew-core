@@ -1,8 +1,8 @@
 class Cortex < Formula
   desc "Long term storage for Prometheus"
   homepage "https://cortexmetrics.io/"
-  url "https://github.com/cortexproject/cortex/archive/v1.10.0.tar.gz"
-  sha256 "8c75d723f31da3806a73a8a869a576cf6a0396aebe6567e96b675eb4df6d9849"
+  url "https://github.com/cortexproject/cortex/archive/v1.14.0.tar.gz"
+  sha256 "cb858658144679145ae8433f3c732ff7363e4ac1819c6fca373e2b9dd81f297a"
   license "Apache-2.0"
 
   livecheck do
@@ -11,22 +11,22 @@ class Cortex < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "63883c16aefe97cc4a4c5ba3b04969cea0bc1bbba16e5b0adf9baa626e5a2f9a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "634ad3f91c86e951ada9ac32b16a05af3ea8c91e07bd18fb261b39ee0c2c5baf"
-    sha256 cellar: :any_skip_relocation, monterey:       "7f01f63d58aba4d6b155b1acbd187df7c6d74e5a72214fc957fff283c6cdb7e8"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3044d8217250a03b90158a8600b03e7cfb70d3de3b19c14141d748d70ba51c22"
-    sha256 cellar: :any_skip_relocation, catalina:       "d31d8bcb6cab6eb3b5679972e41d0a272355650d7fed1a8c1a726364aa8cd871"
-    sha256 cellar: :any_skip_relocation, mojave:         "a9ff8743b74f1cc4286b174446d22928c374a0d907711b05be3ef5dd83481c1c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "960b349470adc18fecda3f24ebbe9871bcab6a8a112c387ab7730c8d1195cc60"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "84495337a577ad1253631d4d3f41d782b4fe6b5071aa10bc56221a27d527f13c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "07c056a1caa0b53ab37f7872c187c71b8c0bb8957411faa3883b6f5529388d65"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7864ee30b322daee8377f7095938cb59e296438cda606500b0bf537167d30024"
+    sha256 cellar: :any_skip_relocation, ventura:        "77e5a6d390e0072268e6700daae15c56019ee5c08ddff975ae87d9eda7333c6b"
+    sha256 cellar: :any_skip_relocation, monterey:       "422ef37276691514ef1654d724a55c4271c0a23b9e6badd98cf3c1f5c4d88765"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8111b2abb9fcd50888964dea6aea756623b454955549f9854dbbf1cdda817544"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8d8e3e074705f761c303cf9ae7d306a17d5fb142f8268d8d0dcee52ec5259de3"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", *std_go_args, "./cmd/cortex"
-    cd "docs/chunks-storage" do
-      inreplace "single-process-config.yaml", "/tmp", var
-      etc.install "single-process-config.yaml" => "cortex.yaml"
+    system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/cortex"
+    cd "docs/configuration" do
+      inreplace "single-process-config-blocks.yaml", "/tmp", var
+      etc.install "single-process-config-blocks.yaml" => "cortex.yaml"
     end
   end
 
@@ -39,18 +39,45 @@ class Cortex < Formula
   end
 
   test do
+    require "open3"
+    require "timeout"
+
     port = free_port
 
-    cp etc/"cortex.yaml", testpath
-    inreplace "cortex.yaml" do |s|
-      s.gsub! "9009", port.to_s
-      s.gsub! var, testpath
+    # A minimal working config modified from
+    # https://github.com/cortexproject/cortex/blob/master/docs/configuration/single-process-config-blocks.yaml
+    (testpath/"cortex.yaml").write <<~EOS
+      server:
+        http_listen_port: #{port}
+      ingester:
+        lifecycler:
+          ring:
+            kvstore:
+              store: inmemory
+            replication_factor: 1
+      blocks_storage:
+        backend: filesystem
+        filesystem:
+          dir: #{testpath}/data/tsdb
+    EOS
+
+    Open3.popen3(
+      bin/"cortex", "-config.file=cortex.yaml",
+                    "-server.grpc-listen-port=#{free_port}"
+    ) do |_, _, stderr, wait_thr|
+      Timeout.timeout(5) do
+        stderr.each do |line|
+          refute line.start_with? "level=error"
+          # It is important to wait for this line. Finishing the test too early
+          # may shadow errors that only occur when modules are fully loaded.
+          break if line.include? "Cortex started"
+        end
+        output = shell_output("curl -s http://localhost:#{port}/services")
+        assert_match "Running", output
+      end
+    ensure
+      Process.kill "TERM", wait_thr.pid
+      Process.wait wait_thr.pid
     end
-
-    fork { exec bin/"cortex", "-config.file=cortex.yaml", "-server.grpc-listen-port=#{free_port}" }
-    sleep 3
-
-    output = shell_output("curl -s localhost:#{port}/services")
-    assert_match "Running", output
   end
 end

@@ -2,8 +2,8 @@ class FaasCli < Formula
   desc "CLI for templating and/or deploying FaaS functions"
   homepage "https://www.openfaas.com/"
   url "https://github.com/openfaas/faas-cli.git",
-      tag:      "0.13.15",
-      revision: "b562392b12a78a11bcff9c6fca5a47146ea2ba0a"
+      tag:      "0.15.4",
+      revision: "0074051aeb837f5f160ee8736341460468b5c190"
   license "MIT"
   head "https://github.com/openfaas/faas-cli.git", branch: "master"
 
@@ -13,12 +13,14 @@ class FaasCli < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "098c53bf56e395f3da01359e9f9a41d90978b94619970db54c51ed849af2f305"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3757d79757a49a9d116e2dfd9665c1080f69de976fbee22aae96c91bf7031163"
-    sha256 cellar: :any_skip_relocation, monterey:       "4714c4f69ed4e335f72dbd6d02e45a2c7d1399c96e35757d111898ca94b6ada8"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7efd0ca1bf78a005d5b6ca1439d7f2db181aa1206cd201c8699fc28eebe8ea83"
-    sha256 cellar: :any_skip_relocation, catalina:       "2e5abe26e4b0eae0a0bb2a6d65aa37a0c508cc2845b23d6697433a1835b7de3c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "47b0e29998140d1f4d6737fac83226132c5155a2b8679265771315859525be46"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "62513fceaddc66b8ff066bcb9aed4eade7bdeeded5a63ab4db57c0f955fc3c34"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "08d5acfca1b93952a081d5baf5d3ceda155aeffd27ef2218f09621436da5c9c0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c6724bf8cdc5f8f8619763db31b2c1e6481afa4eade0b747cba5b6749b1c5bea"
+    sha256 cellar: :any_skip_relocation, ventura:        "2bf1aa3e8ac6cac12601d3987cf8b8eb933494d4a3928242299145ce3e98233e"
+    sha256 cellar: :any_skip_relocation, monterey:       "c56f192ee328325863e6760a0f5ec47d7199943ffed73b8abbfb5aa650e39d16"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f45e25a6fc6b4533855fbd7a28af661f5ed7eb2dbfaf08f6fc7dd7dec0ff6e3c"
+    sha256 cellar: :any_skip_relocation, catalina:       "a44b26ede29570966e1b0a5c2b0d848667978852f3fe74de790e49d88c8c0ab3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1cbacd19e5239d1ac2b06c89cf0c25e7604ab6251d1c349431986f67b0d91044"
   end
 
   depends_on "go" => :build
@@ -32,8 +34,12 @@ class FaasCli < Formula
       -X #{project}/version.GitCommit=#{Utils.git_head}
       -X #{project}/version.Version=#{version}
     ]
-    system "go", "build", "-ldflags", ldflags.join(" "), "-a", "-installsuffix", "cgo", "-o", bin/"faas-cli"
+    system "go", "build", *std_go_args(ldflags: ldflags), "-a", "-installsuffix", "cgo"
     bin.install_symlink "faas-cli" => "faas"
+
+    generate_completions_from_executable(bin/"faas-cli", "completion", "--shell", shells: [:bash, :zsh])
+    # make zsh completions also work for `faas` symlink
+    inreplace zsh_completion/"_faas-cli", "#compdef faas-cli", "#compdef faas-cli\ncompdef faas=faas-cli"
   end
 
   test do

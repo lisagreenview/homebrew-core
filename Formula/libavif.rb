@@ -1,42 +1,39 @@
 class Libavif < Formula
   desc "Library for encoding and decoding .avif files"
   homepage "https://github.com/AOMediaCodec/libavif"
-  url "https://github.com/AOMediaCodec/libavif/archive/refs/tags/v0.9.3.tar.gz"
-  sha256 "bcd9a1f57f982a9615eb7e2faf87236dc88eb1d0c886f3471c7440ead605060d"
+  url "https://github.com/AOMediaCodec/libavif/archive/refs/tags/v0.11.1.tar.gz"
+  sha256 "0eb49965562a0e5e5de58389650d434cff32af84c34185b6c9b7b2fccae06d4e"
   license "BSD-2-Clause"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "89ae2754b605c1a5dd35135ebfbf8e0d0970029fb617c8019c9566ad3da600ed"
-    sha256 cellar: :any,                 arm64_big_sur:  "0e64657e9f2d5ea82d0c66aaf761cfbb7d39e245590fbdcc603743f5280313c3"
-    sha256 cellar: :any,                 monterey:       "8c48b4c95b0df48df71fc8de3e924cfad0dd06c886cd9a69419a6affd7a76e7a"
-    sha256 cellar: :any,                 big_sur:        "9d11f6321b3889671d683e86ebb6db03716142cdc16f0a95ce5e761ba31ab258"
-    sha256 cellar: :any,                 catalina:       "f9611aacd9b0decd5ef0fbbccc67119cea5603eadfd4430ceac556f54723945e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "84b065490127c11a9b8e5fe9263d270ca9751e9cb7962bb5a5ccf6ff2f3c4c08"
+    sha256 cellar: :any,                 arm64_ventura:  "9b4735a70692b1e1cb060a3239bc22b2226cb663c7321474aaaa7b237772a68c"
+    sha256 cellar: :any,                 arm64_monterey: "7894a74f1c218445038333053255a70edd4e5bbd7db601df3f9544c53c19b5e6"
+    sha256 cellar: :any,                 arm64_big_sur:  "89dae84c1c6432e7fce025d72236606fe3cad655b596a19638754e593d608092"
+    sha256 cellar: :any,                 ventura:        "920c5bcf0ebdcd67b5c8fb124b3be365d81fef5b44aaa9e82f0d487aace15a79"
+    sha256 cellar: :any,                 monterey:       "62c3120e7b162a29839b38a1eb53db3f25caa15495aee7cf5c9c54b353d9c965"
+    sha256 cellar: :any,                 big_sur:        "cd42d557da81863120e2a542200c5bebc56b0fec042758157b7c2dec6ac557c7"
+    sha256 cellar: :any,                 catalina:       "b7d1c39830e03db3700c701faad8f9df4ea9ac61f52034a49777b0fbd998474c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b519a99be7b7bf73c940eb53f1bd89cb8d06317f4888e6d71c217b03242e15a7"
   end
 
   depends_on "cmake" => :build
   depends_on "nasm" => :build
   depends_on "aom"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libpng"
 
   uses_from_macos "zlib"
 
   def install
-    args = %W[
-      -DCMAKE_INSTALL_RPATH=#{rpath}
-      -DAVIF_CODEC_AOM=ON
-      -DAVIF_BUILD_APPS=ON
-      -DAVIF_BUILD_EXAMPLES=OFF
-      -DAVIF_BUILD_TESTS=OFF
-    ] + std_cmake_args
-
-    mkdir "build" do
-      system "cmake", "..", *args
-      system "make"
-      system "make", "install"
-    end
-
+    system "cmake", "-S", ".", "-B", "build",
+                    "-DCMAKE_INSTALL_RPATH=#{rpath}",
+                    "-DAVIF_CODEC_AOM=ON",
+                    "-DAVIF_BUILD_APPS=ON",
+                    "-DAVIF_BUILD_EXAMPLES=OFF",
+                    "-DAVIF_BUILD_TESTS=OFF",
+                    *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
     pkgshare.install "examples"
   end
 

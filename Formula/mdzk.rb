@@ -1,8 +1,8 @@
 class Mdzk < Formula
   desc "Plain text Zettelkasten based on mdBook"
-  homepage "https://mdzk-rs.github.io"
-  url "https://github.com/mdzk-rs/mdzk/archive/0.4.3.tar.gz"
-  sha256 "47b3333268ab92d29a2a0c017bc7ef93df82a657b42a00e5042492d51d466af1"
+  homepage "https://mdzk.app/"
+  url "https://github.com/mdzk-rs/mdzk/archive/0.5.2.tar.gz"
+  sha256 "292a0ae7b91d535ffa1cfd3649d903b75a1bb1604abc7d98202f3e13e97de702"
   license "MPL-2.0"
   head "https://github.com/mdzk-rs/mdzk.git", branch: "main"
 
@@ -12,15 +12,25 @@ class Mdzk < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "76601fff050c7c2fa3aebe94dabb88a6c29bafc45a46e8fe602ffe450c2b6785"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ca7eafe6a001f980751289093aa0cf750c3d76ac2d541c2c432118e90bc98c23"
-    sha256 cellar: :any_skip_relocation, monterey:       "65b07939544a1e5e8771eb338f0531f3384c32de001ae5c9e95db66a6a74fc9c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "909badb5ce6a0a36ee66a86c88a8c2058a52e10d41cbc67961a86c01905a8d76"
-    sha256 cellar: :any_skip_relocation, catalina:       "fe6ebe251985b9879a03338bfa4668c5b39f064b354813e0a693dc19e7b9eedd"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "af069e55e599b7789f81448c6b9febc544b6b6d3076abdc7ee82a19b6d55ca51"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e395b411c4fd8c752152796aa860f24a44ac7d4540ffc838c6808a443ea271ac"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "d5b825c14aa162c7b6e107d17a4a94db341b1dbbb57697f1001bd66a2ab9b45c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "57d5583b4a4f354106060c3d15e245b223580a29bfc2e7228bd9a611a31506b0"
+    sha256 cellar: :any_skip_relocation, ventura:        "ce6ab505ed1ff51c57a3740204330ef129212b2bef6e1a1b5a686ec12f038901"
+    sha256 cellar: :any_skip_relocation, monterey:       "5a880de7f75b7b16d40b997e0a50aa4097d24598a46294ba097f5f7a8c3f9595"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b15fade4973c35b431443b0982396b4c1e03399f2c2b85413158a976fbc501a4"
+    sha256 cellar: :any_skip_relocation, catalina:       "c168154d8cf9b1aafdf5f089922d8eb8e74655b97b389435534a9efbc668440d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "95bc548f5fb2c84e0e3b62e895e3c6812e8df51b74eaf6bad4167ab1861f66d5"
   end
 
   depends_on "rust" => :build
+
+  # Fix compile with newer Rust.
+  # Remove with the next release.
+  patch do
+    url "https://raw.githubusercontent.com/NixOS/nixpkgs/ea76cad34d64ce213de5992154031bf0c9b75ace/pkgs/applications/misc/mdzk/update-mdbook-for-rust-1.64.patch"
+    sha256 "953f1d75d586acba6786d9c578f5c07fc2a52fc5ef5c743576a613a7491fbb50"
+  end
 
   def install
     system "cargo", "install", *std_cargo_args

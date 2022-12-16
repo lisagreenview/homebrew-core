@@ -2,17 +2,18 @@ class Tailscale < Formula
   desc "Easiest, most secure way to use WireGuard and 2FA"
   homepage "https://tailscale.com"
   url "https://github.com/tailscale/tailscale.git",
-      tag:      "v1.16.2",
-      revision: "b56ba20549aedc0e56d09dca2552ca62421b2cbd"
+      tag:      "v1.34.1",
+      revision: "331d553a5eb90401c071021bae5dd24ce3993500"
   license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "6369ec8c1be3895d5b75fad2cc57f8c3697fdb3c449f85db4deecb1b7a7b4638"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7eb3571b40b67a09646e84f9850fd7202d4775431c4cc565cdeaf1bf3e366c77"
-    sha256 cellar: :any_skip_relocation, monterey:       "47dec5a678ae017dfc18fccba585d7a1ef27f8be473272ac8c9db4e78e359bb6"
-    sha256 cellar: :any_skip_relocation, big_sur:        "4c774d9e625e4637a1499a0d5ac2039d3af8526992fab54b6783304f85d4ed20"
-    sha256 cellar: :any_skip_relocation, catalina:       "c04ee49e60edf8d7a6a0c0b80b8ad488b16d77b67307dd2982a540841b93e77d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "49a5f97e4a3d980c10bfc98c98c1399cf67215faeff9af267ff42930fe13995c"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e274e440183529fc8394f4c2c4d12c54619918b1d4e6d5ce1f781be3e5d24aa2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8a198eca5d3c48425bc521ce20028e1fcd12939098346f36df176b55ca403430"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "68a06e627709c93b921a351593bcc35fa87583c34ef0e320885d1ec0ceb701ae"
+    sha256 cellar: :any_skip_relocation, ventura:        "7d5a73158e38a266c0b685ca3dc943874d0af3e78714dfc9e93c80f0669a78b9"
+    sha256 cellar: :any_skip_relocation, monterey:       "f0e193cc3201cd996a87513e06017dd1c94442d3a8ee6f308e32c41a84c46e3c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a202b7a7518fc5ca05c461bce0f017f801ff4d328163340c85fdd20094cd3490"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "465b70333d94eaa2a0c955649a7c477d4658524a573e9d82b3610bda207d4b89"
   end
 
   depends_on "go" => :build
@@ -27,6 +28,13 @@ class Tailscale < Formula
     ].join(" ")
     system "go", "build", *std_go_args(ldflags: ldflags), "tailscale.com/cmd/tailscale"
     system "go", "build", *std_go_args(ldflags: ldflags), "-o", bin/"tailscaled", "tailscale.com/cmd/tailscaled"
+  end
+
+  service do
+    run opt_bin/"tailscaled"
+    keep_alive true
+    log_path var/"log/tailscaled.log"
+    error_log_path var/"log/tailscaled.log"
   end
 
   test do

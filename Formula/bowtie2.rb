@@ -1,23 +1,28 @@
 class Bowtie2 < Formula
   desc "Fast and sensitive gapped read aligner"
   homepage "https://bowtie-bio.sourceforge.io/bowtie2/"
-  url "https://github.com/BenLangmead/bowtie2/archive/v2.4.4.tar.gz"
-  sha256 "ef8272fc1b3e18a30f16cb4b6a4344bf50e1f82fbd3af93dc8194b58e5856f64"
+  url "https://github.com/BenLangmead/bowtie2/archive/v2.5.0.tar.gz"
+  sha256 "55dedeba8bea240d3ce3f46211d6e14310035c1de5a3e9ac33f72f739165fea0"
   license "GPL-3.0-or-later"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "36b4d29a024abe09a89e4e3c464636eb37e1d020ad167573bc717bc1d2218b65"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a32813ba9105f8e70c93ea9b66b290da4107a91fa09e7a0e8ceb9d1413050eab"
-    sha256 cellar: :any_skip_relocation, monterey:       "04a436515c958e2d273ce074f1d03c740ab8b07d3207813cf400f03cc1dee23c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "96c8bdffc7e247135089bf5ebc6eb6b4ee1d7bdb82d25a56be5c55680c0a50e9"
-    sha256 cellar: :any_skip_relocation, catalina:       "39a5b463bedd3beeb0f17e95da9a485bc0c95187663e284ca0b45b1a0e09b846"
-    sha256 cellar: :any_skip_relocation, mojave:         "0b36d2735b4eff060d2ecf3d4a2c3fe71a88cedec08514a4bf6ec23210faf696"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "09d14a1287dad374d8dfe98889d68a7f87aa6d2045dd0fd53fe7979b5c64f7b2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "2105ca0b03e8362c3f700da25f436e7aaa3a296dc6f09a511e18bd004c0bef01"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "f4682917b22c7bc0f3ce2ef3baad4f1d95c510cf5c7639177ee07612c5783e75"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "91bce9d10f339a8c83595112691b2b6205fc6d4e61e63d46f2f8f7c32d8380a0"
+    sha256 cellar: :any_skip_relocation, ventura:        "4558f49d23397aac8d27c0a2c14529b57af08f894e89474ff914dc067addb2ee"
+    sha256 cellar: :any_skip_relocation, monterey:       "a2067f6944a3e80808476582ba2dcd3da72d791bb8c9371d4c8dadf47749d34c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8086d31b98a4fee884fc459cb01f33c98e57fedbb9651273068e3709e54736b0"
+    sha256 cellar: :any_skip_relocation, catalina:       "5bd8be0504e7806243d33210f54de2c791521af72aa35897b33e14ec1aa734b4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d83bdfb506a8e464f6adec0342f12a3da423a01942314a853e962230595610c7"
   end
 
-  depends_on "simde"
-  depends_on "tbb"
+  uses_from_macos "perl"
+  uses_from_macos "python", since: :catalina
+  uses_from_macos "zlib"
+
+  on_arm do
+    depends_on "simde" => :build
+  end
 
   def install
     system "make", "install", "PREFIX=#{prefix}"

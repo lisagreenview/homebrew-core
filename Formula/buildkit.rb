@@ -2,8 +2,8 @@ class Buildkit < Formula
   desc "Сoncurrent, cache-efficient, and Dockerfile-agnostic builder toolkit"
   homepage "https://github.com/moby/buildkit"
   url "https://github.com/moby/buildkit.git",
-      tag:      "v0.9.3",
-      revision: "8d2625494a6a3d413e3d875a2ff7dd9b1ed1b1a9"
+      tag:      "v0.10.6",
+      revision: "0c9b5aeb269c740650786ba77d882b0259415ec7"
   license "Apache-2.0"
   head "https://github.com/moby/buildkit.git", branch: "master"
 
@@ -13,12 +13,14 @@ class Buildkit < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ee3caab33349a360ec9370edb7970307ce9fdb23361c742c34a6f7171d56d7ce"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ed273fa26af866942e2dcd6bdee0ea768740e21519607bd195f07ed99242f29e"
-    sha256 cellar: :any_skip_relocation, monterey:       "4409329bb7bedd82c5634dbf8572077814a14af663311333819a1037acfd27f9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "cdd64bc2daa0de481cf1d867f61d0d50362c8a9d44fc712a3d9ea2040cb859c6"
-    sha256 cellar: :any_skip_relocation, catalina:       "95b19784b8d086973cd81ef7af681bfbcca4f212c997748c0ec96978810ee949"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f9ce198eb0ad3c2f4ba7e06207e8643ec715d755c432538cc246bfdff34f839f"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "509ee6de96699aad0ed3b7507d37e2da00860bbabef2c34197daf0213f78e85d"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e4c73ff458b1389ba80f359d53d47a8f131798333800a5124d2b304aa0383bcb"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e3e949728c77522bcdef40df6f34b5545e5eaa3dd99c2c9fb24a1becc2da658e"
+    sha256 cellar: :any_skip_relocation, ventura:        "2c938796c6edb00ed573cb6c71a65a0e13233636a39d431b0028e8a126d5d9a5"
+    sha256 cellar: :any_skip_relocation, monterey:       "e0445eff3198cea041de0a16faeaff54c3890d5e538b0be88b645d6341d109c8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "601d2798288827c90fe41a6b604a6c3bcdf8bb5417a4a82d9e95e2d0439afd17"
+    sha256 cellar: :any_skip_relocation, catalina:       "39aa31ea54d3c8a8f1b83629f53924fdf2490a32383d3fe09b57fab25d0b5d2e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a8f3b689b569d845554ccd76c76df786e14ca7091ff0b602305103c23e0187b7"
   end
 
   depends_on "go" => :build

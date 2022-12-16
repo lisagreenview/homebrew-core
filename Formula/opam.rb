@@ -1,18 +1,20 @@
 class Opam < Formula
   desc "OCaml package manager"
   homepage "https://opam.ocaml.org"
-  url "https://github.com/ocaml/opam/releases/download/2.1.1/opam-full-2.1.1.tar.gz"
-  sha256 "97ed14ac4dcd5b9ab41dc7689ba29eb4fddfe9708124727b64bb6027644d01ec"
+  url "https://github.com/ocaml/opam/releases/download/2.1.3/opam-full-2.1.3.tar.gz"
+  sha256 "cb2ab00661566178318939918085aa4b5c35c727df83751fd92d114fdd2fa001"
   license "LGPL-2.1-only"
   head "https://github.com/ocaml/opam.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a1857425c84f28023915f3c211098a7f278ad39040a1c569a22ccd88a2a6ef10"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9bbb374ac9f15d245e0c7e6f8082ef88aa81a6d808a2cea5dd6a0bd08c21cd4c"
-    sha256 cellar: :any_skip_relocation, monterey:       "8a038c6f7a24ca54295c24d921950d1b42590f7f2e7b343b33ab1b9f1047bf91"
-    sha256 cellar: :any_skip_relocation, big_sur:        "17f550490c8bfe2159fedcd830aac382c6b0bb5a40af26da6ce59c7943d93809"
-    sha256 cellar: :any_skip_relocation, catalina:       "9a2ebda132ee358956a7010a677731f58776d7b6bc33100e3848e900978c2c37"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5fffb9378c88c700679ac7640cd6d0ecd66d36397632baa906b29e5d8cc607eb"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "b02e96f6dfc96d76e790d03cc6baca328f191bd7fea3d3fe569a345473acf855"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8563eb7d39ff28e820a742a93b43a792b51015abefb7f717addeb37940749000"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0c36da51223f65fd44a96d112fe39541fa7250a73350bad309d5a65ba2e894ef"
+    sha256 cellar: :any_skip_relocation, ventura:        "247bbb505091dda216a9cc5a44348ca1e94521173ffbe395ee5ead39a96c8137"
+    sha256 cellar: :any_skip_relocation, monterey:       "b716d483047de32ecef958e0a0169240735fa1193522746c673e09414bd3acd0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "78675942dcb92da0acc6c0f156a86a5068aa628e093f661ec6d0bbbc4bcbd968"
+    sha256 cellar: :any_skip_relocation, catalina:       "dfa026d9771b2942d7eb6157eb8cff877b94de1f15f581ad2b7e3c48db8535ab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2034d975561c9fd928d95cb82c45268f8a15f1fe30c7d6e953b22f99ba3f43e2"
   end
 
   depends_on "ocaml" => [:build, :test]

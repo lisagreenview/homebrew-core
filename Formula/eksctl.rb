@@ -2,18 +2,19 @@ class Eksctl < Formula
   desc "Simple command-line tool for creating clusters on Amazon EKS"
   homepage "https://eksctl.io"
   url "https://github.com/weaveworks/eksctl.git",
-      tag:      "0.74.0",
-      revision: "738d9a8efd1f203a18486af090deac3685fbfc49"
+      tag:      "0.123.0",
+      revision: "53d2577c4e0f6cd030a75a8bb12b652a6375fc15"
   license "Apache-2.0"
   head "https://github.com/weaveworks/eksctl.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "7b187e34fa43bda6bfca5c9734eb7cbb15ba860013dac6104ff89419453c0344"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "81064fd4e23e37ce07dc9795ffc4df545689ea7cfbaf45e5b9214b014de050cf"
-    sha256 cellar: :any_skip_relocation, monterey:       "e4aa1a3f9878a45ca5e045b68c6d3f56e74ef668bdb921a66a3e5cac17dd9156"
-    sha256 cellar: :any_skip_relocation, big_sur:        "9c7e2da6b8766980978275d62522750c67b95dbadb49db07d3f3d05f6d23bd2e"
-    sha256 cellar: :any_skip_relocation, catalina:       "373c7bd89090fb1eb2ea3a00597754a1623d67858b97acd3d97c810e65da10a0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a5a3419fbf5c0a09a578073aeb40cbf21853b01600706a47722195731db9abca"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "30820e6b67a46b60d50e1fe12015bc833069af7592de415ccb431edeca5c988b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8b836cb970801ed15fe05fb1e2184ac42b7b378b7b4c99ad79cc3290e0e8bf63"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "73d59a51268e6cea1de28df8d357efe1be472fa463241547475b84efe65db61f"
+    sha256 cellar: :any_skip_relocation, ventura:        "e5d1def426a4c9a4975cc7cf9a0a780ac688e716b5df2abe3c9bb923515ed959"
+    sha256 cellar: :any_skip_relocation, monterey:       "3b8a0838cd142884215f2af4fac3cc799642e5495c950c10198e913ae525a9be"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0c2d5f61b24a52a8c959143b7e66c8580cdd9a577eaf7c1fefd311d090ffe530"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d6d422cb4808cd0fb7adcdd76fa1f6ed57d983406df3e32762d4f6ee05c9794b"
   end
 
   depends_on "counterfeiter" => :build
@@ -22,17 +23,28 @@ class Eksctl < Formula
   depends_on "mockery" => :build
   depends_on "aws-iam-authenticator"
 
+  # Eksctl requires newer version of ifacemaker
+  #
+  # Replace with `depends_on "ifacemaker" => :build` when ifacemaker > 1.2.0
+  # Until then get the resource version from go.mod
+  resource "ifacemaker" do
+    url "https://github.com/vburenin/ifacemaker/archive/b2018d8549dc4d51ce7e2254d6b0a743643613be.tar.gz"
+    sha256 "41888bf97133b4e7e190f2040378661b5bcab290d009e1098efbcb9db0f1d82f"
+  end
+
   def install
+    resource("ifacemaker").stage do
+      system "go", "build", *std_go_args(ldflags: "-s -w", output: buildpath/"ifacemaker")
+    end
+    inreplace "build/scripts/generate-aws-interfaces.sh", "${GOBIN}/ifacemaker",
+                                                          buildpath/"ifacemaker"
+
     ENV["GOBIN"] = HOMEBREW_PREFIX/"bin"
+    ENV.deparallelize # Makefile prerequisites need to be run in order
     system "make", "build"
     bin.install "eksctl"
 
-    bash_output = Utils.safe_popen_read("#{bin}/eksctl", "completion", "bash")
-    (bash_completion/"eksctl").write bash_output
-    zsh_output = Utils.safe_popen_read("#{bin}/eksctl", "completion", "zsh")
-    (zsh_completion/"_eksctl").write zsh_output
-    fish_output = Utils.safe_popen_read("#{bin}/eksctl", "completion", "fish")
-    (zsh_completion/"eksctl.fish").write fish_output
+    generate_completions_from_executable(bin/"eksctl", "completion")
   end
 
   test do

@@ -2,18 +2,19 @@ require "language/node"
 class TerraformRover < Formula
   desc "Terraform Visualizer"
   homepage "https://github.com/im2nguyen/rover"
-  url "https://github.com/im2nguyen/rover/archive/refs/tags/v0.2.2.tar.gz"
-  sha256 "91dc4ff26e0adafde011db1e6111a8a3c545cddbae1a70c8f4c3abc484b0be0b"
+  url "https://github.com/im2nguyen/rover/archive/refs/tags/v0.3.3.tar.gz"
+  sha256 "491709df11c70c9756e55f4cd203321bf1c6b92793b8db91073012a1f13b42e5"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5367581968ec927f8b2d8a5c576c5b9a381f45da7e135a03093772cc4d54c1f6"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a074f14618b6eb3f4fa1f3538508322aeff9a4aafb6e13176a3ceaab56dcd8ea"
-    sha256 cellar: :any_skip_relocation, monterey:       "052fed203465498fdacfd6d1ee2fe0d14ae4393eedf73cea25496357a6a169a9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "cb2dc4dab8d77371813992ead874a94223269ee42f489d95846a0be627adc9ea"
-    sha256 cellar: :any_skip_relocation, catalina:       "13de4d7c616eb75498f5f633025a6db46cd436d37386a5f94a97d120564fcb72"
-    sha256 cellar: :any_skip_relocation, mojave:         "865c313e1f50c9da29fc570cc602727cf222050b337ab8e61b35ed544be145bb"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "64b4259285d662de26aec694874b0503ec05edc271915f8535c3b1b2afd35080"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "968e2719282cd29685415ea7e18963d0c4ee9faf08c9d506cb3a15b69d6fb164"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a91f264c414c45431d9f49775405e736d8c98fdad348d2890189491eeaf14509"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2585975e144bff4b942e06fea9b4a537845506d8753c83cdd0604242f25565cd"
+    sha256 cellar: :any_skip_relocation, ventura:        "06ed2350c1cfb7e24b9a00d414e8bbce8c6f3ed5cc62fc7c01de2dedadd10b18"
+    sha256 cellar: :any_skip_relocation, monterey:       "2fb8acc2af0c3029d217e0143115e34fd9ceca18cb6372053f35fa19a5d1fe15"
+    sha256 cellar: :any_skip_relocation, big_sur:        "bbb836ca74b099587811edbe6806cd87767c543417f4bbc7043ee55fb00a9d3e"
+    sha256 cellar: :any_skip_relocation, catalina:       "cb3ea8a62a309585e40a3ebca0f8633de15d80acfaed963046591d4ad1d610bf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7352915d9f3322d4795ee475095c00c2cc6c3f206501f00194b9a9f251add4c9"
   end
 
   depends_on "go" => :build

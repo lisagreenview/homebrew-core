@@ -1,31 +1,36 @@
 class Gdb < Formula
   desc "GNU debugger"
   homepage "https://www.gnu.org/software/gdb/"
-  url "https://ftp.gnu.org/gnu/gdb/gdb-11.1.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gdb/gdb-11.1.tar.xz"
-  sha256 "cccfcc407b20d343fb320d4a9a2110776dd3165118ffd41f4b1b162340333f94"
+  url "https://ftp.gnu.org/gnu/gdb/gdb-12.1.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gdb/gdb-12.1.tar.xz"
+  sha256 "0e1793bf8f2b54d53f46dea84ccfd446f48f81b297b28c4f7fc017b818d69fed"
   license "GPL-3.0-or-later"
+  revision 2
   head "https://sourceware.org/git/binutils-gdb.git", branch: "master"
 
   bottle do
-    sha256 monterey:     "c4d3d881ae2ae938b37031f94c9b2780e53f78fa224fe64532b08656157f9afe"
-    sha256 big_sur:      "ce7aa7f3589b5833ff0ace1afb6e43ea01860666bf34ad7f941b9cab5c7ab5ab"
-    sha256 catalina:     "7543956f666aae922d34accd371fbc57d901adb386776b47e079163933e75755"
-    sha256 mojave:       "1d315c9b2213bfe09533c05beb2221a68ae816dc92c321d966c3fe1974e95913"
-    sha256 x86_64_linux: "e83bcc7a2b903fb7e76b2d4b2ae2935d96100385a5cbae4316641c90fc724685"
+    sha256 ventura:      "653c9164e734b074e7688d59250d33ea6a1b52ace2f4da61a1d8e3f666c031a7"
+    sha256 monterey:     "4b3dab2ae56bc0df8de29113b853386a0db29f14035f01af6003bab9195418a1"
+    sha256 big_sur:      "77a26612312e83da76b6fc7eaf14baf71ed62b6565cb87b63c8807897773fc83"
+    sha256 catalina:     "91f4480cfccf02902efc12e30099f899704fb44eac21b96cd5d2e773328cc03b"
+    sha256 x86_64_linux: "79529333571b0bceb8f8307582cc608e597fbed6be24392a0318e25590ebbd51"
   end
 
+  depends_on arch: :x86_64 # gdb is not supported on macOS ARM
   depends_on "gmp"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "xz" # required for lzma support
 
-  uses_from_macos "texinfo" => :build
   uses_from_macos "expat"
+  uses_from_macos "libxcrypt"
   uses_from_macos "ncurses"
+
+  on_system :linux, macos: :ventura_or_newer do
+    depends_on "texinfo" => :build
+  end
 
   on_linux do
     depends_on "pkg-config" => :build
-    depends_on "gcc"
     depends_on "guile"
   end
 
@@ -46,7 +51,7 @@ class Gdb < Formula
       --disable-debug
       --disable-dependency-tracking
       --with-lzma
-      --with-python=#{Formula["python@3.9"].opt_bin}/python3
+      --with-python=#{Formula["python@3.11"].opt_bin}/python3.11
       --disable-binutils
     ]
 
@@ -60,12 +65,14 @@ class Gdb < Formula
   end
 
   def caveats
-    <<~EOS
-      gdb requires special privileges to access Mach ports.
-      You will need to codesign the binary. For instructions, see:
+    on_macos do
+      <<~EOS
+        gdb requires special privileges to access Mach ports.
+        You will need to codesign the binary. For instructions, see:
 
-        https://sourceware.org/gdb/wiki/PermissionsDarwin
-    EOS
+          https://sourceware.org/gdb/wiki/PermissionsDarwin
+      EOS
+    end
   end
 
   test do

@@ -1,20 +1,23 @@
 class PinboardNotesBackup < Formula
   desc "Efficiently back up the notes you've saved to Pinboard"
   homepage "https://github.com/bdesham/pinboard-notes-backup"
-  url "https://github.com/bdesham/pinboard-notes-backup/archive/v1.0.5.3.tar.gz"
-  sha256 "75491e082812493096b68de0031f71a21b8e9e5e8b981b4bc648bb520c5432dc"
+  url "https://github.com/bdesham/pinboard-notes-backup/archive/v1.0.5.6.tar.gz"
+  sha256 "0b544d5e3dfd0ebf029b50fcb405045f601dac1f103fbd95f2b24b5aefd4ef40"
   license "GPL-3.0-or-later"
   head "https://github.com/bdesham/pinboard-notes-backup.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, big_sur:      "57a89dec64c38b1742914b5ff0cb7e0a1555715644b465ecae8b2c67c7580ec2"
-    sha256 cellar: :any_skip_relocation, catalina:     "a1c7eb9a928d9461b66bcd43af6dbaa276d7cd730706e2b57833f70c503fdaaa"
-    sha256 cellar: :any_skip_relocation, mojave:       "d0e2d4abf24f35b65aa3f5454febc68444f33fcba3d0c01ce33a5f571ef4477e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "3ed421ceef39a006065676d8b8f2c3ba553e0986ab7187a7956f6504389904b2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "2a25aa11fe52d764d56bbedbece7d68c8650b5dc21a2bba87c34b6cea1b032e0"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "44a95be5ba2c82644c18c048756fe4223dd61f2ba7fd010e0c895cbe78b0585a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a668842564ed2394a77076e8c3e8b4efe8b9b5032e2a3316f8ff3a741acc480c"
+    sha256 cellar: :any_skip_relocation, ventura:        "e3b01674e194bf24426b5414f0468ad94b2286862a02338a7f9c26767cf9f2fa"
+    sha256 cellar: :any_skip_relocation, monterey:       "bb0049130131cd64c501093904ff99a6df2d2bc26e4c4c05aafbe840e28c9b27"
+    sha256 cellar: :any_skip_relocation, big_sur:        "01a6a006a5df7ec5ad09606c18a80ae9df4b4551035c35c7777ef6220e691445"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7d27dbcd35071c388a067a7b15bf279f334b0c188d121afbf50cab84c261e5ca"
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc@8.6" => :build
+  depends_on "ghc" => :build
 
   uses_from_macos "zlib"
 

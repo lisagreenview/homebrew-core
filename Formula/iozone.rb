@@ -1,8 +1,8 @@
 class Iozone < Formula
   desc "File system benchmark tool"
   homepage "https://www.iozone.org/"
-  url "https://www.iozone.org/src/current/iozone3_492.tgz"
-  sha256 "cece887183d19b566633761f69b50952300cd594327a126a8aea184afbaa18d7"
+  url "https://www.iozone.org/src/current/iozone3_494.tgz"
+  sha256 "a36d43831e2829dbc9dc3d5a5a7eb1ca733c9ecc8cbb634022a52928e9b78662"
   license :cannot_represent
 
   livecheck do
@@ -14,19 +14,20 @@ class Iozone < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "aa676ffe3625bd4127956e10b39e4e25f51f82bb14ca061062282b81dd20318e"
-    sha256 cellar: :any_skip_relocation, big_sur:       "f47bc3f26886b9469cc471bdea595bacd0158199ad1892d2b1836100d617f1e5"
-    sha256 cellar: :any_skip_relocation, catalina:      "ac6f70cec9ffbf1c4be9feeb737bdf2eefeed1a9f9c62f6c4609fd08b6a3de4a"
-    sha256 cellar: :any_skip_relocation, mojave:        "8098476c90a74f06fa73eda62e402629fd179b2f008f59fc97d2f0b5dd633ab5"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "120ac4967eb1ed381019643a0b57fd9935bccfe57f4a6a62d73db5971c12f68a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "3d764fcef8796a89fbc4851a738544d4fe5f4a2d946804466c38c54200cf8fe5"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d224ac1cd5bf43cc51595ac642b6b8b511c05b694a8c7bd0eb9e040973aa68fc"
+    sha256 cellar: :any_skip_relocation, ventura:        "bcc526a3555b9ab8efc4e061f40b64c1948db1fea941b07eacf61440fee3b294"
+    sha256 cellar: :any_skip_relocation, monterey:       "0edd67fecabe2907d1a53d6c66d600408a3c357721284cec71c42099c56f3dc7"
+    sha256 cellar: :any_skip_relocation, big_sur:        "30973f3d9664c0a4b585a20897c9764fb0556428d325afd5f196436eaf2b3d07"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ce1ad65c55a81789572e6ce23fa2b089a52771615849cc7b4443f564f090a92b"
   end
 
   def install
     cd "src/current" do
-      if OS.mac?
-        system "make", "macosx", "CC=#{ENV.cc}"
-      else
-        system "make", "linux", "CC=#{ENV.cc}"
-      end
+      target = OS.mac? ? "macosx" : OS.kernel_name.downcase
+      system "make", "clean"
+      system "make", target, "CC=#{ENV.cc}"
       bin.install "iozone"
       pkgshare.install %w[Generate_Graphs client_list gengnuplot.sh gnu3d.dem
                           gnuplot.dem gnuplotps.dem iozone_visualizer.pl

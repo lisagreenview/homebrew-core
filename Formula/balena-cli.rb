@@ -3,9 +3,8 @@ require "language/node"
 class BalenaCli < Formula
   desc "Command-line tool for interacting with the balenaCloud and balena API"
   homepage "https://www.balena.io/docs/reference/cli/"
-  # balena-cli should only be updated every 10 releases on multiples of 10
-  url "https://registry.npmjs.org/balena-cli/-/balena-cli-12.25.0.tgz"
-  sha256 "af78b891de5492e567d731dee62369b3d1247c262acf94d2bf4e2379790a947e"
+  url "https://registry.npmjs.org/balena-cli/-/balena-cli-14.5.15.tgz"
+  sha256 "59c29204a4a2db53205b28591e9949b26b8adce82f6e600cfb16badc0c7957ef"
   license "Apache-2.0"
 
   livecheck do
@@ -14,16 +13,56 @@ class BalenaCli < Formula
   end
 
   bottle do
-    sha256 catalina:    "1d68785ff12ddc57c8a6e93a0b83d3613e29ccf0ae8331dc8197a06bd1f47336"
-    sha256 mojave:      "c2e8432c28bb7875f42d7815befa98001dbc72a65cffc121fb8dd6bf2d75290e"
-    sha256 high_sierra: "0e670f3cc482565ddc1a166316407fab2fd008f12128a06f7f73c3bcf07a641d"
+    sha256                               arm64_ventura:  "e648378af96592b904200539cee7914dbfaff53b8c31cd1e7b9a6d3cb4a4bae5"
+    sha256                               arm64_monterey: "ace7d80a25d59f4762b7cf6fb4b1749818aa07553650d4e3eeaba3321ce10789"
+    sha256                               arm64_big_sur:  "0c81049835c37e967d91b1d5cc535b26d815def5c75292cbc70d890df0414bee"
+    sha256                               ventura:        "ab6a1eab4b6037360f32542a32c9578bb47ea1c76b15635fc7b19ca44f6dad16"
+    sha256                               monterey:       "63be920bb65c76177cba88454580db3413ebf06cb3e56d1446f2cddf1f09ee38"
+    sha256                               big_sur:        "83aad92fcd11f67e46fa994cf6799d09b90c0cd01f304df0b2fcd4e0e3a4be1f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c2e6b54f260a8a8051ac73478f8f2d149552ddb41a0987978b0ac27e2038574e"
   end
 
-  depends_on "node"
+  # Node looks for an unversioned `python` at build-time.
+  depends_on "python@3.10" => :build
+  depends_on "node@14"
+
+  on_macos do
+    depends_on "macos-term-size"
+  end
 
   def install
+    ENV.deparallelize
+    ENV.prepend_path "PATH", Formula["python@3.10"].opt_libexec/"bin"
     system "npm", "install", *Language::Node.std_npm_install_args(libexec)
-    bin.install_symlink Dir["#{libexec}/bin/*"]
+    (bin/"balena").write_env_script libexec/"bin/balena", PATH: "#{Formula["node@14"].opt_bin}:$PATH"
+
+    # Remove incompatible pre-built binaries
+    os = OS.kernel_name.downcase
+    arch = Hardware::CPU.intel? ? "x64" : Hardware::CPU.arch.to_s
+    node_modules = libexec/"lib/node_modules/balena-cli/node_modules"
+    node_modules.glob("{ffi-napi,ref-napi}/prebuilds/*")
+                .each { |dir| dir.rmtree if dir.basename.to_s != "#{os}-#{arch}" }
+
+    term_size_vendor_dir = node_modules/"term-size/vendor"
+    term_size_vendor_dir.rmtree # remove pre-built binaries
+
+    if OS.mac?
+      macos_dir = term_size_vendor_dir/"macos"
+      macos_dir.mkpath
+      # Replace the vendored pre-built term-size with one we build ourselves
+      ln_sf (Formula["macos-term-size"].opt_bin/"term-size").relative_path_from(macos_dir), macos_dir
+
+      unless Hardware::CPU.intel?
+        # Replace pre-built x86_64 binaries with native binaries
+        %w[denymount macmount].each do |mod|
+          (node_modules/mod/"bin"/mod).unlink
+          system "make", "-C", node_modules/mod
+        end
+      end
+    end
+
+    # Replace universal binaries with their native slices.
+    deuniversalize_machos
   end
 
   test do

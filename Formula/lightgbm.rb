@@ -2,28 +2,31 @@ class Lightgbm < Formula
   desc "Fast, distributed, high performance gradient boosting framework"
   homepage "https://github.com/microsoft/LightGBM"
   url "https://github.com/microsoft/LightGBM.git",
-      tag:      "v3.3.1",
-      revision: "d4851c3381495d9a065d49e848fbf291a408477d"
+      tag:      "v3.3.3",
+      revision: "a0a617dfff2e2e1637b72b7a2adbe5453e7f97e0"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "34610dd420b6e0e39f5de3575b99dc7991adfa0f8b6ebd032886b20e61596e68"
-    sha256 cellar: :any,                 arm64_big_sur:  "3c8b86c37e5233ed06de0494fd8cdba6fa9faa91af97840f0a72c95fdfb092c4"
-    sha256 cellar: :any,                 monterey:       "d0d1dbb78a2cb0f66096babb71eee9d31fd0fd4a34faaea6ea25eef88fd1f03b"
-    sha256 cellar: :any,                 big_sur:        "a4d65f031a1b2af129f8cc3741e77721fc78ea8c832e848b731b1a144e43d8ab"
-    sha256 cellar: :any,                 catalina:       "4b6a53e88126659be4d6c0a18e6d077cbbf9152d2753363749a29bf79153c4dd"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "083b5aa1adba57bc086d9917730672f2c4d2ab5f8b03ef55f999e1faf2596e56"
+    sha256 cellar: :any,                 arm64_ventura:  "608ec71093c5032d541d162523ca61da5dc75cae2f75ffba727e391e7b880379"
+    sha256 cellar: :any,                 arm64_monterey: "918af46783680319f01d1173c31810cfe767202baa4d42b69173131bef01de71"
+    sha256 cellar: :any,                 arm64_big_sur:  "3d45c91704e3462b2b41ca91e934a791507e5c3994917770db95e2b74fdc0595"
+    sha256 cellar: :any,                 ventura:        "a4b0b3b1775dec3bd6232c4b4d69752e380d39e31158acc4fc7f70c6a4619b28"
+    sha256 cellar: :any,                 monterey:       "e13f4270b50d04416bb96002b6fc67556e3dde967a113bf4123599e79439cd48"
+    sha256 cellar: :any,                 big_sur:        "7b97ee4f76abaec2a2fc4f1f97a8a0725f2ed3ab1e9a91cd7025ca5be7153914"
+    sha256 cellar: :any,                 catalina:       "1f48fc264c40bc505beb3f29976ea606980c0d04a48ac1e12446af46d3e467e0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7d5e12ba59005339f668ea5bafdab5f17f61ebaf8d8d1dee7601eef64ddf6f57"
   end
 
   depends_on "cmake" => :build
-  depends_on "libomp"
+
+  on_macos do
+    depends_on "libomp"
+  end
 
   def install
-    mkdir "build" do
-      system "cmake", *std_cmake_args, "-DAPPLE_OUTPUT_DYLIB=ON", ".."
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args, "-DAPPLE_OUTPUT_DYLIB=ON"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
     pkgshare.install "examples"
   end
 

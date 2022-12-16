@@ -1,10 +1,10 @@
 class Node < Formula
   desc "Platform built on V8 to build network applications"
   homepage "https://nodejs.org/"
-  url "https://nodejs.org/dist/v17.0.1/node-v17.0.1.tar.xz"
-  sha256 "6ec480f872cb7c34877044985e3d7bd89329ace5b8e2ad90b57980601786341c"
+  url "https://nodejs.org/dist/v19.3.0/node-v19.3.0.tar.xz"
+  sha256 "d3189574ef9849c713822e7f31de7a1b9dd8a2c6b5fc78ddb811aaa259a22b1e"
   license "MIT"
-  head "https://github.com/nodejs/node.git", branch: "master"
+  head "https://github.com/nodejs/node.git", branch: "main"
 
   livecheck do
     url "https://nodejs.org/dist/"
@@ -12,32 +12,29 @@ class Node < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "9244d5b18bb785b79f050f7ecf5181b8dfb5578fe6fe092e4b529a26fd9455f9"
-    sha256 cellar: :any,                 arm64_big_sur:  "91bc40f51269f2d3b4b4783655c4bd451f8d7ff29e073ffccc555ced69c1274f"
-    sha256 cellar: :any,                 monterey:       "418bbd8bae6edab2a2681df3d61249dcab19fa6703b68810ad132582c3a2e0e1"
-    sha256 cellar: :any,                 big_sur:        "5dd16b4fb13f717e03753a42302b96140c609d5f5e8c77ff7d5465b006eb7551"
-    sha256 cellar: :any,                 catalina:       "60b63ee8d5df47723b5e0d2bddf6c242e65519d73f7b1636a75321dda1a8f6b7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7f1601c8205e9cddc66e8a409fd51cad74596aa029999666e6c71ef9dfd8714a"
+    sha256 arm64_ventura:  "20cdbd3baf3f64d56f94219e6651a76140424b90664b6787162f2267bb908165"
+    sha256 arm64_monterey: "ffc0cf0a5e3dc983f159a902a270a64cec1ab2830f2a8924d40379fe5adb351a"
+    sha256 arm64_big_sur:  "606c36fe955671b141ea6d6d846ae47f886c43a4b9c656bc0e98829388186d0d"
+    sha256 ventura:        "107f4a4160d9f87fefc3c413193625918f6439e629f02fef72debc50ae4a9712"
+    sha256 monterey:       "f1ad6dc2e40e38bfdfbb7f82fa35e133049b01f60c0f339dc2cbdacf68790013"
+    sha256 big_sur:        "1e396fa1297ed9e047c2d9eff13498a603f5643070309e60b891e36c2689a2d7"
+    sha256 x86_64_linux:   "95ef71c5e896043291001ae8de0e62beca4c9e9974b62722d39c47328fe6d356"
   end
 
   depends_on "pkg-config" => :build
+  depends_on "python@3.10" => :build
   depends_on "brotli"
   depends_on "c-ares"
   depends_on "icu4c"
   depends_on "libnghttp2"
   depends_on "libuv"
   depends_on "openssl@1.1"
-  depends_on "python@3.9"
 
+  uses_from_macos "python", since: :catalina
   uses_from_macos "zlib"
 
   on_macos do
     depends_on "llvm" => [:build, :test] if DevelopmentTools.clang_build_version <= 1100
-  end
-
-  on_linux do
-    depends_on "gcc"
   end
 
   fails_with :clang do
@@ -52,22 +49,22 @@ class Node < Formula
   # We track major/minor from upstream Node releases.
   # We will accept *important* npm patch releases when necessary.
   resource "npm" do
-    url "https://registry.npmjs.org/npm/-/npm-8.1.0.tgz"
-    sha256 "301ddf6bdbd6f6abb36de144902914c6bb4d6f7463758774fdd0a9ee7c597d34"
+    url "https://registry.npmjs.org/npm/-/npm-9.2.0.tgz"
+    sha256 "e2574f7da94665dd2f717f8e67bd1874134c4b301f8781dabceecdfc3d685071"
   end
 
   def install
-    ENV.remove "HOMEBREW_LIBRARY_PATHS", Formula["llvm"].opt_lib
     ENV.llvm_clang if OS.mac? && (DevelopmentTools.clang_build_version <= 1100)
 
     # make sure subprocesses spawned by make are using our Python 3
-    ENV["PYTHON"] = Formula["python@3.9"].opt_bin/"python3"
+    ENV["PYTHON"] = which("python3.10")
 
     # Never install the bundled "npm", always prefer our
     # installation from tarball for better packaging control.
     args = %W[
       --prefix=#{prefix}
       --without-npm
+      --without-corepack
       --with-intl=system-icu
       --shared-libuv
       --shared-nghttp2
@@ -91,8 +88,9 @@ class Node < Formula
 
     # Enabling LTO errors on Linux with:
     # terminate called after throwing an instance of 'std::out_of_range'
+    # Pre-Catalina macOS also can't build with LTO
     # LTO is unpleasant if you have to build from source.
-    args << "--enable-lto" if OS.mac? && build.bottle?
+    args << "--enable-lto" if MacOS.version >= :catalina && build.bottle?
 
     system "./configure", *args
     system "make", "install"
@@ -166,8 +164,8 @@ class Node < Formula
     assert_predicate HOMEBREW_PREFIX/"bin/npm", :exist?, "npm must exist"
     assert_predicate HOMEBREW_PREFIX/"bin/npm", :executable?, "npm must be executable"
     npm_args = ["-ddd", "--cache=#{HOMEBREW_CACHE}/npm_cache", "--build-from-source"]
-    system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "npm@latest"
-    system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "ref-napi" unless head?
+    system HOMEBREW_PREFIX/"bin/npm", *npm_args, "install", "npm@latest"
+    system HOMEBREW_PREFIX/"bin/npm", *npm_args, "install", "ref-napi" unless head?
     assert_predicate HOMEBREW_PREFIX/"bin/npx", :exist?, "npx must exist"
     assert_predicate HOMEBREW_PREFIX/"bin/npx", :executable?, "npx must be executable"
     assert_match "< hello >", shell_output("#{HOMEBREW_PREFIX}/bin/npx --yes cowsay hello")

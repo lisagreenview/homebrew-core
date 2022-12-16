@@ -1,16 +1,19 @@
 class SimpleScan < Formula
   desc "GNOME document scanning application"
   homepage "https://gitlab.gnome.org/GNOME/simple-scan"
-  url "https://download.gnome.org/sources/simple-scan/40/simple-scan-40.5.tar.xz"
-  sha256 "eb5379e4cb6ca605092c942210c18425d036773da76541e43b89d8223f82b9a4"
+  url "https://download.gnome.org/sources/simple-scan/42/simple-scan-42.5.tar.xz"
+  sha256 "05f5dfa4e9e206efa9d404c9861dd7c442091793e734c41719739917250e4050"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 arm64_big_sur: "28589902b7eb3965380a37e8a2566fdda48b4485bcd29b72a4f4a875d1e892b5"
-    sha256 monterey:      "79c8843d4fc8377db0b6e94e381b6fceda9e87aae811f3cf0e4b3d070d7e10ce"
-    sha256 big_sur:       "29db6142111c9acaee04a3f6b17c9113b2d23b7a53188b6a21ae3a31454872ca"
-    sha256 catalina:      "fe60b1d71b27e3b2cbb20edd2bd8b6d9000c4f2653edb283ab65905dbd897291"
-    sha256 mojave:        "4871d0a1a1eff098b418deca15103d2f41bda91904e693e0146f109d92dbbd10"
+    sha256 arm64_ventura:  "44ce53c6ce4db8a2852b2bfe791b2eb2c1b76dd4c2b43c50cb35194f3084b387"
+    sha256 arm64_monterey: "80acb3bb82bdfc4ae6311c9a8188fcdd93a4357434248f21e47d7d9490682c22"
+    sha256 arm64_big_sur:  "ac9800eb3bab125883229ed260f55c3a0b440fc03287f8d823d1fb38edfe5218"
+    sha256 ventura:        "d1422a16ec6e767acc9a6048f8eddd646be4ada7cf6a34b488b9b93d69c22208"
+    sha256 monterey:       "e9805d0b210633beca14b395cf8fa4d9fe182e8dde09a065403901c44796e91e"
+    sha256 big_sur:        "a1cc322c0ce81cf2bc2e2e9aab706542bd52c93941c295c756c4ecfc6481ba4b"
+    sha256 catalina:       "9d484fd5d6baf6180b3e6d9946dd752f4f485f029fd1e2edc8d6945e11f5ebc3"
+    sha256 x86_64_linux:   "8a15d4a1a86f60b6ce011c1ef46a59d2768b05316fd76fde118375d516ef1538"
   end
 
   depends_on "itstool" => :build
@@ -40,6 +43,9 @@ class SimpleScan < Formula
   end
 
   test do
+    # Errors with `Cannot open display`
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"].present?
+
     system "#{bin}/simple-scan", "-v"
   end
 end

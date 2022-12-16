@@ -1,51 +1,33 @@
-class Python3Requirement < Requirement
-  fatal true
-  satisfy(build_env: false) { which "python3" }
-  def message
-    <<~EOS
-      An existing Python 3 installation is required in order to avoid cyclic
-      dependencies (as Homebrew's Python depends on xcb-proto).
-    EOS
-  end
-end
-
 class Libxcb < Formula
   desc "X.Org: Interface to the X Window System protocol"
   homepage "https://www.x.org/"
-  url "https://xcb.freedesktop.org/dist/libxcb-1.14.tar.gz"
-  sha256 "2c7fcddd1da34d9b238c9caeda20d3bd7486456fc50b3cc6567185dbd5b0ad02"
+  url "https://xcb.freedesktop.org/dist/libxcb-1.15.tar.gz"
+  sha256 "1cb65df8543a69ec0555ac696123ee386321dfac1964a3da39976c9a05ad724d"
   license "MIT"
-  revision 1
 
   bottle do
     rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "2f27ce523b926966e075a8abef580e8553be84780eae15f60b4cf7551894e33c"
-    sha256 cellar: :any,                 arm64_big_sur:  "5ffb8c3b6520d99063e973ae9f26110737757f57e4c63fb88d8462666d96d777"
-    sha256 cellar: :any,                 monterey:       "fc23652d4a3d41e021ab3ae0b1df443dd5940b466315b48865155295b0345909"
-    sha256 cellar: :any,                 big_sur:        "990819c1dd57e74dc867ba37d1952fc0e7baa69273aa6a809ce5b4c18346eac4"
-    sha256 cellar: :any,                 catalina:       "7f40d617b2092e9dc4fed78b032a1cde7658b813b26bcabb349770cd6c744208"
-    sha256 cellar: :any,                 mojave:         "3a21a6aee4bda8851599df53ed9ebe6b282ff3264be763badcb7c3346d89c90a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "31ccfc5e31bd8914f9d54b415d38cd6d1889112f7568c74a5c5138ae4dff2d8b"
+    sha256 cellar: :any,                 arm64_ventura:  "1c61b275a2a61d1f0d089e7c0836e3515f0d344726ff5098f7ae550577b47b4a"
+    sha256 cellar: :any,                 arm64_monterey: "0cdfcc168853b8f09f431c1790ae9b8de5d8567b5fab5381f26af300bb7dc5b3"
+    sha256 cellar: :any,                 arm64_big_sur:  "6bf77051114dec12e0c541bc478d7833a992792047553fc821f3e1a17b82ec38"
+    sha256 cellar: :any,                 ventura:        "87313e4ffe14ad6a8495a2b909963625886a82869e4463c7dc26ee803ad8d23a"
+    sha256 cellar: :any,                 monterey:       "3847eca62ce6198e7a728df8ae431f628091fb8e83956efdc9d527f4d2795ef3"
+    sha256 cellar: :any,                 big_sur:        "c1436addb2cb20e446f6147c10752e517336245b6dcdd946273537e60aa040eb"
+    sha256 cellar: :any,                 catalina:       "035b1d299e3f1b41581e759981cf9a83aee2754c4b744cdcad4c7fe32de83ffb"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b8e96bb6f8a1e84ddc0b7e32ca3bd3ae05e4006785ca58b8356db00bd81879fa"
   end
 
   depends_on "pkg-config" => :build
+  depends_on "python@3.11" => :build # match version in `xcb-proto`
   depends_on "xcb-proto" => :build
   depends_on "libpthread-stubs"
   depends_on "libxau"
   depends_on "libxdmcp"
 
-  on_macos do
-    depends_on "python@3.9" => :build
-  end
-  on_linux do
-    # Use an existing Python 3, to avoid a cyclic dependency on Linux:
-    # python3 -> tcl-tk -> libx11 -> libxcb -> python3
-    depends_on Python3Requirement => :build
-  end
-
   def install
+    python3 = "python3.11"
+
     args = %W[
-      --prefix=#{prefix}
       --sysconfdir=#{etc}
       --localstatedir=#{var}
       --enable-dri3
@@ -53,13 +35,13 @@ class Libxcb < Formula
       --enable-xevie
       --enable-xprint
       --enable-selinux
-      --disable-dependency-tracking
       --disable-silent-rules
       --enable-devel-docs=no
       --with-doxygen=no
+      PYTHON=#{python3}
     ]
 
-    system "./configure", *args
+    system "./configure", *std_configure_args, *args
     system "make"
     system "make", "install"
   end

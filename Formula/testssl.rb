@@ -1,16 +1,17 @@
 class Testssl < Formula
   desc "Tool which checks for the support of TLS/SSL ciphers and flaws"
   homepage "https://testssl.sh/"
-  url "https://github.com/drwetter/testssl.sh/archive/v3.0.6.tar.gz"
-  sha256 "05768444d6cf3dc5812f8fb88695d17a82668089deddd6aaf969041ba4c10b10"
-  license "GPL-2.0-or-later"
+  url "https://github.com/drwetter/testssl.sh/archive/v3.0.8.tar.gz"
+  sha256 "22c5dc6dfc7500db94b6f8a48775f72b5149d0a372b8552ed7666016ee79edf0"
+  license "GPL-2.0-only"
   head "https://github.com/drwetter/testssl.sh.git", branch: "3.1dev"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "2fa5f3a1c687e37727afa1e2bfa1549b8d997c2f6e51b3d3077466bdd79be3f5"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, all: "3a76af565cfb3d79ede861d1ef2edaa3bea39f94dcfa3d8bd7ee72979afbb4f5"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   on_linux do
     depends_on "bind" => :test # can also use `drill` or `ldns`
@@ -22,7 +23,7 @@ class Testssl < Formula
     man1.install "doc/testssl.1"
     prefix.install "etc"
     env = {
-      PATH:                "#{Formula["openssl@1.1"].opt_bin}:$PATH",
+      PATH:                "#{Formula["openssl@3"].opt_bin}:$PATH",
       TESTSSL_INSTALL_DIR: prefix,
     }
     bin.env_script_all_files(libexec/"bin", env)

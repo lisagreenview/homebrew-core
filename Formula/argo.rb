@@ -2,21 +2,22 @@ class Argo < Formula
   desc "Get stuff done with container-native workflows for Kubernetes"
   homepage "https://argoproj.io"
   url "https://github.com/argoproj/argo-workflows.git",
-      tag:      "v3.2.4",
-      revision: "8771ca279c329753e420dbdd986a9c914876b151"
+      tag:      "v3.4.4",
+      revision: "3b2626ff900aff2424c086a51af5929fb0b2d7e5"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c61ec0627f145e16a54b9db8a1e78838064fc36951a65a00cf43040d663ef008"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "654ef290a58438e2291b50be164dbe147af14563566197319163b373ec752bd0"
-    sha256 cellar: :any_skip_relocation, monterey:       "952281ce3dc5c39e34b7296f3397af3532604029ca6619e40d4201644749882b"
-    sha256 cellar: :any_skip_relocation, big_sur:        "9339723eee46c58b91e8bb84e62df5ce363434931170ceee127a0da5b27512ee"
-    sha256 cellar: :any_skip_relocation, catalina:       "4dc0af4cf26cea93e0342947b7a5eafca1eafa5db8daca5270890cc92b77e48f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f8a812d2f6cf3ac1c3485edbb45f4ae4df985bd4b22d9b4547822d122d01f1fb"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cf9adebd0558f2d37eb8095ec03998ff013189071d715093d07fd74c663b2f01"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b5d21a61e15411fb85d8205ed2a98bc251beaf43bb0e4f3bbef61bf0ad0d1566"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a4826377d1e3545ec50c7762fe28f942364b503b4ac7747bc0ec04e17425f138"
+    sha256 cellar: :any_skip_relocation, ventura:        "8ad58fc83a28146241e689fa97c3904407e4c36dccb4fb65617100667ea4dd4f"
+    sha256 cellar: :any_skip_relocation, monterey:       "a6835637602c3729b401ae676f4f336bc61a9eaef0bba96ab169df950dfb3d6f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "6f8b73a2bb5766b99ff2979035a86683f70398f25dc2d2655a04f230ad6eeb38"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "008c19f86145c749d533613b32514798bfe3187298f1f0d80f9b860f320938e7"
   end
 
   depends_on "go" => :build
-  depends_on "node@14" => :build
+  depends_on "node" => :build
   depends_on "yarn" => :build
 
   def install
@@ -25,10 +26,7 @@ class Argo < Formula
     system "make", "dist/argo"
     bin.install "dist/argo"
 
-    output = Utils.safe_popen_read("#{bin}/argo", "completion", "bash")
-    (bash_completion/"argo").write output
-    output = Utils.safe_popen_read("#{bin}/argo", "completion", "zsh")
-    (zsh_completion/"_argo").write output
+    generate_completions_from_executable(bin/"argo", "completion", shells: [:bash, :zsh])
   end
 
   test do

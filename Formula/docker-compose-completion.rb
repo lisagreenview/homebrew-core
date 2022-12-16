@@ -4,7 +4,7 @@ class DockerComposeCompletion < Formula
   url "https://github.com/docker/compose/archive/1.29.2.tar.gz"
   sha256 "99a9b91d476062d280c889ae4e9993d7dd6a186327bafb2bb39521f9351b96eb"
   license "Apache-2.0"
-  head "https://github.com/docker/compose.git"
+  head "https://github.com/docker/compose.git", branch: "v2"
 
   bottle do
     rebuild 1
@@ -12,7 +12,7 @@ class DockerComposeCompletion < Formula
   end
 
   # See: https://github.com/docker/compose/issues/8550
-  deprecate! date: "2021-10-02", because: "no upstream support for v2"
+  disable! date: "2022-10-19", because: "no upstream support for v2"
 
   def install
     bash_completion.install "contrib/completion/bash/docker-compose"

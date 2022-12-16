@@ -2,8 +2,8 @@ class Wolfssl < Formula
   desc "Embedded SSL Library written in C"
   homepage "https://www.wolfssl.com"
   url "https://github.com/wolfSSL/wolfssl.git",
-      tag:      "v4.8.1-stable",
-      revision: "723ed009ae5dc68acc14cd7664f93503d64cd51d"
+      tag:      "v5.5.3-stable",
+      revision: "a7635da9e64a43028d2f8f14bce75e4bed39f162"
   license "GPL-2.0-or-later"
   head "https://github.com/wolfSSL/wolfssl.git", branch: "master"
 
@@ -14,13 +14,14 @@ class Wolfssl < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "525c3bb7de024ce851ebb2ded4b09ec85e7b4232b2396b17754dd4e09358719c"
-    sha256 cellar: :any,                 arm64_big_sur:  "630d303a592f178e4af58d75c1d957b8330e1e72ffb8b815aebd059c768f2452"
-    sha256 cellar: :any,                 monterey:       "a90d64e4537cb874902181fe6f7bc4f23b3c40862b4cf112b04a9bc8039b0515"
-    sha256 cellar: :any,                 big_sur:        "753f16d4de6f2a439ecdf3a554608edeaa7af98b9f6e724421c786a23c64a8e7"
-    sha256 cellar: :any,                 catalina:       "2cffe3c281ead906a9449ec5f85a4c1d7be09ab7a90d4c37ecac0d76f81d2428"
-    sha256 cellar: :any,                 mojave:         "13dcbf8ef5cbccb7bf18aeb017e04d8a1ac116a4ec0eb3e44a842eabd91a0aa9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b23130ec9484bdd913cd3fb7e8ec1ca6800b4f2c60d635bf5e5a0e66a98c21e2"
+    sha256 cellar: :any,                 arm64_ventura:  "ba3020092405373dabe0e02b6a748aead33b12e19f43473a1f82e777450fa2e4"
+    sha256 cellar: :any,                 arm64_monterey: "0b36a7a8da2a383088fa5552191abd47b1caec800fa740222df6e8fd660b0cd9"
+    sha256 cellar: :any,                 arm64_big_sur:  "850aadd52ef6807c11adb97a186a5e08c0e8db460ccbf04bd0677be0bfa7f780"
+    sha256 cellar: :any,                 ventura:        "3916e96cc70eff91a9e703a0989829e5938a27a002c5b26837bf5e87416ecbec"
+    sha256 cellar: :any,                 monterey:       "af54e8129748ce0283106f427b9b4e03a9ab496e2304d16b4829fc467b3e3024"
+    sha256 cellar: :any,                 big_sur:        "bd3dcbc75f9adaea69c9854861d982510f06d99a6cdc0a08770204bf7fba941a"
+    sha256 cellar: :any,                 catalina:       "ec99a22963c3a3a290574a84e5af87a2a2f634ec23fe21c393b761dac41bed62"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "52afb0dc18ae8daa11ed9fa9f42e18c9bcbd356691e474b7b194722fb8d5177f"
   end
 
   depends_on "autoconf" => :build
@@ -68,6 +69,7 @@ class Wolfssl < Formula
       --enable-opensslextra
       --enable-poly1305
       --enable-psk
+      --enable-quic
       --enable-rabbit
       --enable-ripemd
       --enable-savesession

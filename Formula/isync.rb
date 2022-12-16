@@ -1,24 +1,26 @@
 class Isync < Formula
   desc "Synchronize a maildir with an IMAP server"
   homepage "https://isync.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/isync/isync/1.4.3/isync-1.4.3.tar.gz"
-  sha256 "b4c720745bda3447fbd5b9f71783b23f699a55295917ae7586ee5c22e91b9708"
-  license "GPL-2.0"
+  url "https://downloads.sourceforge.net/project/isync/isync/1.4.4/isync-1.4.4.tar.gz"
+  sha256 "7c3273894f22e98330a330051e9d942fd9ffbc02b91952c2f1896a5c37e700ff"
+  license "GPL-2.0-or-later"
+  revision 1
   head "https://git.code.sf.net/p/isync/isync.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "1e6f75cc51c2f1d3d0b617da6abe0371bb0d0834929e54ba8064f110f749979e"
-    sha256 cellar: :any,                 arm64_big_sur:  "234460b3dd4674da6104722ae8590a73c67ba595af54e66d2ddaeae54efd4be9"
-    sha256 cellar: :any,                 monterey:       "026e93bf6d455de2aaa6a714e18a4e6b91e626d739e5f8fe8289788805655dcc"
-    sha256 cellar: :any,                 big_sur:        "908d620917e954c55c095b015f4f13475d1ec69022951fc06154a193c6b368b1"
-    sha256 cellar: :any,                 catalina:       "c8c78c50bf5d9070cbd3faaf43555e68bf0c673cb17bd25034ea4e93400f882e"
-    sha256 cellar: :any,                 mojave:         "8e24cd012a3640bf0aaccf003a1682285def1e05580fe70292d2765befb52e5a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f0acc76de8df5cea3da8ac0e6a005b616946ab1ac19d91e09670e19b9fdf7ebe"
+    sha256 cellar: :any,                 arm64_ventura:  "04fb22e1a315723cc3ab4035656c3435998821be930a4df4d49a97cfaa586a4e"
+    sha256 cellar: :any,                 arm64_monterey: "95afd09cb00be9960ded1846393a3ba9954d7e65dda8704dd6678ee31564d588"
+    sha256 cellar: :any,                 arm64_big_sur:  "20bdf52bc6b10d073dbca79b20c6d7008d7639ad5109e20b98e7b05e1a5b8412"
+    sha256 cellar: :any,                 ventura:        "14c0f8dc5fd3cc09516f12783542047afd01ecece5e6f45c452f65547db88e9e"
+    sha256 cellar: :any,                 monterey:       "9fabb93ff8e3edacf208eccb77cc6e456eb52146839fb8df8f11fbaf34a1b118"
+    sha256 cellar: :any,                 big_sur:        "42d8ad7a8728df819720a4a0ded2bdbbba86a1c730f4593a0659af9808637435"
+    sha256 cellar: :any,                 catalina:       "bf1041694107d4d5173b2a79eb447a1ef568d6ad79783ede8ef5ac2157d78102"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "28a71e46d89483ffde37b91ed00f9a7a60933c184db724c6103fee86392bdad3"
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
-  depends_on "berkeley-db"
+  depends_on "berkeley-db@5"
   depends_on "openssl@1.1"
 
   uses_from_macos "zlib"

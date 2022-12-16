@@ -3,9 +3,9 @@ class Exiftool < Formula
   homepage "https://exiftool.org"
   # Ensure release is tagged production before submitting.
   # https://exiftool.org/history.html
-  url "https://cpan.metacpan.org/authors/id/E/EX/EXIFTOOL/Image-ExifTool-12.30.tar.gz"
-  mirror "https://exiftool.org/Image-ExifTool-12.30.tar.gz"
-  sha256 "3be7cda70b471df589c75a4adbb71bae62e633022b0ba62585f3bcd91b35544f"
+  url "https://cpan.metacpan.org/authors/id/E/EX/EXIFTOOL/Image-ExifTool-12.50.tar.gz"
+  mirror "https://exiftool.org/Image-ExifTool-12.50.tar.gz"
+  sha256 "bce841fc5c10302f0f3ef7678c3bf146953a8c065c0ba18c41f734007e2ec0a8"
   license any_of: ["Artistic-1.0-Perl", "GPL-1.0-or-later"]
 
   livecheck do
@@ -14,21 +14,25 @@ class Exiftool < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b872e06e2a9544418994622bc7ec701a2c6ba029a95072684ea627fe6817d4a7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "95b4d728377c063ff92c7a9b3fe3562bfa2cf6193aaf69bc4e168a5574228c4c"
-    sha256 cellar: :any_skip_relocation, monterey:       "6d7c3bd90e98c38c64e39a2e66175669a312fd3fae975ace17db2daa174ef2d4"
-    sha256 cellar: :any_skip_relocation, big_sur:        "43726e8ab33280185f1444d05bf3517c8dbca843d6989122624054ec53ed96fb"
-    sha256 cellar: :any_skip_relocation, catalina:       "8ca86536d8310a0526a3c086196f545a200d338e1ba1bb906d7a7a2efa4b248b"
-    sha256 cellar: :any_skip_relocation, mojave:         "8ca86536d8310a0526a3c086196f545a200d338e1ba1bb906d7a7a2efa4b248b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d55c401cc6b9ea4bb8940684661341366f2c7876e0b4efc51cf2c477bc4970f8"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "b37887c8ff3fa3be1526f5916e9b67ef97c19b9320028f2fa0a31bb34276d8d0"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b37887c8ff3fa3be1526f5916e9b67ef97c19b9320028f2fa0a31bb34276d8d0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "86e334f07d75121f937d2b0bac40787626a5abcb4222f044a9a7cb98993d8396"
+    sha256 cellar: :any_skip_relocation, ventura:        "dcf4b052ee5c8cc96cc90a8b514f1c6117a5792e40b0f8d97983c991ad4eab51"
+    sha256 cellar: :any_skip_relocation, monterey:       "dcf4b052ee5c8cc96cc90a8b514f1c6117a5792e40b0f8d97983c991ad4eab51"
+    sha256 cellar: :any_skip_relocation, big_sur:        "71467ad6fc4d358e207845142ab8fa709f6abb746261e3007940fd732a33b72f"
+    sha256 cellar: :any_skip_relocation, catalina:       "f7d892599342e76812b207a804ce906179f188dbf189729d9d9caec2a8e43d02"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6a7936fe430d4f1430ef2eda8550527a06d8981be0257015532f577a581f4f4d"
   end
 
   uses_from_macos "perl"
 
   def install
+    # Enable large file support
+    # https://exiftool.org/forum/index.php?topic=3916.msg18182#msg18182
+    inreplace "lib/Image/ExifTool.pm", "LargeFileSupport => undef", "LargeFileSupport => 1"
+
     # replace the hard-coded path to the lib directory
-    inreplace "exiftool", "$1/lib", libexec/"lib"
+    inreplace "exiftool", "unshift @INC, $incDir;", "unshift @INC, \"#{libexec}/lib\";"
 
     system "perl", "Makefile.PL"
     system "make", "all"

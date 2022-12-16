@@ -1,8 +1,8 @@
 class DitaOt < Formula
   desc "DITA Open Toolkit is an implementation of the OASIS DITA specification"
   homepage "https://www.dita-ot.org/"
-  url "https://github.com/dita-ot/dita-ot/releases/download/3.6.1/dita-ot-3.6.1.zip"
-  sha256 "ebddd6152d44467a794bcfc5d28cf5effd005330677d6a8aafa5de00f250688b"
+  url "https://github.com/dita-ot/dita-ot/releases/download/4.0.1/dita-ot-4.0.1.zip"
+  sha256 "a2f5ecd58b6f069cb5e45444e44e1a32acd51819921065f655667467cac2f3a4"
   license "Apache-2.0"
 
   livecheck do
@@ -11,13 +11,13 @@ class DitaOt < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "bb3c63160256f78fbbb2bb3dccfb80a4577f5116a00c00128652e7ce96194b88"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bb3c63160256f78fbbb2bb3dccfb80a4577f5116a00c00128652e7ce96194b88"
-    sha256 cellar: :any_skip_relocation, monterey:       "d2962c76fd1ab8527a8ca065d73abe37cf0898b647368826e6d1f39e3e59cd5f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "d2962c76fd1ab8527a8ca065d73abe37cf0898b647368826e6d1f39e3e59cd5f"
-    sha256 cellar: :any_skip_relocation, catalina:       "d2962c76fd1ab8527a8ca065d73abe37cf0898b647368826e6d1f39e3e59cd5f"
-    sha256 cellar: :any_skip_relocation, mojave:         "d2962c76fd1ab8527a8ca065d73abe37cf0898b647368826e6d1f39e3e59cd5f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bb3c63160256f78fbbb2bb3dccfb80a4577f5116a00c00128652e7ce96194b88"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7cb4c3b63bb88096938a310dd937d855397bf6e08740fca39b1fd71a71132da1"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7cb4c3b63bb88096938a310dd937d855397bf6e08740fca39b1fd71a71132da1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7cb4c3b63bb88096938a310dd937d855397bf6e08740fca39b1fd71a71132da1"
+    sha256 cellar: :any_skip_relocation, ventura:        "3f1b709adf44d5237507132cb99eb5d8215e5d4dbea604d8a282e9a92c85dde7"
+    sha256 cellar: :any_skip_relocation, monterey:       "3f1b709adf44d5237507132cb99eb5d8215e5d4dbea604d8a282e9a92c85dde7"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3f1b709adf44d5237507132cb99eb5d8215e5d4dbea604d8a282e9a92c85dde7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c277d6a7ac2a85f72fb6d8c58c0ff5075dfcec957d9361cc78a188fcd9c22745"
   end
 
   depends_on "openjdk"

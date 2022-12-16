@@ -3,8 +3,8 @@ class Libngspice < Formula
   homepage "https://ngspice.sourceforge.io/"
 
   stable do
-    url "https://downloads.sourceforge.net/project/ngspice/ng-spice-rework/35/ngspice-35.tar.gz"
-    sha256 "c1b7f5c276db579acb3f0a7afb64afdeb4362289a6cab502d4ca302d6e5279ec"
+    url "https://downloads.sourceforge.net/project/ngspice/ng-spice-rework/38/ngspice-38.tar.gz"
+    sha256 "2c3e22f6c47b165db241cf355371a0a7558540ab2af3f8b5eedeeb289a317c56"
 
     # Fix -flat_namespace being used on Big Sur and later.
     patch do
@@ -18,13 +18,14 @@ class Libngspice < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "9f5d30370d1a437b7c2b21fb94691efd3f3b4e9c163f6213667e412b56d58a6b"
-    sha256 arm64_big_sur:  "01054bb2006ea4677a5e1b95910e57b8ced84f9e778a89b01da3edb34d05725c"
-    sha256 monterey:       "6009678f01f68f1e8561cbd6bce2f8d7c5cf944dac9c857788b839455132df01"
-    sha256 big_sur:        "e131229e4c554e7831094bb19e1a4741385877eb0bf2cabfca9b6179476b9479"
-    sha256 catalina:       "17794a5f1e6e1b9a4bd8c45b4a45ab5cbf7755885eee0508948e1991e24cd2ec"
-    sha256 mojave:         "855fd851ca4492c2c8476763f8cc4ce6cc67681e37560d76786e685f61db18e2"
-    sha256 x86_64_linux:   "28f28030b9a69ccb91734230d407e3cdb04cf757c179e5cafbab6c7cf65af402"
+    sha256 cellar: :any,                 arm64_ventura:  "1cc7171cb7d6abde17e2dc04d8a508a53818d643f094216e1952fd3343a703ce"
+    sha256 cellar: :any,                 arm64_monterey: "6050333fe137e8588d00246b64d24d09691a6b9d71ad2609493f3a967915ff28"
+    sha256 cellar: :any,                 arm64_big_sur:  "f939d3c2d40d5cc3b3264202453dfa8b18c77dfa9d9fa3fbb31205f0aae88ab9"
+    sha256 cellar: :any,                 ventura:        "48489a02e4433452e849f84c7dc7b28c34ed43a94e0aad25921afc43f8a07b32"
+    sha256 cellar: :any,                 monterey:       "d79b24f3980fecb7b6d1b52529be345edece474121efbc8636da106d6f2a3f86"
+    sha256 cellar: :any,                 big_sur:        "61d787f0d5358831155d1c3d1238e7ca00b25a54865496e9190919e8007ff3fa"
+    sha256 cellar: :any,                 catalina:       "170c8aae880863774486a8d74b54971a3e78c8fd6e8d151f303fcd89cc728541"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "612e1aa668db6d7f3574c846af876fa6a09e45944e74e6a1213d096ab4dbb3c1"
   end
 
   head do
@@ -51,6 +52,9 @@ class Libngspice < Formula
 
     system "./configure", *args
     system "make", "install"
+
+    # remove script files
+    rm_rf Dir[share/"ngspice/scripts"]
   end
 
   test do

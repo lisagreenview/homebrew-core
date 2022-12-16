@@ -2,18 +2,19 @@ class Kubebuilder < Formula
   desc "SDK for building Kubernetes APIs using CRDs"
   homepage "https://github.com/kubernetes-sigs/kubebuilder"
   url "https://github.com/kubernetes-sigs/kubebuilder.git",
-      tag:      "v3.2.0",
-      revision: "b7a730c84495122a14a0faff95e9e9615fffbfc5"
+      tag:      "v3.8.0",
+      revision: "184ff7465947ced153b031db8de297a778cecf36"
   license "Apache-2.0"
-  head "https://github.com/kubernetes-sigs/kubebuilder.git"
+  head "https://github.com/kubernetes-sigs/kubebuilder.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2a4dad1daa9263ce2173869c13261c0ec572538bd26527e442fc88f0480fba8a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "18896f341179475b31589656f00c0bd6e5fe5cee86d83a8e74b8cfecbf999280"
-    sha256 cellar: :any_skip_relocation, monterey:       "33b6ffe15f1b2ac1c0d64a3a8137fd118f5d02e8e92167ec2021a7669490e6d2"
-    sha256 cellar: :any_skip_relocation, big_sur:        "c42883ef1ce3413ff25efcb9e36c271231bfc6b5bbb396a48e16391f4d8841e7"
-    sha256 cellar: :any_skip_relocation, catalina:       "30d47238b140ac3df8761f2fedc1bb9c6a2460a2734f4eaff4b1c5bef1e1b81b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "782dce15eb8760239abada37e34632610dbaaf66519b89b65b4433cecc770e72"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "171b33ef310797f5dbf60df8f29889d21aad8f424d8e192baad9a1d2c43b63fb"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "68354c935b40113c2256708993db3ead763d3a1edd45d3190c4514aea220aec4"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "69731f736bda318e59c1a02ca8427bd931924e10af7ac00ddf53d203109151f2"
+    sha256 cellar: :any_skip_relocation, ventura:        "08d8b57f99e72e49e0ab889ee1402c60ae14cf86bd9f6b5e2773d41e93d9a155"
+    sha256 cellar: :any_skip_relocation, monterey:       "9680e3b12de2bc2c9ddc270b7b996b56d8e8451ba5c255f0a8c8c99135f1c22f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a344d07b3a0b9a8cd84782bb1ca8b4abb5a5e73630af158935c021e11e013f20"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1c902c0e6f4cb8cd0494c723fe69b031327bea8383e2f464feeab635cd02eadf"
   end
 
   depends_on "git-lfs" => :build
@@ -29,14 +30,9 @@ class Kubebuilder < Formula
       -X main.gitCommit=#{Utils.git_head}
       -X main.buildDate=#{time.iso8601}
     ]
-    system "go", "build", *std_go_args(ldflags: ldflags.join(" ")), "./cmd"
+    system "go", "build", *std_go_args(ldflags: ldflags), "./cmd"
 
-    output = Utils.safe_popen_read(bin/"kubebuilder", "completion", "bash")
-    (bash_completion/"kubebuilder").write output
-    output = Utils.safe_popen_read(bin/"kubebuilder", "completion", "zsh")
-    (zsh_completion/"_kubebuilder").write output
-    output = Utils.safe_popen_read(bin/"kubebuilder", "completion", "fish")
-    (fish_completion/"kubebuilder.fish").write output
+    generate_completions_from_executable(bin/"kubebuilder", "completion")
   end
 
   test do

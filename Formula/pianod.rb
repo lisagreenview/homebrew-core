@@ -1,8 +1,8 @@
 class Pianod < Formula
   desc "Pandora client with multiple control interfaces"
   homepage "https://deviousfish.com/pianod/"
-  url "https://deviousfish.com/Downloads/pianod2/pianod2-376.tar.gz"
-  sha256 "ac00655c1e3c7507ff89f283d8c339510f50e9ddd5a44cb1df7ebcb2e147e6d1"
+  url "https://deviousfish.com/Downloads/pianod2/pianod2-392.tar.gz"
+  sha256 "d3e24ec34677bb17307e61e79f42ae2b22441228db7a31cf056d452a92447cec"
   license "MIT"
 
   livecheck do
@@ -11,13 +11,15 @@ class Pianod < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "bf0828b5121524385982b319bc232292a5eb2439562955b1736037444468298a"
-    sha256 arm64_big_sur:  "56ab9d2c636cf273f208ffe8fb75d9b125361e445fa755920f9f582ec32e1afa"
-    sha256 monterey:       "9435a267507da828e96d612c833fae22b0bdae8c90db55bf2f5bcf9ce12864e7"
-    sha256 big_sur:        "3aaed35adde0c5e286691e0cec46cf841d21e8990449fe8ce44a1b19206fac81"
-    sha256 catalina:       "1eb5a5505c87c7e3507c56770567bfedfd778322989416d028ba964c5177ef06"
-    sha256 mojave:         "416d3972a515b932768d6e6ee1412c266e640f9b5bc734f00974a1b35bd40b80"
-    sha256 x86_64_linux:   "639af5a5c17e693c8ae599f20e76f5a58fafb804df91cccf69a7dfc2fd831d3c"
+    rebuild 1
+    sha256 arm64_ventura:  "ea6bd357e1c4adc9485f520ecef09bcea8bf690a59bf7a6c26a1618069e991c9"
+    sha256 arm64_monterey: "face4fa3d0b5350001bd9fab327e91b4c93e27b9838739543e51500e7f56f87e"
+    sha256 arm64_big_sur:  "be5cd3ad282889c61a990ad65d909a42f65d66df5cd3ee86629e6596e1e3961c"
+    sha256 ventura:        "45bf385a68a5a09b10b425606ca1eefb234a7c3a72dc99c1fd4d2c2fe7b221c8"
+    sha256 monterey:       "c28a6af22280a294723b9ab645b12be7fea3dd7125a731019ea7e1640ec19a28"
+    sha256 big_sur:        "d3f6100a1d1ae88f96c78708ce9b54140a3827819460c8a829c49d08cc5c13bd"
+    sha256 catalina:       "f12927568166fb653d124f06a28728e96f0d2e443cb210cfb61f4860ab5935b2"
+    sha256 x86_64_linux:   "840ab04307092dacff3212e7822c64a4c03ba77e14ff5f9ad86da1d36b3501ae"
   end
 
   depends_on "pkg-config" => :build
@@ -25,14 +27,15 @@ class Pianod < Formula
   depends_on "libao"
   depends_on "libgcrypt"
 
+  uses_from_macos "libxcrypt"
+
   on_macos do
     depends_on "ncurses"
   end
 
   on_linux do
     # pianod uses avfoundation on macOS, ffmpeg on Linux
-    depends_on "ffmpeg"
-    depends_on "gcc"
+    depends_on "ffmpeg@4"
     depends_on "gnutls"
     depends_on "libbsd"
   end
@@ -41,10 +44,7 @@ class Pianod < Formula
 
   def install
     ENV["OBJCXXFLAGS"] = "-std=c++14"
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}"
+    system "./configure", *std_configure_args, "--disable-silent-rules"
     system "make", "install"
   end
 

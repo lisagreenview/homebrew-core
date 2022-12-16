@@ -1,21 +1,23 @@
 class Fn < Formula
   desc "Command-line tool for the fn project"
   homepage "https://fnproject.io"
-  url "https://github.com/fnproject/cli/archive/0.6.11.tar.gz"
-  sha256 "872ea9b7a93bb4ffd47defe4023aebc5c57b3f1db2d601dbb60ef42aad0c780b"
+  url "https://github.com/fnproject/cli/archive/0.6.23.tar.gz"
+  sha256 "1f34eb5c1c43759a4d5a4de01fe850ade410a1b4c4e7d4d51e23910e2f978854"
   license "Apache-2.0"
   head "https://github.com/fnproject/cli.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "31137e821a4d8a2547cdb83089834252ce72c02ca48502b02fc0793e4bfad455"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "85d676b361a17ee6208184d8a4ec0305497f118f85a84ee7c682d23d58baa740"
-    sha256 cellar: :any_skip_relocation, monterey:       "c4c87002dd9354584de4cea3cd6a27abc4d5357389b701ad66373f83342f0eb1"
-    sha256 cellar: :any_skip_relocation, big_sur:        "cd951aac2ea949487262df0ed02c76509a6c845fdc154ac11abf169a8c22d080"
-    sha256 cellar: :any_skip_relocation, catalina:       "c2b5b4aa1a0a4bde889dc666d8b11c1a4835834de0e90a9622708ad283f04b67"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "453835cb778d2604c4dab50c6a99f8a1a3578dfd26d510d619902ba45460e660"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "459e3ccc7de4bb49f8e901fcd27a14cfd41e754d6867fc694124bf1038b7d657"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "c5a73a2c61a782c491c472eef535f660d7eddfef12d788d4c644ae040eb4e013"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a7e5fac2037ebf083c484554a1aca56729b9a631e5e6db8cd2e0930e1179d708"
+    sha256 cellar: :any_skip_relocation, ventura:        "abcd61b594b462e75305596a99635b21545121e1221a5c78d527d93f3f43c905"
+    sha256 cellar: :any_skip_relocation, monterey:       "81ea4ec3ababd3e8f3473ee9876d5d360835352ccf969751b5fef9afc0946b21"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ec596a172d47796de2f76d1cbf45c844e791ee468fdf198e4e83eefea35ebeb3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e38836cae152077e69d2ddd9e232ab2f3a5b9e3bd3140a4c6cc83d1f7f3c6555"
   end
 
-  depends_on "go" => :build
+  # Bump to 1.18 on the next release, if possible.
+  depends_on "go@1.17" => :build
 
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w")
@@ -38,6 +40,7 @@ class Fn < Formula
         }.to_json
 
         socket = server.accept
+        socket.gets
         socket.print "HTTP/1.1 200 OK\r\n" \
                      "Content-Length: #{response.bytesize}\r\n" \
                      "Connection: close\r\n"

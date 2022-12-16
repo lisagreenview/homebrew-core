@@ -1,9 +1,9 @@
 class Sollya < Formula
   desc "Library for safe floating-point code development"
   homepage "https://www.sollya.org/"
-  url "https://www.sollya.org/releases/sollya-7.0/sollya-7.0.tar.gz"
-  sha256 "30487b8242fb40ba0f4bc2ef23a8ef216477e57b1db277712fde1f53ceebb92a"
-  revision 1
+  url "https://www.sollya.org/releases/sollya-8.0/sollya-8.0.tar.gz"
+  sha256 "58d734f9a2fc8e6733c11f96d2df9ab25bef24d71c401230e29f0a1339a81192"
+  license "CECILL-C"
 
   livecheck do
     url "https://www.sollya.org/download.php"
@@ -11,11 +11,14 @@ class Sollya < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "e85099273aa58bed86a2f3f5cecd630d6ef34733eb82781db493baf17e3beecb"
-    sha256 cellar: :any,                 big_sur:       "c4bfa257d2e396ec055f3032d5ece3753d47f582db360d2f5c639d5d21304bc9"
-    sha256 cellar: :any,                 catalina:      "2a005ddf4e5215f870f20efd84297d27d7683b5acc5ff771545893cf729da2a4"
-    sha256 cellar: :any,                 mojave:        "711853a4670a2951c6160f5681c8c511136f3f731e7a7806dd4a9f39b3eff209"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "1127e4744b2256e940f48537cea591c7f2f717619e8a8a3c93d053b8e3cf97ee"
+    sha256 cellar: :any,                 arm64_ventura:  "24c8ad7e4c09b06e16a5eabc7b19ef2a1c7106f5aecc726714ba3cb7d83a4dd0"
+    sha256 cellar: :any,                 arm64_monterey: "ab2fae288574175cf2fa8211a355514df71e916d9514b79da9c9836ea7b52647"
+    sha256 cellar: :any,                 arm64_big_sur:  "c07fef942ebff9171d52926e76947ad8eeccdc74be40290b18799c7dd67046fb"
+    sha256 cellar: :any,                 ventura:        "ff80b9b2a8861e4cf579b3cf016e8c349f15ffe87bad24c4b2e59a51b72a66bf"
+    sha256 cellar: :any,                 monterey:       "361f12cad5b11c1107747be6906745e048e9698596e40309d608bf0ae67866c7"
+    sha256 cellar: :any,                 big_sur:        "b3a49a1f76957bcbd5a81c8ea141b952b814eb45ff32063451550a7775d9f97b"
+    sha256 cellar: :any,                 catalina:       "614701c860f55043408ff5f1d3a6f4d527db39e07ea4f72715b969bacdeb9826"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b7ca886155f71257dd0fa97945db31705c58028169ea4c51f7c8f22631109db5"
   end
 
   depends_on "automake" => :build
@@ -28,24 +31,19 @@ class Sollya < Formula
   uses_from_macos "libxml2"
 
   def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}"
+    system "./configure", *std_configure_args, "--disable-silent-rules"
     system "make", "install"
   end
 
   test do
-    (testpath/"cos.sollya").write(<<~EOF)
+    (testpath/"cos.sollya").write <<~EOF
       write(taylor(2*cos(x),1,0)) > "two.txt";
       quit;
     EOF
     system bin/"sollya", "cos.sollya"
-    assert_equal "2", File.read(testpath/"two.txt")
-  end
+    assert_equal "2", (testpath/"two.txt").read
 
-  test do
-    (testpath/"test.c").write(<<~EOF)
+    (testpath/"test.c").write <<~EOF
       #include <sollya.h>
 
       int main(void) {
@@ -58,8 +56,8 @@ class Sollya < Formula
         return 0;
       }
     EOF
-    pkg_config_flags = `pkg-config --cflags --libs gmp mpfr fplll`.chomp.split
+    pkg_config_flags = shell_output("pkg-config --cflags --libs gmp mpfr fplll").chomp.split
     system ENV.cc, "test.c", *pkg_config_flags, "-I#{include}", "-L#{lib}", "-lsollya", "-o", "test"
-    assert_equal "pi", `./test`
+    assert_equal "pi", shell_output("./test")
   end
 end

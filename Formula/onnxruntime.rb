@@ -2,8 +2,8 @@ class Onnxruntime < Formula
   desc "Cross-platform, high performance scoring engine for ML models"
   homepage "https://github.com/microsoft/onnxruntime"
   url "https://github.com/microsoft/onnxruntime.git",
-      tag:      "v1.9.1",
-      revision: "2a96b73a1afa9aaafb510749627e267c4e8dee63"
+      tag:      "v1.13.1",
+      revision: "b353e0b41d588605958b03f9a223d10a2fbeb514"
   license "MIT"
 
   livecheck do
@@ -12,21 +12,18 @@ class Onnxruntime < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "1df38efbb3dabf25c4a8a66f0703576a9bd68030a33956cdea6f75701b84f9f0"
-    sha256 cellar: :any,                 arm64_big_sur:  "b201b295f91bb36ea1ddd9a1fc369698466e790d2db462c74adf07cb5a7bd764"
-    sha256 cellar: :any,                 monterey:       "8dcd8c225b6d6947c9fcf6417df6372b975f125237a5fc55496260c78abbc3a9"
-    sha256 cellar: :any,                 big_sur:        "9df210ba239c623f6c0270db7c3e75089007422156be6c35867c37f060ede8f7"
-    sha256 cellar: :any,                 catalina:       "ff4acf5025be335fbb577682f2ba438f749a64d12b6f7167a11c1aff29235dcc"
-    sha256 cellar: :any,                 mojave:         "be2ce9d531cdc938a4587126364fa4fd7b237bc50d183d9aa3359969913e7b77"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "469682bee07c34a201802ba90f228893035f8f16d58ad3a7d9a58f06d4a64427"
+    sha256 cellar: :any,                 arm64_ventura:  "820848cee92dd69f5b063945901be4c3b68e57ba3789bd6386c82635c411c64f"
+    sha256 cellar: :any,                 arm64_monterey: "bc8914ae115b17c564281c81e21ee0fed26ccc5884dbd4644c879e87315643b7"
+    sha256 cellar: :any,                 arm64_big_sur:  "5618ef80c6f28b9ab4388699ecc434b9daf91c77864147a27718b7d97048a901"
+    sha256 cellar: :any,                 ventura:        "37b36297a72347ff0238d514bc7673cb6cd00b41b3a9fe8fd6fce9b7d508ae6e"
+    sha256 cellar: :any,                 monterey:       "1089f14d4be6c984c891a9718e9f0bbb01cdb41730aac67e529f397284aa8e24"
+    sha256 cellar: :any,                 big_sur:        "5334140c6721a125b83bd3130cd8c0b86bd5050f59c15d2f842038bbf04e679f"
+    sha256 cellar: :any,                 catalina:       "d18a5c72bc777468e6e53c5cd2700d6b03dc279e95c80e3d88d359ba59787112"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fda7083fd01d859c83f78d4b5e582aa76c9faf89e56022ef65d2b5dfeece882b"
   end
 
   depends_on "cmake" => :build
-  depends_on "python@3.9" => :build
-
-  on_linux do
-    depends_on "gcc" => :build
-  end
+  depends_on "python@3.10" => :build
 
   fails_with gcc: "5" # GCC version < 7 is no longer supported
 
@@ -34,15 +31,14 @@ class Onnxruntime < Formula
     cmake_args = %W[
       -Donnxruntime_RUN_ONNX_TESTS=OFF
       -Donnxruntime_GENERATE_TEST_REPORTS=OFF
-      -DPYTHON_EXECUTABLE=#{Formula["python@3.9"].opt_bin}/python3
+      -DPYTHON_EXECUTABLE=#{which("python3.10")}
       -Donnxruntime_BUILD_SHARED_LIB=ON
       -Donnxruntime_BUILD_UNIT_TESTS=OFF
     ]
 
-    mkdir "build" do
-      system "cmake", "../cmake", *std_cmake_args, *cmake_args
-      system "make", "install"
-    end
+    system "cmake", "-S", "cmake", "-B", "build", *cmake_args, *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

@@ -1,29 +1,29 @@
 class NagiosPlugins < Formula
   desc "Plugins for the nagios network monitoring system"
   homepage "https://www.nagios-plugins.org/"
-  url "https://www.nagios-plugins.org/download/nagios-plugins-2.3.3.tar.gz"
-  sha256 "07859071632ded58c5135d613438137022232da75f8bdc1687f3f75da2fe597f"
-  license "GPL-3.0"
+  url "https://github.com/nagios-plugins/nagios-plugins/releases/download/release-2.4.2/nagios-plugins-2.4.2.tar.gz"
+  sha256 "5b2769ae3d05559ea76ee296e73cf6e99e7175ad1e7ab3a7582c4a36d4ae3f47"
+  license "GPL-3.0-or-later"
   head "https://github.com/nagios-plugins/nagios-plugins.git", branch: "master"
 
-  livecheck do
-    url "https://nagios-plugins.org/download/"
-    regex(/href=.*?nagios-plugins[._-]v?(\d+(?:\.\d+)+)\.t/i)
-  end
-
   bottle do
-    sha256 cellar: :any, arm64_monterey: "e16175975182c9a77c3a8606c67028c83c7ad3dde9574a5caa949e98b1032e6f"
-    sha256 cellar: :any, arm64_big_sur:  "c1668e45b54d3654123117a0a7c365cb8f456fd5c9128e571c1553abbefb5b1f"
-    sha256 cellar: :any, monterey:       "46db6fbe86c1ca0917e24d9960c5c7b93d45160093aaa5b014a59342e24d5423"
-    sha256 cellar: :any, big_sur:        "af8499231b3f5728465e53f3f3dc8b7dd02172afa118b5c7607a11d69994566d"
-    sha256 cellar: :any, catalina:       "b90c6f268ed5a5310a797855d87730f016c5d5077fa7b131c929aee042a1ee6c"
-    sha256 cellar: :any, mojave:         "9dc95d628b0ca0e63df426e933f2be374442fa6ea3c6db0ea24ffb5967d098b1"
-    sha256 cellar: :any, high_sierra:    "873811a29453153cd0ace61f92be73ae33b4a5bec1a4ece13baf128b32250e6e"
+    sha256 cellar: :any, arm64_ventura:  "f2729b87cb23d5ad37af39e0b4696dd818c9520507b2d1528d42649ca06fb44d"
+    sha256 cellar: :any, arm64_monterey: "c0fe6bd13cc6fa25c154597a0bb66d245bae9a31c0b7d3f049dedd6d862fe5a6"
+    sha256 cellar: :any, arm64_big_sur:  "04f19ceb18f70237980d02e1147c03388a3e84e963427bba51f7c4437b1ed265"
+    sha256 cellar: :any, ventura:        "c040f9db0325edfac6fc13f7f9ac08acd96f3a4592fe6006b93bf74e8e802e3f"
+    sha256 cellar: :any, monterey:       "7106bc2245c818a345caff133b70650336ce8024859986852874b3b539d1c3fe"
+    sha256 cellar: :any, big_sur:        "9f5eba9244658bf95874d96c807f1a6f1decc7e201a8be8f8ba247fbcef4688a"
+    sha256 cellar: :any, catalina:       "48b56d823d578b7e7076dfb5c9c58dc58d5f9a1147b8ba6ae8937f0142d504fe"
+    sha256               x86_64_linux:   "3eb6d87ae49cde9604837cf5479f36237364c92a1d10e9ee78175398934795bf"
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "openssl@1.1"
+
+  on_linux do
+    depends_on "bind"
+  end
 
   conflicts_with "monitoring-plugins", because: "both install their plugins to the same folder"
 

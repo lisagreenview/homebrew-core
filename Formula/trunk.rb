@@ -1,19 +1,21 @@
 class Trunk < Formula
   desc "Build, bundle & ship your Rust WASM application to the web"
   homepage "https://github.com/thedodd/trunk"
-  url "https://github.com/thedodd/trunk/archive/v0.14.0.tar.gz"
-  sha256 "c72914740b6b557c7b0b0c3cd97bf104abb020f5f4dbe0bf9e201c3d18995d61"
+  url "https://github.com/thedodd/trunk/archive/v0.16.0.tar.gz"
+  sha256 "035f3508ad3954aa1117f662f9f59541e7a0059483b15d573a8146d997b54827"
   license any_of: ["MIT", "Apache-2.0"]
   head "https://github.com/thedodd/trunk.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2fd3194821fb98dfe898d09a6299a80498991bfdf6d8439490aa19cbf24b3215"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "68a15fbec3f247e910201dc63f748a97e00867c85176bd153ec010684c338dd6"
-    sha256 cellar: :any_skip_relocation, monterey:       "1b5d3f9b5903485cc6a37600f898b415793ec68fb5fb96790304f3203fe4d43b"
-    sha256 cellar: :any_skip_relocation, big_sur:        "c155f100ca114266d87db1737e25ed2fa59a427156ca184c494b7f88ebe02fbb"
-    sha256 cellar: :any_skip_relocation, catalina:       "039d601d002b042cab1a1d12402fdd0d8e8660fd83341a50be5fcf92676645d5"
-    sha256 cellar: :any_skip_relocation, mojave:         "1de2e90b44bcbe2b505f251a1b9867b2837ad442447f35e9d189583de139bd69"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b50b8c680e87c8edfe3276de12b0bd50835cce2fcf0de58e69f891f9670a8b0c"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c9b443cab6df437394b07edd2f3b5d0d156061faebac570a1b913231c617cd92"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8698432271512ae4822f764aeb3981c4700482557a5356bedd68f82c6e49dc81"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a64951157d2cf3b3e357336037ae06de3a387d27b993f1ba453afc44744d1bfb"
+    sha256 cellar: :any_skip_relocation, ventura:        "e4a773004aa3f41ead36f294b4fe139f31e4939e8774740acb4da696311a9812"
+    sha256 cellar: :any_skip_relocation, monterey:       "ec46a733f25e4cf02f7ed0308eb02717264668e2828ad1f0c50cd8205cdd23e7"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7a456539cb5bcb23d14389194ad9b9d303205f6fe45c47a1b9eb8b877b9290fd"
+    sha256 cellar: :any_skip_relocation, catalina:       "4554cc599f552716337cb468f0d05dc9afe74081d7ec9f86d4e2621418942b71"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "44fb0361a0ef22f61a55a160527f63fe1fab72c70f147b1c91953edec1071884"
   end
 
   depends_on "rust" => :build

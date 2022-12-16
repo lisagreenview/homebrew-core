@@ -3,24 +3,29 @@ require "language/node"
 class Lanraragi < Formula
   desc "Web application for archival and reading of manga/doujinshi"
   homepage "https://github.com/Difegue/LANraragi"
-  url "https://github.com/Difegue/LANraragi/archive/v.0.8.1.tar.gz"
-  sha256 "b87ca0f3b08147308d2ceee344c77e9f7068742f9b4705ed0ac298f08b4a5bad"
+  url "https://github.com/Difegue/LANraragi/archive/v.0.8.7.tar.gz"
+  sha256 "4b0338a1fc0bd6cc64cee38da823e395caa7e61362f60d9ae7c2d07e3cb51da5"
   license "MIT"
-  head "https://github.com/Difegue/LANraragi.git"
+  head "https://github.com/Difegue/LANraragi.git", branch: "dev"
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "9ee88f05aaa4fe5775a41068b26450ac766ebc8520ab596107a64f1cf7a61dc8"
-    sha256 cellar: :any, big_sur:       "b6f9247a0587e23fac302d70ca69f1d07cd73f3194ea1da37e0a5f3b4bb2fb86"
-    sha256 cellar: :any, catalina:      "a3608bc9c711fc8f8cc5c051b14ef89b882bfc3a4420e2cfbf63eb6ebaee617e"
-    sha256 cellar: :any, mojave:        "fb8c7b0db15297e6174933b439a816ff4bd9eacee21779d322973a619a249d22"
+    sha256 cellar: :any,                 arm64_ventura:  "2445c07c8f92473c73b9654da0e81afe41514ea365acd4267b91b0d6e2a10c79"
+    sha256 cellar: :any,                 arm64_monterey: "3731c4b8c241e190430528ea1c6db6ac729e38d995494db81051680608c4a044"
+    sha256 cellar: :any,                 arm64_big_sur:  "2c72d50acb5f48b67db009d31e9616656a96c6cd991c5e9646ef45118832fd28"
+    sha256 cellar: :any,                 ventura:        "bda2d3aafb92a76d9180b4390f23e114a6e495053bbe0eedfd4ec848fe279acd"
+    sha256 cellar: :any,                 monterey:       "513328a5b21273b678723d351ae46541564bcdc42ffee32cf174ddd0f8d2d3ad"
+    sha256 cellar: :any,                 big_sur:        "88b712c81f26c0b59bda5c619129a64dadd5c54cd055dd0562ff4e0c39a9a5fc"
+    sha256 cellar: :any,                 catalina:       "36900d82301c02c6c3217fb472faebbf4df8aaf3496e6324e79d19b360351f54"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6762bb72de8d407cfc53d289f7d599910c542094d995d6911379afa7c8607320"
   end
 
+  depends_on "nettle" => :build
   depends_on "pkg-config" => :build
   depends_on "cpanminus"
   depends_on "ghostscript"
   depends_on "giflib"
   depends_on "imagemagick"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libpng"
   depends_on "node"
   depends_on "openssl@1.1"
@@ -30,25 +35,29 @@ class Lanraragi < Formula
 
   uses_from_macos "libarchive"
 
+  resource "libarchive-headers" do
+    on_macos do
+      url "https://github.com/apple-oss-distributions/libarchive/archive/refs/tags/libarchive-83.100.2.tar.gz"
+      sha256 "a0228f75792f881bc927196f8b794d0263a019aab741765e54550f75271258aa"
+    end
+  end
+
   resource "Image::Magick" do
     url "https://cpan.metacpan.org/authors/id/J/JC/JCRISTY/Image-Magick-7.0.11-3.tar.gz"
     sha256 "232f2312c09a9d9ebc9de6c9c6380b893511ef7c6fc358d457a4afcec26916aa"
   end
 
-  resource "libarchive-headers" do
-    url "https://opensource.apple.com/tarballs/libarchive/libarchive-83.100.2.tar.gz"
-    sha256 "e54049be1b1d4f674f33488fdbcf5bb9f9390db5cc17a5b34cbeeb5f752b207a"
-  end
-
-  resource "Archive::Peek::Libarchive" do
-    url "https://cpan.metacpan.org/authors/id/R/RE/REHSACK/Archive-Peek-Libarchive-0.38.tar.gz"
-    sha256 "332159603c5cd560da27fd80759da84dad7d8c5b3d96fbf7586de2b264f11b70"
-  end
-
   def install
     ENV.prepend_create_path "PERL5LIB", "#{libexec}/lib/perl5"
     ENV.prepend_path "PERL5LIB", "#{libexec}/lib"
-    ENV["CFLAGS"] = "-I#{libexec}/include"
+
+    # On Linux, use the headers provided by the libarchive formula rather than the ones provided by Apple.
+    ENV["CFLAGS"] = if OS.mac?
+      "-I#{libexec}/include"
+    else
+      "-I#{Formula["libarchive"].opt_include}"
+    end
+
     ENV["OPENSSL_PREFIX"] = Formula["openssl@1.1"].opt_prefix
 
     imagemagick = Formula["imagemagick"]
@@ -63,23 +72,15 @@ class Lanraragi < Formula
       system "make", "install"
     end
 
-    resource("libarchive-headers").stage do
-      cd "libarchive/libarchive" do
-        (libexec/"include").install "archive.h", "archive_entry.h"
+    if OS.mac?
+      resource("libarchive-headers").stage do
+        cd "libarchive/libarchive" do
+          (libexec/"include").install "archive.h", "archive_entry.h"
+        end
       end
     end
 
-    resource("Archive::Peek::Libarchive").stage do
-      inreplace "Makefile.PL" do |s|
-        s.gsub! "$autoconf->_get_extra_compiler_flags", "$autoconf->_get_extra_compiler_flags .$ENV{CFLAGS}"
-      end
-
-      system "cpanm", "Config::AutoConf", "--notest", "-l", libexec
-      system "perl", "Makefile.PL", "INSTALL_BASE=#{libexec}"
-      system "make"
-      system "make", "install"
-    end
-
+    system "cpanm", "Config::AutoConf", "--notest", "-l", libexec
     system "npm", "install", *Language::Node.local_npm_install_args
     system "perl", "./tools/install.pl", "install-full"
 
@@ -117,6 +118,7 @@ class Lanraragi < Formula
       The program will cease functioning now.
     EOS
     # Execute through npm to avoid starting a redis-server
-    assert_match output, shell_output("npm start --prefix #{libexec}", 61)
+    return_value = OS.mac? ? 61 : 111
+    assert_match output, shell_output("npm start --prefix #{libexec}", return_value)
   end
 end

@@ -1,11 +1,10 @@
 class Varnish < Formula
   desc "High-performance HTTP accelerator"
   homepage "https://www.varnish-cache.org/"
-  url "https://varnish-cache.org/_downloads/varnish-7.0.1.tgz"
-  mirror "https://fossies.org/linux/www/varnish-7.0.1.tgz"
-  sha256 "c4e75beff0d461611742361fe8039ee1233ddf755b2b8a1e18a5fcacbe2b4660"
+  url "https://varnish-cache.org/_downloads/varnish-7.2.1.tgz"
+  mirror "https://fossies.org/linux/www/varnish-7.2.1.tgz"
+  sha256 "4d937d1720a8ec19c533f972d9303a1c9889b7bfca7437893ae5c27cf204a940"
   license "BSD-2-Clause"
-  revision 1
 
   livecheck do
     url "https://varnish-cache.org/releases/"
@@ -13,10 +12,13 @@ class Varnish < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "5627a636277bc9d9361b245d521755799c53782b4585d709cff88e3c43fae50a"
-    sha256 monterey:      "7cb4ae49e8618bd05741eeddf5de9f563b1c1c9a541216ad7444cbdd04383810"
-    sha256 big_sur:       "30eabfc78b2a616339e8d931c7ca2d70356b3c9b2bb223ea045195e9d59445bf"
-    sha256 catalina:      "ef8a23c4bd73ffd8431808cad95c0c738fc3a2b5a98a70aa30f9a99dc25918e4"
+    sha256 arm64_ventura:  "97837ceaffdb8bd8bfb4eb8bb6ca2ecaffa0330d9f3230118cd80beb64a69f3c"
+    sha256 arm64_monterey: "54d9b377ca097b2b52a6587b008861942980304d498f1ca763c381eadda84dde"
+    sha256 arm64_big_sur:  "52abe334b03a84878db5e12e656fdee57bf96d0850e16acf5c41de22e20d3a42"
+    sha256 monterey:       "1f5136cf626233f818e8b360903681fb6ac26da594eebc22464f3645e15676af"
+    sha256 big_sur:        "1e898c2342fc114e4d125da13affff0abe826f88b83d130da9b93e9decfdb9dc"
+    sha256 catalina:       "71676992efeb6f6bdc5bbd9dee205e3b0e752cb5b38032586d35043ac007361d"
+    sha256 x86_64_linux:   "64855ed4ce7f02bcd01eccc9dfdd0977239a39023349f7b83b91ffc5cb15d53c"
   end
 
   depends_on "docutils" => :build
@@ -26,14 +28,11 @@ class Varnish < Formula
   depends_on "sphinx-doc" => :build
   depends_on "pcre2"
 
-  # Fix -flat_namespace being used on Big Sur and later.
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-    sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-  end
+  uses_from_macos "libedit"
+  uses_from_macos "ncurses"
 
   def install
-    ENV["PYTHON"] = which("python3")
+    ENV["PYTHON"] = Formula["python@3.10"].opt_bin/"python3.10"
 
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
@@ -44,6 +43,9 @@ class Varnish < Formula
     # can install VMODs and VCL.
     ENV.append_to_cflags "-DVARNISH_VMOD_DIR='\"#{HOMEBREW_PREFIX}/lib/varnish/vmods\"'"
     ENV.append_to_cflags "-DVARNISH_VCL_DIR='\"#{pkgetc}:#{HOMEBREW_PREFIX}/share/varnish/vcl\"'"
+
+    # Fix missing pthread symbols on Linux
+    ENV.append_to_cflags "-pthread" if OS.linux?
 
     system "make", "install", "CFLAGS=#{ENV.cflags}"
 

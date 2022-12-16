@@ -4,22 +4,23 @@ class Libpsl < Formula
   url "https://github.com/rockdaboot/libpsl/releases/download/0.21.1/libpsl-0.21.1.tar.gz"
   sha256 "ac6ce1e1fbd4d0254c4ddb9d37f1fa99dec83619c1253328155206b896210d4c"
   license "MIT"
-  revision 3
+  revision 5
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "899906030e256c5132cc6a1a709c283161701f950f698bee27d6f7e54d7d71df"
-    sha256 cellar: :any,                 arm64_big_sur:  "f2330a5e4084401e4c60bec2da48cc2d877e777c51f8106f9c11653612dc7337"
-    sha256 cellar: :any,                 monterey:       "70c916c1ccdda936de0cc1de6a17c066f6ecf2d76204482137f122852787e0bb"
-    sha256 cellar: :any,                 big_sur:        "dfb143c0316dd1319165c09d9cfd8cb3ed47a572e538b88755bae8f90de594b9"
-    sha256 cellar: :any,                 catalina:       "6ebd02eb47c7a10b1b60360c6f2467677feba8d81a3a4e9e4cb09c08180395f5"
-    sha256 cellar: :any,                 mojave:         "7ce4c33579aa8d7263df78f1814166a8a14a26b28866bbd8772c9a0bea9726a5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e95d796f1b490d7720f3aa1a9dd6d3799ccf99be87194dd2b4bcd72d00c626a8"
+    sha256 cellar: :any,                 arm64_ventura:  "33e8c735f9e1bcbf1965f4fdb61ccf73afaacba62623f9bd708edd2e20c31974"
+    sha256 cellar: :any,                 arm64_monterey: "e557dadaa6ae91265e67c280cd809c0cbf5e6b02215a6345115f6e0f8d52d315"
+    sha256 cellar: :any,                 arm64_big_sur:  "99118a8a981f19bbc3ce71e1fabbebf92cda62f94d4294c5d58ada5f50f6e859"
+    sha256 cellar: :any,                 ventura:        "93fe13888b190954713cdb04a84a45521820e22772d1f21c7e230844b66e90e1"
+    sha256 cellar: :any,                 monterey:       "2a9b432b666f483235e80cafa9201920df70b1c8e4ad53f819f8d4607818d0e2"
+    sha256 cellar: :any,                 big_sur:        "9a7d0cf58a69d6b388775d32c093365e6ae8d56cf0b362af6be6b4c067202a5b"
+    sha256 cellar: :any,                 catalina:       "a6a89728976c0687f579b4c13fa0537b82d38e1aa01dfe965518e00192e4052b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b67f7d46ea88425ee5b1a0ebba7b6c28ed7d035c1752862613eb40682bea319c"
   end
 
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
-  depends_on "python@3.9" => :build
+  depends_on "python@3.10" => :build
   depends_on "icu4c"
 
   def install

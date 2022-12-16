@@ -1,8 +1,8 @@
 class Lxc < Formula
   desc "CLI client for interacting with LXD"
   homepage "https://linuxcontainers.org"
-  url "https://linuxcontainers.org/downloads/lxd/lxd-4.20.tar.gz"
-  sha256 "35504ef2e2dc7024b7088010987657969b1e2dea5581b24b4294f8f449248ed5"
+  url "https://linuxcontainers.org/downloads/lxd/lxd-5.9.tar.gz"
+  sha256 "a24cf7fbe3e5527a34deda7e8e92f17c05a51498723821f69b146d1e8e58117f"
   license "Apache-2.0"
 
   livecheck do
@@ -11,23 +11,23 @@ class Lxc < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b45c85faf3771083a8f452fc5ac61e76f58bba74be0d21cc631346e9030c1377"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7fbf94307ed09f5283ae28ffa69396cdf3cce144a5744781864c5f0041ce5222"
-    sha256 cellar: :any_skip_relocation, monterey:       "5b30a6b7530b528d7fc9da11a48b5ebf0810757acd82ccea0bc9684f34466234"
-    sha256 cellar: :any_skip_relocation, big_sur:        "d246824961d641893fa212daa7c078e0e4dbc5a7167da0911f25b9334dd4f352"
-    sha256 cellar: :any_skip_relocation, catalina:       "b2f3e1c8114b2d344fa9defa5df340a42c945f5d4222a571968951079223f71d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "03927c037f8d5bc9d08d93ddce1a9a840bf77dc8e0d2b6b949ade7e9910c3bb9"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "467d364d1941a462a8588cb60c61343e802531bc1c65f565d510bfe90d513caf"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "6fc6dddc5aa8a78bad4927d23d5ef711cfa16de232facdc1ce8342e18d879d8e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0c70bbea1040521babec2392f95e43fe026e4bcc2703c3500e7c253c1ba69913"
+    sha256 cellar: :any_skip_relocation, ventura:        "2e00016e37da68d54e19f91c1e18a60bd1469e8e11fce396554f479abbcb513c"
+    sha256 cellar: :any_skip_relocation, monterey:       "72961a6bf0108a0bc97154ea1201291a8a9019dc7dbe22e5d311c6ffd2952040"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7e4b6747167dc4a2fad050f5cd93a9dc2ddb1ffe8d7d75caf3b0b0be54310fac"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "73e2ccb65311eb39f3a056858a41ca4b2cb924f599a92b2d7a7e8f00464889c6"
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GOBIN"] = bin
-
     system "go", "build", *std_go_args, "./lxc"
   end
 
   test do
-    system "#{bin}/lxc", "--version"
+    output = JSON.parse(shell_output("#{bin}/lxc remote list --format json"))
+    assert_equal "https://images.linuxcontainers.org", output["images"]["Addr"]
   end
 end

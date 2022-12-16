@@ -5,7 +5,7 @@ class Libav < Formula
   sha256 "6893cdbd7bc4b62f5d8fd6593c8e0a62babb53e323fbc7124db3658d04ab443b"
   license "GPL-2.0-or-later"
   revision 8
-  head "https://git.libav.org/libav.git"
+  head "https://git.libav.org/libav.git", branch: "master"
 
   bottle do
     sha256 cellar: :any,                 arm64_monterey: "d163d72bbc94cf659325285190fbbf60f8e3232bb60eba917c57bb3fa4189983"
@@ -18,7 +18,7 @@ class Libav < Formula
   end
 
   # See: https://lists.libav.org/pipermail/libav-devel/2020-April/086589.html
-  deprecate! date: "2020-04-16", because: :unmaintained
+  disable! date: "2022-07-31", because: :unmaintained
 
   depends_on "pkg-config" => :build
   # manpages won't be built without texi2html
@@ -32,7 +32,7 @@ class Libav < Formula
   depends_on "libvorbis"
   depends_on "libvpx"
   depends_on "opus"
-  depends_on "sdl"
+  depends_on "sdl12-compat"
   depends_on "theora"
   depends_on "x264"
   depends_on "xvid"

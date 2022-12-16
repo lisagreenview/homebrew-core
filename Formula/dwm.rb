@@ -1,11 +1,10 @@
 class Dwm < Formula
   desc "Dynamic window manager"
   homepage "https://dwm.suckless.org/"
-  url "https://dl.suckless.org/dwm/dwm-6.2.tar.gz"
-  sha256 "97902e2e007aaeaa3c6e3bed1f81785b817b7413947f1db1d3b62b8da4cd110e"
+  url "https://dl.suckless.org/dwm/dwm-6.4.tar.gz"
+  sha256 "fa9c0d69a584485076cfc18809fd705e5c2080dafb13d5e729a3646ca7703a6e"
   license "MIT"
-  revision 2
-  head "https://git.suckless.org/dwm", using: :git
+  head "https://git.suckless.org/dwm", using: :git, branch: "master"
 
   livecheck do
     url "https://dl.suckless.org/dwm/"
@@ -13,13 +12,14 @@ class Dwm < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "3971098bdbc2dee1f4acac3020a38052d6be49f777543c422e93e2c2f361e3bf"
-    sha256 cellar: :any, arm64_big_sur:  "7fd3a01a1f29927ca94c2c5ea32b4ee0c9f31d9ea39adc04e76ab40517663149"
-    sha256 cellar: :any, monterey:       "ac0754547b75d1e161c9401e78dcad9c9560d76f45483c19fbd1890429b88cc7"
-    sha256 cellar: :any, big_sur:        "afd787afd9c6ea4cc81c100f324d2b8aa4c65c2a06e43ca87d54135425b347cf"
-    sha256 cellar: :any, catalina:       "d872be09d1f5c11c9fb4d34002cc5f4622fbc259691800e1742354573b9effb0"
-    sha256 cellar: :any, mojave:         "e4ec85368754c0594847dad5272770a36e69876ed433fdd390d73a7d05c43263"
-    sha256 cellar: :any, high_sierra:    "b22ec01678edc39f1b82837087bb69ac311bce937eb10cb096fc8b1002f97701"
+    sha256 cellar: :any,                 arm64_ventura:  "3ea89386f0283643f4034d9223c9c5cd39172b630ddf3046769a8655537f3ea4"
+    sha256 cellar: :any,                 arm64_monterey: "10e4acc8a0acf14b00397ddca12a3324e5cbf2ac881974472e473fe4a555b783"
+    sha256 cellar: :any,                 arm64_big_sur:  "45a4e170d418e0c7caeace0c4ddea6e8986b53e59906f056b95f42aa2d4201fe"
+    sha256 cellar: :any,                 ventura:        "da198c90c358db49b0d9827f1b9702099fb7e7d5b9f74d4fb5caba0a89a1a651"
+    sha256 cellar: :any,                 monterey:       "9774dc44a72ebf8831d07261e49d5607036b03895af484091828452fed9e09b2"
+    sha256 cellar: :any,                 big_sur:        "1620a1e55c9bbce30c5c0247bd02425120fb317e39c5a97ff34ea163641b388d"
+    sha256 cellar: :any,                 catalina:       "0632b1fa0115e7f403e2cd6e05ad4df2554dabc1018825eb16976798b1a84e61"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "24c0fe1f422ba854396d792b3fe28225f5658edca9e0fd98cadff55eeb8b0f13"
   end
 
   depends_on "dmenu"

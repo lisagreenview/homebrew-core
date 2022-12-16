@@ -1,8 +1,8 @@
 class Yarn < Formula
   desc "JavaScript package manager"
   homepage "https://yarnpkg.com/"
-  url "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz"
-  sha256 "267982c61119a055ba2b23d9cf90b02d3d16c202c03cb0c3a53b9633eae37249"
+  url "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz"
+  sha256 "732620bac8b1690d507274f025f3c6cfdc3627a84d9642e38a07452cc00e0f2e"
   license "BSD-2-Clause"
 
   livecheck do
@@ -10,34 +10,34 @@ class Yarn < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, all: "2d9cb60cd75e22835f7d7b840168aa5a5d8999d82f0eea75315cb3193edc8c9e"
+    sha256 cellar: :any_skip_relocation, all: "79b90324a5365189a144b786e9bdb3bf32be3823e9041d5f3250ea7b804dcd0b"
   end
 
-  depends_on "node"
+  depends_on "node" => :test
 
   conflicts_with "hadoop", because: "both install `yarn` binaries"
   conflicts_with "corepack", because: "both install `yarn` and `yarnpkg` binaries"
 
   def install
     libexec.install buildpath.glob("*")
-    (bin/"yarn").write_env_script libexec/"bin/yarn.js",
-                                  PREFIX:            HOMEBREW_PREFIX,
-                                  NPM_CONFIG_PYTHON: which("python3")
-    (bin/"yarnpkg").write_env_script libexec/"bin/yarn.js",
-                                      PREFIX:            HOMEBREW_PREFIX,
-                                      NPM_CONFIG_PYTHON: which("python3")
+    (bin/"yarn").write_env_script libexec/"bin/yarn.js", PREFIX: HOMEBREW_PREFIX
+    (bin/"yarnpkg").write_env_script libexec/"bin/yarn.js", PREFIX: HOMEBREW_PREFIX
     inreplace libexec/"lib/cli.js", "/usr/local", HOMEBREW_PREFIX
     inreplace libexec/"package.json", '"installationMethod": "tar"',
                                       "\"installationMethod\": \"#{tap.user.downcase}\""
   end
 
+  def caveats
+    <<~EOS
+      yarn requires a Node installation to function. You can install one with:
+        brew install node
+    EOS
+  end
+
   test do
     (testpath/"package.json").write('{"name": "test"}')
     system bin/"yarn", "add", "jquery"
-    on_macos do
-      # macOS specific package
-      system bin/"yarn", "add", "fsevents", "--build-from-source=true"
-    end
+    # macOS specific package
+    system bin/"yarn", "add", "fsevents", "--build-from-source=true" if OS.mac?
   end
 end

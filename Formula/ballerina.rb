@@ -1,21 +1,20 @@
 class Ballerina < Formula
   desc "Programming Language for Network Distributed Applications"
   homepage "https://ballerina.io"
-  url "https://dist.ballerina.io/downloads/1.2.21/ballerina-1.2.21.zip"
-  sha256 "ce156d4b4c07da0358d07187c446d8c6854fd9423a34bb32601c2ec58d8c7728"
+  url "https://dist.ballerina.io/downloads/2201.3.0/ballerina-2201.3.0-swan-lake.zip"
+  sha256 "43b91c8eb0d82f297be05df577a3d14597c14d45b0b98636a96226e125d9b580"
   license "Apache-2.0"
 
   livecheck do
-    url "https://ballerina.io/downloads/"
-    regex(%r{href=.*?/downloads/.*?ballerina[._-]v?(\d+(?:\.\d+)+)\.}i)
+    url "https://github.com/ballerina-platform/ballerina-lang.git"
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "ef65852216c055aeaba2128b57556d37542809f9739acf34424656a98ca5d7e9"
+    sha256 cellar: :any_skip_relocation, all: "7f4cdbda70f9c2fb15cd23451bb7134c5b5d488a66aedf03c868cedd339f9a4d"
   end
 
-  depends_on arch: :x86_64 # openjdk@8 does not have ARM support
-  depends_on "openjdk@8"
+  depends_on "openjdk@11"
 
   def install
     # Remove Windows files
@@ -25,7 +24,7 @@ class Ballerina < Formula
 
     bin.install "bin/bal"
     libexec.install Dir["*"]
-    bin.env_script_all_files(libexec/"bin", Language::Java.java_home_env("1.8"))
+    bin.env_script_all_files(libexec/"bin", Language::Java.java_home_env("11"))
   end
 
   test do

@@ -2,56 +2,42 @@ class Istioctl < Formula
   desc "Istio configuration command-line utility"
   homepage "https://istio.io/"
   url "https://github.com/istio/istio.git",
-      tag:      "1.12.0",
-      revision: "016bc46f4a5e0ef3fa135b3c5380ab7765467c1a"
+      tag:      "1.16.1",
+      revision: "f6d7bf648e571a6a523210d97bde8b489250354b"
   license "Apache-2.0"
-  head "https://github.com/istio/istio.git"
+  head "https://github.com/istio/istio.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "3153bd861e0152480ff0239b503b8fddf665d80f8d26e2ced5caff356d47596c"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3153bd861e0152480ff0239b503b8fddf665d80f8d26e2ced5caff356d47596c"
-    sha256 cellar: :any_skip_relocation, monterey:       "59cdd78e0c1419e58f87408f78f2b799a3a9a7b86a2a132f2f1aba040d0690e6"
-    sha256 cellar: :any_skip_relocation, big_sur:        "59cdd78e0c1419e58f87408f78f2b799a3a9a7b86a2a132f2f1aba040d0690e6"
-    sha256 cellar: :any_skip_relocation, catalina:       "59cdd78e0c1419e58f87408f78f2b799a3a9a7b86a2a132f2f1aba040d0690e6"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "5afa237a7350505f2172344bb69b2b10cf78160454086f60e7d29f373daa03f7"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5afa237a7350505f2172344bb69b2b10cf78160454086f60e7d29f373daa03f7"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5afa237a7350505f2172344bb69b2b10cf78160454086f60e7d29f373daa03f7"
+    sha256 cellar: :any_skip_relocation, ventura:        "b4b419e4842fef13eca2adca70eda55fb8352c87a0a14ad830cd63b899809e7c"
+    sha256 cellar: :any_skip_relocation, monterey:       "b4b419e4842fef13eca2adca70eda55fb8352c87a0a14ad830cd63b899809e7c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b4b419e4842fef13eca2adca70eda55fb8352c87a0a14ad830cd63b899809e7c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "da0d3d86a5598e83b3b4b34fae54d742e460ffa0f4841b9869c75b5102205cb6"
   end
 
   depends_on "go" => :build
   depends_on "go-bindata" => :build
 
-  # Fix https://github.com/istio/istio/issues/35831
-  # remove in next release
-  patch do
-    url "https://github.com/istio/istio/commit/6d9c69f10431bca2ee2beefcfdeaad5e5f62071b.patch?full_index=1"
-    sha256 "47e175fc0ac5e34496c6c0858eefbc31e45073dad9683164f7a21c74dbaa6055"
-  end
+  uses_from_macos "curl" => :build
 
   def install
-    # make parallelization should be fixed in version > 1.12.0
-    ENV.deparallelize
     ENV["VERSION"] = version.to_s
     ENV["TAG"] = version.to_s
     ENV["ISTIO_VERSION"] = version.to_s
     ENV["HUB"] = "docker.io/istio"
     ENV["BUILD_WITH_CONTAINER"] = "0"
 
-    dirpath = if OS.linux?
-      "linux_amd64"
-    elsif Hardware::CPU.arm?
-      # Fix missing "amd64" for macOS ARM in istio/common/scripts/setup_env.sh
-      # Can remove when upstream adds logic to detect `$(uname -m) == "arm64"`
-      ENV["TARGET_ARCH"] = "arm64"
+    os = OS.kernel_name.downcase
+    arch = Hardware::CPU.intel? ? "amd64" : Hardware::CPU.arch.to_s
 
-      "darwin_arm64"
-    else
-      "darwin_amd64"
-    end
+    ENV.prepend_path "PATH", Formula["curl"].opt_bin if OS.linux?
 
-    system "make", "istioctl", "istioctl.completion"
-    cd "out/#{dirpath}" do
-      bin.install "istioctl"
-      bash_completion.install "release/istioctl.bash"
-      zsh_completion.install "release/_istioctl"
-    end
+    system "make", "istioctl"
+    bin.install "out/#{os}_#{arch}/istioctl"
+
+    generate_completions_from_executable(bin/"istioctl", "completion")
   end
 
   test do

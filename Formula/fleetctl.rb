@@ -5,7 +5,7 @@ class Fleetctl < Formula
       tag:      "v1.0.0",
       revision: "b8127afc06e3e41089a7fc9c3d7d80c9925f4dab"
   license "Apache-2.0"
-  head "https://github.com/coreos/fleet.git"
+  head "https://github.com/coreos/fleet.git", branch: "master"
 
   bottle do
     rebuild 1
@@ -21,7 +21,7 @@ class Fleetctl < Formula
 
   # "CoreOS recommends Kubernetes for all clustering needs":
   # https://coreos.com/blog/migrating-from-fleet-to-kubernetes.html
-  deprecate! date: "2020-04-15", because: :repo_archived
+  disable! date: "2022-07-31", because: :repo_archived
 
   depends_on "go" => :build
 

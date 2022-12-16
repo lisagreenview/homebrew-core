@@ -1,19 +1,20 @@
 class CargoLlvmLines < Formula
   desc "Count lines of LLVM IR per generic function"
   homepage "https://github.com/dtolnay/cargo-llvm-lines"
-  url "https://github.com/dtolnay/cargo-llvm-lines/archive/0.4.12.tar.gz"
-  sha256 "4841e606a2fd642524b48206f5777691d7a66afad54ddea24cb4a3d63113484b"
+  url "https://github.com/dtolnay/cargo-llvm-lines/archive/0.4.22.tar.gz"
+  sha256 "af963e70574b9fc1fd6570df8df875bf00d3bcbf2435a7e86920fdb762cb3764"
   license any_of: ["Apache-2.0", "MIT"]
   head "https://github.com/dtolnay/cargo-llvm-lines.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f7c69877426ae36001d8945ff7283e8288af8615240e9fea506216f752e5728b"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7477c0e478b44c685286fb5ee438991ba817308973f974b0105ac8f453d8f2c5"
-    sha256 cellar: :any_skip_relocation, monterey:       "9975280ca8b2f0e666cc0082e3ffb95a5f20780466e3d87e1d9731c2596e2b90"
-    sha256 cellar: :any_skip_relocation, big_sur:        "65a2750b5af50dc662e5015af0e86648af4258282bde5bef173edf5ee743bc8b"
-    sha256 cellar: :any_skip_relocation, catalina:       "c7d2161ae1981fdab972e20cf41854a1db147dc51955bfe5f60de81fbdb14a19"
-    sha256 cellar: :any_skip_relocation, mojave:         "2c964ba29b0a1d5f5c3d0bd6408a434acbe4f1f501319f8c92daf8caea219795"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "08d3da247d169be76162f26ed9689b2d2d99131ed8c411b78def71ab0364424e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "8ce5bf04339b565f2ed9d1ce643536856e914f519a39966ad6b8979345870f41"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "002a58e20089d8a7483e37280317f39b6b5a96a8b5d441876bcbd14f9780bbe9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b35416eef705850d5ac2e51e1f0715e0c9a95b94c578ea66508dc41609c31d72"
+    sha256 cellar: :any_skip_relocation, ventura:        "552b29cd42f365d6b0845ee33a44f33fcead2ec54c6a6ce05848016442dcccd2"
+    sha256 cellar: :any_skip_relocation, monterey:       "4c0c9ea8b97bdbe33805faf944680d141746a8fcdf332070784e40b9818bfffb"
+    sha256 cellar: :any_skip_relocation, big_sur:        "e27f31467c219637410440515776464a5c0f0537bbb688e8447625bd9285079f"
+    sha256 cellar: :any_skip_relocation, catalina:       "3405955b474189e5dfa59b6870059a5543251120dc5178faf81de2b708b04efc"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fe0b2e7f11ccfd619808b957cd65f29bf4c589a136fda3d91f60f58b821d5fde"
   end
 
   depends_on "rust"

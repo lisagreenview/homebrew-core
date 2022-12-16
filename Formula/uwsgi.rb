@@ -1,38 +1,30 @@
 class Uwsgi < Formula
   desc "Full stack for building hosting services"
   homepage "https://uwsgi-docs.readthedocs.io/en/latest/"
+  url "https://files.pythonhosted.org/packages/b3/8e/b4fb9f793745afd6afcc0d2443d5626132e5d3540de98f28a8b8f5c753f9/uwsgi-2.0.21.tar.gz"
+  sha256 "35a30d83791329429bc04fe44183ce4ab512fcf6968070a7bfba42fc5a0552a9"
   license "GPL-2.0-or-later"
-  revision 2
   head "https://github.com/unbit/uwsgi.git", branch: "master"
 
-  stable do
-    url "https://files.pythonhosted.org/packages/c7/75/45234f7b441c59b1eefd31ba3d1041a7e3c89602af24488e2a22e11e7259/uWSGI-2.0.19.1.tar.gz"
-    sha256 "faa85e053c0b1be4d5585b0858d3a511d2cd10201802e8676060fd0a109e5869"
-
-    # Fix "library not found for -lgcc_s.10.5" with 10.14 SDK
-    # Remove in next release
-    patch do
-      url "https://github.com/unbit/uwsgi/commit/6b1b397f.patch?full_index=1"
-      sha256 "85725f31ea0f914e89e3abceffafc64038ee5e44e979ae85eb8d58c80de53897"
-    end
-  end
-
   bottle do
-    sha256 arm64_monterey: "8165b1f5c4e155fbb114f1f7dfa02802528531874c5364bb44acb21d13d6f284"
-    sha256 arm64_big_sur:  "26fab6fdc9ceeec301ef5fd5cbcfadfcfbe7166ef327229467ba90c6a787a4e6"
-    sha256 monterey:       "ad2fae7eefbe577c898841750ce6867e73185445730f3ff974e135ab57b00e99"
-    sha256 big_sur:        "a2a58236a725f7b14d68b0cd5defb7b186827b7e1008f6b8ea118f9b5365c524"
-    sha256 catalina:       "32b2ae6a83e6b18be219052bac8dee129eef3aae9881a455486abaa0d3e3c904"
-    sha256 x86_64_linux:   "ba0b90b81f4b8bcb207ccb2b473f47fb0d9facb0520a0af5824adf4ed486a665"
+    sha256 arm64_ventura:  "9f14390de18ef1adb63a98c4f5a19b146fa02cb6f99485ae513ca9fefe0e09bb"
+    sha256 arm64_monterey: "9d1929c7a720d4ad1f8f8f4f8cef51bed5833e5adc5881da44e6f5b7946abbc6"
+    sha256 arm64_big_sur:  "a3dfad629f7fc0aeb1df752862fe3311ae7aa1684dacf3225264187344b7ea7e"
+    sha256 ventura:        "8088e630d033c27705b52a86ee4f7622094490eaf5e0f544456e0b9c45a37584"
+    sha256 monterey:       "2dc03c4a6aa1503256a73a59bc54a4abe9a478c647a0f35c63d8300f5f951115"
+    sha256 big_sur:        "d25cafb4c641df72f8b3b23ece9257e7c44c2c3dbaee2fcb222e14e2e1926292"
+    sha256 catalina:       "2e1ff38549441c6d30dfd1a9a43c9dff3bca37f84463c9661280324be112160a"
+    sha256 x86_64_linux:   "2c7d7ec6a3dbffb363190886a92977fadd48cfd14553c950ace7825037c09567"
   end
 
   depends_on "pkg-config" => :build
   depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
   depends_on "yajl"
 
   uses_from_macos "curl"
+  uses_from_macos "libxcrypt"
   uses_from_macos "libxml2"
   uses_from_macos "openldap"
   uses_from_macos "perl"
@@ -42,10 +34,6 @@ class Uwsgi < Formula
   end
 
   def install
-    # Fix file not found errors for /usr/lib/system/libsystem_symptoms.dylib and
-    # /usr/lib/system/libsystem_darwin.dylib on 10.11 and 10.12, respectively
-    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version <= :sierra
-
     openssl = Formula["openssl@1.1"]
     ENV.prepend "CFLAGS", "-I#{openssl.opt_include}"
     ENV.prepend "LDFLAGS", "-L#{openssl.opt_lib}"
@@ -61,11 +49,12 @@ class Uwsgi < Formula
       embedded_plugins = null
     EOS
 
-    system "python3", "uwsgiconfig.py", "--verbose", "--build", "brew"
+    python3 = "python3.10"
+    system python3, "uwsgiconfig.py", "--verbose", "--build", "brew"
 
     plugins = %w[airbrake alarm_curl asyncio cache
                  carbon cgi cheaper_backlog2 cheaper_busyness
-                 corerouter curl_cron cplusplus dumbloop dummy
+                 corerouter curl_cron dumbloop dummy
                  echo emperor_amqp fastrouter forkptyrouter gevent
                  http logcrypto logfile ldap logpipe logsocket
                  msgpack notfound pam ping psgi pty rawrouter
@@ -80,13 +69,14 @@ class Uwsgi < Formula
                  transformation_offload transformation_tofile
                  transformation_toupper ugreen webdav zergpool]
     plugins << "alarm_speech" if OS.mac?
+    plugins << "cplusplus" if OS.linux?
 
     (libexec/"uwsgi").mkpath
     plugins.each do |plugin|
-      system "python3", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/#{plugin}", "brew"
+      system python3, "uwsgiconfig.py", "--verbose", "--plugin", "plugins/#{plugin}", "brew"
     end
 
-    system "python3", "uwsgiconfig.py", "--verbose", "--plugin", "plugins/python", "brew", "python3"
+    system python3, "uwsgiconfig.py", "--verbose", "--plugin", "plugins/python", "brew", "python3"
 
     bin.install "uwsgi"
   end

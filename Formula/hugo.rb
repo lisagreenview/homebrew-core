@@ -1,18 +1,19 @@
 class Hugo < Formula
   desc "Configurable static site generator"
   homepage "https://gohugo.io/"
-  url "https://github.com/gohugoio/hugo/archive/v0.89.4.tar.gz"
-  sha256 "9d4f61788f8d886913a1be15b3eae04fad04a4e243bd7f65c5e7367bd617856d"
+  url "https://github.com/gohugoio/hugo/archive/v0.108.0.tar.gz"
+  sha256 "dc90e9de22ce87c22063ce9c309cefacba89269a21eb369ed556b90b22b190c5"
   license "Apache-2.0"
   head "https://github.com/gohugoio/hugo.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "fcdaa12243e5622003f7d76f1203e140d3c7592f8109bcddcc754a74aee04494"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0bd084315fa0a9d6a681f05aff613059bfdfa44976ba0ba279e7e1bfa15ed1f5"
-    sha256 cellar: :any_skip_relocation, monterey:       "10679eafb53c401ba867e72e8452c7d7c59cff1090ae79961da3677cafa58da1"
-    sha256 cellar: :any_skip_relocation, big_sur:        "48c4030c91c38a2193c4bcd29844c80cc8171680cc8a0f4f09172fe6c0e3fd72"
-    sha256 cellar: :any_skip_relocation, catalina:       "42035e1ace83b1e33981ac78a838de2084a045e23aa0428046d73c5613ea2b34"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "61ae0659db33b966aace9d38f5bafb8ab1b3aed81a9b8380fa97cdd46389268a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "130e9c38547fe080a8b853a156ba9b822a069979d48bb36c31247890c7ca7d2e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a7947fe185db2bf3e2fbbe1919146ac10fa318d5247e8c803cf5f0f79f0741e0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "cc32d875018527fc63855780692f4509e4f09e99b128a0697465c3e4f53b1bf0"
+    sha256 cellar: :any_skip_relocation, ventura:        "dc5e7b466bba95d38e23c69f97f38817560e4b35b3617a81429eb83a5c6c3fd9"
+    sha256 cellar: :any_skip_relocation, monterey:       "668f401abc34249b6b3c7abd0bde41000d64640119a883837d8982683134a979"
+    sha256 cellar: :any_skip_relocation, big_sur:        "037959e244141794454fb293170d77475ae885e9369b7def256a5cb024d7e429"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fa0d606eec4059c2c6030229ceeb94b40456fd9f2b05ad668b48407aac9f3254"
   end
 
   depends_on "go" => :build
@@ -20,9 +21,7 @@ class Hugo < Formula
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w"), "-tags", "extended"
 
-    # Build bash completion
-    system bin/"hugo", "gen", "autocomplete", "--completionfile=hugo.sh"
-    bash_completion.install "hugo.sh"
+    generate_completions_from_executable(bin/"hugo", "completion")
 
     # Build man pages; target dir man/ is hardcoded :(
     (Pathname.pwd/"man").mkpath

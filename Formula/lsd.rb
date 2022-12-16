@@ -1,24 +1,29 @@
 class Lsd < Formula
   desc "Clone of ls with colorful output, file type icons, and more"
   homepage "https://github.com/Peltoche/lsd"
-  url "https://github.com/Peltoche/lsd/archive/0.20.1.tar.gz"
-  sha256 "a2086aa049b8bd21c880f23b21b0e9ef21d3c3829d40641aa8810c08be936c19"
+  url "https://github.com/Peltoche/lsd/archive/0.23.1.tar.gz"
+  sha256 "9698919689178cc095f39dcb6a8a41ce32d5a1283e6fe62755e9a861232c307d"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b70c45cc56466e5b28d69ca52355d82a8b8be64afbff7269ef4475e7ada62b8d"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6837d97dc37d9ffd1e0c84e974db7598f47db4a24099b8718019c7090b6c515a"
-    sha256 cellar: :any_skip_relocation, monterey:       "ef2b9bb793dae90f9dacc2f19dc0646576e364b1ca290fd558ccce1710411a24"
-    sha256 cellar: :any_skip_relocation, big_sur:        "0c9103225c2dd6c8faeb893947100bfb6395a0f6ce008f8968a2598fe99f3d46"
-    sha256 cellar: :any_skip_relocation, catalina:       "7710d954067c99c7cace2bb0c58c1b7a61d88d5df1e997b95a050265ba13e4ba"
-    sha256 cellar: :any_skip_relocation, mojave:         "bb72efd16f431bf09fa76661ed68b5919e6326f83da79d1f6e9d5e63fef90ab0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2b59509fbad6bf50cd6b4d4bdf026f2e04772f0ec5ee8ae3d2282400a58740ee"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "12f7c0889cf4a5c18fd04f0dda7dac2af7a7c6aafc2a16ce2af4a76d28fc50b2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "657141d387cf3185c8e33a5730c13bf4ff600c35dc2b4ed7bb0c5d6bdd99501c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fb9f63aab186e0d6b231eae5cb7800976a06d4f44265b415b082b6996c1f0c38"
+    sha256 cellar: :any_skip_relocation, ventura:        "603348a70cb1484053c8732ecfffc96920177770dbb84f791e9ac3be23e26cf2"
+    sha256 cellar: :any_skip_relocation, monterey:       "0303125c2efa21b60105d8d576d032b2248e14deb7198b5bcb55a2bd5e58d4c8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0cb90516594836c18243d8e799e88339e420735d2fb5c8182a4e3b78c83103cf"
+    sha256 cellar: :any_skip_relocation, catalina:       "5f105e34087e96b5fad8f62d69fb8b212f03501a526420415871fa2326a5f570"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "20fc3d18113e6fe56c387d1d3443d8b6dbf6888e07f53b90c9d8266e0048680d"
   end
 
   depends_on "rust" => :build
 
   def install
+    ENV["SHELL_COMPLETIONS_DIR"] = buildpath
     system "cargo", "install", *std_cargo_args
+    bash_completion.install "lsd.bash"
+    fish_completion.install "lsd.fish"
+    zsh_completion.install "_lsd"
   end
 
   test do

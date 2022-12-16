@@ -13,9 +13,8 @@ class ScalaAT211 < Formula
 
   keg_only :versioned_formula
 
-  deprecate! date: "2017-11-09", because: :unsupported
+  disable! date: "2022-07-31", because: :unsupported
 
-  depends_on arch: :x86_64 # openjdk@8 is not supported on ARM
   depends_on "openjdk@8"
 
   def install

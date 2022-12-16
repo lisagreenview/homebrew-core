@@ -1,17 +1,18 @@
 class Lesspipe < Formula
   desc "Input filter for the pager less"
   homepage "https://www-zeuthen.desy.de/~friebel/unix/lesspipe.html"
-  url "https://github.com/wofr06/lesspipe/archive/1.91.tar.gz"
-  sha256 "6192e7e451c5db26841c6dc3cbcc23c1ef396c1cc4588288effa699dbc665cdb"
+  url "https://github.com/wofr06/lesspipe/archive/v2.06.tar.gz"
+  sha256 "f46c7b0b06f951613535a480d22ba7e8563f4f08d3d3f8e370047df122cb1637"
   license "GPL-2.0-only"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "eab2efbe871e0533c2610a0eb643f079e6dfadde5566aa8882a9c60b263d5882"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "eab2efbe871e0533c2610a0eb643f079e6dfadde5566aa8882a9c60b263d5882"
-    sha256 cellar: :any_skip_relocation, monterey:       "eab2efbe871e0533c2610a0eb643f079e6dfadde5566aa8882a9c60b263d5882"
-    sha256 cellar: :any_skip_relocation, big_sur:        "eab2efbe871e0533c2610a0eb643f079e6dfadde5566aa8882a9c60b263d5882"
-    sha256 cellar: :any_skip_relocation, catalina:       "eab2efbe871e0533c2610a0eb643f079e6dfadde5566aa8882a9c60b263d5882"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8db1eb487dcae19e75c6926212c274b62d04438193ccbe61e00a5bcb7ccba571"
+    sha256 cellar: :any_skip_relocation, all: "1fea365d12621bd65e1df169e2355b4d91ab157081ca83bb8c9346ae799f5669"
+  end
+
+  # build patch, remove in next release
+  patch do
+    url "https://github.com/wofr06/lesspipe/commit/8ebede2ee629fa7154dcb854d50b325ef9c54163.patch?full_index=1"
+    sha256 "a39ecba93b829d055973773746dd1447e38487169d89bb7161322066799c1534"
   end
 
   def install
@@ -23,7 +24,7 @@ class Lesspipe < Formula
   def caveats
     <<~EOS
       Append the following to your #{shell_profile}:
-      export LESSOPEN="|#{HOMEBREW_PREFIX}/bin/lesspipe.sh %s" LESS_ADVANCED_PREPROCESSOR=1
+      export LESSOPEN="|#{HOMEBREW_PREFIX}/bin/lesspipe.sh %s"
     EOS
   end
 
@@ -33,6 +34,6 @@ class Lesspipe < Formula
     system "tar", "-cvzf", "homebrew.tar.gz", "file1.txt", "file2.txt"
 
     assert_predicate testpath/"homebrew.tar.gz", :exist?
-    assert_match "file2.txt", pipe_output(bin/"tarcolor", shell_output("tar -tvzf homebrew.tar.gz"))
+    assert_match "file2.txt", pipe_output(bin/"archive_color", shell_output("tar -tvzf homebrew.tar.gz"))
   end
 end

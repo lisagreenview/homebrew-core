@@ -1,9 +1,9 @@
 class Socat < Formula
   desc "SOcket CAT: netcat on steroids"
   homepage "http://www.dest-unreach.org/socat/"
-  url "http://www.dest-unreach.org/socat/download/socat-1.7.4.1.tar.gz"
-  sha256 "0c7e635070af1b9037fd96869fc45eacf9845cb54547681de9d885044538736d"
-  license "GPL-2.0"
+  url "http://www.dest-unreach.org/socat/download/socat-1.7.4.4.tar.gz"
+  sha256 "0f8f4b9d5c60b8c53d17b60d79ababc4a0f51b3bb6d2bd3ae8a6a4b9d68f195e"
+  license "GPL-2.0-only"
 
   livecheck do
     url "http://www.dest-unreach.org/socat/download/"
@@ -11,20 +11,21 @@ class Socat < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "a1d69b34c205acecf9cd848a83884675e730920749ed3d5b2cb3d2770d4566bd"
-    sha256 cellar: :any,                 arm64_big_sur:  "1d355658a55eb44cb6ffe1fa8dc140883359467080e13be0d4237cf181c05dc0"
-    sha256 cellar: :any,                 monterey:       "b6fb68ad1092c12e0ccac75526ab19bb3714adc1605eb4a3757c238a2430c71a"
-    sha256 cellar: :any,                 big_sur:        "2249d3b3852d95fc683e27292e26967b0e3a13d60e59a99181445f941a343a32"
-    sha256 cellar: :any,                 catalina:       "f2a0d0d0bca542cb0f4b700d42dc244e82b8da9be2d5aff8d98b8a7fef77c9fe"
-    sha256 cellar: :any,                 mojave:         "531f3ea55671c8d01165c3a314b24cef873c51442a1729fe2e9ce14ff908aebb"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "78a1e71516e40d992644374d24b33013d23b2e92e7c000783f3d5fd517282994"
+    sha256 cellar: :any,                 arm64_ventura:  "623b6a8ffbf52e2f49bd91d7f67ab4831656969f8915a855ac9141ada45950a1"
+    sha256 cellar: :any,                 arm64_monterey: "9869f1abbc5e6f06eb88b9d105b8cd7a51104c3fc61445a137c7df696ff5bbda"
+    sha256 cellar: :any,                 arm64_big_sur:  "6fbd66e30a037ad2894cf36efbe54246ea4b121d83c1c58ec46f0db8ea949be4"
+    sha256 cellar: :any,                 ventura:        "582473222d1b540d10b7526d51b8521cfd709bc5e7ac73d6a08a2b0c7530fd7f"
+    sha256 cellar: :any,                 monterey:       "53f46b767cb68336f0b8df622eb3ba6f05d83c1918566c6394336ed36c1abd15"
+    sha256 cellar: :any,                 big_sur:        "16de00d162871d7911ac6c31ceec915041f84252dbafa5629a1d9c659cd549cb"
+    sha256 cellar: :any,                 catalina:       "9a047ed686313839bfb8ed662d4e9ed7d3d682631b36317ce2b4bba37fdb2ed1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a2658491f6539bd6f99a06ab1f7c9ae2c8b59313ccd5adb53dc64973cdb0f2f4"
   end
 
   depends_on "openssl@1.1"
   depends_on "readline"
 
   def install
-    system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
+    system "./configure", *std_configure_args, "--mandir=#{man}"
     system "make", "install"
   end
 

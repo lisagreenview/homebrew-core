@@ -1,18 +1,20 @@
 class Gau < Formula
   desc "Open Threat Exchange, Wayback Machine, and Common Crawl URL fetcher"
   homepage "https://github.com/lc/gau"
-  url "https://github.com/lc/gau/archive/v2.0.6.tar.gz"
-  sha256 "1728c341b147388fa8e60784c4b3895391be25f1e2e1b1cbb734329be7603693"
+  url "https://github.com/lc/gau/archive/v2.1.2.tar.gz"
+  sha256 "2900ba86dfda01b5d8a90e1547f158feb134f6d2b757ff8fc77d96d290f72e4c"
   license "MIT"
   head "https://github.com/lc/gau.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "00a96dbf0cc34dfb56496ae50e010e4aff8198a135d1a0481bc78392ece71ed4"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "528f21b04737f159a57832c0d7d925821e6ebfb79c8f5372fdf2221e922be619"
-    sha256 cellar: :any_skip_relocation, monterey:       "ff916f02b6af91e0938a114540f05183cad48f903247732d97cf8fd75bd62dcd"
-    sha256 cellar: :any_skip_relocation, big_sur:        "de3e307ba6de2d0f18e3f1757d4c7e000eb411e98467e9e6dd0cffc0fd699751"
-    sha256 cellar: :any_skip_relocation, catalina:       "35d83e8a497553bc880ec4764174719414997dc3bff2fa9a103ee1fa00739388"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "205251b87cb972f5f9125bb158746607e6b118012674892bd70f2050faef3ff3"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "ff3c4dfa76c55fb3d9f4aca25dd7311e32a8cf68c3eef0a59730ba93b01242d0"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "69fa3291ac27be667e85c304dc09bb66375c51baeb5fcee0611a370aa0880c0b"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2c6825916653f661d5a7ef5179185d2d68315c8bd08a34b0c788abbf05574e2e"
+    sha256 cellar: :any_skip_relocation, ventura:        "6b083901d3caa8436d86a3ab6dccd8a158a096c3ba661ae5b0793b0a12b4d26f"
+    sha256 cellar: :any_skip_relocation, monterey:       "fbfb406d2af502acf270b0907466ae1c8a94172ef8e22c87f5bdb3b7ca6f1cec"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f27a77b5321b456b1fb37e7ec396a5fa449e7f26938804f68d378dce8cef196a"
+    sha256 cellar: :any_skip_relocation, catalina:       "461ac21a199fa8435f68129edc6c9cb3f52d716026a373e978adcf4a0d52c533"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2673a688e06d00163439668c054944ab1965078c36be3dac11fa000dd8a2a888"
   end
 
   depends_on "go" => :build

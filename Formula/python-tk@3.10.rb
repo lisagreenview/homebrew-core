@@ -1,29 +1,33 @@
 class PythonTkAT310 < Formula
   desc "Python interface to Tcl/Tk"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz"
-  sha256 "c4e0cbad57c90690cb813fb4663ef670b4d0f587d8171e2c42bd4c9245bd2758"
+  url "https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz"
+  sha256 "f400c3fb394b8bef1292f6dc1292c5fadc3533039a5bc0c3e885f3e16738029a"
   license "Python-2.0"
-  revision 1
 
   livecheck do
     formula "python@3.10"
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "5c5ca802727c9bb7cad99b3335db43efcc0ab3d0b47035884ff804dd764cbad2"
-    sha256 cellar: :any, arm64_big_sur:  "6495ba7d17711b36a7cec076db2458da038d4b3adb83b6d70404c7bc39eb5ec8"
-    sha256 cellar: :any, monterey:       "1a4ddbb28f7fd41be9864a80234d41d53f49056878fb8fc7a5b5fc6f73682c10"
-    sha256 cellar: :any, big_sur:        "9a840114d16d6f0e164e4b7af1b20d95196431bc128473f866fffd69f028eef8"
-    sha256 cellar: :any, catalina:       "bd83cb8f690893fb79ec7f4ba8414455bc175f246c764e48ec2991b1a94fb35d"
-    sha256 cellar: :any, mojave:         "fde0835103328932bf87517e9737cca4d9bbf0b7b6a17eba99fc7eaa9647c2c8"
-    sha256               x86_64_linux:   "2d9582d815f79fa032d38f4db9ba6e2842670f5340dade2238783e3ca821d1bc"
+    sha256 cellar: :any, arm64_ventura:  "08c243168db901bed54f2596034c578283eefd8a9744eca346f4fbe1dca8d799"
+    sha256 cellar: :any, arm64_monterey: "b28fa88f88581f432a9c17c5dcc065e81b16d7eaf739ed702e9de511ebbef048"
+    sha256 cellar: :any, arm64_big_sur:  "b9633cfa0899bdad1bb0568ca8f8731ba124c2a7f00f4970558fa124280e5d2b"
+    sha256 cellar: :any, ventura:        "81c3360cf1d2fc74a7809af4d9deaccfb9d0a3b653826204c866945f7235f8b5"
+    sha256 cellar: :any, monterey:       "367b3dfc45ac1c33655181e9fdd28bd0984c6fafad3edf7538ec2b5d611ddf95"
+    sha256 cellar: :any, big_sur:        "d0f6ee0c2b06cb096c59868b1c8116fae96d3aa3a7ab8e89d6e2b9f160b217ff"
+    sha256 cellar: :any, catalina:       "62469dbf3c34554e9ca8bf21b91ed6efa2af595d7f06990476dbe97552b3ab23"
+    sha256               x86_64_linux:   "378de196b95470e825f1df2691c4fa9f04f429bc277a4f629038d93f8d3eec72"
   end
 
   keg_only :versioned_formula
 
   depends_on "python@3.10"
   depends_on "tcl-tk"
+
+  def python3
+    "python3.10"
+  end
 
   def install
     cd "Modules" do
@@ -43,20 +47,17 @@ class PythonTkAT310 < Formula
               ]
         )
       EOS
-      system Formula["python@3.10"].bin/"python3", *Language::Python.setup_install_args(libexec),
-                                                  "--install-lib=#{libexec}"
+      system python3, *Language::Python.setup_install_args(libexec, python3),
+                      "--install-lib=#{libexec}"
       rm_r Dir[libexec/"*.egg-info"]
     end
   end
 
   test do
-    system Formula["python@3.10"].bin/"python3", "-c", "import tkinter"
+    system python3, "-c", "import tkinter"
 
-    on_linux do
-      # tk does not work in headless mode
-      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
-    end
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
 
-    system Formula["python@3.10"].bin/"python3", "-c", "import tkinter; root = tkinter.Tk()"
+    system python3, "-c", "import tkinter; root = tkinter.Tk()"
   end
 end

@@ -1,17 +1,19 @@
 class Eigenpy < Formula
   desc "Python bindings of Eigen library with Numpy support"
   homepage "https://github.com/stack-of-tasks/eigenpy"
-  url "https://github.com/stack-of-tasks/eigenpy/releases/download/v2.6.9/eigenpy-2.6.9.tar.gz"
-  sha256 "fa73023f30e3ad341fddbd984e22260fdae5a84656e08d7dbf0045c909fdf9a7"
+  url "https://github.com/stack-of-tasks/eigenpy/releases/download/v2.8.1/eigenpy-2.8.1.tar.gz"
+  sha256 "a96296a561a1f60b71fb89043ed0dc5fb8d048c70bae381100f59c42e83424d2"
   license "BSD-2-Clause"
   head "https://github.com/stack-of-tasks/eigenpy.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "1bc55f1d1204c796c907e83a4d3a879386332047a10562ab511302be825ccdec"
-    sha256 cellar: :any,                 monterey:      "33a468df036e701063635d80317d8377c2b6764fc835ee42f6b2b19ced73e785"
-    sha256 cellar: :any,                 big_sur:       "cd6488d937b6767a37cab99b4672ff01620c6179083e2edcbf8c2068a0e89bd7"
-    sha256 cellar: :any,                 catalina:      "1f638c3ed39e9861039f919c168fd78a124d0b67952da7e9ad3deec576cb6587"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "34dab627a99e3a2da59e87d17da5990feb047f6c55eb7ac83bc9501a604f5b62"
+    sha256 cellar: :any,                 arm64_ventura:  "7996f3f4ad17849dd0b4e3d8f9c54cd057e38dcabe22c4f7fc208bf0df4fbe57"
+    sha256 cellar: :any,                 arm64_monterey: "d0ad359e5b7e96bf147680d766e045a5e1dd647aedc7a456bdba1b8db8160865"
+    sha256 cellar: :any,                 arm64_big_sur:  "2b2b5f7dacea01b6c132a94033a02f88516731d98c1a3900938341acc628036a"
+    sha256 cellar: :any,                 ventura:        "c5c08d4332102fc38f2c4918dc752f5dd2cf0a9474d5c311bb868ceddc109d05"
+    sha256 cellar: :any,                 monterey:       "a5c07d694eba0af66ddfa7918a0caed4eebe96439154d16f8bc2a17b0493cabd"
+    sha256 cellar: :any,                 big_sur:        "b7d122323ff1c517c5a7341141cc70ecaec1c6b1da522b7a72779d89eb4c2fbe"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c81a01d97f97709ba7dd6332bf2b54de43b66ecb7a68de5c7352ecddce3e2f29"
   end
 
   depends_on "boost" => :build
@@ -20,26 +22,26 @@ class Eigenpy < Formula
   depends_on "boost-python3"
   depends_on "eigen"
   depends_on "numpy"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
+
+  def python3
+    "python3.11"
+  end
 
   def install
-    pyver = Language::Python.major_minor_version "python3"
-    python = Formula["python@#{pyver}"].opt_bin/"python#{pyver}"
-    ENV.prepend_path "PYTHONPATH", Formula["numpy"].opt_prefix/Language::Python.site_packages("python3")
+    ENV.prepend_path "PYTHONPATH", Formula["numpy"].opt_prefix/Language::Python.site_packages(python3)
     ENV.prepend_path "Eigen3_DIR", Formula["eigen"].opt_share/"eigen3/cmake"
 
-    mkdir "build" do
-      args = *std_cmake_args
-      args << "-DPYTHON_EXECUTABLE=#{python}"
-      args << "-DBUILD_UNIT_TESTS=OFF"
-      system "cmake", "..", *args
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build",
+                    "-DPYTHON_EXECUTABLE=#{which(python3)}",
+                    "-DBUILD_UNIT_TESTS=OFF",
+                    *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do
-    system Formula["python@3.9"].opt_bin/"python3", "-c", <<~EOS
+    system python3, "-c", <<~EOS
       import numpy as np
       import eigenpy
 

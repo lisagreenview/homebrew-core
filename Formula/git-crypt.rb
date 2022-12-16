@@ -1,9 +1,9 @@
 class GitCrypt < Formula
   desc "Enable transparent encryption/decryption of files in a git repo"
   homepage "https://www.agwa.name/projects/git-crypt/"
-  url "https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz"
-  sha256 "6d30fcd99442d50f4b3c8d554067ff1d980cdf9f3120ee774131172dba98fd6f"
-  revision 1
+  url "https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.7.0.tar.gz"
+  sha256 "50f100816a636a682404703b6c23a459e4d30248b2886a5cf571b0d52527c7d8"
+  license "GPL-3.0-or-later"
 
   livecheck do
     url :homepage
@@ -11,22 +11,30 @@ class GitCrypt < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "546a3085d07478b8658337c472bc1e90fd685b898478aff541957ae56a2cea2f"
-    sha256 cellar: :any,                 arm64_big_sur:  "b30c2ac4ab305cc72b8be7253b7bf3dcca3487a579ebf00e21da793d4afc8bd4"
-    sha256 cellar: :any,                 monterey:       "cf130a9cb498f2ee2a4227d4971053ec991a2c084161fd6334b96678a958bc23"
-    sha256 cellar: :any,                 big_sur:        "7567932a504ce3c08a087f9d3d020f5ca8307f41fe2a16a843e7df862120abc9"
-    sha256 cellar: :any,                 catalina:       "f38bb645c3eff62cfb43802199370d85e4785fcf10c063e4d7453e032788bcba"
-    sha256 cellar: :any,                 mojave:         "89d2058a4dd5afc565696707c8e93621fd644f9ab303fe378727ae999783d156"
-    sha256 cellar: :any,                 high_sierra:    "0d2cf3c93ab2ca4059163f8da8a3ab845b566b13debf5e1b43a734dc86138a18"
-    sha256 cellar: :any,                 sierra:         "6b2c2773e5c327282d461f5d49600928ae97d432e5f4d8b7acfcaaa6e6d1ef68"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "13febdb36a936377e0ff5f78883dbaba43f70cb9f91ec7fee833d3057f92d85d"
+    rebuild 2
+    sha256 cellar: :any,                 arm64_ventura:  "0fa83aa6dc1b794075e1a959c27ba858024f234c52d390c048a7b01538c089a0"
+    sha256 cellar: :any,                 arm64_monterey: "e062f956b5b18899552b3389177be8f69f7cc41c4aee5688b40c2e4249ec9b98"
+    sha256 cellar: :any,                 arm64_big_sur:  "f33b245d7f7948d3af259bb7faacdf37a83931e73e6f0e7e28f826b49fbff1c3"
+    sha256 cellar: :any,                 ventura:        "02d70c5e710b98eb4a9d1e95fd5265bff5b09841df7aa629f9576596d1ddcae9"
+    sha256 cellar: :any,                 monterey:       "9a63b27a7544ebd2eba62ec5b744e8e278fd239451cba5dc6e876e5cdb59f581"
+    sha256 cellar: :any,                 big_sur:        "d70c2f3e01239cf5294762cfcafecfe70d977c395da50bedd45f990d5bcc1b23"
+    sha256 cellar: :any,                 catalina:       "0681b6a663f89c9e4d18d057ede3cd9116c6d3685c5a08e4f75aec38a9900971"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2c775788bff6d5c72d93098a866cf202a2d8ab397932c25702f06d1def1fe91a"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "docbook" => :build
+  depends_on "docbook-xsl" => :build
+  depends_on "openssl@3"
+
+  uses_from_macos "libxslt" => :build
 
   def install
-    system "make"
-    bin.install "git-crypt"
+    # fix docbook load issue
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
+
+    ENV.append_to_cflags "-DOPENSSL_API_COMPAT=0x30000000L"
+
+    system "make", "ENABLE_MAN=yes", "PREFIX=#{prefix}", "install"
   end
 
   test do

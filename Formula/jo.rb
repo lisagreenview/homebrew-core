@@ -1,19 +1,19 @@
 class Jo < Formula
   desc "JSON output from a shell"
   homepage "https://github.com/jpmens/jo"
-  url "https://github.com/jpmens/jo/releases/download/1.4/jo-1.4.tar.gz"
-  sha256 "24c64d2eb863900947f58f32b502c95fec8f086105fd31151b91f54b7b5256a2"
-  license "GPL-2.0"
+  url "https://github.com/jpmens/jo/releases/download/1.9/jo-1.9.tar.gz"
+  sha256 "0195cd6f2a41103c21544e99cd9517b0bce2d2dc8cde31a34867977f8a19c79f"
+  license all_of: ["GPL-2.0-or-later", "MIT"]
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b8208a1f1fee8b3d703b0ce2e795527689d9e95b1eada80569c070298967b874"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ef0996d00e1c8859a597d160af04803aeb7eacc2b8f417f0494979bb9e3de753"
-    sha256 cellar: :any_skip_relocation, monterey:       "b524bfcf6ff1597fe928b7e36f14d669d63b442f3abad05dd2d542c6f4020693"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e7e0509c877e132429eb5cd71b4150c3ea573c9604e92b4bb31c2de4508eb182"
-    sha256 cellar: :any_skip_relocation, catalina:       "15bee62d31331c60c1768949ca11916d242fbe96aafcdc7a66a8359c0f4a9c3c"
-    sha256 cellar: :any_skip_relocation, mojave:         "6741c18bb9a9519e325ac4b30989cdd0c735107ee34772097d3d8fde103880eb"
-    sha256 cellar: :any_skip_relocation, high_sierra:    "bd19a24ded348995844cf428f74729dc91b3c23a9f144ca1b117108c3d3b5401"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cba7692fdbb89e05db0125becd99b851bb1009d1da5fa9f19e6fa42187c02c16"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cff2c3168526423e589192b36bd2bef9dd123f5d960ce65e9ffbcae36bcbf898"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b07931afb2f5184b579fe97bedc3da888b4113632d42b30122aa9e877bce9e22"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "11d1fa55ba7cdf4228ddabd9441517f5e65eceeb5912e23aede7499059545504"
+    sha256 cellar: :any_skip_relocation, ventura:        "4bdc4df3521ec5cfc62cdb56fc252f8f3db8f1633002625059615de4a77ab0b9"
+    sha256 cellar: :any_skip_relocation, monterey:       "682e771556543d18f7bd82384a1a01690d5c8173b115dbeaa92ae62cea2bbe7b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8711cdb2d031d165a1967f68dbd2991a61515d35e35973c77547c26154000bd4"
+    sha256 cellar: :any_skip_relocation, catalina:       "2f0bfbd2e270b4e41c65dd46d627752103ba27a75ddf5ffe3cbb76b48a9d4109"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7635a8a7f0174e957d9600fa87e350bf245caa61bda573a19b69dca3c488bb9d"
   end
 
   head do

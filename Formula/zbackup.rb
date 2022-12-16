@@ -3,6 +3,7 @@ class Zbackup < Formula
   homepage "http://zbackup.org"
   url "https://github.com/zbackup/zbackup/archive/1.4.4.tar.gz"
   sha256 "efccccd2a045da91576c591968374379da1dc4ca2e3dec4d3f8f12628fa29a85"
+  license "GPL-2.0-or-later" => { with: "openvpn-openssl-exception" }
   revision 18
 
   bottle do
@@ -16,7 +17,7 @@ class Zbackup < Formula
   end
 
   # No new commits since 2016, no sign a activity since 2020
-  deprecate! date: "2021-10-21", because: :unmaintained
+  disable! date: "2021-12-16", because: :unmaintained
 
   depends_on "cmake" => :build
   depends_on "lzo"

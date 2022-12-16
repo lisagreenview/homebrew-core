@@ -3,6 +3,10 @@ class Dieharder < Formula
   homepage "https://webhome.phy.duke.edu/~rgb/General/dieharder.php"
   url "https://webhome.phy.duke.edu/~rgb/General/dieharder/dieharder-3.31.1.tgz"
   sha256 "6cff0ff8394c553549ac7433359ccfc955fb26794260314620dfa5e4cd4b727f"
+  # This is the "standard Gnu General Public License version 2 or
+  # any later version", with the one minor (humorous) "Beverage"
+  # modification.
+  license "GPL-2.0-or-later"
   revision 3
 
   livecheck do
@@ -21,10 +25,18 @@ class Dieharder < Formula
     sha256 cellar: :any, sierra:         "8a40fb61aef5230ad77b3b851a6e8b6d575ff2adaa747c3b73a75cd203197945"
   end
 
+  # At the time of writing (2022-01-17), the webhome.phy.duke.edu server has
+  # an incomplete SSL certificate chain, which causes an error on Linux
+  # and with brewed curl on macOS (`curl: (60) SSL certificate problem: unable
+  # to get local issuer certificate`). We may be able to revert this deprecation
+  # if this issue is fixed on the upstream server in the future.
+  # Original deprecation date: 2022-01-19
+  disable! date: "2022-01-20", because: "uses an upstream server with an incomplete SSL certificate chain"
+
   depends_on "gsl"
 
-  on_linux do
-    patch do
+  patch do
+    on_linux do
       url "https://raw.githubusercontent.com/Homebrew/formula-patches/b5dfa6f2b9c5d44cb4bab93ace2e0d7d58465fb0/dieharder/dieharder-linux.patch"
       sha256 "8c0ab2425c8a315471f809d5ecaebd061985f24019886cba7f856e5aaf72112b"
     end

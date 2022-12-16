@@ -1,10 +1,9 @@
 class Unbound < Formula
   desc "Validating, recursive, caching DNS resolver"
   homepage "https://www.unbound.net"
-  url "https://nlnetlabs.nl/downloads/unbound/unbound-1.13.2.tar.gz"
-  sha256 "0a13b547f3b92a026b5ebd0423f54c991e5718037fd9f72445817f6a040e1a83"
+  url "https://nlnetlabs.nl/downloads/unbound/unbound-1.17.0.tar.gz"
+  sha256 "dcbc95d7891d9f910c66e4edc9f1f2fde4dea2eec18e3af9f75aed44a02f1341"
   license "BSD-3-Clause"
-  revision 1
   head "https://github.com/NLnetLabs/unbound.git", branch: "master"
 
   # We check the GitHub repo tags instead of
@@ -16,13 +15,14 @@ class Unbound < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "a4623b4e5433b7d66a50b3d478a29b37ffa9ae2d64ec3d34a73351bc6bd3d6b7"
-    sha256 arm64_big_sur:  "be270411ac84da8f2e6424c50e9a24f2b6b332b98a0f82690c933b4f2aa03569"
-    sha256 monterey:       "ecba34a33d7e30a3b2053fb57b9a6ccb4cf5ea85a6eb9bbe2c5cd365d2c15f57"
-    sha256 big_sur:        "7f411a6ec21a1c46be319d79c7b7e43f4858e0751cd92b8e9fdd41b070265991"
-    sha256 catalina:       "3519fe0e6677d759978c5a6d07f1eb576495e04146df01cdbd367506421d2ac2"
-    sha256 mojave:         "79fc8a9f5c4579ee06a35966fa5e247037c8773519b3f29d67b7ef47e52db7b9"
-    sha256 x86_64_linux:   "b96cfb9beaf9b62043260bc32e9d76dac680132842ee3089d6fd8698810884ce"
+    sha256 arm64_ventura:  "7f6b083215495c918232e28acc05407a7539e4aacf8243a526b06f244c4864f5"
+    sha256 arm64_monterey: "cd06e5b7f62103ad750fab0d5cfdb933c93fc1e40c7769605697b4c8777986b6"
+    sha256 arm64_big_sur:  "8dfe71d7aaf0cae625b9c6d1e781e7a83426df3aed669ddee756c49d3442197a"
+    sha256 ventura:        "c33cfc378f7f8694e3dcd406683b516edc7c882b4fcde7104c72292dfb2dcb17"
+    sha256 monterey:       "6cf8bdba19831e794bbe0e929e773bb0b7eaab510d99db125aebc473c285e0f2"
+    sha256 big_sur:        "46bd6470dd62d235900de08625ada5f03d9162a060b6e82badc96e0351843b31"
+    sha256 catalina:       "d494000cb01f1b52b69253c9ff09b4a6fe39bb607cf5e60ae3ab648f1432960d"
+    sha256 x86_64_linux:   "6359bdf39dc577245648315e93523e2edd476dc8853a580e68e7ad1c7bec5428"
   end
 
   depends_on "libevent"
@@ -62,35 +62,9 @@ class Unbound < Formula
   end
 
   plist_options startup: true
-
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-        <dict>
-          <key>Label</key>
-          <string>#{plist_name}</string>
-          <key>KeepAlive</key>
-          <true/>
-          <key>RunAtLoad</key>
-          <true/>
-          <key>ProgramArguments</key>
-          <array>
-            <string>#{opt_sbin}/unbound</string>
-            <string>-d</string>
-            <string>-c</string>
-            <string>#{etc}/unbound/unbound.conf</string>
-          </array>
-          <key>UserName</key>
-          <string>root</string>
-          <key>StandardErrorPath</key>
-          <string>/dev/null</string>
-          <key>StandardOutPath</key>
-          <string>/dev/null</string>
-        </dict>
-      </plist>
-    EOS
+  service do
+    run [opt_sbin/"unbound", "-d", "-c", etc/"unbound/unbound.conf"]
+    keep_alive true
   end
 
   test do

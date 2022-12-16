@@ -1,18 +1,20 @@
 class Nfdump < Formula
   desc "Tools to collect and process netflow data on the command-line"
   homepage "https://github.com/phaag/nfdump"
-  url "https://github.com/phaag/nfdump/archive/v1.6.23.tar.gz"
-  sha256 "8c5a7959e66bb90fcbd8ad508933a14ebde4ccf7f4ae638d8f18c9473c63af33"
+  url "https://github.com/phaag/nfdump/archive/v1.7.0.1.tar.gz"
+  sha256 "d7c4b400f506bee1b0f0baecb9285bb7230588f0afa050bb898d5d48454b1632"
   license "BSD-3-Clause"
   head "https://github.com/phaag/nfdump.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "39c67075d143f58892baadff95c631182c4d80183b2ab38cdeb0df475c192bd7"
-    sha256 cellar: :any, arm64_big_sur:  "0166cf87b2fac3b3d48f54a7b5d3dd2433e43fd0aa21500f485167e035b09d49"
-    sha256 cellar: :any, monterey:       "157477b2e290a049a25c4d12001fb0492e8c8342612f22ccb9169493686b58d1"
-    sha256 cellar: :any, big_sur:        "04cb78152af1e986c69f60f6e3437cce46d362f4087ded5717e6ab0390cc7041"
-    sha256 cellar: :any, catalina:       "cd1575d5edc5474ab44e8729ef1fbdb10df0508b96d408888ab147d7ba6408f5"
-    sha256 cellar: :any, mojave:         "cf8ab09a45c609ba6deb8e4b7db49077c301c228658b778ecd29f81b9fbb1482"
+    sha256 arm64_ventura:  "371a2574fe88a3251f570168f46edecd1e7754a0931baf5d412d401bb242fefc"
+    sha256 arm64_monterey: "681beef5015bf019828a043715db83e4dd60520f16a81dc407cd87b02b8cceb6"
+    sha256 arm64_big_sur:  "d19ad9cb90362d9ed47428bcb9a49e0397f67bcc4bc71f5a996edba314dd987d"
+    sha256 ventura:        "c3fc9261295fdd76cce2d51c5761f6b4d2937688b30ac82a0e8a3c75b9d0d3f0"
+    sha256 monterey:       "a6de554ea6baa063a23f8324900411222eb5aa09c8988f2f12ffccdccc6a183a"
+    sha256 big_sur:        "3583fedeaa83d5c0a82cf51aa225ee3798db0f1779a094c466011fabcfbcc39f"
+    sha256 catalina:       "fa4cc1227af8aabfacefbe89d9e1079c6510aa29a2ca5626c5557f6d1f73e0a7"
+    sha256 x86_64_linux:   "d71d0d8766ea2346659017b6ab6d232d0473a9ffc280c2464fa7102fdda2acce"
   end
 
   depends_on "autoconf" => :build
@@ -20,9 +22,14 @@ class Nfdump < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
 
+  uses_from_macos "bison" => :build
+  uses_from_macos "flex" => :build
+  uses_from_macos "bzip2"
+  uses_from_macos "libpcap"
+
   def install
     system "./autogen.sh"
-    system "./configure", "--prefix=#{prefix}", "--enable-readpcap"
+    system "./configure", *std_configure_args, "--enable-readpcap", "LEXLIB="
     system "make", "install"
   end
 

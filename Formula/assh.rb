@@ -1,25 +1,28 @@
 class Assh < Formula
   desc "Advanced SSH config - Regex, aliases, gateways, includes and dynamic hosts"
   homepage "https://manfred.life/assh"
-  url "https://github.com/moul/assh/archive/v2.12.0.tar.gz"
-  sha256 "f4b8ef42582f86f208fe6947e5ca123e9b86d47e58e0aaecf822bbe9e9e74a26"
+  url "https://github.com/moul/assh/archive/v2.15.0.tar.gz"
+  sha256 "ff80cb7dc818af1bd2d7a031058cb2d4074b0f4af6f7d3077619901689744387"
   license "MIT"
   head "https://github.com/moul/assh.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a8b66c39894c86ce43aa3e3fd2415cbfd98e7443b94d99f5a2c4058cb50977a1"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a2e89654afd5dd87dc505b09dd36ee2d0dd142f6a7955dce79db9a4f96713c77"
-    sha256 cellar: :any_skip_relocation, monterey:       "482dce52a4f7a0dcc4a9b4664013d18373ea734f7dddd88b241dbec631e6d055"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b32614a996f726756faa62ca0b4e27ee7404e9f3341a8d8f1457d925e899bc65"
-    sha256 cellar: :any_skip_relocation, catalina:       "77570e18528c106267cf4fe3f7a8160d7f788681885dfe16560280d9d450ad7a"
-    sha256 cellar: :any_skip_relocation, mojave:         "46193d23bec30727a5a8b63d77e8f8a811dd4ffaf7b7023c832d7e3a24acc072"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "efa11877000c3a322c5ae8a1402910e95a122554ae80321f8c3557fbc9063625"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3845487397a59b96211e7075a79f592854736420a7000787150af72eb45702df"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "c31affa151098673530f050292e4d04659c3786cf19412b8f652013480519a20"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "678036dadc14bc728ef7b7d0d7feda46e175deaab47cc6f8ad80bda74ad49d62"
+    sha256 cellar: :any_skip_relocation, ventura:        "d24096cdd506cdd193a7316c563ccd35ec275d18fc0ae85ca42ed36c66571b8b"
+    sha256 cellar: :any_skip_relocation, monterey:       "2490103a8c5ef28f6eaf5d7e4286244de7367171431e959424829eb612364bfe"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a5f782b77042bbc321d0e619d03b890147aa1e699f3d000206a10f1a8889c04a"
+    sha256 cellar: :any_skip_relocation, catalina:       "778b845f4546ccfe60933063e24b1c9179d1e836f26581217ae1b094233eb41d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "760e85e343ce75d153710cb34214ea46f3217e16fc048330d835920a0500bfaf"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", *std_go_args, "-ldflags", "-s -w"
+    system "go", "build", *std_go_args(ldflags: "-s -w")
+
+    generate_completions_from_executable(bin/"assh", "completion")
   end
 
   test do

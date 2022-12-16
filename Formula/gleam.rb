@@ -1,18 +1,18 @@
 class Gleam < Formula
   desc "✨ A statically typed language for the Erlang VM"
   homepage "https://gleam.run"
-  url "https://github.com/gleam-lang/gleam/archive/v0.17.0.tar.gz"
-  sha256 "9530e616d42b4158ffcc5dd1befdc87ab2ea2af784fce6c57aec8c42a71a4ce2"
+  url "https://github.com/gleam-lang/gleam/archive/v0.25.1.tar.gz"
+  sha256 "87dd4d06bc2f511217efed92f9d271a450b6fc9ad74f0f286dc24df0f1b57659"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "9bcd68363e64c7946796e349a9f3fc84d6746d0278850c826ac1c13e3a212d24"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5c3c84d492dbf86c9041469cabfb8c698660ded0a2da658678d9583ea21667b7"
-    sha256 cellar: :any_skip_relocation, monterey:       "4c5fcc18e6714172d522b76aa637f46797a809c6831eed67b9b9da25ee1c35fe"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1fbe03b66b76929c8cb919508f59e7fd9cfae2cd10ec177a775d60c8ef5f8b94"
-    sha256 cellar: :any_skip_relocation, catalina:       "c33692e53fbf7eca2cac472d3ca6e7a2555edbc14048a95e123160840853f314"
-    sha256 cellar: :any_skip_relocation, mojave:         "f1de3efb23c8eee281157668801ef6e1974d410a90c7708b16d3667d96f5632f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "005e249588fb532d3711b4a478f0c7ec176951ca143e1687cc8d0e465f294948"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "20472b03a63022868cb559b62e329119df2297a0e4f99d6e7ccd9b844e76b852"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "743a254f93ac06998b74ad1803060b9876a081793366a36da3f986d05d082e24"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4137e0be70b14e0feb894ef6acb285d740eaca8112f661a4cbdfd25a3bb20def"
+    sha256 cellar: :any_skip_relocation, ventura:        "f0c21fae9f45e69f7987da6d49fb5444cd22ca5282a706bc2c7ea0c6095470a5"
+    sha256 cellar: :any_skip_relocation, monterey:       "f7cac750b2aea466d7786c48ba22990bba4b48f0fd4ee3ac26af1a12ffa97873"
+    sha256 cellar: :any_skip_relocation, big_sur:        "89167584ee08c19b4d33c618b7750643f141ae9c32bdddb9e75baf85a68027c4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "00643f2044dd5a5982b4906e36a913aff8b254d5c8c9c8ca93bf076024356f7e"
   end
 
   depends_on "rust" => :build
@@ -31,6 +31,6 @@ class Gleam < Formula
     Dir.chdir testpath
     system bin/"gleam", "new", "test_project"
     Dir.chdir "test_project"
-    system "rebar3", "eunit"
+    system "gleam", "test"
   end
 end

@@ -1,10 +1,10 @@
 class Gegl < Formula
   desc "Graph based image processing framework"
   homepage "https://www.gegl.org/"
-  url "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.32.tar.xz"
-  sha256 "668e3c6b9faf75fb00512701c36274ab6f22a8ba05ec62dbf187d34b8d298fa1"
+  url "https://download.gimp.org/pub/gegl/0.4/gegl-0.4.40.tar.xz"
+  sha256 "cdde80d15a49dab9a614ef98f804c8ce6e4cfe1339a3c240c34f3fb45436b85d"
   license all_of: ["LGPL-3.0-or-later", "GPL-3.0-or-later", "BSD-3-Clause", "MIT"]
-  head "https://gitlab.gnome.org/GNOME/gegl.git"
+  head "https://gitlab.gnome.org/GNOME/gegl.git", branch: "master"
 
   livecheck do
     url "https://download.gimp.org/pub/gegl/0.4/"
@@ -12,23 +12,23 @@ class Gegl < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "1c234b2a7dd7fc511b344ccfb34247fb6860b2be0d2b13bc9bc6f1b3e0d0fe9a"
-    sha256 monterey:      "ad90de6673f674f89602495df968193c4a8e6f4e523658b4d72afc01c90ef9a8"
-    sha256 big_sur:       "ae01c735384d081f6a725143afa961815db81cd262b311731b0caf39e393d21e"
-    sha256 catalina:      "56abd3c5b8d1156efac49f97781cb9f96e16de970c61df4eee4d7f086d2b3ba8"
-    sha256 mojave:        "cf5437b07a943809b93c3420f437ad0a1a4b43320e054e25ac6fc1df1ece9c20"
-    sha256 x86_64_linux:  "0eb285b819e60dc969b2fb8ad8b9ece9c5fbfb3359ddee06ad0ff458fe7053c0"
+    sha256 arm64_monterey: "6baf08d6460d2afd684a862abbf94085f1b36472e7bcd0b01019af119520e0d3"
+    sha256 arm64_big_sur:  "8531f1b68c977713321eac2a0d21cd904fe6652656be7b2bc019d655f31c97f6"
+    sha256 monterey:       "31616246ea13a143b9e77fcb280b9d26bea1987b00ed8e9e04f41bd4efb40e47"
+    sha256 big_sur:        "4f6f9d4a5c6cc11cc65a3bb56f135e8029e20ed46fea8ea33e89c622df261f49"
+    sha256 catalina:       "c712e1d83e2174a9cd33b64997fa25d2ddaf38bd98e504a9a662709443bbcf7f"
+    sha256 x86_64_linux:   "e6ce196bd236b3d492aefa75c05045188a533404eee902a116b7d355fda3c6f9"
   end
 
-  depends_on "glib" => :build
   depends_on "gobject-introspection" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
+  depends_on "python@3.10" => :build
   depends_on "babl"
   depends_on "gettext"
   depends_on "glib"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "json-glib"
   depends_on "libpng"
 
@@ -36,18 +36,7 @@ class Gegl < Formula
     depends_on "cairo"
   end
 
-  conflicts_with "coreutils", because: "both install `gcut` binaries"
-
   def install
-    args = std_meson_args + %w[
-      -Ddocs=false
-      -Dcairo=disabled
-      -Djasper=disabled
-      -Dumfpack=disabled
-      -Dlibspiro=disabled
-      --force-fallback-for=libnsgif,poly2tri-c
-    ]
-
     ### Temporary Fix ###
     # Temporary fix for a meson bug
     # Upstream appears to still be deciding on a permanent fix
@@ -58,11 +47,15 @@ class Gegl < Formula
     touch "subprojects/poly2tri-c/EMPTYFILE.c"
     ### END Temporary Fix ###
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", *std_meson_args, "build",
+                    "-Ddocs=false",
+                    "-Dcairo=disabled",
+                    "-Djasper=disabled",
+                    "-Dumfpack=disabled",
+                    "-Dlibspiro=disabled",
+                    "--force-fallback-for=libnsgif,poly2tri-c"
+    system "meson", "compile", "-C", "build", "-v"
+    system "meson", "install", "-C", "build"
   end
 
   test do

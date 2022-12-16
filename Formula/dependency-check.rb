@@ -1,8 +1,8 @@
 class DependencyCheck < Formula
   desc "OWASP dependency-check"
   homepage "https://owasp.org/www-project-dependency-check/"
-  url "https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.0/dependency-check-6.5.0-release.zip"
-  sha256 "e27ab0c010a447e5d2ac62063112c3e1a25364193450cb4345fc18defb4511a2"
+  url "https://github.com/jeremylong/DependencyCheck/releases/download/v7.4.1/dependency-check-7.4.1-release.zip"
+  sha256 "a755bff22fe0d753bea7543f2bff37e9ab87643f4296dbd8edbff0c10ef91a5b"
   license "Apache-2.0"
 
   livecheck do
@@ -11,7 +11,7 @@ class DependencyCheck < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "07cdd46e60f7509f4d1a4ebeea9d18cdf1435fea9e9a9e4c2f4c420f1416896b"
+    sha256 cellar: :any_skip_relocation, all: "ce6f1f41de69d93960761ff0b1c6ae03ed6dc5f1027bbb62290f5528a0dda20b"
   end
 
   depends_on "openjdk"
@@ -48,6 +48,8 @@ class DependencyCheck < Formula
     EOS
     system bin/"dependency-check", "-P", "temp-props.properties", "-f", "XML",
                "--project", "dc", "-s", libexec, "-d", testpath, "-o", testpath,
+               "--cveUrlBase", "https://jeremylong.github.io/DependencyCheck/hb_nvd/nvdcve-1.1-%d.json.gz",
+               "--cveUrlModified", "https://jeremylong.github.io/DependencyCheck/hb_nvd/nvdcve-1.1-modified.json.gz",
                "--cveStartYear", Time.now.year, "--cveDownloadWait", "5000"
     assert_predicate testpath/"dependency-check-report.xml", :exist?
   end

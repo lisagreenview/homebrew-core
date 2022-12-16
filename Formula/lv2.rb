@@ -1,9 +1,13 @@
 class Lv2 < Formula
+  include Language::Python::Shebang
+  include Language::Python::Virtualenv
+
   desc "Portable plugin standard for audio systems"
   homepage "https://lv2plug.in/"
-  url "https://lv2plug.in/spec/lv2-1.18.2.tar.bz2"
-  sha256 "4e891fbc744c05855beb5dfa82e822b14917dd66e98f82b8230dbd1c7ab2e05e"
-  license "ISC"
+  url "https://lv2plug.in/spec/lv2-1.18.10.tar.xz"
+  sha256 "78c51bcf21b54e58bb6329accbb4dae03b2ed79b520f9a01e734bd9de530953f"
+  license any_of: ["0BSD", "ISC"]
+  head "https://gitlab.com/lv2/lv2.git", branch: "master"
 
   livecheck do
     url "https://lv2plug.in/spec/"
@@ -11,18 +15,26 @@ class Lv2 < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "37eebb5f3d7e92a4339be7fdf5f63a5493e36ad1ef71369aa9d9ecc8b3d41ef7"
-    sha256 cellar: :any_skip_relocation, big_sur:       "757cd306cc72fb5517d4b2226eaa8addc9e8ca807fa576d025d921a8b25a3382"
-    sha256 cellar: :any_skip_relocation, catalina:      "3fc9a00fcb361d6d87e101733497abad39e33b299774229bc484af15a59d2e55"
-    sha256 cellar: :any_skip_relocation, mojave:        "0897d136c566648ff5acf40760ff064bdeda779c4afc6a31f02741a08083c5f8"
-    sha256 cellar: :any_skip_relocation, all:           "6cfa4a566aeb2febb8b912f9c9311a9e4c51b7044694abb425276964016fd099"
+    sha256 cellar: :any_skip_relocation, all: "00e2c051efd2fbb588d34d1b96d1582252ccf0c3a254d4f994d81b6a7fe3fea8"
   end
 
-  depends_on :macos # Due to Python 2
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
+  depends_on "python@3.10"
 
   def install
-    system "./waf", "configure", "--prefix=#{prefix}", "--no-plugins", "--lv2dir=#{lib}"
-    system "./waf", "build"
-    system "./waf", "install"
+    system "meson", "build", *std_meson_args, "-Dplugins=disabled", "-Dlv2dir=#{lib}/lv2"
+    system "meson", "compile", "-C", "build"
+    system "meson", "install", "-C", "build"
+
+    (pkgshare/"example").install "plugins/eg-amp.lv2/amp.c"
+  end
+
+  test do
+    # Try building a simple lv2 plugin
+    dynamic_flag = OS.mac? ? "-dynamiclib" : "-shared"
+    system ENV.cc, pkgshare/"example/amp.c", "-I#{include}",
+           "-DEG_AMP_LV2_VERSION=1.0.0", "-DHAVE_LV2=1", "-fPIC", dynamic_flag,
+           "-o", shared_library("amp")
   end
 end

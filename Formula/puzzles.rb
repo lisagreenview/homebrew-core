@@ -2,9 +2,9 @@ class Puzzles < Formula
   desc "Collection of one-player puzzle games"
   homepage "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
   # Extract https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles.tar.gz to get the version number
-  url "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20211031.640f923.tar.gz"
-  version "20211031"
-  sha256 "7562d65731d98b5d07d3bb5c0f5bf3704ea2279156ff41012a48e69d0f3d50cd"
+  url "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/puzzles-20221214.8acb84e.tar.gz"
+  version "20221214"
+  sha256 "f32e7cf339d6c05fada13ad10cf145058f428e1c50fcdb5b73c308cadc8668e5"
   license "MIT"
   head "https://git.tartarus.org/simon/puzzles.git", branch: "main"
 
@@ -18,12 +18,13 @@ class Puzzles < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5059bad798c405f1e6268af42b2c9c4f75ef64a5604cc3ab072c96ec4f0f901f"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "61f2053aa5f6794ef359d106120dfd954c5fd4ce4ef8f23b81f0092825aabd20"
-    sha256 cellar: :any_skip_relocation, monterey:       "aa2b5ced7280a325621b4abb3da7cdf58459fafc5aa80746197803ce69608382"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a097c3141b50047cce69fd444ca52c83d35f7b2c6484908f3200d2339261cf51"
-    sha256 cellar: :any_skip_relocation, catalina:       "3a8b5fc472830793d11bfbcc0643b983a5bf31d151692fa77102013b91688ed3"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "09e61d6c7ca035c75d55ba06c22aa6a730d456d138fd904bcbcc7183c7a718df"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "717b4856fdfa9c602b4a593a3d6ce993f0ba9d8e35f870ed397ff1364c7a9860"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "6dfbb2b244141f18df951caf1cd5bde64ea81924a45b28a76dc9364581f67e64"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fc9d2b899627ecae45f2f5fa5a68f74cab92bc87ea40fa97cc779a60641575e7"
+    sha256 cellar: :any_skip_relocation, ventura:        "db6e0be33dd330554d17fe9ce0e821197dd2bb1bb709b6cc3d418c127661337e"
+    sha256 cellar: :any_skip_relocation, monterey:       "2e187db980c1915d7a505a038219d858630520cbe088eb34e9ef019a1f388c09"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b46d05a31484b3e94946d39dab4a3ccfe7a2bb88a7c02367cc39012a4c735172"
+    sha256                               x86_64_linux:   "0bfcc5738c42aac3bc121b6f700a314f919ef8983d3a7bdaa8293f76694664e0"
   end
 
   depends_on "cmake" => :build
@@ -47,12 +48,9 @@ class Puzzles < Formula
   end
 
   test do
-    on_macos do
+    if OS.mac?
       assert_predicate prefix/"Puzzles.app/Contents/MacOS/Puzzles", :executable?
-    end
-
-    on_linux do
-      # Gtk-WARNING **: 14:18:20.744: cannot open display
+    else
       return if ENV["HOMEBREW_GITHUB_ACTIONS"]
 
       assert_match "Mines, from Simon Tatham's Portable Puzzle Collection", shell_output(bin/"mines")

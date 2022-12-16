@@ -3,19 +3,20 @@ class GobjectIntrospection < Formula
 
   desc "Generate introspection data for GObject libraries"
   homepage "https://gi.readthedocs.io/en/latest/"
-  url "https://download.gnome.org/sources/gobject-introspection/1.70/gobject-introspection-1.70.0.tar.xz"
-  sha256 "902b4906e3102d17aa2fcb6dad1c19971c70f2a82a159ddc4a94df73a3cafc4a"
+  url "https://download.gnome.org/sources/gobject-introspection/1.74/gobject-introspection-1.74.0.tar.xz"
+  sha256 "347b3a719e68ba4c69ff2d57ee2689233ea8c07fc492205e573386779e42d653"
   license all_of: ["GPL-2.0-or-later", "LGPL-2.0-or-later", "MIT"]
-  revision 1
 
   bottle do
-    sha256 arm64_monterey: "b3415581141e6a2dd35baf1065aef21bfa07cacd582c8f18a728606750904a0c"
-    sha256 arm64_big_sur:  "743867fe7cd99538df90b4a233e36bbc50878f8d97758efa06403b650baaedd6"
-    sha256 monterey:       "974fbe1764602c4e8a7611203bc6bd78d7a47f66531fdbd294138eaacc8f5dc0"
-    sha256 big_sur:        "8f3959289f6ffde7c6e547ea9736dbb4346302a5ebd8bb9780fa044656fa61f5"
-    sha256 catalina:       "140f94de2c097db9ac7f4a7de0293235a4354fd13f687df2791214d58b24e008"
-    sha256 mojave:         "c7f254c243c5c225c3079616174a22ed507e62cdbb47f23b5fb0bf4a8ef45b2f"
-    sha256 x86_64_linux:   "abbd5d8a9d3e17a05c24913da6ca16818453e8d79f0a7f873d86f8beebdeb67b"
+    rebuild 1
+    sha256 arm64_ventura:  "9342850d655d2ff1ab8d0b263a9cb9eb483fba3f3520754dea86c5db55633d7e"
+    sha256 arm64_monterey: "a2d055c6adfe61109d77d6868371a37f757ed2a0215e01e9e6b782af02d2fca8"
+    sha256 arm64_big_sur:  "8df914d538a9ee28653ae3a368830481541c13c9fc3bf6133587a86c6d2cc0e4"
+    sha256 ventura:        "56cbcedb7b5ff5edc66d039817a85d4dfc80d1861e9db9282e01853ca8a5e328"
+    sha256 monterey:       "44b03b7f51941f220e553cbf565e63c7c5e36833609cb6de248d2c62f66d5af3"
+    sha256 big_sur:        "60e0831ce9685429b4c7c11180789f225fd30d4542ed102acb912d684383271f"
+    sha256 catalina:       "71ad6ca87e733d7a25c43a6a3e5d8d3e2b983d33502e6936dfad0d77b17db6c6"
+    sha256 x86_64_linux:   "231554638d60b7702697dbd4266c0104bc2bf19de4f1f9f776e702e5f4b73690"
   end
 
   depends_on "bison" => :build
@@ -23,11 +24,12 @@ class GobjectIntrospection < Formula
   depends_on "ninja" => :build
   depends_on "cairo"
   depends_on "glib"
-  depends_on "libffi"
   depends_on "pkg-config"
-  depends_on "python@3.9"
+  # Ships a `_giscanner.cpython-311-darwin.so`, so needs a specific version.
+  depends_on "python@3.11"
 
   uses_from_macos "flex" => :build
+  uses_from_macos "libffi", since: :catalina
 
   resource "tutorial" do
     url "https://gist.github.com/7a0023656ccfe309337a.git",
@@ -43,25 +45,28 @@ class GobjectIntrospection < Formula
   end
 
   def install
+    python3 = "python3.11"
+
+    # Allow scripts to find "python3" during build if Python formula is altinstall'ed
+    pyver = Language::Python.major_minor_version python3
+    ENV.prepend_path "PATH", Formula["python@#{pyver}"].opt_libexec/"bin"
+
     ENV["GI_SCANNER_DISABLE_CACHE"] = "true"
     inreplace "giscanner/transformer.py", "/usr/share", "#{HOMEBREW_PREFIX}/share"
     inreplace "meson.build",
       "config.set_quoted('GOBJECT_INTROSPECTION_LIBDIR', join_paths(get_option('prefix'), get_option('libdir')))",
       "config.set_quoted('GOBJECT_INTROSPECTION_LIBDIR', '#{HOMEBREW_PREFIX}/lib')"
 
-    mkdir "build" do
-      system "meson", *std_meson_args,
-        "-Dpython=#{Formula["python@3.9"].opt_bin}/python3",
-        "-Dextra_library_paths=#{HOMEBREW_PREFIX}/lib",
-        ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-      bin.find { |f| rewrite_shebang detected_python_shebang, f }
-    end
+    system "meson", "setup", "build", "-Dpython=#{which(python3)}",
+                                      "-Dextra_library_paths=#{HOMEBREW_PREFIX}/lib",
+                                      *std_meson_args
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
+
+    rewrite_shebang detected_python_shebang, *bin.children
   end
 
   test do
-    ENV.prepend_path "PKG_CONFIG_PATH", Formula["libffi"].opt_lib/"pkgconfig"
     resource("tutorial").stage testpath
     system "make"
     assert_predicate testpath/"Tut-0.1.typelib", :exist?

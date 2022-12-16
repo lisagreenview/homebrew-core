@@ -1,17 +1,20 @@
 class Shellharden < Formula
   desc "Bash syntax highlighter that encourages/fixes variables quoting"
   homepage "https://github.com/anordal/shellharden"
-  url "https://github.com/anordal/shellharden/archive/v4.1.3.tar.gz"
-  sha256 "1ea7f3af1346738689bf41f2be2a8be2285c2d66b55fe71999c0d82f50a1bdc0"
+  url "https://github.com/anordal/shellharden/archive/v4.3.0.tar.gz"
+  sha256 "d17bf55bae4ed6aed9f0d5cea8efd11026623a47b6d840b826513ab5b48db3eb"
   license "MPL-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "d625041f1fbe3eab74c04270fd05050aaba03aee4cd7327298cc56076b257270"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1fad7048a92304e23fa0b61f52a33a481b9fd4b92d9d05f1fd4c8ae4592adc8a"
-    sha256 cellar: :any_skip_relocation, monterey:       "3ff3866f623e46915cede8a4fae524cd3bc1617bea2b021fd6137e7ed36183ff"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1ac2c0a82a51438f5f9de526e63a962e20e84d31383afe6dd3440d5477d3c1ee"
-    sha256 cellar: :any_skip_relocation, catalina:       "0f61dd945c675db1d7be6cc124ed4af85b1973bcd4a83a58ca76094b88885c62"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d39ca4ad421695d03bc72d815214ead62fb236d96c7c3cad3265fd6998b8c694"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "af4c4531c0e2af03ab01cb7002dbe4c0b9216531d3357a0cc984767cf333d20b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5ab26af4b397db53c4118608c6752e7b37200348bdc7e3f5d9774aba8d9563a2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "41d6e352a23075865bf5b50a79c2e85feb0fa80a8fb6c99397bbe5a33466531d"
+    sha256 cellar: :any_skip_relocation, ventura:        "91cac0ef8ad9379fa304345396b22b3ba5747b39e45163c40e0a659a8e7eedb6"
+    sha256 cellar: :any_skip_relocation, monterey:       "4e9357aebe45d1e473c70d05c34dade5dc9d510f7dcc845933129e2dcd22ec56"
+    sha256 cellar: :any_skip_relocation, big_sur:        "6481b5f71159d7afc13d7bfd1798483ebd0fe46ee168302e9e48938c55f0dd07"
+    sha256 cellar: :any_skip_relocation, catalina:       "b3b53405b95f10baac16f954fc2295d39177aa8b70653c151d25d0f0c287bae9"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "36a59a10d57b518b7ebb1168f09c7ef397448d6df530cc0674e9aa8c061975a9"
   end
 
   depends_on "rust" => :build

@@ -2,18 +2,19 @@ class KubeScore < Formula
   desc "Kubernetes object analysis recommendations for improved reliability and security"
   homepage "https://kube-score.com"
   url "https://github.com/zegl/kube-score.git",
-      tag:      "v1.13.0",
-      revision: "d1ad91defc1a5814f7c7395ed64cd7039d259158"
+      tag:      "v1.16.0",
+      revision: "e30a088ffd4a16c1e7466870db4fb099a73d22fd"
   license "MIT"
   head "https://github.com/zegl/kube-score.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "166de56ea1b76d175c6234d6f9644c654cce58ad61767b0edf449afb6bd0aa2c"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "14ae4f4fe357a21a85db5693502581f559e71eceb03fa8a2f3e8e383da76cb2d"
-    sha256 cellar: :any_skip_relocation, monterey:       "ea6f7ba1498dad2dc4d95628fae213dd46b7d19c7d66dc358f4a794a10ed14b9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "76eb89b240b58af512d99eb134d9c796cb4131c0384b5efee098408a67902e40"
-    sha256 cellar: :any_skip_relocation, catalina:       "98043d871527b391420ca2b538361062decb69a22866c18f3acb5ddbdda37be4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e86bd5092c9c88399cf9a297c6f3cc7f7519cd3c6446daa72e1cc400a2790c6e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "5118de22a69b64ff4a850b732cb53d574225a0d48cbc95eeb69e0ef2bb52c005"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "f2130a7a8053bba23d497b77ae755e9914e806356e9342c88145ccfbe7b09763"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a3aac121fc19f8da33c66a1ce65dfb8a8362657c5b31bb13b8da750de8df5c49"
+    sha256 cellar: :any_skip_relocation, ventura:        "44cdaf3ce7b4d35676e01e61e3d1bd111f78d47fd07810c4d8ebfc189a960233"
+    sha256 cellar: :any_skip_relocation, monterey:       "a3ca528ec01a7e19db86f048658075234c44aaa7edac85d526eea4be353c57c0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1652bbb31eb182a869e1a0e7e329306c73b3d4db7969b68f190747bbf22b9266"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "77cb8748f33179b1b4cae8306afe6d53828d0da47539c40e915e547609bca2db"
   end
 
   depends_on "go" => :build
@@ -24,7 +25,7 @@ class KubeScore < Formula
       -X main.version=#{version}
       -X main.commit=#{Utils.git_head}
       -X main.date=#{time.iso8601}
-    ].join(" ")
+    ]
     system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/kube-score"
   end
 

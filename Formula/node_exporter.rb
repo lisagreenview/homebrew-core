@@ -1,8 +1,8 @@
 class NodeExporter < Formula
   desc "Prometheus exporter for machine metrics"
   homepage "https://prometheus.io/"
-  url "https://github.com/prometheus/node_exporter/archive/v1.2.2.tar.gz"
-  sha256 "3b7b710dad97d9d2b4cb8c3f166ee1c86f629cce59062b09d4fb22459163ec86"
+  url "https://github.com/prometheus/node_exporter/archive/v1.5.0.tar.gz"
+  sha256 "67c6d59359d8c484e1e28d0a52a971eebe687f083c5fbb35c5e651543e5d0ea4"
   license "Apache-2.0"
   head "https://github.com/prometheus/node_exporter.git", branch: "master"
 
@@ -12,26 +12,25 @@ class NodeExporter < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "24542f9ea4c259bcc715a11a2be45cf63102ae3a1e51a7f9d1df1774229427c2"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "08defe8d74459977bc0bf5b5da1e0c09bada5943fd6bbb78d053deb0f6ad1505"
-    sha256 cellar: :any_skip_relocation, monterey:       "4534d77e58bb1d29981f68562225aa48dcb7aaffd907276ccbb2e99faf8a2d17"
-    sha256 cellar: :any_skip_relocation, big_sur:        "bbac191f8d01fe6a3cd41a389d02ac800e6b823ddb0a5bb9fc60f4d7e59da41c"
-    sha256 cellar: :any_skip_relocation, catalina:       "71aa1e6052258257c504b3968027c43238e62ab583efaf1937670ba25defce19"
-    sha256 cellar: :any_skip_relocation, mojave:         "d79d282260ddd651b834688c74b5255d74ccd0c67d9c504efe71882503ebd6a5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5937f64800a35b0205c36e679d7d7f83042092e8e9cb5ef71fb145b22e4e296c"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "1b186c09bf34900911bb0bc4940707d6a38b1c7a0e61fb86a5415f49ff5c4cc3"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5f2e08c7b6c4f46771d29e41d348eb620849952059b5e4c136aa905f2af9190a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "01294c514574959a1b0f61cf5531f6cccab03735def7e29e870b7f3d274c6f94"
+    sha256 cellar: :any_skip_relocation, ventura:        "e5635c6e92beda5e1e4f85396c97a0f1bfc56e9b656e0822ef87fe8baed7a0d1"
+    sha256 cellar: :any_skip_relocation, monterey:       "08b62862b6ff824d79fec85055012836edd688b80cde6c496cc6f2277775ddde"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7af3cb9e5fc4191af71c794708751e3c245e61235f9895b8c2c09f3fee819a25"
+    sha256 cellar: :any_skip_relocation, catalina:       "7f8660b470247bc23fcb352ef896bc44d8b7662aa1bc033fbee74630471dcd24"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5197ff118cb8674acf45da1357c73a81a1659de45f9acb9fcd5e070900614588"
   end
 
   depends_on "go" => :build
 
   def install
     ldflags = %W[
+      -s -w
       -X github.com/prometheus/common/version.Version=#{version}
       -X github.com/prometheus/common/version.BuildUser=Homebrew
     ]
-    system "go", "build", "-ldflags", ldflags.join(" "), "-trimpath",
-           "-o", bin/"node_exporter"
-    prefix.install_metafiles
+    system "go", "build", *std_go_args(ldflags: ldflags)
 
     touch etc/"node_exporter.args"
 

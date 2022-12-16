@@ -3,37 +3,26 @@ require "language/node"
 class AskCli < Formula
   desc "CLI tool for Alexa Skill Kit"
   homepage "https://www.npmjs.com/package/ask-cli"
-  url "https://registry.npmjs.org/ask-cli/-/ask-cli-2.24.1.tgz"
-  sha256 "b3d489f5aaba8f845478f53540bf98b10b0b12b9a45049b32d7dba103942614e"
+  url "https://registry.npmjs.org/ask-cli/-/ask-cli-2.28.0.tgz"
+  sha256 "2a48779a0caf4609155547a9ac4020f0defd98a78781177d2b1705d54a1d188c"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "6ac3f4a96bd2c79484892e4a7740c72edb6c2141365551ab1402762ca57aa099"
-    sha256 cellar: :any_skip_relocation, big_sur:       "18c34ee050739e525549fa2fe79fc5cd0ed36db58031150802744fc2b010294f"
-    sha256 cellar: :any_skip_relocation, catalina:      "26372a8bfdd117c11e7dce55d2946db943ddd3b035e30671c654a9213dff3551"
-    sha256 cellar: :any_skip_relocation, mojave:        "a8b73172e29b4295b9c780261876f6a57cfb8545474cd0d4205f31d6048bf2ea"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "2512f4176778dd8ab682ce80b4112fa0e3762a2b7a4679f2da8923290a405e9a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "6987ca9ca56fdc7049bca53d8ab928a21f77ffbbb2ada472f68fab4b059516b5"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "01c411a937865505b03caa56fb77bd007aa013fc700ce18df80ce156ed6f042a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "894bab76ed98768ec3f1487a4e89c4d58daaf1587ff73a22f22904d32f59f4c9"
+    sha256 cellar: :any_skip_relocation, ventura:        "4d267d5ad92a40d0b815187cf7b9f58b6e78c716098c13f9d0859dfe7d9e1efe"
+    sha256 cellar: :any_skip_relocation, monterey:       "741719b5541e431ca00c3d95d377ec96d5661092892578e3fe3bbf5272b5181b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0bb6b2cc0fb14bfa2851459729b23fb048c9ea5a6f2ca0f56ed6866238d7957c"
+    sha256 cellar: :any_skip_relocation, catalina:       "5fb344f87d678113601e87c46e82a5c89148b52a123e8f2d53f6cbe9184a6071"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "61424d7db537fb060c7f9021d02d5040f0b279f28872cdcb29f6cddcc9472cf8"
   end
 
   depends_on "node"
 
-  on_macos do
-    depends_on "macos-term-size"
-  end
-
   def install
     system "npm", "install", *Language::Node.std_npm_install_args(libexec)
     bin.write_exec_script libexec/"bin/ask"
-
-    term_size_vendor_dir = libexec/"lib/node_modules"/name/"node_modules/term-size/vendor"
-    term_size_vendor_dir.rmtree # remove pre-built binaries
-
-    if OS.mac?
-      macos_dir = term_size_vendor_dir/"macos"
-      macos_dir.mkpath
-      # Replace the vendored pre-built term-size with one we build ourselves
-      ln_sf (Formula["macos-term-size"].opt_bin/"term-size").relative_path_from(macos_dir), macos_dir
-    end
 
     # Replace universal binaries with native slices
     deuniversalize_machos

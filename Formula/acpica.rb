@@ -1,23 +1,24 @@
 class Acpica < Formula
   desc "OS-independent implementation of the ACPI specification"
   homepage "https://www.acpica.org/"
-  url "https://acpica.org/sites/acpica/files/acpica-unix-20210930.tar.gz"
-  sha256 "3cd82a281a16bc70c2708665668f138c4fc606c31161d46ce77230454ec04821"
+  url "https://acpica.org/sites/acpica/files/acpica-unix-20221020.tar_0.gz"
+  # Work around invalid tarball extension (.tar_0.gz). Remove when fixed.
+  version "20221020"
+  sha256 "33a2e394aca0ca57d4018afe3da340dfad5eb45b1b9300e81dd595fda07cf1c5"
   license any_of: ["Intel-ACPI", "GPL-2.0-only", "BSD-3-Clause"]
   head "https://github.com/acpica/acpica.git", branch: "master"
 
   livecheck do
     url "https://acpica.org/downloads"
-    regex(/current release of ACPICA is version <strong>v?(\d{6,8}) </i)
+    regex(/href=.*?acpica-unix[._-]v?(\d+(?:\.\d+)*)\.t/i)
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "3b872f35d911d1c82a2615898af5afc4770b76e059aa7a2d3bb4a6659b933bc0"
-    sha256 cellar: :any_skip_relocation, monterey:      "26e952c5c45c718c00f2c8d55b1f0024ac14eb171a21d54ee6de9e248782799e"
-    sha256 cellar: :any_skip_relocation, big_sur:       "171ca64d2e427e06fee2f5a3e6deb8e68403c8dcb0b505be088f9c363c592eab"
-    sha256 cellar: :any_skip_relocation, catalina:      "f1e620c13d2fcb5fd8969f32467c26b588ddc70d4866bb8a9e4740e893f19a09"
-    sha256 cellar: :any_skip_relocation, mojave:        "d311e06530b37ddcbdb19f2a7131e0d12fb2c4489905d0a827aa7e8de551fdb1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "75a5c8a82145074588085877162245a1c6703a7bf89fd2577f828f4636462d4d"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur: "d8c97744dcd6f6b1be41c6b13a07b02c373f83bf1aa7d8852d96a2935a5c5330"
+    sha256 cellar: :any_skip_relocation, ventura:       "36c5768c90757e49b87d58cb6068d1745a557c0741fc27c32df08fdd0254a949"
+    sha256 cellar: :any_skip_relocation, monterey:      "0ada9f5afbb835d2ab0cf55ba23e07c286373ec6ed1b6fb46859cf510cfff49a"
+    sha256 cellar: :any_skip_relocation, big_sur:       "27433e94ad72edf41984cfe6a665afa21f6f5ce997c3fdedf33c68eb864d785e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "87a339b361429ed66f9316dda49339bf70848c94d6038b22daf6585ee0123e10"
   end
 
   uses_from_macos "bison" => :build
@@ -25,6 +26,8 @@ class Acpica < Formula
   uses_from_macos "m4" => :build
 
   def install
+    # Work around invalid tarball extension (.tar_0.gz). Remove when fixed.
+    system "tar", "--strip-components=1", "-xf", "acpica-unix-#{version}.tar_0"
     ENV.deparallelize
     system "make", "PREFIX=#{prefix}"
     system "make", "install", "PREFIX=#{prefix}"

@@ -1,8 +1,8 @@
 class PythonTkAT39 < Formula
   desc "Python interface to Tcl/Tk"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tar.xz"
-  sha256 "06828c04a573c073a4e51c4292a27c1be4ae26621c3edc7cf9318418ce3b6d27"
+  url "https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tar.xz"
+  sha256 "22dddc099246dd2760665561e8adb7394ea0cc43a72684c6480f9380f7786439"
   license "Python-2.0"
 
   livecheck do
@@ -10,12 +10,13 @@ class PythonTkAT39 < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "f1a19f4e7bc6353fcc3cf445887327871dacbbe911a85a764cc850339e5cbe7a"
-    sha256 cellar: :any, arm64_big_sur:  "af848416d1a1e4832432a507804ae1541855f0d9eb74ac9b0a11de71cff46221"
-    sha256 cellar: :any, monterey:       "42fa5ccf9e1ab957a84934553e1f7ad775f7a509d254eb04f9e1608b15c430c6"
-    sha256 cellar: :any, big_sur:        "9ce5eb27db025494313681ccb3420be48fe3938cca67c04b307f6f40a5588a44"
-    sha256 cellar: :any, catalina:       "54e068e0cd5a15bf6602bdd2f776d77c02490ce8bd30522404af1017dc51c395"
-    sha256               x86_64_linux:   "02a180b21d8a5fd52f0a39d8657c4376b6da3d878209cc178e82e46e61eee366"
+    sha256 cellar: :any, arm64_ventura:  "934359e681de64f7c6bea6e951918febb31a521f6b9c28275f8deff484340da3"
+    sha256 cellar: :any, arm64_monterey: "78dbca71e130764ff20006aba90d35688e0007af7593dd17a0a68024fb5f0319"
+    sha256 cellar: :any, arm64_big_sur:  "38a6238339e1f987a11cf043ddb67c5c74bf264addcf8d647ba7fb8a989e9e68"
+    sha256 cellar: :any, ventura:        "232df696df869d89550c0b3142b718f1743768dce53c84774ed617ec0414c59c"
+    sha256 cellar: :any, monterey:       "10662af4c3405423b6fa656033fa69b9b49804a9536583989614dbd21ce647db"
+    sha256 cellar: :any, big_sur:        "219b1ba1812894e681a9645b38977cec7821c3c752a12ad551ef236cb7d1b4a9"
+    sha256               x86_64_linux:   "d8a80d6de08597d9a4613e9ccf0f2921f1525de8496fcf1d07007e85d8ebcb28"
   end
 
   depends_on "python@3.9"
@@ -39,20 +40,16 @@ class PythonTkAT39 < Formula
               ]
         )
       EOS
-      system Formula["python@3.9"].bin/"python3", *Language::Python.setup_install_args(libexec),
-                                                  "--install-lib=#{libexec}"
-      rm_r Dir[libexec/"*.egg-info"]
+      system "python3.9", *Language::Python.setup_install_args(libexec), "--install-lib=#{libexec}"
+      rm_r libexec.glob("*.egg-info")
     end
   end
 
   test do
-    system Formula["python@3.9"].bin/"python3", "-c", "import tkinter"
+    system "python3.9", "-c", "import tkinter"
 
-    on_linux do
-      # tk does not work in headless mode
-      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
-    end
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
 
-    system Formula["python@3.9"].bin/"python3", "-c", "import tkinter; root = tkinter.Tk()"
+    system "python3.9", "-c", "import tkinter; root = tkinter.Tk()"
   end
 end

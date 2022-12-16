@@ -3,39 +3,34 @@ class Circleci < Formula
   homepage "https://circleci.com/docs/2.0/local-cli/"
   # Updates should be pushed no more frequently than once per week.
   url "https://github.com/CircleCI-Public/circleci-cli.git",
-      tag:      "v0.1.16422",
-      revision: "7ce53877952ebe083438e822d93d8dbf8c921f18"
+      tag:      "v0.1.22770",
+      revision: "802994bb588db994da3d625fe46acfb8c2268d37"
   license "MIT"
   head "https://github.com/CircleCI-Public/circleci-cli.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f39684ba7f0bb488ba4db81ffad10ab4b8c8f2039f088f5d9f1d9cac502fb358"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "64002020a71464bc3118f36751f795ab7b2476ea2ebaa8946c4788ee2e49619b"
-    sha256 cellar: :any_skip_relocation, monterey:       "4bfc7698b60d42bf9a8be938954e695e5b25972c7830468a29ef8532b7d4ee46"
-    sha256 cellar: :any_skip_relocation, big_sur:        "81325ce63c2c593bf4c7c07a29ccde215b37bcf211fcaad7643a2836366341ac"
-    sha256 cellar: :any_skip_relocation, catalina:       "062590bd0638d18cf1c8650ab2adbd4d50ef4250a9f4bc53ba4a26cc1ea21478"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d19ecc0d6ca820e77af80e7037ec64fdfae9f85010258e3a55efbeab78ee5357"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "478d9ac1c7a35205113bd5b320cf3824088c20eae26daf7c1414378e0731a908"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "62a769fa2a82d5c3e27d176e52f9914ef5d8e8b42cc7d61564c067212d8b1e72"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "18ff0ec5f8c075c560a95c514cc03322743d5abfdfa4b86181834fad2d029fdf"
+    sha256 cellar: :any_skip_relocation, ventura:        "b3d513afd728b9eee9c1787503c353f1783af19855de5079ac5b7ce0d90bca7e"
+    sha256 cellar: :any_skip_relocation, monterey:       "1aa75cdef212afb810a0b6d62554c6bee72b2c3c24739785947afcf93bc97121"
+    sha256 cellar: :any_skip_relocation, big_sur:        "33b55cdfa0013bcb2140cb47886a919e172c42069bf61edd62b3f0fa7e9fe7a2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5c78ae4ff9bc500b62cf749c06f77872231fe13f5804e6b9ab526a46f959068c"
   end
 
   depends_on "go" => :build
-  depends_on "packr" => :build
 
   def install
-    system "packr2", "--ignore-imports", "-v"
-
     ldflags = %W[
       -s -w
       -X github.com/CircleCI-Public/circleci-cli/version.packageManager=homebrew
       -X github.com/CircleCI-Public/circleci-cli/version.Version=#{version}
       -X github.com/CircleCI-Public/circleci-cli/version.Commit=#{Utils.git_short_head}
     ]
-    system "go", "build", *std_go_args(ldflags: ldflags.join(" "))
+    system "go", "build", *std_go_args(ldflags: ldflags)
 
-    output = Utils.safe_popen_read("#{bin}/circleci", "--skip-update-check", "completion", "bash")
-    (bash_completion/"circleck").write output
-
-    output = Utils.safe_popen_read("#{bin}/circleci", "--skip-update-check", "completion", "zsh")
-    (zsh_completion/"_circleci").write output
+    generate_completions_from_executable(bin/"circleci", "--skip-update-check", "completion",
+                                        shells: [:bash, :zsh])
   end
 
   test do
@@ -45,7 +40,7 @@ class Circleci < Formula
     output = shell_output("#{bin}/circleci config pack #{testpath}/.circleci.yml")
     assert_match "version: 2.1", output
     # assert update is not included in output of help meaning it was not included in the build
-    assert_match "update      This command is unavailable on your platform", shell_output("#{bin}/circleci help")
+    assert_match(/update.+This command is unavailable on your platform/, shell_output("#{bin}/circleci help 2>&1"))
     assert_match "`update` is not available because this tool was installed using `homebrew`.",
       shell_output("#{bin}/circleci update")
   end

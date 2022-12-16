@@ -3,72 +3,71 @@ class Fabric < Formula
 
   desc "Library and command-line tool for SSH"
   homepage "https://www.fabfile.org/"
-  url "https://files.pythonhosted.org/packages/32/61/9a26b8f3dcdb5cb17daff57c9a85be6d5963d50488f45319d64a413da762/fabric-2.6.0.tar.gz"
-  sha256 "47f184b070272796fd2f9f0436799e18f2ccba4ee8ee587796fca192acd46cd2"
+  url "https://files.pythonhosted.org/packages/1f/36/9969093324a67cee916f484eda7b3547e8f8e6077f5f2a1814cde80d6fc2/fabric-2.7.1.tar.gz"
+  sha256 "76f8fef59cf2061dbd849bbce4fe49bdd820884385004b0ca59136ac3db129e4"
   license "BSD-2-Clause"
-  revision 2
   head "https://github.com/fabric/fabric.git"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "61f18da0dd9b74e0d8aca31a538cd9e472b8877d345111aa9ac9eb962f3034ae"
-    sha256 cellar: :any,                 arm64_big_sur:  "abd0cb21c321e8ede77855e1b219bc504d0a16895ac094b304e0851e8f7bfcdd"
-    sha256 cellar: :any,                 monterey:       "98fe7efe0df522233646e94479e1d23d034c7721c48e3712a74fc8326069c64e"
-    sha256 cellar: :any,                 big_sur:        "6fd30b87b0e459ad6bf9e3b71a5df399f393e72a2f5259a322972792f24e3422"
-    sha256 cellar: :any,                 catalina:       "53bd40ec74a81b85904a4232d4de2d35850525df862466b0bf99bd955b6eadc5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a94d0b1334e8b56567438ed6e82032241f11562c0a26fb6a9fa394c745fac2b9"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "135dc5cc6e423e5f934a7d05171305f3f424605eb9a503a6f2f4071c37913dc3"
+    sha256 cellar: :any,                 arm64_monterey: "ccd2663005a3c16d686d0aa758a3289e158e8d003b47ee08ef277a6448836b89"
+    sha256 cellar: :any,                 arm64_big_sur:  "630be8c0a1469b55894d3ed7bf2dcdba281dabbe45d3bb8a28e968dff71dcab1"
+    sha256 cellar: :any,                 ventura:        "29b2c1aa7da4b29debc87bbe804f6dd663bf457f4801db31eed436ac8739c017"
+    sha256 cellar: :any,                 monterey:       "972cf4da10edce2148cb1bd3a8e9bcb2228ab3a4bdb4af61ae5ec8671c5b10b3"
+    sha256 cellar: :any,                 big_sur:        "aed7203872c89087d2464ed1cf86f839b96ff838846e2f117c38c02f831ac87f"
+    sha256 cellar: :any,                 catalina:       "2acb1f21d3a07f4f22fc564630ce0d8c5e254982332d7d4cf2fc72d4a9fc0b98"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "90be4f0931d76416c08baa7d8730849ea3673ee92085559cf13de4d8e47e7626"
   end
 
   depends_on "rust" => :build
   depends_on "openssl@1.1"
-  depends_on "python@3.9"
+  depends_on "pyinvoke"
+  depends_on "python@3.10"
+  depends_on "six"
 
   resource "bcrypt" do
-    url "https://files.pythonhosted.org/packages/d8/ba/21c475ead997ee21502d30f76fd93ad8d5858d19a3fad7cd153de698c4dd/bcrypt-3.2.0.tar.gz"
-    sha256 "5b93c1726e50a93a033c36e5ca7fdcd29a5c7395af50a6892f5d9e7c6cfbfb29"
+    url "https://files.pythonhosted.org/packages/e8/36/edc85ab295ceff724506252b774155eff8a238f13730c8b13badd33ef866/bcrypt-3.2.2.tar.gz"
+    sha256 "433c410c2177057705da2a9f2cd01dd157493b2a7ac14c8593a16b3dab6b6bfb"
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/a8/20/025f59f929bbcaa579704f443a438135918484fffaacfaddba776b374563/cffi-1.14.5.tar.gz"
-    sha256 "fd78e5fee591709f32ef6edb9a015b4aa1a5022598e36227500c8f4e02328d9c"
+    url "https://files.pythonhosted.org/packages/2b/a8/050ab4f0c3d4c1b8aaa805f70e26e84d0e27004907c5b8ecc1d31815f92a/cffi-1.15.1.tar.gz"
+    sha256 "d400bfb9a37b1351253cb402671cea7e89bdecc294e8016a707f6d1d8ac934f9"
   end
 
   resource "cryptography" do
-    url "https://files.pythonhosted.org/packages/fa/2d/2154d8cb773064570f48ec0b60258a4522490fcb115a6c7c9423482ca993/cryptography-3.4.6.tar.gz"
-    sha256 "2d32223e5b0ee02943f32b19245b61a62db83a882f0e76cc564e1cec60d48f87"
-  end
-
-  resource "invoke" do
-    url "https://files.pythonhosted.org/packages/f0/bf/12827f26d127549b0c17aeb075b8bec2b0a48873418c51fca4bfcd0bd985/invoke-1.5.0.tar.gz"
-    sha256 "f0c560075b5fb29ba14dad44a7185514e94970d1b9d57dcd3723bec5fed92650"
+    url "https://files.pythonhosted.org/packages/89/d9/5fcd312d5cce0b4d7ee8b551a0ea99e4ea9db0fdbf6dd455a19042e3370b/cryptography-37.0.4.tar.gz"
+    sha256 "63f9c17c0e2474ccbebc9302ce2f07b55b3b3fcb211ded18a42d5764f5c10a82"
   end
 
   resource "paramiko" do
-    url "https://files.pythonhosted.org/packages/cf/a1/20d00ce559a692911f11cadb7f94737aca3ede1c51de16e002c7d3a888e0/paramiko-2.7.2.tar.gz"
-    sha256 "7f36f4ba2c0d81d219f4595e35f70d56cc94f9ac40a6acdf51d6ca210ce65035"
+    url "https://files.pythonhosted.org/packages/1d/08/3b8d8f1b4ec212c17429c2f3ff55b7f2237a1ad0c954972e39c8f0ac394c/paramiko-2.11.0.tar.gz"
+    sha256 "003e6bee7c034c21fbb051bf83dc0a9ee4106204dd3c53054c71452cc4ec3938"
   end
 
   resource "pathlib2" do
-    url "https://files.pythonhosted.org/packages/94/d8/65c86584e7e97ef824a1845c72bbe95d79f5b306364fa778a3c3e401b309/pathlib2-2.3.5.tar.gz"
-    sha256 "6cd9a47b597b37cc57de1c05e56fb1a1c9cc9fab04fe78c29acd090418529868"
+    url "https://files.pythonhosted.org/packages/31/51/99caf463dc7c18eb18dad1fffe465a3cf3ee50ac3d1dccbd1781336fe9c7/pathlib2-2.3.7.post1.tar.gz"
+    sha256 "9fe0edad898b83c0c3e199c842b27ed216645d2e177757b2dd67384d4113c641"
   end
 
   resource "pycparser" do
-    url "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
-    sha256 "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+    url "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz"
+    sha256 "e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"
   end
 
   resource "PyNaCl" do
-    url "https://files.pythonhosted.org/packages/cf/5a/25aeb636baeceab15c8e57e66b8aa930c011ec1c035f284170cacb05025e/PyNaCl-1.4.0.tar.gz"
-    sha256 "54e9a2c849c742006516ad56a88f5c74bf2ce92c9f67435187c3c5953b346505"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/6b/34/415834bfdafca3c5f451532e8a8d9ba89a21c9743a0c59fbd0205c7f9426/six-1.15.0.tar.gz"
-    sha256 "30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"
+    url "https://files.pythonhosted.org/packages/a7/22/27582568be639dfe22ddb3902225f91f2f17ceff88ce80e4db396c8986da/PyNaCl-1.5.0.tar.gz"
+    sha256 "8ac7448f09ab85811607bdd21ec2464495ac8b7c66d146bf545b0f08fb9220ba"
   end
 
   def install
     virtualenv_install_with_resources
+
+    # we depend on pyinvoke, but that's a separate formula, so install a `.pth` file to link them
+    site_packages = Language::Python.site_packages("python3.10")
+    pyinvoke = Formula["pyinvoke"].opt_libexec
+    (libexec/site_packages/"homebrew-pyinvoke.pth").write pyinvoke/site_packages
   end
 
   test do

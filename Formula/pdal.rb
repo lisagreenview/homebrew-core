@@ -1,27 +1,30 @@
 class Pdal < Formula
   desc "Point data abstraction library"
   homepage "https://www.pdal.io/"
-  url "https://github.com/PDAL/PDAL/releases/download/2.3.0/PDAL-2.3.0-src.tar.gz"
-  sha256 "5b0b92258874ef722b5027054d64c8b318b524e7a9b2b250d0330d76e19b8618"
+  url "https://github.com/PDAL/PDAL/releases/download/2.4.3/PDAL-2.4.3-src.tar.gz"
+  sha256 "abac604c6dcafdcd8a36a7d00982be966f7da00c37d89db2785637643e963e4c"
   license "BSD-3-Clause"
+  revision 4
   head "https://github.com/PDAL/PDAL.git", branch: "master"
 
-  # The upstream GitHub repository sometimes tags a commit with only a
-  # major/minor version (`1.2`) and then uses major/minor/patch (`1.2.3`) for
-  # the release (with downloadable assets). This inconsistency can be a problem
-  # if we need to substitute the version from livecheck in the `stable` URL, so
-  # we use the `GithubLatest` strategy here.
+  # The upstream GitHub repository sometimes creates tags that only include a
+  # major/minor version (`1.2`) and then uses major/minor/patch (`1.2.0`) for
+  # the release tarball. This inconsistency can be a problem if we need to
+  # substitute the version from livecheck in the `stable` URL, so we check the
+  # first-party download page, which links to the tarballs on GitHub.
   livecheck do
-    url :stable
+    url "https://pdal.io/en/stable/download.html"
     regex(/href=.*?PDAL[._-]v?(\d+(?:\.\d+)+)[._-]src\.t/i)
-    strategy :github_latest
   end
 
   bottle do
-    sha256 arm64_big_sur: "bab6bc4359165c0114f42bfaa336efd455f4be53504b4c9ccd730f69fa4138e6"
-    sha256 big_sur:       "c5b53c3b047b1cc147c4b7a2b32337c219f29b04ca5badb054ba2c5d282f6d6f"
-    sha256 catalina:      "5ed3e147a0d6078d4757b59ec97edd1b582c6e696f0c1a7b458deed020be38c7"
-    sha256 mojave:        "c907f76ffd95101e6d7555cc0f7da93c0380e03a54973b03c02e0be0998e8b79"
+    sha256                               arm64_ventura:  "b145597a2bc716cbcbaf26d84decccb036ec13b128660ed75650a0b1d701ddca"
+    sha256                               arm64_monterey: "da9093b3d6f58a288c57d1881655d8ff40eda857fe64927d04dcdb123f638289"
+    sha256                               arm64_big_sur:  "9eff84edbe30ac408fd28f0903af506ae6864a0b108d6ed5c32bb726292751b1"
+    sha256                               ventura:        "8aace20f820b6f384a629d003ff9a868ab7b65ce93342d1da0db7a4cad9fa97a"
+    sha256                               monterey:       "c8e4d8faebdb46f9e9884f4a84dc58fc5cc82ec15e86ec6b70a2c5d860b55d72"
+    sha256                               big_sur:        "4862f29cfc6f7778ba3427cab71d77598830f178b196edb61827321f9940bd34"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6c2eea1807baa6fd1a77cf2068b8b42853188fc20b38fdf4073285633a2d4819"
   end
 
   depends_on "cmake" => :build
@@ -29,16 +32,16 @@ class Pdal < Formula
   depends_on "gdal"
   depends_on "hdf5"
   depends_on "laszip"
+  depends_on "libpq"
   depends_on "numpy"
-  depends_on "pcl"
-  depends_on "postgresql"
+
+  fails_with gcc: "5" # gdal is compiled with GCC
 
   def install
     system "cmake", ".", *std_cmake_args,
                          "-DWITH_LASZIP=TRUE",
                          "-DBUILD_PLUGIN_GREYHOUND=ON",
                          "-DBUILD_PLUGIN_ICEBRIDGE=ON",
-                         "-DBUILD_PLUGIN_PCL=ON",
                          "-DBUILD_PLUGIN_PGPOINTCLOUD=ON",
                          "-DBUILD_PLUGIN_PYTHON=ON",
                          "-DBUILD_PLUGIN_SQLITE=ON"

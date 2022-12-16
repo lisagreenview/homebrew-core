@@ -1,10 +1,9 @@
 class PdftkJava < Formula
   desc "Port of pdftk in java"
   homepage "https://gitlab.com/pdftk-java/pdftk"
-  url "https://gitlab.com/pdftk-java/pdftk/-/archive/v3.3.1/pdftk-v3.3.1.tar.gz"
-  sha256 "4a97856c8aadfa182e480d2e717842e6cbed43829cd917c9f9dd2d15b57d3d2d"
+  url "https://gitlab.com/pdftk-java/pdftk/-/archive/v3.3.3/pdftk-v3.3.3.tar.gz"
+  sha256 "9c947de54658539e3a136e39f9c38ece1cf2893d143abb7f5bf3a2e3e005b286"
   license "GPL-2.0-or-later"
-  revision 1
   head "https://gitlab.com/pdftk-java/pdftk.git", branch: "master"
 
   livecheck do
@@ -13,11 +12,14 @@ class PdftkJava < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "697142c434ed6b00925ba13c845f5a91942ef9509e63393b1ca12fd7b3acc9b2"
-    sha256 cellar: :any_skip_relocation, big_sur:       "eb0b076125b9b7023eef4aa646b14bc087476e3ea8950e93e9c4aa5b68265dd7"
-    sha256 cellar: :any_skip_relocation, catalina:      "c1719607f7e628fb26215b53c2e4b10dab3f20bf6533476d0825dafdc604c3bc"
-    sha256 cellar: :any_skip_relocation, mojave:        "603bf4ee89edf29dd9e8c272b719ea6bb42e58a14b5eb59569ff74d1d6d8e207"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4609e765fe7a9a7737f29262b30dc5b3ef7db5269857ff36f28702807e0bcfb2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3a5857d7211fd50b381bffc97a2b986bf1b247da437f29ebd93c7f3996901e20"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "89c574a7f8c34385575fb89a88bb4e17c29dae1f5f4d4159c8d99a9d38e1dd9c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d49f5787ea1de2dc8a3b0b5247fbe13f3afedd06300723a397034ddd55a9607b"
+    sha256 cellar: :any_skip_relocation, ventura:        "99832fe1d1e78d1086d7378135379c0e999b956a91308f812854169407db811d"
+    sha256 cellar: :any_skip_relocation, monterey:       "4c681bcf7c438fe4579a383ef327fa7d999bdae7a02d07610ce21b9c31e008ea"
+    sha256 cellar: :any_skip_relocation, big_sur:        "067b14996ed189e5fc3a2b648000a34376b5e49b1e523b5957f70f02e2c53fe2"
+    sha256 cellar: :any_skip_relocation, catalina:       "20197d53ee7fb4954921f8a4b19617f8a506042376655a08bbbe9e04adbdddcf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5324e59b0873170d230c18fedd86696fad098cd20443633c692a33d493b1c411"
   end
 
   depends_on "gradle" => :build

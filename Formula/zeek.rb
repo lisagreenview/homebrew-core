@@ -2,10 +2,9 @@ class Zeek < Formula
   desc "Network security monitor"
   homepage "https://www.zeek.org"
   url "https://github.com/zeek/zeek.git",
-      tag:      "v4.1.1",
-      revision: "70e95dde8817f7d891cf63592b49b88fad21beb9"
+      tag:      "v4.2.2",
+      revision: "40eb7f80378284202e52e6c45299cac10abf07ab"
   license "BSD-3-Clause"
-  revision 1
   head "https://github.com/zeek/zeek.git", branch: "master"
 
   livecheck do
@@ -14,13 +13,15 @@ class Zeek < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "d02836b583b2b3934e2d8223d07a2717eea4c6938a9733770a6e22e92750b0c3"
-    sha256 arm64_big_sur:  "1f2b6ade33c459c14955fb497c2be5219f54d61cb39ef011d2478cddfb06789d"
-    sha256 monterey:       "e0b68111d16b627983b5a285adae19f7a8fae4d67c1ce9e773b0036fb1ca4aa7"
-    sha256 big_sur:        "28b6d8e00ad14ff0b6536be06bc0a09ed3bae6c91740cca2cee47ab8171aa88d"
-    sha256 catalina:       "45b8d2ac3710d29895d1b7c10a73da2f71bc4415d0aa0e8f960e3f55e5a76736"
-    sha256 mojave:         "ec2c18a5f3a49bb4f0fc1e9c1d9ab7a0c301bfba78369c20a8677a8e79a4f684"
-    sha256 x86_64_linux:   "951f61c803173ca8ddd3b178430ee92640226db8ecbf3aee2e6414ff62d2e019"
+    rebuild 1
+    sha256 arm64_ventura:  "c7ed92fb064de3aafc5c56d17e9f998916a8b0fd97e59c51e5820b2ebdb7e98a"
+    sha256 arm64_monterey: "79cff929180fbf3e76c1b263a96cf16db2b7ae8ebbc48b7e7c19f7edb6b3deb7"
+    sha256 arm64_big_sur:  "1dbab06ef418f7be7a2af05e74a8397ad8da0e62bf48ac9a5b9c80ce18128fd5"
+    sha256 ventura:        "f3893d1d6a127fc1082252aa56e6f456ca7e40d24764935cb3a6f28ec5f513e2"
+    sha256 monterey:       "9f0c7484c6c89089e496da6a82126f1ad6150a091ec7ac1e3365123bc9e73ae3"
+    sha256 big_sur:        "eb6cec7c6008e645889203c0f9160a23e4bd747cb45df1b6f44070c9b45e3679"
+    sha256 catalina:       "77328d64c938ee428b22d21937902848b52c098760cd63d3049ec43fae211982"
+    sha256 x86_64_linux:   "9f3b8561dcb40db17c4ac25ac2e5ac9269c24294b065287402d1de475439491b"
   end
 
   depends_on "bison" => :build
@@ -35,11 +36,8 @@ class Zeek < Formula
 
   uses_from_macos "flex"
   uses_from_macos "libpcap"
+  uses_from_macos "libxcrypt"
   uses_from_macos "zlib"
-
-  on_linux do
-    depends_on "gcc" # For C++17
-  end
 
   fails_with gcc: "5"
 

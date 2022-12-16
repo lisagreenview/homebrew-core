@@ -1,8 +1,8 @@
 class Nspr < Formula
   desc "Platform-neutral API for system-level and libc-like functions"
   homepage "https://hg.mozilla.org/projects/nspr"
-  url "https://archive.mozilla.org/pub/nspr/releases/v4.32/src/nspr-4.32.tar.gz"
-  sha256 "bb6bf4f534b9559cf123dcdc6f9cd8167de950314a90a88b2a329c16836e7f6c"
+  url "https://archive.mozilla.org/pub/nspr/releases/v4.35/src/nspr-4.35.tar.gz"
+  sha256 "7ea3297ea5969b5d25a5dd8d47f2443cda88e9ee746301f6e1e1426f8a6abc8f"
   license "MPL-2.0"
 
   livecheck do
@@ -11,13 +11,14 @@ class Nspr < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "45df53b5a421215b987071da52791d105137df0202a374a0e8c7e209c60f880f"
-    sha256 cellar: :any,                 arm64_big_sur:  "69c39b2f0a2d93ea5969a9906d0e5063caa34ad495cd56cef7e22b8b8628a67a"
-    sha256 cellar: :any,                 monterey:       "2b6b4bde77314607f5c19b327a9fc854b32053655848a60b802e36bebd07124c"
-    sha256 cellar: :any,                 big_sur:        "fa4089b067d319a827833747ed64c0e9ed9ce1c95aa54d77fb1dabffd52436ed"
-    sha256 cellar: :any,                 catalina:       "f5a4e62a6d63a398ce0d14af9aa25ad1c33c8eb9ff64de988551ee0791aae69b"
-    sha256 cellar: :any,                 mojave:         "fd4bc5953ceff865f0a3e049fbb06ccb07015c4369a7aa4c67e820af6b7cc53b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e96c1aec46c06a8fb7644697cc962e75278a325e17d39622163b51bdb003d850"
+    sha256 cellar: :any,                 arm64_ventura:  "f687611cbb5d48ff8a9e5312eebac9f12f31fb700c3cc1f5a8d2732c0cae9afc"
+    sha256 cellar: :any,                 arm64_monterey: "466fd0ffb45153ddc9ce8d882440bc3f2c9c2e1e5ff1caf00ea3e5a7f2dbff0c"
+    sha256 cellar: :any,                 arm64_big_sur:  "2e3a32904cb5f089c1dba35df40a81513b2519c1e33b5b29af0c06a639cc554f"
+    sha256 cellar: :any,                 ventura:        "230771659d8bd6227c5cd2b7dbb89953d02a0b0646a80d4ac0920782990e98fb"
+    sha256 cellar: :any,                 monterey:       "7b4bd4b9800bad2ae7322c125defee4da9a94a2cc6abeb6c3897af64a8f023a3"
+    sha256 cellar: :any,                 big_sur:        "9c50db49ddcd26100b885dc4054ac7c2fd4559012eedc1fdaf4b4d03145ce10f"
+    sha256 cellar: :any,                 catalina:       "4310f8360717b354f2e29eb205d7de77a34d83a7d9c08addaa85c7fba397ed6a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "592605a1cac69bf9728b59f9deb9b4fcdcc77461d44cabcd6f59669f77278b08"
   end
 
   def install

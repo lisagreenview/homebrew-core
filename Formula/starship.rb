@@ -1,22 +1,23 @@
 class Starship < Formula
   desc "Cross-shell prompt for astronauts"
   homepage "https://starship.rs"
-  url "https://github.com/starship/starship/archive/v1.0.0.tar.gz"
-  sha256 "a66d47758b3dac4f1a626bb175c4847a2ef266540498a9f25222e715baf9f9db"
+  url "https://github.com/starship/starship/archive/v1.12.0.tar.gz"
+  sha256 "748a0541009b0bee5f51b716d072f244d8d5cb3fb8d768519ed305494ea11e02"
   license "ISC"
   head "https://github.com/starship/starship.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "35fd536521a8c741c86ada03b75e22dd08f719dbde5892c25d32d3ff67f47bc6"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b13cbcb4e50e836f17e168da533c767a38ed9ca95a78a0982317705c79ffa149"
-    sha256 cellar: :any_skip_relocation, monterey:       "5f9d73aa8caa8dc009958d9ae2df016ddc4e80e97d75d9aaabbdf800012e5efd"
-    sha256 cellar: :any_skip_relocation, big_sur:        "107b6540bdb4820c59e0e022b12e9c3020a3f17f3d428c4aa7229fa2126d02f4"
-    sha256 cellar: :any_skip_relocation, catalina:       "aafc54465ee3a673318edb08039c0eb3b37d3c42407e534498ebd0890bb8d3ec"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "99000a25be0ea6411caff418a2bdb2dc30122900fbddcf0c1a9431bd4d00417b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "01f950a875e7903eafde1bc29121e8f0d30e33a73f8ef514a21c63907c3a8b9c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "4ddafeedf0a4a3677a4abc46dd237879fabd1b449b4254418f1e8ea5fd19c180"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1c57117968bda80a63bf9edf6b585418aae20fc45a23b23e0a6eebc958eff66e"
+    sha256 cellar: :any_skip_relocation, ventura:        "4ebc3aff8e3bf7edb0516ab404e320ecd26282671b79e8f4259e49c545b21769"
+    sha256 cellar: :any_skip_relocation, monterey:       "ed2c1d864d2097f92c5a329e2795839588437d78418f326c225d3554ab8aaa2c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b57426a31e55cfde0bbe56211b9509974513d5283b51d8048448c883d136b10a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b8bdd32cc58abd1cc4e3f532e33ce64231fe2d9611f344d49326851c07d0a932"
   end
 
+  depends_on "cmake" => :build
   depends_on "rust" => :build
-  depends_on "openssl@1.1"
 
   uses_from_macos "zlib"
 
@@ -26,16 +27,9 @@ class Starship < Formula
   end
 
   def install
-    system "cargo", "install", "--features", "notify-rust", *std_cargo_args
+    system "cargo", "install", *std_cargo_args
 
-    bash_output = Utils.safe_popen_read("#{bin}/starship", "completions", "bash")
-    (bash_completion/"starship").write bash_output
-
-    zsh_output = Utils.safe_popen_read("#{bin}/starship", "completions", "zsh")
-    (zsh_completion/"_starship").write zsh_output
-
-    fish_output = Utils.safe_popen_read("#{bin}/starship", "completions", "fish")
-    (fish_completion/"starship.fish").write fish_output
+    generate_completions_from_executable(bin/"starship", "completions")
   end
 
   test do

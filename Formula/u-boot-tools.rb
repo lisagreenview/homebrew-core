@@ -1,8 +1,8 @@
 class UBootTools < Formula
   desc "Universal boot loader"
   homepage "https://www.denx.de/wiki/U-Boot/"
-  url "https://ftp.denx.de/pub/u-boot/u-boot-2021.10.tar.bz2"
-  sha256 "cde723e19262e646f2670d25e5ec4b1b368490de950d4e26275a988c36df0bd4"
+  url "https://ftp.denx.de/pub/u-boot/u-boot-2022.10.tar.bz2"
+  sha256 "50b4482a505bc281ba8470c399a3c26e145e29b23500bc35c50debd7fa46bdf8"
   license all_of: ["GPL-2.0-only", "GPL-2.0-or-later", "BSD-3-Clause"]
 
   livecheck do
@@ -11,17 +11,19 @@ class UBootTools < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "46d10310bde67e69ca0ca324728cc6c0e95bc3ff6c3f24644e6c25ec2d7f3948"
-    sha256 cellar: :any,                 arm64_big_sur:  "7ed89bdfdf7c129de811e6bf1ee2b306a20c0a922e9a998011c652e81b9ba099"
-    sha256 cellar: :any,                 monterey:       "ec5c40f352a1fb603c694c3c94046316b7fa87d934fde9ce3110bcdc75a6d5e8"
-    sha256 cellar: :any,                 big_sur:        "4dfb85faaad3da512619216a0159864f21acd8d9c41e70461ea97a680e296c76"
-    sha256 cellar: :any,                 catalina:       "e74626de6dda88a5dde743eeeec5c807169cda61b5a67462ae5d673e1c4edaaa"
-    sha256 cellar: :any,                 mojave:         "f67521ce162fdcb22ce0c5d5236376260f63f9a32d5cb0a5b3b308faec3d3764"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c1a01204bd4e86fec942c4890eda4cd74549e28059119737132ee3c7d40dfc19"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "a5c755402325271f4d814154e572295ffc79a2d3ab9d551d564743ea519b547e"
+    sha256 cellar: :any,                 arm64_monterey: "fcf481e76ad286781a9e74b2395a263def5382c6c0e6d29a7a0dfcd7255decbf"
+    sha256 cellar: :any,                 arm64_big_sur:  "35e09390026f8dd3b12a7781bc93e5a0c6314844d622e1d8e91913997cf6be06"
+    sha256 cellar: :any,                 ventura:        "d1da94a16a07548f7374f70406b8568bbe49db80cf9fd88c55640660068a75fa"
+    sha256 cellar: :any,                 monterey:       "67df4d2ddfa5dea5250bbefb453f5947a5f886bbb75aceb4a7dfdaf69ae685a6"
+    sha256 cellar: :any,                 big_sur:        "b2354f8b5f468df0dd4f0a4d00049867eb68ca08d0bc7e069c63b3f13ad690f6"
+    sha256 cellar: :any,                 catalina:       "020d650fbcc7230aad7b0243d08889a551449cb842369dfd5488960a3be6550d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4b0a42eb62c6259aec9a98faaacf46854972099dd3418631d67a61ac85e1cce9"
   end
 
   depends_on "coreutils" => :build # Makefile needs $(gdate)
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   uses_from_macos "bison" => :build
   uses_from_macos "flex" => :build
@@ -29,6 +31,9 @@ class UBootTools < Formula
   def install
     # Replace keyword not present in make 3.81
     inreplace "Makefile", "undefine MK_ARCH", "unexport MK_ARCH"
+
+    # Disable mkeficapsule
+    inreplace "configs/tools-only_defconfig", "CONFIG_TOOLS_MKEFICAPSULE=y", "CONFIG_TOOLS_MKEFICAPSULE=n"
 
     system "make", "tools-only_defconfig"
     system "make", "tools-only", "NO_SDL=1"

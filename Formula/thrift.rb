@@ -4,9 +4,9 @@ class Thrift < Formula
   license "Apache-2.0"
 
   stable do
-    url "https://www.apache.org/dyn/closer.lua?path=thrift/0.15.0/thrift-0.15.0.tar.gz"
-    mirror "https://archive.apache.org/dist/thrift/0.15.0/thrift-0.15.0.tar.gz"
-    sha256 "d5883566d161f8f6ddd4e21f3a9e3e6b8272799d054820f1c25b11e86718f86b"
+    url "https://www.apache.org/dyn/closer.lua?path=thrift/0.17.0/thrift-0.17.0.tar.gz"
+    mirror "https://archive.apache.org/dist/thrift/0.17.0/thrift-0.17.0.tar.gz"
+    sha256 "b272c1788bb165d99521a2599b31b97fa69e5931d099015d91ae107a0b0cc58f"
 
     # Fix -flat_namespace being used on Big Sur and later.
     patch do
@@ -16,13 +16,14 @@ class Thrift < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "77ea98789bcafe47df87460c0b236c2a4d0883d3a87f189de5fa228f14b920d1"
-    sha256 cellar: :any,                 arm64_big_sur:  "8352c16aaef3267d863dc31aa6e6562ab59ce5823b61296a0a2dfe62fb747112"
-    sha256 cellar: :any,                 monterey:       "8fafe39b9a14df03183aadb76da3d2005972de99f9ef99820a760e71bf131f8b"
-    sha256 cellar: :any,                 big_sur:        "e371159616481c100f45d01660e70ff68d9df907baef025982e8650ff485b3f4"
-    sha256 cellar: :any,                 catalina:       "77ffd9f8aea765983f90ae45c94afd32502d035bb09f58b601290f65fc2966e0"
-    sha256 cellar: :any,                 mojave:         "e1f46a93099ec7b01caf380433a05d5014686cc5ea59293286fc55a5b0efd39c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fa1ac943dc0f963402b71ce1189f19e62aa51510165c4f3607dc45b6b95f273f"
+    sha256 cellar: :any,                 arm64_ventura:  "ee3bde856db5cfd342c2383cb108c8b4d2cd93c82a99fc44d203c34fbad46804"
+    sha256 cellar: :any,                 arm64_monterey: "cab37541e49c9895b900cfbec2ef67fddf240699975bdaa2eea25e5110dc31e1"
+    sha256 cellar: :any,                 arm64_big_sur:  "bb496e6fe3cfdfafc3b2558af33c6008802f157efef43b12c801315c9cd4da45"
+    sha256 cellar: :any,                 ventura:        "cc594cd722d68c7d7bce933eb510cbe2b819e5e7a455ad5398caf00cc236a9ed"
+    sha256 cellar: :any,                 monterey:       "17406f83b600ee211014de055114ba8948ef7802dd3f0de80bb63ed0a33dfd10"
+    sha256 cellar: :any,                 big_sur:        "e446d029f2856a2f9afaccabec4c469abc60330df078e89c773f42e372f9b639"
+    sha256 cellar: :any,                 catalina:       "103df8d65c791c3d3430d8ccf2165e27c30dd9745164a163871333b191338c62"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "771930b8511e07801658fc5b94f374a758a135ae4da0f2ec2b61b990137b954a"
   end
 
   head do
@@ -37,6 +38,7 @@ class Thrift < Formula
   depends_on "bison" => :build
   depends_on "boost" => [:build, :test]
   depends_on "openssl@1.1"
+  uses_from_macos "zlib"
 
   def install
     system "./bootstrap.sh" unless build.stable?
@@ -47,14 +49,24 @@ class Thrift < Formula
       --prefix=#{prefix}
       --libdir=#{lib}
       --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
-      --without-erlang
-      --without-haskell
       --without-java
+      --without-kotlin
+      --without-python
+      --without-py3
+      --without-ruby
+      --without-haxe
+      --without-netstd
       --without-perl
       --without-php
       --without-php_extension
-      --without-python
-      --without-ruby
+      --without-dart
+      --without-erlang
+      --without-go
+      --without-d
+      --without-nodejs
+      --without-nodets
+      --without-lua
+      --without-rs
       --without-swift
     ]
 

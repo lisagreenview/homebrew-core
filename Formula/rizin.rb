@@ -1,18 +1,20 @@
 class Rizin < Formula
   desc "UNIX-like reverse engineering framework and command-line toolset"
   homepage "https://rizin.re"
-  url "https://github.com/rizinorg/rizin/releases/download/v0.3.1/rizin-src-v0.3.1.tar.xz"
-  sha256 "9ae4b7f9c47be63665fd0e59375b2b10f83c37156abb044ca4d61c1f0fc88f7e"
+  url "https://github.com/rizinorg/rizin/releases/download/v0.4.1/rizin-src-v0.4.1.tar.xz"
+  sha256 "669d956b997820a36e423cf35d482aa99849254b9658cef6844459912dfdbfb8"
   license "LGPL-3.0-only"
   head "https://github.com/rizinorg/rizin.git", branch: "dev"
 
   bottle do
-    sha256 arm64_monterey: "2015c89cade24a58dea5145d9a109d8f3a1c3a8845ec0c02b5f818ba01c159c0"
-    sha256 arm64_big_sur:  "b5166f24a8eb41e8f38e08070e24db30a36181aa7a09f5861672a3877ae852e3"
-    sha256 monterey:       "e8d44363dc8e59f035f37e15e199a18d438eb2aef34bf3be334df786362b9c6f"
-    sha256 big_sur:        "d3ff33c7b0067ce161fb235aae8b75420a8528699ab7ef9d036af7913af4decc"
-    sha256 catalina:       "d890f8050d783a4a87499a72899b052e49f70e35d4e6ca7d721bfffdd3ef544c"
-    sha256 x86_64_linux:   "4628797504cb11b0963bfac675b09ab7ad9afab39ea1bb52891bab9909099f29"
+    sha256 arm64_ventura:  "8c74fabf96018a03aa29a1362729ca6ed5dbbe787a27b8d7c4d43fb7f1be3c48"
+    sha256 arm64_monterey: "c04c60e8834648bea585014cd5e00a4900a1f41e95ea67adc92e2bf094136c09"
+    sha256 arm64_big_sur:  "c1b7a23fca85bf610789e9f8cf3e50bee631c9e711f4ba1612291a0f35979092"
+    sha256 ventura:        "3c86cb6d5529c3baae5367f4d4d626e9af0792262a2b030ff41057c1110bb8d8"
+    sha256 monterey:       "6127e3bfbf3607835e4894aca4ffcd4c08f56ce2c5e2cbb35511981da3bc760c"
+    sha256 big_sur:        "e1dbdf060e19defa2c3a2e82434387899d37d2ea7276d9dcba538d9a1053c377"
+    sha256 catalina:       "35b645f1e1cb630e38d38b6688c0bb3f644d36c792038f21c6f87eceab83e2a1"
+    sha256 x86_64_linux:   "266f41d8b9df51e7f172707d7b79db9c182529258da301e9d8e66be91d9ff2e9"
   end
 
   depends_on "meson" => :build
@@ -30,15 +32,6 @@ class Rizin < Formula
   uses_from_macos "zlib"
 
   def install
-    # Workarounds for finding Homebrew dependences. Reported at:
-    # https://github.com/rizinorg/rizin/issues/2013
-
-    # Meson looks for `xxhash.pc` but we only have `libxxhash.pc`.
-    (buildpath/"pkgconfig").install_symlink Formula["xxhash"].opt_lib/"pkgconfig/libxxhash.pc" => "xxhash.pc"
-    ENV.prepend_path "PKG_CONFIG_PATH", buildpath/"pkgconfig"
-    # Meson's `find_library` isn't able to find `libmagic` without help.
-    inreplace "meson.build", "cc.find_library('magic',", "\\0 dirs: '#{Formula["libmagic"].opt_lib}',"
-
     mkdir "build" do
       args = [
         "-Dpackager=#{tap.user}",
@@ -49,14 +42,14 @@ class Rizin < Formula
         "-Duse_sys_tree_sitter=enabled",
         "-Duse_sys_libuv=enabled",
         "-Duse_sys_openssl=enabled",
+        "-Duse_sys_libzip_openssl=true",
         "-Duse_sys_capstone=enabled",
         "-Duse_sys_xxhash=enabled",
         "-Duse_sys_magic=enabled",
         "-Drizin_plugins=#{HOMEBREW_PREFIX}/lib/rizin/plugins",
-        "-Drizin_extras=#{HOMEBREW_PREFIX}/lib/rizin/extras",
-        "-Drizin_bindings=#{HOMEBREW_PREFIX}/lib/rizin/bindings",
         "-Denable_tests=false",
         "-Denable_rz_test=false",
+        "--wrap-mode=nodownload",
       ]
 
       system "meson", *std_meson_args, *args, ".."
@@ -67,8 +60,6 @@ class Rizin < Formula
 
   def post_install
     (HOMEBREW_PREFIX/"lib/rizin/plugins").mkpath
-    (HOMEBREW_PREFIX/"lib/rizin/extras").mkpath
-    (HOMEBREW_PREFIX/"lib/rizin/bindings").mkpath
   end
 
   def caveats

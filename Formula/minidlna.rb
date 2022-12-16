@@ -4,16 +4,17 @@ class Minidlna < Formula
   url "https://downloads.sourceforge.net/project/minidlna/minidlna/1.3.0/minidlna-1.3.0.tar.gz"
   sha256 "47d9b06b4c48801a4c1112ec23d24782728b5495e95ec2195bbe5c81bc2d3c63"
   license "GPL-2.0-only"
+  revision 5
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any,                 arm64_monterey: "aa5d1420c5a2b0e89ac9e1dba2dc076b80b97fd90535367837fcbbc9c26d7c68"
-    sha256 cellar: :any,                 arm64_big_sur:  "3296fc2759c028ff9316c712504be6644eb5e1fb15155e2aea1f8c4bb609cc33"
-    sha256 cellar: :any,                 monterey:       "dedb1a51edc778969549199ed98fb2a5f4a4ec7cc4bb8e758d3f2afbc239f01d"
-    sha256 cellar: :any,                 big_sur:        "92e3ced10e41d5528a06befe8124b0badde96b3542c094109c0d9b07315af0c4"
-    sha256 cellar: :any,                 catalina:       "e43528eb7559099f5dd38d278c75ac2555be3f28474c84a7005e5a16f920e528"
-    sha256 cellar: :any,                 mojave:         "fc24ceaaed86d9b4417349afa20ad6c86b765097314cc01bb2bb81d83a4c4639"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "384178070afc9696895c67b06ae128b82bc094be413fbb8e148aa30afdb58272"
+    sha256 cellar: :any,                 arm64_ventura:  "f557c99e2c4cffde970fe96d6b2410bdb4f340adff508d2925d196484ca70840"
+    sha256 cellar: :any,                 arm64_monterey: "d6e515b1672040010f55f8b0c10321c1d90ef3923201f724d37878b45eab7f8e"
+    sha256 cellar: :any,                 arm64_big_sur:  "c501682a37f168c7fc6c69e97ff5ef327f95fe478e404199a83027c629a20622"
+    sha256 cellar: :any,                 ventura:        "b20d2959a3e91f24d00339a1fd481e3197f36306b414886479a21d1b6a8118b0"
+    sha256 cellar: :any,                 monterey:       "64a43285b054c1c20b54f02ea18396905d7c75ffec2d9085f8c4dd9ece0f2360"
+    sha256 cellar: :any,                 big_sur:        "527a15ab85b5f20ab0d82d3b25109dcbbb5254c1245df114772dc7e56d4cf6dc"
+    sha256 cellar: :any,                 catalina:       "31a0327514763858e81f17e6de6d63d0a4fcf531704e31d3a834cfc84ad6d6b7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c083e8fa0d622dbcffb47617f1c4acc5a4dad8af098cbe047f680d5224f23d0b"
   end
 
   head do
@@ -27,26 +28,30 @@ class Minidlna < Formula
 
   depends_on "ffmpeg"
   depends_on "flac"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libexif"
   depends_on "libid3tag"
   depends_on "libogg"
   depends_on "libvorbis"
   depends_on "sqlite"
 
+  fails_with gcc: "5" # ffmpeg is compiled with GCC
+
   def install
     system "./autogen.sh" if build.head?
-    system "./configure", "--prefix=#{prefix}"
+    system "./configure", *std_configure_args
     system "make", "install"
   end
 
   def post_install
-    (pkgshare/"minidlna.conf").write <<~EOS
+    conf = <<~EOS
       friendly_name=Mac DLNA Server
-      media_dir=#{ENV["HOME"]}/.config/minidlna/media
-      db_dir=#{ENV["HOME"]}/.config/minidlna/cache
-      log_dir=#{ENV["HOME"]}/.config/minidlna
+      media_dir=#{Dir.home}/.config/minidlna/media
+      db_dir=#{Dir.home}/.config/minidlna/cache
+      log_dir=#{Dir.home}/.config/minidlna
     EOS
+
+    (pkgshare/"minidlna.conf").write conf unless File.exist? pkgshare/"minidlna.conf"
   end
 
   def caveats
@@ -61,8 +66,8 @@ class Minidlna < Formula
   end
 
   service do
-    run [opt_sbin/"minidlnad", "-d", "-f", "#{ENV["HOME"]}/.config/minidlna/minidlna.conf",
-         "-P", "#{ENV["HOME"]}/.config/minidlna/minidlna.pid"]
+    run [opt_sbin/"minidlnad", "-d", "-f", "#{Dir.home}/.config/minidlna/minidlna.conf",
+         "-P", "#{Dir.home}/.config/minidlna/minidlna.pid"]
     keep_alive true
     log_path var/"log/minidlnad.log"
     error_log_path var/"log/minidlnad.log"

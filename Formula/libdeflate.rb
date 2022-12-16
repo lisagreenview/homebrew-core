@@ -1,18 +1,19 @@
 class Libdeflate < Formula
   desc "Heavily optimized DEFLATE/zlib/gzip compression and decompression"
   homepage "https://github.com/ebiggers/libdeflate"
-  url "https://github.com/ebiggers/libdeflate/archive/v1.8.tar.gz"
-  sha256 "50711ad4e9d3862f8dfb11b97eb53631a86ee3ce49c0e68ec2b6d059a9662f61"
+  url "https://github.com/ebiggers/libdeflate/archive/v1.14.tar.gz"
+  sha256 "89e7df898c37c3427b0f39aadcf733731321a278771d20fc553f92da8d4808ac"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "753a9e821ec87092fd731b04b073937a126a41776eeb638c1d7858c448575e99"
-    sha256 cellar: :any,                 arm64_big_sur:  "663669870ff0bde818c9d35e24d6dbb4c0601d61b81576e34e18931b1f4badfe"
-    sha256 cellar: :any,                 monterey:       "885468709de7f330635973aba560e918fd50c73321f652d060e4ecc828789782"
-    sha256 cellar: :any,                 big_sur:        "c984576da43b8e60e2f263cbdc13c176a42958b1c1e168ca8bd49505042b67d0"
-    sha256 cellar: :any,                 catalina:       "083f6b73565408c7a3fb01d92dd917364ab0345125741d8e811963ff74949ade"
-    sha256 cellar: :any,                 mojave:         "7c9e2f9ef003ee75d5639b04ca25b7abe97d3d7548bf9f1d60b13e7071cbf1c6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9b307828767aa51938d7f552e7c6ba69473338907bce68e6cf561e9302a1c36e"
+    sha256 cellar: :any,                 arm64_ventura:  "e5ee2ffedd51e64581e9bf9bdcc99ef750f7749310584b08a2192cf31b63874b"
+    sha256 cellar: :any,                 arm64_monterey: "324ee7719635c163f1d5fb751a577cf58c0798990982284a047ad8009605bd98"
+    sha256 cellar: :any,                 arm64_big_sur:  "58846f6a35bb709a379aaa0935a3cba7c2a1152496c0ffb3faa92b3e0dcdf684"
+    sha256 cellar: :any,                 ventura:        "b4dadf1d9a1f74a83ece22380554b9512d7a491384cbd5e995cb555364e1426a"
+    sha256 cellar: :any,                 monterey:       "28b420821d6358bf36e4f8be76774bddb04a20b2167f866204df77d12c78680e"
+    sha256 cellar: :any,                 big_sur:        "7c28cefed63f6a4c68c8a923665b4450ea672ca3b83b80bb4a08f3b27e21e0c9"
+    sha256 cellar: :any,                 catalina:       "d0c47d6630933b8c68d2c2c94bd8be47c942f9a96c149e0bb8ddd81cb9e04edd"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8ef64ef6bc47bce68ba644f57f598dfbae1b0112ddf477c02facf691ef4dfb8c"
   end
 
   def install

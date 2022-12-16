@@ -1,9 +1,10 @@
 class Zebra < Formula
   desc "Information management system"
   homepage "https://www.indexdata.com/resources/software/zebra/"
-  url "https://ftp.indexdata.com/pub/zebra/idzebra-2.2.3.tar.gz"
-  sha256 "85ade449d161d97df47d4a8910a53a5ea3bd5e3598b6189d86fc8986a8effea4"
+  url "https://ftp.indexdata.com/pub/zebra/idzebra-2.2.5.tar.gz"
+  sha256 "747714b33b653cbe5697193703b9955489fa2f51597433f9b072ab2bf9cf92bb"
   license "GPL-2.0-or-later"
+  revision 1
 
   livecheck do
     url "https://ftp.indexdata.com/pub/zebra/"
@@ -11,16 +12,25 @@ class Zebra < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "eaef0ac6043ea6d81351dd34bd2a96df357dedb4f23c24b72fff47193590c2c6"
-    sha256 arm64_big_sur:  "7a974b65d88ed87b9a83990a357b09aa0c4215a9281961a1a5def5108c307c91"
-    sha256 monterey:       "a9f08214eecf10f5ddc11d591fd6e4b7fa28173d2b642b1abf99ef3b1be7ae6c"
-    sha256 big_sur:        "a1ea1081a94d89b8f47395528de594a0516c3c3f915ce30f54c05b7b73e883e2"
-    sha256 catalina:       "6063cecb5f7cced53e56fe465b5030bfb5f34cd6ea322e5994793b15c836953e"
-    sha256 mojave:         "1114c380d8a57a0f052bca099a7902a42bea70fdf0ff6b88d9d9985c44c5ab6d"
+    sha256 arm64_ventura:  "e5031d8103e0a12a8250de2075d552577c3920e6dd5910506c126ad78339c2d2"
+    sha256 arm64_monterey: "8bede656eb92a62100fbef7242bc5983698621e2e197bbcae466ab9f3ff2c51d"
+    sha256 arm64_big_sur:  "3f306cc62317d8a0ace3904ea87cfbe2b87b86eb1b8a1261650d2142ed9670cd"
+    sha256 ventura:        "11256e93155452cc87c258f460ec2360d35bbbdeea07db933445523fa0c77a43"
+    sha256 monterey:       "4edf6fa6edd68cdd84f0160b2da734a11d1ea9ee3dba66f123d3a67786c8d6db"
+    sha256 big_sur:        "c4bcb8868fd1ad665e0b3793f63c3c26a2faf94be04c5bacc6cd3db12d6661d6"
+    sha256 catalina:       "f18e747b339b6df99dca4aa709d2545575a0f3f5cad7f1d1f76b9544ea7b8a39"
+    sha256 x86_64_linux:   "943a68df4bb5c465878db259e1865c9b181fc58b9af18eb57f6db5cbb5432363"
   end
 
   depends_on "icu4c"
   depends_on "yaz"
+
+  uses_from_macos "bzip2"
+  uses_from_macos "expat"
+  uses_from_macos "libxcrypt"
+  uses_from_macos "libxml2"
+  uses_from_macos "libxslt"
+  uses_from_macos "zlib"
 
   def install
     system "./configure", "--disable-dependency-tracking",

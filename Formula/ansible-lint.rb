@@ -3,33 +3,41 @@ class AnsibleLint < Formula
 
   desc "Checks ansible playbooks for practices and behaviour"
   homepage "https://github.com/ansible/ansible-lint/"
-  url "https://files.pythonhosted.org/packages/b0/44/9d47dd76a75de9e7b4acb13e1b8f75294d888852aadab51a9cef53b0e093/ansible-lint-5.2.1.tar.gz"
-  sha256 "d64aca59c8d896541d379b9205b2126b851088aab0a2c2cab19ff74b184cdf1c"
-  license "MIT"
-  revision 1
+  url "https://files.pythonhosted.org/packages/24/84/19f148ada6996acd0408f8085bd6a5799acca7cd5f0d59cf4f8cf92f9aaa/ansible-lint-6.10.0.tar.gz"
+  sha256 "f5ecec58ebe7b6bfc4976be7d6e400411a8af05b0e1a19f15f25f59f3401348c"
+  license all_of: ["MIT", "GPL-3.0-or-later"]
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "488ebdbd306e0f4801f23e83f473248e66ecd441f5b54855c0f99a6459496321"
-    sha256 cellar: :any,                 arm64_big_sur:  "6286c5ad0061c9ec9fcdbd14737850a397cd791139751a456932635626301d7e"
-    sha256 cellar: :any,                 monterey:       "8974f792ff05ef3cef89846e03be87eacb9f8daba62d64e9426c7cf48fd10739"
-    sha256 cellar: :any,                 big_sur:        "adbff4e4a4809b69aed0161adc7f4fe3ecb99cd0df031ca1d2321b22d1a81f6a"
-    sha256 cellar: :any,                 catalina:       "2afeb4e9ce0cca2b22ab92498fbbad094ee340726680f02872d43791c6ccd852"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b0375c54a57092cf407a98d99c5013e0e765b0c66e4326697966882feca41abf"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c547854c6a8fd15f8b86389524770df9602cf84dd04b0a25b06fe8185bed986a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b91c157d5b9b463702bf656c58bf60387d760d83bd3dc620cf6d13cc4c2e31b8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5e7fca61f7b0977dc3d6058425a08e34d892695d43a1a88880a23e8c3a86a6cf"
+    sha256 cellar: :any_skip_relocation, ventura:        "c42310b8db20bb1b401a75b27eb899a530b973cde8a84336dc2952a915c0e3dc"
+    sha256 cellar: :any_skip_relocation, monterey:       "60e3ca62785340be040c29da9dcfa0a2fa781b626e3cf12a0249d24f8084a0e1"
+    sha256 cellar: :any_skip_relocation, big_sur:        "2b5a2313677b26363dc71bc1753ec9709b5c562fd5cd3bdafe33efa4f0d54882"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f5c49ab94a9e8d39d4b2c6f324a5d29c29bce2fb33b8d50359dc9814d0b03959"
   end
 
   depends_on "pkg-config" => :build
   depends_on "ansible"
-  depends_on "libyaml"
-  depends_on "python@3.10"
+  depends_on "black"
+  depends_on "pygments"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
+  depends_on "yamllint"
 
-  resource "bracex" do
-    url "https://files.pythonhosted.org/packages/10/d5/0f2fa4d62d905c159ad3f81fb3b0446d5ef5a900ca942d2995f441b5c440/bracex-2.2.tar.gz"
-    sha256 "8230f3a03f1f76c192a7844377124300fbaec83870a728b629dfabd9be9e83d0"
+  resource "ansible-compat" do
+    url "https://files.pythonhosted.org/packages/b6/a1/bf63af6f20afa76b828956e67b811e76615cb06cbd44f5be1ff8cadb902a/ansible-compat-2.2.7.tar.gz"
+    sha256 "08deddcd0a1dc6baabe674b07c6ff882118492c123d281f56f01905271a7ffc4"
   end
 
-  resource "colorama" do
-    url "https://files.pythonhosted.org/packages/1f/bb/5d3246097ab77fa083a61bd8d3d527b7ae063c7d8e8671b1cf8c4ec10cbe/colorama-0.4.4.tar.gz"
-    sha256 "5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"
+  resource "attrs" do
+    url "https://files.pythonhosted.org/packages/1a/cb/c4ffeb41e7137b23755a45e1bfec9cbb76ecf51874c6f1d113984ecaa32c/attrs-22.1.0.tar.gz"
+    sha256 "29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"
+  end
+
+  resource "bracex" do
+    url "https://files.pythonhosted.org/packages/b3/96/d53e290ddf6215cfb24f93449a1835eff566f79a1f332cf046a978df0c9e/bracex-2.3.post1.tar.gz"
+    sha256 "e7b23fc8b2cd06d3dec0692baabecb249dda94e06a617901ff03a6c56fd71693"
   end
 
   resource "commonmark" do
@@ -37,62 +45,54 @@ class AnsibleLint < Formula
     sha256 "452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"
   end
 
-  resource "enrich" do
-    url "https://files.pythonhosted.org/packages/47/2b/b453d52a5cd1409d859d67c6a530971095406aedc0c0589c1c6a5212f506/enrich-1.2.6.tar.gz"
-    sha256 "0e99ff57d87f7b5def0ca79917e88fb9351aa0d52e228ee38bff7cd858315fe4"
+  resource "filelock" do
+    url "https://files.pythonhosted.org/packages/d8/73/292d9ea2370840a163e6dd2d2816a571244e9335e2f6ad957bf0527c492f/filelock-3.8.2.tar.gz"
+    sha256 "7565f628ea56bfcd8e54e42bdc55da899c85c1abfe1b5bcfd147e9188cebb3b2"
+  end
+
+  resource "jsonschema" do
+    url "https://files.pythonhosted.org/packages/36/3d/ca032d5ac064dff543aa13c984737795ac81abc9fb130cd2fcff17cfabc7/jsonschema-4.17.3.tar.gz"
+    sha256 "0f864437ab8b6076ba6707453ef8f98a6a0d512a80e93f8abdb676f737ecb60d"
   end
 
   resource "packaging" do
-    url "https://files.pythonhosted.org/packages/df/86/aef78bab3afd461faecf9955a6501c4999933a48394e90f03cd512aad844/packaging-21.0.tar.gz"
-    sha256 "7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7"
+    url "https://files.pythonhosted.org/packages/6b/f7/c240d7654ddd2d2f3f328d8468d4f1f876865f6b9038b146bec0a6737c65/packaging-22.0.tar.gz"
+    sha256 "2198ec20bd4c017b8f9717e00f0c8714076fc2fd93816750ab48e2c41de2cfd3"
   end
 
-  resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/b7/b3/5cba26637fe43500d4568d0ee7b7362de1fb29c0e158d50b4b69e9a40422/Pygments-2.10.0.tar.gz"
-    sha256 "f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"
-  end
-
-  resource "pyparsing" do
-    url "https://files.pythonhosted.org/packages/c1/47/dfc9c342c9842bbe0036c7f763d2d6686bcf5eb1808ba3e170afdb282210/pyparsing-2.4.7.tar.gz"
-    sha256 "c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"
-  end
-
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/36/2b/61d51a2c4f25ef062ae3f74576b01638bebad5e045f747ff12643df63844/PyYAML-6.0.tar.gz"
-    sha256 "68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"
+  resource "pyrsistent" do
+    url "https://files.pythonhosted.org/packages/b8/ef/325da441a385a8a931b3eeb70db23cb52da42799691988d8d943c5237f10/pyrsistent-0.19.2.tar.gz"
+    sha256 "bfa0351be89c9fcbcb8c9879b826f4353be10f58f8a677efab0c017bf7137ec2"
   end
 
   resource "rich" do
-    url "https://files.pythonhosted.org/packages/4e/fd/5d40b0363467f8c87d5f5f551b7b431e234bff2becf959daab453f9d7795/rich-10.12.0.tar.gz"
-    sha256 "83fb3eff778beec3c55201455c17cccde1ccdf66d5b4dade8ef28f56b50c4bd4"
+    url "https://files.pythonhosted.org/packages/11/23/814edf09ec6470d52022b9e95c23c1bef77f0bc451761e1504ebd09606d3/rich-12.6.0.tar.gz"
+    sha256 "ba3a3775974105c221d31141f2c116f4fd65c5ceb0698657a11e9f295ec93fd0"
   end
 
   resource "ruamel.yaml" do
-    url "https://files.pythonhosted.org/packages/71/81/f597606e81f53eb69330e3f8287e9b5a3f7ed0481824036d550da705cd82/ruamel.yaml-0.17.16.tar.gz"
-    sha256 "1a771fc92d3823682b7f0893ad56cb5a5c87c48e62b5399d6f42c8759a583b33"
+    url "https://files.pythonhosted.org/packages/46/a9/6ed24832095b692a8cecc323230ce2ec3480015fbfa4b79941bd41b23a3c/ruamel.yaml-0.17.21.tar.gz"
+    sha256 "8b7ce697a2f212752a35c1ac414471dc16c424c9573be4926b56ff3f5d23b7af"
   end
 
-  resource "ruamel.yaml.clib" do
-    url "https://files.pythonhosted.org/packages/8b/25/08e5ad2431a028d0723ca5540b3af6a32f58f25e83c6dda4d0fcef7288a3/ruamel.yaml.clib-0.2.6.tar.gz"
-    sha256 "4ff604ce439abb20794f05613c374759ce10e3595d1867764dd1ae675b85acbd"
-  end
-
-  resource "tenacity" do
-    url "https://files.pythonhosted.org/packages/2c/f5/04748914f5c78f7418b803226bd56cdddd70ac369b936b3e24f5158017f1/tenacity-8.0.1.tar.gz"
-    sha256 "43242a20e3e73291a28bcbcacfd6e000b02d3857a9a9fff56b297a27afdc932f"
+  resource "subprocess-tee" do
+    url "https://files.pythonhosted.org/packages/76/1b/653bc93bf15738ab2fe83a875d28354cbe7402b12e22801d35e5461fe3f2/subprocess-tee-0.4.0.tar.gz"
+    sha256 "7ea885ff32cdb2b2d3b2a6c464492f2ee1ebbf324e50598d75de4f6f3ea0f149"
   end
 
   resource "wcmatch" do
-    url "https://files.pythonhosted.org/packages/47/63/88168196fdcd77e012944bb83ab589a9d53336b8094703a64567f0bf218c/wcmatch-8.2.tar.gz"
-    sha256 "4d54ddb506c90b5a5bba3a96a1cfb0bb07127909e19046a71d689ddfb18c3617"
+    url "https://files.pythonhosted.org/packages/b7/94/5dd083fc972655f6689587c3af705aabc8b8e781bacdf22d6d2282fe6142/wcmatch-8.4.1.tar.gz"
+    sha256 "b1f042a899ea4c458b7321da1b5e3331e3e0ec781583434de1301946ceadb943"
   end
 
   def install
     virtualenv_install_with_resources
-    xy = Language::Python.major_minor_version Formula["python@3.10"].opt_bin/"python3"
-    site_packages = "lib/python#{xy}/site-packages"
-    ansible = Formula["ansible"].opt_libexec
-    (libexec/site_packages/"homebrew-ansible.pth").write ansible/site_packages
+
+    site_packages = Language::Python.site_packages("python3.11")
+    %w[ansible black yamllint].each do |package_name|
+      package = Formula[package_name].opt_libexec
+      (libexec/site_packages/"homebrew-#{package_name}.pth").write package/site_packages
+    end
   end
 
   test do
@@ -100,10 +100,10 @@ class AnsibleLint < Formula
     (testpath/"playbook.yml").write <<~EOS
       ---
       - hosts: all
-        gather_facts: False
+        gather_facts: false
         tasks:
         - name: ping
-          ping:
+          ansible.builtin.ping:
     EOS
     system bin/"ansible-lint", testpath/"playbook.yml"
   end

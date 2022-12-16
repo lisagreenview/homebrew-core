@@ -2,25 +2,35 @@ class Vim < Formula
   desc "Vi 'workalike' with many additional features"
   homepage "https://www.vim.org/"
   # vim should only be updated every 50 releases on multiples of 50
-  url "https://github.com/vim/vim/archive/v8.2.3650.tar.gz"
-  sha256 "a2ea5becb025c9bb7a3c64ec757fa6a410261db5c12e12b783b148972c642413"
+  url "https://github.com/vim/vim/archive/v9.0.1050.tar.gz"
+  sha256 "5cc8b8f3272d3302384b6f3d52ef6302dbb53587f5d88e2a155767530c1f6c3f"
   license "Vim"
   head "https://github.com/vim/vim.git", branch: "master"
 
+  # The Vim repository contains thousands of tags and the `Git` strategy isn't
+  # ideal in this context. This is an exceptional situation, so this checks the
+  # first page of tags on GitHub (to minimize data transfer).
+  livecheck do
+    url "https://github.com/vim/vim/tags"
+    regex(%r{href=["']?[^"' >]*?/tag/v?(\d+(?:\.\d+)+)["' >]}i)
+    strategy :page_match
+  end
+
   bottle do
-    sha256 arm64_monterey: "2cf1bcd1f8a0400f4446c0b861fb715e81a56149ea59763b6e63f415565f643e"
-    sha256 arm64_big_sur:  "599b0ae9a253c93de59308c45d36b97da71299fa29029a4b379f7147bdb741e9"
-    sha256 monterey:       "006dc1d04de197b4065df32482a0ff68b7fc48f8ca197227e07573df40bc1a66"
-    sha256 big_sur:        "567b1ea4b38e67d60bc65981d0c8acfeaaee19656d118daa6d0bc9ee49b2274c"
-    sha256 catalina:       "4213cfb7111c6f99fd8fe027bbffab91f4d633589c9c1eb80f6efa1fc5db77f7"
-    sha256 x86_64_linux:   "95dfcc1bf732e04c6e1d88313802c9115ff0b020627588b97948db1c10e06c6f"
+    sha256 arm64_ventura:  "fad92a5d624c0a4abd6576be620737a7b70c4dbdae479b2fbee15b8021290028"
+    sha256 arm64_monterey: "1c3312164530b1220e6223249031e6874e771c7883132abfa7a452a6e32cff0a"
+    sha256 arm64_big_sur:  "f988c971256fb6d96f0ebd0d38e7fd634089b02c8262b1eab7dbf2ef770ac850"
+    sha256 ventura:        "a4664acc32946168c433989bb61a537c5b62330c6ab63bbb79ff32e56e0911bf"
+    sha256 monterey:       "254e54542f9311dbf8e00ba8be8c1368b6708bd567854bfd8873ab3e3a4d2f6d"
+    sha256 big_sur:        "269db9f59c9e06765b0973c514f258f8c9447713343b117daefe202902ddcb64"
+    sha256 x86_64_linux:   "475fa59aa9633b69b2e18e59fa07d3c061c8ef956b7cf2bb7561f0913f0f0c6d"
   end
 
   depends_on "gettext"
   depends_on "lua"
   depends_on "ncurses"
   depends_on "perl"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
   depends_on "ruby"
 
   conflicts_with "ex-vi",
@@ -30,7 +40,7 @@ class Vim < Formula
     because: "vim and macvim both install vi* binaries"
 
   def install
-    ENV.prepend_path "PATH", Formula["python@3.9"].opt_libexec/"bin"
+    ENV.prepend_path "PATH", Formula["python@3.10"].opt_libexec/"bin"
 
     # https://github.com/Homebrew/homebrew-core/pull/1046
     ENV.delete("SDKROOT")
@@ -54,7 +64,7 @@ class Vim < Formula
                           "--enable-perlinterp",
                           "--enable-rubyinterp",
                           "--enable-python3interp",
-                          "--enable-gui=no",
+                          "--disable-gui",
                           "--without-x",
                           "--enable-luainterp",
                           "--with-lua-prefix=#{Formula["lua"].opt_prefix}"

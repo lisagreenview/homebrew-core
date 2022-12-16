@@ -4,6 +4,7 @@ class Ompl < Formula
   url "https://github.com/ompl/ompl/archive/1.5.2.tar.gz"
   sha256 "db1665dd2163697437ef155668fdde6101109e064a2d1a04148e45b3747d5f98"
   license "BSD-3-Clause"
+  revision 3
   head "https://github.com/ompl/ompl.git", branch: "main"
 
   # We check the first-party download page because the "latest" GitHub release
@@ -14,11 +15,14 @@ class Ompl < Formula
   end
 
   bottle do
-    sha256                               arm64_big_sur: "214c8032cd621e44527cacc9af0800312e95922f7d79e58a94c93a09977638de"
-    sha256                               big_sur:       "aab42d95974b15167f1a240f853283eed81a928877822a0aa8ee67664f1992e6"
-    sha256                               catalina:      "6b0190b615a9929cd74f03e97ff62efdca225ce9c7afc171ed3f5be31f2a8afd"
-    sha256                               mojave:        "b7d94176b089fc5959b6accb2da9390f94ab1863902f0f189bd542566815578c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "d74e2b42ab0c62c1f2cf35d515cb9b3b87c24b9e3f480553064748d686fa3a04"
+    sha256 cellar: :any,                 arm64_ventura:  "843607614ddb38dad78f7995c2a1926ada94aad6eccf7756120977033d58003f"
+    sha256 cellar: :any,                 arm64_monterey: "30ee71e15b93d121ab4115219e73a518d64650a8bf557f8ec0074f13d746ac47"
+    sha256 cellar: :any,                 arm64_big_sur:  "d917e5fdf5c7d440fd91b82b258f675d47dfdd98f6dbf1666297063c97847da3"
+    sha256 cellar: :any,                 ventura:        "9a4320bc23a07517bf829a7943e10fe5c1eb38719ce7b396760fe130c9b7fa8a"
+    sha256 cellar: :any,                 monterey:       "6df2084f25065baf411c8d8308e2e8794ec64710dc12892d86ecd03d7e2221dd"
+    sha256 cellar: :any,                 big_sur:        "21964e04b91b8246c5910fdedd6f038417f04b9d86c2c2fb79f6a06e00871f07"
+    sha256 cellar: :any,                 catalina:       "c9691b20bccb579326f24add8b6b4c377d4f7bdf2e656a7de44b8811f486c0ca"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3fec9ac266afa86e2cf676cb6acd864146b6aa1932870bf7761299cab2727c88"
   end
 
   depends_on "cmake" => :build

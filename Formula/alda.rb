@@ -1,16 +1,19 @@
 class Alda < Formula
   desc "Music programming language for musicians"
   homepage "https://alda.io"
-  url "https://github.com/alda-lang/alda/archive/refs/tags/release-2.0.6.tar.gz"
-  sha256 "1c6252b108d00d1213fe198c4c441fcc71e40e33cf6f8b71f753cc93897182c4"
+  url "https://github.com/alda-lang/alda/archive/refs/tags/release-2.2.4.tar.gz"
+  sha256 "9dc2fb0886e97be1906e6d0a96671ef9d0f52b9f91817e4c64741cd18bf8e0d1"
   license "EPL-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "0fcac6fa1a7d9cef658be487619c728b2f3d986d9949b4499a21e46c5160c903"
-    sha256 cellar: :any_skip_relocation, big_sur:       "efa338a3e209a3a93f89e30027b77f7f8003099ea191886039133bd917c15636"
-    sha256 cellar: :any_skip_relocation, catalina:      "919c6ad0865fc0cd185912daa0e0937d9e24fed135b95af938d6374bfb5e4b2d"
-    sha256 cellar: :any_skip_relocation, mojave:        "513015f78c85c68a73e05b41075f2ba76a760afa1613bf6aa79f11995535f5bf"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "909dc6675c88eccfc9fff5b7638254d41026c20ae95975dd53d766d7eff68eb2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "be7f749d13dc8d775578b52ca4d13b06bd9cae16b947dcf2424cc8172c2b2c77"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "85514be019f5897dceb40189f3c91e79520c49fcf0504d9051611d6f1091dde4"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "366276ac1b97d1fbbed3ae072636035776905b454caeecc5ca90f118b5fbe3c4"
+    sha256 cellar: :any_skip_relocation, ventura:        "ac43f1e4040e8f6a8063909c46dbbee35821ee7649170cc0a9a79c57df0a927b"
+    sha256 cellar: :any_skip_relocation, monterey:       "d1844d8b733cdae6a2981e336b5c92db1ba78926220ed03e94a2953e44a7c0ea"
+    sha256 cellar: :any_skip_relocation, big_sur:        "67a0da8bd2aa9cc90efed984b66fe2c17e007c90a09ae80323b21783e9046a19"
+    sha256 cellar: :any_skip_relocation, catalina:       "1af8e33fc2f0e120ccbfc98dd821507917ab66751243b9ef52b07e56f0cc194d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "46e247add4b87712ab8d2026dd549926105a59029a00ec46d750f194a620d15c"
   end
 
   depends_on "go" => :build

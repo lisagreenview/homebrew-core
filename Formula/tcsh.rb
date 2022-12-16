@@ -1,9 +1,9 @@
 class Tcsh < Formula
   desc "Enhanced, fully compatible version of the Berkeley C shell"
   homepage "https://www.tcsh.org/"
-  url "https://astron.com/pub/tcsh/tcsh-6.22.04.tar.gz"
-  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/tcsh/tcsh-6.22.04.tar.gz"
-  sha256 "eb16356243218c32f39e07258d72bf8b21e62ce94bb0e8a95e318b151397e231"
+  url "https://astron.com/pub/tcsh/tcsh-6.24.06.tar.gz"
+  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/tcsh/tcsh-6.24.06.tar.gz"
+  sha256 "a8cd0cd1ddc94f870681ccbd09a3511050e9a71e5fe99a2b007941f5e1b2b7a5"
   license "BSD-3-Clause"
 
   livecheck do
@@ -12,15 +12,16 @@ class Tcsh < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "e06e3bb2c5640579012b26957f82ba9bba2e4a0283daea6093d8614e158bc049"
-    sha256 arm64_big_sur:  "f930817db9b631c7db52a1b214c821eae5a456d199dd0a891cea7dbe26120a8b"
-    sha256 monterey:       "25ce70faf15ec771c7cd31e08f64f69d3bacd975a6632e3334eb2f474ca86d87"
-    sha256 big_sur:        "4c2d74ed1c5d926ad51dd171479095078db420a0d9e15615044ee6ab86186462"
-    sha256 catalina:       "302f0d9d4300c8285431ffbaac65b470d5007059da22da68bffe2f1b5709872f"
-    sha256 mojave:         "ccaa49f83f4a1bfac216bc86a9b2a99bd0ba2131d81322b652c584b024248be7"
-    sha256 x86_64_linux:   "825ea20b88a3bd49d8b0a6164e20689f56ce63eedabd928dd785d3af90713a0b"
+    sha256 arm64_ventura:  "cd792c5cdf985d2e142eeb04c267b28b7534841c932d1c798e956fd6f4815b52"
+    sha256 arm64_monterey: "b620bed03c9bc06b223c2da7b91f0effbe02f189dfae3bea4e677b4cddc97a19"
+    sha256 arm64_big_sur:  "a168ece35f6cbc671d12124cc2e71a25c4739bf8ff3a80b49d5653bba71c2a7f"
+    sha256 ventura:        "aba2dcdc6ad9b2ed1f658d3161ac3a2bd0ca31a1f9056d36d56c6dec6d187576"
+    sha256 monterey:       "c5ed380b623dd7604c2964bf84528449018b293ee9e595a3c6d90ccee2dc1e34"
+    sha256 big_sur:        "505aa6e6f44f05a8f8305c7b30d992529009f35936c9ff6a869ec1af7b9eb754"
+    sha256 x86_64_linux:   "75b2085e0df306892337eb5f5bdbbbfb20a9878f31db2f44ccfc27781be2603f"
   end
 
+  uses_from_macos "libxcrypt"
   uses_from_macos "ncurses"
 
   def install

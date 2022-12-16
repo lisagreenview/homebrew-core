@@ -1,8 +1,8 @@
 class Fetchmail < Formula
   desc "Client for fetching mail from POP, IMAP, ETRN or ODMR-capable servers"
   homepage "https://www.fetchmail.info/"
-  url "https://downloads.sourceforge.net/project/fetchmail/branch_6.4/fetchmail-6.4.23.tar.xz"
-  sha256 "5f7a5e13731431134a2ca535bbced7adc666d3aeb93169a0830945d91f492300"
+  url "https://downloads.sourceforge.net/project/fetchmail/branch_6.4/fetchmail-6.4.34.tar.xz"
+  sha256 "c3bdded1b5ce236960bd1ceeee3f3257220ed99c3eec84a5d76bb5618e3258d4"
   license all_of: [
     "LGPL-2.1-or-later",
     "ISC",
@@ -17,20 +17,22 @@ class Fetchmail < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "9b0561ee39f9a440fcc0ad760fdbac0791cca487371bc8675dd92786eed955e0"
-    sha256 cellar: :any, arm64_big_sur:  "0e0f7cff073d7dcf3b6c8a20c9dbf811924500c827b7252674fe2a85a34b82fe"
-    sha256 cellar: :any, monterey:       "05f4a1693344f655b09472d4bf9b072b4035b3042cc73c5bdc5aa3adc564d9c7"
-    sha256 cellar: :any, big_sur:        "cd66b9f37fdb2d1c80b37a6dd5c05f809c3dedebd1491e739a4465e01c4e7a32"
-    sha256 cellar: :any, catalina:       "368ea10abfbc0cef637aa62f49f183a7b96349c18015f494e361dac5586edfc1"
-    sha256               x86_64_linux:   "512b434776b4c1783c1a154acf0f9891c5848050fb6ede3b8b736546d579b893"
+    sha256 cellar: :any, arm64_ventura:  "0e72f8a593bce8f6b70ad0f865587e79bf2eac97170d0db4726aa4aa6bb81641"
+    sha256 cellar: :any, arm64_monterey: "6c2e7623eb53d17c633555b5cdb0659061cb0b0bad7af40252ddcec2aba3a45d"
+    sha256 cellar: :any, arm64_big_sur:  "50772adf604e9205c592503137467f95ae53cb04722baed139899e1ed6a86211"
+    sha256 cellar: :any, ventura:        "997cb4d44910e0f88c6b8b8e72a7e25f83b2b8abdd95b9e7d208d499d57afa56"
+    sha256 cellar: :any, monterey:       "ce494d0f16574c490c6e06cc1019934413f629674eac8c4f241c8326fbf8e5cb"
+    sha256 cellar: :any, big_sur:        "031dc3c1d190d75404ae239491861e194ea0c5bd660823585d56f41b56e36ae8"
+    sha256 cellar: :any, catalina:       "748117a27ec5bb18475ecc9707dc350e030eba647a160b00d720d6f6512dd215"
+    sha256               x86_64_linux:   "7b01de3652afe1f7ac3adeaf61d92c6fb9002883afb2030267f563890925a7f2"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}"
+                          "--with-ssl=#{Formula["openssl@3"].opt_prefix}"
     system "make", "install"
   end
 

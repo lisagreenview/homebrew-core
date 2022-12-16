@@ -1,24 +1,28 @@
 class Nfpm < Formula
   desc "Simple deb and rpm packager"
   homepage "https://nfpm.goreleaser.com/"
-  url "https://github.com/goreleaser/nfpm/archive/v2.9.2.tar.gz"
-  sha256 "74d3c6b6f52fbfbb2d634c27cd9fa3aea46ba2a98763351b52d7478040e8e162"
+  url "https://github.com/goreleaser/nfpm/archive/v2.22.2.tar.gz"
+  sha256 "84871d898cf25cbcdccbbe3ca7f68e11a3de89a34eb3b5212091ae73ad207ba5"
   license "MIT"
   head "https://github.com/goreleaser/nfpm.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e198dd863bfaee6301b79057ee901503ead7177baf0650ded5e2ffd7db702a0a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6b2745937b4c880fdafd9aac1723549313924dd90c26add7da5ad8a5ddccc2f8"
-    sha256 cellar: :any_skip_relocation, monterey:       "c99cfb1cbe06490adf256ffdf1c1c3a87663549d2b1f415aea981f96ba028797"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ce20ed4aa1587e0de5cd65cf4cabf17b821c5ccc37b3881722b6f9fb26b3d956"
-    sha256 cellar: :any_skip_relocation, catalina:       "f7fd5479c587f59ecce2d461b227f0756f942c8caf52021ef97dfba7f5d647d5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3ab5554582b86a02a54d13d6a670f548c67ae3e5ae87a347ea71fed6a5e5a4b4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "6996d9175434931d063f8788fc4bcb08e0ada4ad51ade993e48d98517b63a852"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1674a001e6206f7a9d1666705201fc661f29b26ba6bec034533bec9132f434f5"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "87c91c220c86c4638ff74589806192a1cafb30d73803f5330ba12e0cfc76458c"
+    sha256 cellar: :any_skip_relocation, ventura:        "b1989d3eaa5205ff70e2c92d5acefcb7272ed843c06c233418d101a2adf7a0be"
+    sha256 cellar: :any_skip_relocation, monterey:       "9b94f82ebef58cc0cfe9ae55fb733ee6549e8af2706a25a1c4884402733ab7b9"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9549bdc28c0e954648c396f2d7fb547fa43f9076572d86a3869f6872ef64dcda"
+    sha256 cellar: :any_skip_relocation, catalina:       "07ba6410d7d95cea2652fa9f48d53ff3c3978b85283db07ee79c04e6c49d4cc1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "204b6177fdf4c3bd0547e07daf863027c7db32ddbd2a2c18507ced0f4fe40d1b"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", "-ldflags", "-X main.version=v#{version}", *std_go_args, "./cmd/nfpm"
+    system "go", "build", *std_go_args(ldflags: "-X main.version=v#{version}"), "./cmd/nfpm"
+
+    generate_completions_from_executable(bin/"nfpm", "completion")
   end
 
   test do

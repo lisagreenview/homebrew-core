@@ -3,25 +3,29 @@ require "language/node"
 class Jhipster < Formula
   desc "Generate, develop and deploy Spring Boot + Angular/React applications"
   homepage "https://www.jhipster.tech/"
-  # Check if this can be switched to the newest `node` at version bump
-  url "https://registry.npmjs.org/generator-jhipster/-/generator-jhipster-7.3.1.tgz"
-  sha256 "7a8efbf2b5fd03443215462de9018b7cf631457b59efd062dd0ff0d38dc568f1"
+  url "https://registry.npmjs.org/generator-jhipster/-/generator-jhipster-7.9.3.tgz"
+  sha256 "c76f39732ed3594d07d03a51c3724f10a40c6343f385ddb48caa2ba7ef0a66cd"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "904c6594ec6783d3b78ed4ea1775f0cb9bad743290acb815e08abcf40b521622"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "53e333dbadebe5daabf052724857d1de9592480951d7b0fb0f1b62c6bbd7c78d"
-    sha256 cellar: :any_skip_relocation, monterey:       "8a4958081d729f08fe8b55b09a58f22b8f1693e74e2ec6053aac5ebf86b60f16"
-    sha256 cellar: :any_skip_relocation, big_sur:        "943375ab2c62e4a975d982fcc7a75d7922c878b481f204f1647f22835223e07c"
-    sha256 cellar: :any_skip_relocation, catalina:       "943375ab2c62e4a975d982fcc7a75d7922c878b481f204f1647f22835223e07c"
-    sha256 cellar: :any_skip_relocation, mojave:         "943375ab2c62e4a975d982fcc7a75d7922c878b481f204f1647f22835223e07c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0401856fe3b91a344b63010743be0b017ed187fb0bc6baade7d1a838951f756d"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e5023ca884b48c2c31472f38182176581b76b453f604280bc8cf065bf44bd9e2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e5023ca884b48c2c31472f38182176581b76b453f604280bc8cf065bf44bd9e2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e5023ca884b48c2c31472f38182176581b76b453f604280bc8cf065bf44bd9e2"
+    sha256 cellar: :any_skip_relocation, ventura:        "1a870835098f2a8ce7957000f69ec7c5ed93cfdee6d28279f781b10d646f2dbf"
+    sha256 cellar: :any_skip_relocation, monterey:       "1a870835098f2a8ce7957000f69ec7c5ed93cfdee6d28279f781b10d646f2dbf"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1a870835098f2a8ce7957000f69ec7c5ed93cfdee6d28279f781b10d646f2dbf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e5023ca884b48c2c31472f38182176581b76b453f604280bc8cf065bf44bd9e2"
   end
 
   depends_on "node"
   depends_on "openjdk"
 
   def install
+    # Bump dependent package yeoman-environment to 3.11.0 to work around
+    # `ERR_PACKAGE_PATH_NOT_EXPORTED` error. Remove on next release.
+    inreplace "package.json",
+      '"yeoman-environment": "3.10.0"',
+      '"yeoman-environment": "3.11.0"'
     system "npm", "install", *Language::Node.std_npm_install_args(libexec)
     bin.install Dir["#{libexec}/bin/*"]
     bin.env_script_all_files libexec/"bin", Language::Java.overridable_java_home_env

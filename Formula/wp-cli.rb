@@ -1,8 +1,8 @@
 class WpCli < Formula
   desc "Command-line interface for WordPress"
   homepage "https://wp-cli.org/"
-  url "https://github.com/wp-cli/wp-cli/releases/download/v2.5.0/wp-cli-2.5.0.phar"
-  sha256 "be0853e9f443f3848566070871d344e8ad81eb1e15d15dcf9324b4a75e272789"
+  url "https://github.com/wp-cli/wp-cli/releases/download/v2.7.1/wp-cli-2.7.1.phar"
+  sha256 "bbf096bccc6b1f3f1437e75e3254f0dcda879e924bbea403dff3cfb251d4e468"
   license "MIT"
 
   livecheck do
@@ -11,20 +11,23 @@ class WpCli < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1f99dcae45bc3a8f8ea09d534e1050201391afea5fcd42287a5d24aef303dcc4"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1f99dcae45bc3a8f8ea09d534e1050201391afea5fcd42287a5d24aef303dcc4"
-    sha256 cellar: :any_skip_relocation, monterey:       "5f130b0733ba0765afdb46836875c83e848b5b6bf53990cdb4b1e2282cf03171"
-    sha256 cellar: :any_skip_relocation, big_sur:        "5f130b0733ba0765afdb46836875c83e848b5b6bf53990cdb4b1e2282cf03171"
-    sha256 cellar: :any_skip_relocation, catalina:       "5f130b0733ba0765afdb46836875c83e848b5b6bf53990cdb4b1e2282cf03171"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1f99dcae45bc3a8f8ea09d534e1050201391afea5fcd42287a5d24aef303dcc4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7868eabba4f5f380a94488c1f136d9945ee152836a4a44456cd8ab24add74c98"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7868eabba4f5f380a94488c1f136d9945ee152836a4a44456cd8ab24add74c98"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7868eabba4f5f380a94488c1f136d9945ee152836a4a44456cd8ab24add74c98"
+    sha256 cellar: :any_skip_relocation, ventura:        "6be0dde0e3a8e8d64b7cb81a373b91938ab054cc22a107ecf8149251cd7f40ab"
+    sha256 cellar: :any_skip_relocation, monterey:       "6be0dde0e3a8e8d64b7cb81a373b91938ab054cc22a107ecf8149251cd7f40ab"
+    sha256 cellar: :any_skip_relocation, big_sur:        "6be0dde0e3a8e8d64b7cb81a373b91938ab054cc22a107ecf8149251cd7f40ab"
+    sha256 cellar: :any_skip_relocation, catalina:       "6be0dde0e3a8e8d64b7cb81a373b91938ab054cc22a107ecf8149251cd7f40ab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7868eabba4f5f380a94488c1f136d9945ee152836a4a44456cd8ab24add74c98"
   end
 
   depends_on "php"
 
   # Keg-relocation breaks the formula when it replaces `/usr/local` with a non-default prefix
   on_macos do
-    pour_bottle? only_if: :default_prefix if Hardware::CPU.intel?
+    on_intel do
+      pour_bottle? only_if: :default_prefix
+    end
   end
 
   def install

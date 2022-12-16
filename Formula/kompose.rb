@@ -1,32 +1,28 @@
 class Kompose < Formula
   desc "Tool to move from `docker-compose` to Kubernetes"
   homepage "https://kompose.io/"
-  url "https://github.com/kubernetes/kompose/archive/v1.26.0.tar.gz"
-  sha256 "e24db4279d3386700e25f3eb3ae4115ed11f4e0b2eea16d28f2113c71d13fb5b"
+  url "https://github.com/kubernetes/kompose/archive/v1.27.0.tar.gz"
+  sha256 "258e05c6e725fd2ef710275a6ce8d391d5d54de46f0a9f637ebbeb96b976b4ad"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "3fae1e781bebf43f1bcfe8935e2016cdcf3908ed4560c2700868d3d7ce281a34"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "11159ca2fd486a6a13e415f8b0104ce67b81bf849a1209531ee91b106e24f966"
-    sha256 cellar: :any_skip_relocation, monterey:       "9d9abadd8858189a27d40c7586eaf252ea20966e336d924195ffd2d390e51994"
-    sha256 cellar: :any_skip_relocation, big_sur:        "54124d3c5933c7644cf9ad53ec10c8014ad6ad3e031907438a9cf5afa0018e64"
-    sha256 cellar: :any_skip_relocation, catalina:       "63f80ee2b91e4e796ec3e334759f167f2ccb656f3cfd464fe0b862964f518797"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "387e670a1b49be509660f5001542d44f01c512fb2252595e6c2fd06c17db7992"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c72e214d68b500682945ff6d24e363bfeeb5686fd8a1c165743f7f84c7a6b519"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "73286744b877e3da7becc95f0502833e06eb37c36057c5719d00bb68901716f9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8ba5b4cd7d937e38071767bfef36948f1bd0786b607e150feab27d56e06d1e55"
+    sha256 cellar: :any_skip_relocation, ventura:        "b68ba2aae5888ec75ec9cbeb112e1edf9976ca0b361eb071eafb3409c5148e8d"
+    sha256 cellar: :any_skip_relocation, monterey:       "1b1d5018ace1b8247f3dd0474eb9632d011f38716afce6e74bdc30a402aa0402"
+    sha256 cellar: :any_skip_relocation, big_sur:        "be28041f3dd15d9b717c0615c4234a3c615ce01baf423046f3b23f5f090a7412"
+    sha256 cellar: :any_skip_relocation, catalina:       "b217de5792e76e969ce916c4e282f603751b69890d91a42f758cb4146a858566"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b9b48d58808855c3e8aa8c4211422706693adbac6d416abfcb407e44d537188a"
   end
 
-  depends_on "go" => :build
+  # Bump to 1.18 on the next release, if possible.
+  depends_on "go@1.17" => :build
 
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w")
 
-    output = Utils.safe_popen_read(bin/"kompose", "completion", "bash")
-    (bash_completion/"kompose").write output
-
-    output = Utils.safe_popen_read(bin/"kompose", "completion", "zsh")
-    (zsh_completion/"_kompose").write output
-
-    output = Utils.safe_popen_read(bin/"kompose", "completion", "fish")
-    (fish_completion/"kompose.fish").write output
+    generate_completions_from_executable(bin/"kompose", "completion")
   end
 
   test do

@@ -1,22 +1,29 @@
 class DhallYaml < Formula
   desc "Convert between Dhall and YAML"
   homepage "https://github.com/dhall-lang/dhall-haskell/tree/master/dhall-yaml"
-  url "https://hackage.haskell.org/package/dhall-yaml-1.2.8/dhall-yaml-1.2.8.tar.gz"
-  sha256 "5359f4d4e0f8aa96ef5d6788e33654a508b6c38130d4034b146eacc89737e6dc"
+  # TODO: Switch `ghc@9.2` to `ghc` once cborg has a new release that supports
+  # ghc-prim 0.9.0. PR ref: https://github.com/well-typed/cborg/pull/304
+  url "https://hackage.haskell.org/package/dhall-yaml-1.2.11/dhall-yaml-1.2.11.tar.gz"
+  sha256 "90ba0e61caeb1f1b671dd5d21ced247d5c761fb9b1c3d7b467c907fbe24b16c7"
   license "BSD-3-Clause"
-  head "https://github.com/dhall-lang/dhall-haskell.git"
+  head "https://github.com/dhall-lang/dhall-haskell.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ca43581e426e62cd9bf97a54b7346aaa6b2ead264fdda3a37f5ac6c47b8b23f8"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a01cad7832672edda803711fd85feb441209a796eb0888cbb99ed56c6bebb657"
-    sha256 cellar: :any_skip_relocation, monterey:       "f0848538919c411a5f50eaf267a4f12109caf09d8eb3f8810c37be7d61051e71"
-    sha256 cellar: :any_skip_relocation, big_sur:        "26a59e11de9af4b90c79e9ff7be84bf1338583073e6998ecff90a08e0075eb64"
-    sha256 cellar: :any_skip_relocation, catalina:       "c63f896511f1d4d9ef17c90b76982711561363275ee1b181377b13dff50d32fa"
-    sha256 cellar: :any_skip_relocation, mojave:         "8165c1454147b4f36b7fe9f6a83995c7b99655cb2741c064e19048649ffb9f1e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "cb2c9c1940c7a49d41b1fd1c6dba3861910547c879c9e28e7123c6adf9700d42"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "8103d97ef51d7a331d4c15b9073e3847e7f9bd3e57a093b6476ebca10b550a99"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f85fdec06f8fe38a8b6da9453651f9c07f49889ecaa9c30a31e64598e33774f8"
+    sha256 cellar: :any_skip_relocation, ventura:        "d7874a05f1a88499aa8377c693343ea922df26965f6e18b923fb2d5dc363ff20"
+    sha256 cellar: :any_skip_relocation, monterey:       "4e970a26b036b0b0f34412c1aa49b5e31e6b5c46e30465dac5ca9c7e332d13ff"
+    sha256 cellar: :any_skip_relocation, big_sur:        "cebe8b981ee53551733d158dffd23f483b0dcd108fec9f6078b6add6eb082600"
+    sha256 cellar: :any_skip_relocation, catalina:       "1995b281bf300de48db36c0ad04e4f69cf10ea184d4001e8fa1e07ec76a5fa80"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bff559058b2bef2ecce72d231c8d26128b4dfc433cc5cea935521426304edf84"
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc" => :build
+  depends_on "ghc@9.2" => :build
+
+  uses_from_macos "ncurses"
+  uses_from_macos "zlib"
 
   def install
     system "cabal", "v2-update"

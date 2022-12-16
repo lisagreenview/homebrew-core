@@ -1,8 +1,8 @@
 class Pdns < Formula
   desc "Authoritative nameserver"
   homepage "https://www.powerdns.com"
-  url "https://downloads.powerdns.com/releases/pdns-4.5.2.tar.bz2"
-  sha256 "93d94a2500b1b3288dde0e76da7c40095382d93f0998d0f15449d1e6fc033641"
+  url "https://downloads.powerdns.com/releases/pdns-4.7.2.tar.bz2"
+  sha256 "4dcae35ebdc04915872d7bf6e2d0bca4b05c6350a100a5cf9c29df53baa53ce2"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Pdns < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "aee6620ec75691f52847aeae7e41a5245801b1c2bda56071c51f9c8cc0778b0a"
-    sha256 arm64_big_sur:  "0938f5acdf256c636a0b0a432e46f4038db29cc301d297864e677f607a4d6118"
-    sha256 monterey:       "d451672f170e1e26279258069004668d8e81c75047ee0e061815334c3511162e"
-    sha256 big_sur:        "1c9ad24b87edac72a2f1833f79063c70dab768722a61a58485ed1985a90b25cd"
-    sha256 catalina:       "933208e353c7ef908a6ada9464b5a8dc5dce3d6a7455ef8bafd892f6b45f80e3"
-    sha256 x86_64_linux:   "af45246ab6ec2d5a516d8463bee88a991f7168365e795c016441110bdfe4bc8b"
+    sha256 arm64_ventura:  "f9fb4470bed7a5c12f9b6fcf01c330da80c5f8847d5c94c318d8a7ddd36ca604"
+    sha256 arm64_monterey: "0bc2833a1410994a4cd10342597f0fc3b686006eda11d770521e97790fe12543"
+    sha256 arm64_big_sur:  "cec0ef3944878a458038437c3a5769c848b3bfb773f9631733cc5bafd456d883"
+    sha256 ventura:        "b25eaf4f146426e67c547930a4ad9247e46ee62a944f623a9b68d1da690c65d8"
+    sha256 monterey:       "27d45e5b8aeb8389964f397b0c1f13a4a47677cdf49160790decf03e40da05c1"
+    sha256 big_sur:        "857b7b5da938ef75e0cff5534580b0fb09f424c9d8895d0d655ea2d52da6f15c"
+    sha256 catalina:       "56e71f15270192931fa11e8b137ca3e8ab73629c33a052f7cb09ef4c49fa44ff"
+    sha256 x86_64_linux:   "223164b460f222660027359d46e16e4c17898aeb4276e53fe5155fea7a35f9f9"
   end
 
   head do
@@ -36,11 +38,7 @@ class Pdns < Formula
 
   uses_from_macos "curl"
 
-  on_linux do
-    depends_on "gcc" # for C++17
-  end
-
-  fails_with gcc: "5"
+  fails_with gcc: "5" # for C++17
 
   def install
     args = %W[
@@ -57,30 +55,9 @@ class Pdns < Formula
     system "make", "install"
   end
 
-  plist_options manual: "pdns_server start"
-
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
-        <true/>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{sbin}/pdns_server</string>
-        </array>
-        <key>EnvironmentVariables</key>
-        <key>KeepAlive</key>
-        <true/>
-        <key>SHAuthorizationRight</key>
-        <string>system.preferences</string>
-      </dict>
-      </plist>
-    EOS
+  service do
+    run opt_sbin/"pdns_server"
+    keep_alive true
   end
 
   test do

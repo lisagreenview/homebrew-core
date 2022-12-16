@@ -1,10 +1,10 @@
 class PerconaServer < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-8.0/Percona-Server-8.0.25-15/source/tarball/percona-server-8.0.25-15.tar.gz"
-  sha256 "447168d0cda3a0ef82ae0d20aa5af2fccfe5697c0f298262f1e8e315ac5c2dec"
+  url "https://downloads.percona.com/downloads/Percona-Server-8.0/Percona-Server-8.0.29-21/source/tarball/percona-server-8.0.29-21.tar.gz"
+  sha256 "a54c45b23719d4f6ba1e409bb2916c59dc0c9aaae98e24299ff26f150ad4f735"
   license "BSD-3-Clause"
-  revision 1
+  revision 2
 
   livecheck do
     url "https://www.percona.com/downloads/Percona-Server-LATEST/"
@@ -12,21 +12,21 @@ class PerconaServer < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "e1056ae13a6ead2b01731fffd0bd8cdb4a0e2b0ddca16748b81e5670b242b2f2"
-    sha256 big_sur:       "a5b4062a285c2c28c17022ed5c6237b4fe09a0f5e76b66aff67f51087c42c4bd"
-    sha256 catalina:      "35b00843d2323c04c1eb6fb1683675f0d669b4e02e3bf89a187a45fc8ef66dba"
-    sha256 x86_64_linux:  "d567bc1e5753b819d88081fceb3f2d5bf64ddadf34fa5230d861a111f1fd0b10"
-  end
-
-  pour_bottle? do
-    reason "The bottle needs a var/mysql datadir (yours is var/percona)."
-    satisfy { datadir == var/"mysql" }
+    sha256 arm64_ventura:  "1a61fec9e5d4003e9e0c5d9205091ce76f50bd821b0a4500a818593236d419c0"
+    sha256 arm64_monterey: "0133d8fe76dbc77d4d780e377b99ae220e5dd571edad87d421e5fbe2e757da1d"
+    sha256 arm64_big_sur:  "4da7726e3988cf850c41e7a796e6d734d6bf4e06e7829a9e0bf280976d304f3a"
+    sha256 ventura:        "cb4b17cbbc933936a14e16fc304bd5baaa537f7bdfb4fd7df0258b92ce312d66"
+    sha256 monterey:       "0828b310ec01954e21d01a2d1b1e63d168fe2d5f4ddb8252a1541607bc0839b0"
+    sha256 big_sur:        "336ecb45561368ce58b2591f54e52e212b2c2967b123f860e2366a1c6276f981"
+    sha256 catalina:       "6a8b7df8f17f928511a3a257895513f67f76c8916870c14499a0cecfe497d49a"
+    sha256 x86_64_linux:   "5fbb09fa511901a89990c5b87c4408723a7cb32e5766d3d55ddf8a73dde46ff2"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "icu4c"
   depends_on "libevent"
+  depends_on "libfido2"
   depends_on "lz4"
   depends_on "openssl@1.1"
   depends_on "protobuf"
@@ -35,18 +35,20 @@ class PerconaServer < Formula
   uses_from_macos "curl"
   uses_from_macos "cyrus-sasl"
   uses_from_macos "libedit"
+  uses_from_macos "openldap"
   uses_from_macos "zlib"
 
   on_linux do
     depends_on "patchelf" => :build
+    depends_on "libtirpc"
     depends_on "readline"
 
     # Fix build with OpenLDAP 2.5+, which merged libldap_r into libldap
     patch :DATA
   end
 
-  conflicts_with "mariadb", "mysql",
-    because: "percona, mariadb, and mysql install the same binaries"
+  conflicts_with "mariadb", "mysql", because: "percona, mariadb, and mysql install the same binaries"
+  conflicts_with "percona-xtrabackup", because: "both install a `kmip.h`"
 
   # https://bugs.mysql.com/bug.php?id=86711
   # https://github.com/Homebrew/homebrew-core/pull/20538
@@ -55,20 +57,34 @@ class PerconaServer < Formula
     cause "Wrong inlining with Clang 8.0, see MySQL Bug #86711"
   end
 
-  # https://github.com/percona/percona-server/blob/Percona-Server-#{version}/cmake/boost.cmake
-  resource "boost" do
-    url "https://boostorg.jfrog.io/artifactory/main/release/1.73.0/source/boost_1_73_0.tar.bz2"
-    sha256 "4eb3b8d442b426dc35346235c8733b5ae35ba431690e38c6a8263dce9fcbb402"
+  fails_with :gcc do
+    version "6"
+    cause "GCC 7.1 or newer is required"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/mysql to be
-  # shared with the mysql and mariadb formulae.
-  def datadir
-    @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
+  # https://github.com/percona/percona-server/blob/Percona-Server-#{version}/cmake/boost.cmake
+  resource "boost" do
+    url "https://boostorg.jfrog.io/artifactory/main/release/1.77.0/source/boost_1_77_0.tar.bz2"
+    sha256 "fc9f85fc030e233142908241af7a846e60630aa7388de9a5fafb1f3a26840854"
+  end
+
+  # Patch out check for Homebrew `boost`.
+  # This should not be necessary when building inside `brew`.
+  # https://github.com/Homebrew/homebrew-test-bot/pull/820
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/030f7433e89376ffcff836bb68b3903ab90f9cdc/percona-server/boost-check.patch"
+    sha256 "3223f7eebd04b471de1c21104c46b2cdec3fe7b26e13535bdcd0d7b8fd341bde"
   end
 
   def install
+    # Fix mysqlrouter_passwd RPATH to link to metadata_cache.so
+    inreplace "router/src/http/src/CMakeLists.txt",
+              "ADD_INSTALL_RPATH(mysqlrouter_passwd \"${ROUTER_INSTALL_RPATH}\")",
+              "\\0\nADD_INSTALL_RPATH(mysqlrouter_passwd \"${RPATH_ORIGIN}/../${ROUTER_INSTALL_PLUGINDIR}\")"
+
+    # Disable ABI checking
+    inreplace "cmake/abi_check.cmake", "RUN_ABI_CHECK 1", "RUN_ABI_CHECK 0" if OS.linux?
+
     # -DINSTALL_* are relative to `CMAKE_INSTALL_PREFIX` (`prefix`)
     args = %W[
       -DFORCE_INSOURCE_BUILD=1
@@ -81,18 +97,21 @@ class PerconaServer < Formula
       -DINSTALL_MANDIR=share/man
       -DINSTALL_MYSQLSHAREDIR=share/mysql
       -DINSTALL_PLUGINDIR=lib/percona-server/plugin
-      -DMYSQL_DATADIR=#{datadir}
+      -DMYSQL_DATADIR=#{var}/mysql
       -DSYSCONFDIR=#{etc}
       -DENABLED_LOCAL_INFILE=1
       -DWITH_EMBEDDED_SERVER=ON
       -DWITH_INNODB_MEMCACHED=ON
       -DWITH_UNIT_TESTS=OFF
+      -DWITH_SYSTEM_LIBS=ON
       -DWITH_EDITLINE=system
+      -DWITH_FIDO=system
       -DWITH_ICU=system
       -DWITH_LIBEVENT=system
       -DWITH_LZ4=system
       -DWITH_PROTOBUF=system
-      -DWITH_SSL=#{Formula["openssl@1.1"].opt_prefix}
+      -DWITH_SSL=system
+      -DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}
       -DWITH_ZLIB=system
       -DWITH_ZSTD=system
     ]
@@ -121,14 +140,6 @@ class PerconaServer < Formula
       # Docker containers lack CAP_SYS_NICE capability by default.
       test_args << "--nowarnings" if OS.linux?
       system "./mysql-test-run.pl", "status", *test_args
-    end
-
-    if OS.mac?
-      # Remove libssl copies as the binaries use the keg anyway and they create problems for other applications
-      rm lib/"libssl.dylib"
-      rm lib/"libssl.1.1.dylib"
-      rm lib/"libcrypto.1.1.dylib"
-      rm lib/"libcrypto.dylib"
     end
 
     # Remove the tests directory
@@ -161,10 +172,10 @@ class PerconaServer < Formula
     # Don't initialize database, it clashes when testing other MySQL-like implementations.
     return if ENV["HOMEBREW_GITHUB_ACTIONS"]
 
-    unless (datadir/"mysql/user.frm").exist?
+    unless (var/"mysql/mysql/user.frm").exist?
       ENV["TMPDIR"] = nil
       system bin/"mysqld", "--initialize-insecure", "--user=#{ENV["USER"]}",
-        "--basedir=#{prefix}", "--datadir=#{datadir}", "--tmpdir=/tmp"
+        "--basedir=#{prefix}", "--datadir=#{var}/mysql", "--tmpdir=/tmp"
     end
   end
 
@@ -185,30 +196,10 @@ class PerconaServer < Formula
     s
   end
 
-  plist_options manual: "mysql.server start"
-
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>KeepAlive</key>
-        <true/>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_bin}/mysqld_safe</string>
-          <string>--datadir=#{datadir}</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{datadir}</string>
-      </dict>
-      </plist>
-    EOS
+  service do
+    run [opt_bin/"mysqld_safe", "--datadir=#{var}/mysql"]
+    keep_alive true
+    working_dir var/"mysql"
   end
 
   test do

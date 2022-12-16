@@ -1,8 +1,8 @@
 class OpenMpi < Formula
   desc "High performance message passing library"
   homepage "https://www.open-mpi.org/"
-  url "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.1.tar.bz2"
-  sha256 "e24f7a778bd11a71ad0c14587a7f5b00e68a71aa5623e2157bafee3d44c07cda"
+  url "https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.4.tar.bz2"
+  sha256 "92912e175fd1234368c8730c03f4996fe5942e7479bb1d10059405e7f2b3930d"
   license "BSD-3-Clause"
   revision 2
 
@@ -12,17 +12,18 @@ class OpenMpi < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "123ffa8203d626457a3a66117cad431eb95065f230751aca14e6ccdbb40d9327"
-    sha256 arm64_big_sur:  "c24af00250fad2b097822d0d6e51f1027915e375dcbc0590b385b30ef8af6453"
-    sha256 monterey:       "0d95be67b57f68afb81d7524098d6a33fb8a9c18538c66f7dbf6b196954f8e3b"
-    sha256 big_sur:        "da310195e62c1a27aea7365b325cb15dd48f99dd673fd1f685f8b5247cfbb48d"
-    sha256 catalina:       "27f25156376078df9cb6e41a57c370cb030f16092ee7dfe85d7a8000f252240e"
-    sha256 mojave:         "4d57102ec2e06043bc97d34130ae5cd9115a6a1718331476f5fbd71d8bef149e"
-    sha256 x86_64_linux:   "0c6558437eedbf31810f41163ddff64c610ec5d5065bb4080e2559961ab3668d"
+    sha256 arm64_ventura:  "3f61fb90c6a60331c3fe85137b9c975f97a2967433608da6efb4abac3bc22eca"
+    sha256 arm64_monterey: "6fce4b7846d2ac61b339fed64109f83fbfe3fca5e29123d219c4aec7264b17b8"
+    sha256 arm64_big_sur:  "270edb8b3f965fabae4c6f25136fdd129072a0bb560127ed2a26eef4f7a05953"
+    sha256 ventura:        "84a19b52620c7394d79bcda0fc7f742401bd33c9001fcfda2618b76fc7929240"
+    sha256 monterey:       "7b119eb6403ba68bc7488400b743dfefb09162a8d094659110a23491782925f6"
+    sha256 big_sur:        "e8f418ade2643371972f22ea27dfd1283659b58efaac5e271916961845d00f6f"
+    sha256 catalina:       "340edd884d2c78cd6939de7bf859f501f77a3af469aad6a3e05fcee64ac32b7a"
+    sha256 x86_64_linux:   "07c71e5e4e4a6fae6bb0fb7ed19c4f50c434478438d6468df62b2ff328a15fcc"
   end
 
   head do
-    url "https://github.com/open-mpi/ompi.git"
+    url "https://github.com/open-mpi/ompi.git", branch: "main"
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
@@ -39,44 +40,42 @@ class OpenMpi < Formula
     ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
 
     # Avoid references to the Homebrew shims directory
-    %w[
+    inreplace_files = %w[
       ompi/tools/ompi_info/param.c
-      orte/tools/orte-info/param.c
       oshmem/tools/oshmem_info/param.c
-      opal/mca/pmix/pmix3x/pmix/src/tools/pmix_info/support.c
-    ].each do |fname|
-      inreplace fname, /(OPAL|PMIX)_CC_ABSOLUTE/, "\"#{ENV.cc}\""
-    end
+    ]
 
-    %w[
-      ompi/tools/ompi_info/param.c
-      oshmem/tools/oshmem_info/param.c
-    ].each do |fname|
-      inreplace fname, "OMPI_CXX_ABSOLUTE", "\"#{ENV.cxx}\""
-    end
+    cxx = OS.linux? ? "g++" : ENV.cxx
+    inreplace inreplace_files, "OMPI_CXX_ABSOLUTE", "\"#{cxx}\""
+
+    inreplace_files << "orte/tools/orte-info/param.c" unless build.head?
+    inreplace_files << "opal/mca/pmix/pmix3x/pmix/src/tools/pmix_info/support.c" unless build.head?
+
+    cc = OS.linux? ? "gcc" : ENV.cc
+    inreplace inreplace_files, /(OPAL|PMIX)_CC_ABSOLUTE/, "\"#{cc}\""
 
     ENV.cxx11
+    ENV.runtime_cpu_detection
 
     args = %W[
-      --prefix=#{prefix}
-      --disable-dependency-tracking
       --disable-silent-rules
       --enable-ipv6
       --enable-mca-no-build=reachable-netlink
+      --sysconfdir=#{etc}
       --with-libevent=#{Formula["libevent"].opt_prefix}
       --with-sge
     ]
     args << "--with-platform-optimized" if build.head?
 
     system "./autogen.pl", "--force" if build.head?
-    system "./configure", *args
+    system "./configure", *std_configure_args, *args
     system "make", "all"
     system "make", "check"
     system "make", "install"
 
     # Fortran bindings install stray `.mod` files (Fortran modules) in `lib`
     # that need to be moved to `include`.
-    include.install Dir["#{lib}/*.mod"]
+    include.install lib.glob("*.mod")
   end
 
   test do

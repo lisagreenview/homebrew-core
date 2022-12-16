@@ -1,8 +1,8 @@
 class ExtraCmakeModules < Formula
   desc "Extra modules and scripts for CMake"
   homepage "https://api.kde.org/frameworks/extra-cmake-modules/html/index.html"
-  url "https://download.kde.org/stable/frameworks/5.88/extra-cmake-modules-5.88.0.tar.xz"
-  sha256 "33bd83908daa531654455b77fc121b598f757aadf8ba01dbacfda8b8fb050319"
+  url "https://download.kde.org/stable/frameworks/5.101/extra-cmake-modules-5.101.0.tar.xz"
+  sha256 "8c4c561310db587d390a6c84afc97e1addbaddd73b9d7a4c7309c5da9b9bc8f2"
   license all_of: ["BSD-2-Clause", "BSD-3-Clause", "MIT"]
   head "https://invent.kde.org/frameworks/extra-cmake-modules.git", branch: "master"
 
@@ -14,11 +14,13 @@ class ExtraCmakeModules < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "fc264af38195c14c607e4a96e33cab0c0e353be296d369b44c198e50bbddb7b5"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1d30d324019e3a61b258c04ce13aa2031ce28bf68afcc262c7d890c7bbaec8c0"
-    sha256 cellar: :any_skip_relocation, big_sur:        "9d733e1d44f701b9f3a4d2b1867d4862c7e89e0f46b4726477a637158533125e"
-    sha256 cellar: :any_skip_relocation, catalina:       "9d733e1d44f701b9f3a4d2b1867d4862c7e89e0f46b4726477a637158533125e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b2a6093c65426e7978e61c99b886dd9ac30b9e25b79c1c1f2b13bbe0ae821b84"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "b5d8cda941a1260c80ec83c9b02ee7b397dcc84dbcd5bb89fde22f00313a495a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b5d8cda941a1260c80ec83c9b02ee7b397dcc84dbcd5bb89fde22f00313a495a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f770b6be4916899607db73d90ae3509d4293edb8257f2ce875874b8e5e2e1dcb"
+    sha256 cellar: :any_skip_relocation, ventura:        "b7ede559b811c751e56f3b4bfad198aaaf02decb9cb5fad6add136e254415de8"
+    sha256 cellar: :any_skip_relocation, monterey:       "f5940f687ed0b94585c8737c417b9137d12b2510e29fae5d76389acbf581c96c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b7ede559b811c751e56f3b4bfad198aaaf02decb9cb5fad6add136e254415de8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a6bd6a274c4d56d2b10bcf381d5659a6c2a3fb372fc6b4221363df9b06957ad9"
   end
 
   depends_on "cmake" => [:build, :test]
@@ -26,13 +28,15 @@ class ExtraCmakeModules < Formula
   depends_on "sphinx-doc" => :build
 
   def install
-    args = std_cmake_args
-    args << "-DBUILD_HTML_DOCS=ON"
-    args << "-DBUILD_MAN_DOCS=ON"
-    args << "-DBUILD_QTHELP_DOCS=ON"
-    args << "-DBUILD_TESTING=OFF"
+    args = std_cmake_args + %w[
+      -S .
+      -B build
+      -DBUILD_HTML_DOCS=ON
+      -DBUILD_MAN_DOCS=ON
+      -DBUILD_QTHELP_DOCS=ON
+    ]
 
-    system "cmake", "-S", ".", "-B", "build", *args
+    system "cmake", *args
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
   end

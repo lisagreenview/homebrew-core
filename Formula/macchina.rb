@@ -1,17 +1,19 @@
 class Macchina < Formula
   desc "System information fetcher, with an emphasis on performance and minimalism"
   homepage "https://github.com/Macchina-CLI/macchina"
-  url "https://github.com/Macchina-CLI/macchina/archive/v5.0.5.tar.gz"
-  sha256 "f8cd45546f3ce1e59e88b5861c1ba538039b39e7802749fff659a6367f097402"
+  url "https://github.com/Macchina-CLI/macchina/archive/v6.1.6.tar.gz"
+  sha256 "1183b3ed710579e6a3fdb80ef63a9ee539ebbbe56764fb5fa3c4a0249d0eb042"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "287ed38e068c0e828f62585c991de91755e22aaced7049111a10624d92ef4633"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fa832a1ca6709f1b8cb727eacca232b355962133a72693c4f83284a4e5ca2b7b"
-    sha256 cellar: :any_skip_relocation, monterey:       "311bc5e1f22a509234258049fe3e8456362c1a76d7ac50103ff3ccd59c19833e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3f353c38f5f70a1a2120911ba8d3238bf6214a86c3017a450f5cb53ea70ff490"
-    sha256 cellar: :any_skip_relocation, catalina:       "0ca50b7cb21df0b753ad88f4406fe1d82f2c587226ca52c1cbbb3c36a4e7a4f4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c098962b2620cbc5365a43c9ea8defdf678f35338716fa65fef750c055639360"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "5b83b8757e278b63701c3753c730be607263386a63e2d563efc0ad6e30f14b3e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "cbc35a1ec00a5308111137ae9c393e4c5b957b4bbeecf7cd87bd53766dc8ac44"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "825edfe2ef70ca769b0d9c588089a7a1eb061b088f725dd6c80c2b479c529340"
+    sha256 cellar: :any_skip_relocation, ventura:        "0e0a3e450b7fb0625588e3dc750cec13fb5fa15e6014831243cb354d8bb48b2f"
+    sha256 cellar: :any_skip_relocation, monterey:       "6f7ba54b554d1728a0d7e2a19c6b9654adcf422c87b3229fb524263e1a153a18"
+    sha256 cellar: :any_skip_relocation, big_sur:        "acb985865a243c3ea63515ac2b61fc3acc712f648ebbd82a8a49f59b9ed3e32d"
+    sha256 cellar: :any_skip_relocation, catalina:       "3c94a12772dda424b4e10a56724e5de9b2c0a499d6c4c5dd4ff2f07ae1737c7b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b5fc74f24f46d864bb3805db70a464b457ff0b260f0fd0f6b31804dd3ae1fb6f"
   end
 
   depends_on "rust" => :build

@@ -1,17 +1,19 @@
 class Libhandy < Formula
   desc "Building blocks for modern adaptive GNOME apps"
   homepage "https://gitlab.gnome.org/GNOME/libhandy"
-  url "https://download.gnome.org/sources/libhandy/1.4/libhandy-1.4.0.tar.xz"
-  sha256 "2676d51fa1fa40fdee7497d3e763fefa18b0338bffcd2ee32e7f7e633c885446"
+  url "https://gitlab.gnome.org/GNOME/libhandy/-/archive/1.8.0/libhandy-1.8.0.tar.gz"
+  sha256 "34bafc4ed57401bf0c18be85b06d38fc274fe5858db5eeee9c28b67a07d762da"
   license "LGPL-2.1-or-later"
 
   bottle do
-    sha256 arm64_big_sur: "67c5f4982894646b07942c0f387443c2aac2813167aaa3de9197cd760fc93e5b"
-    sha256 monterey:      "9846518bcebff7818836942e043f03f4e7e8ac07f618646b6d0396407085e1c9"
-    sha256 big_sur:       "337f9be107164821d8436c443c20dcb79d66bc3268fac909ace2878432bcc652"
-    sha256 catalina:      "2e04f3f8004ac544fea47905a65a6597908b8ced6dadd5c330d87b8a310951d9"
-    sha256 mojave:        "a8972dc9efc8c2d6a6fe0f038ebda941a741c3e0d7be57b51b9c634120d1a479"
-    sha256 x86_64_linux:  "17515106b873bbdbc591ca0daca12c043485e6a52b478cff912f9a835620c825"
+    sha256 arm64_ventura:  "c2a5965da71d08b9b31d4df765cbef8268ef3b4b10210cd8164d7164b0b11e15"
+    sha256 arm64_monterey: "973506dea8f690558a01f8b4e786c66e785a9dc5fb69347bcf3f501a6bce2b00"
+    sha256 arm64_big_sur:  "a3907134a8b5a823a1a591f5aece22e2668503ee6d457100ec7e8985759f8933"
+    sha256 ventura:        "f495e7933e16595c07828dfff9f718caa2396250d4b7a96ff70f3f5eb442cd9d"
+    sha256 monterey:       "3299684c80ba3fb24bf03061c4086f0b5ba195f26833f251194477ebb9f6271b"
+    sha256 big_sur:        "b570dc588fde9e71fe4d65d196de009d968d0ed21931b3c01ff1b286c81cdac3"
+    sha256 catalina:       "77f8b6b63595aa9016a59753376a7795335c40b827070a65277a8858d624987e"
+    sha256 x86_64_linux:   "75047efa0473ce094e13388d08fefdea2dc44e5c58be89325f959efe9b87b6c5"
   end
 
   depends_on "gettext" => :build
@@ -90,13 +92,9 @@ class Libhandy < Formula
       -lpango-1.0
       -lpangocairo-1.0
     ]
-    on_macos do
-      flags << "-lintl"
-    end
+    flags << "-lintl" if OS.mac?
     system ENV.cc, "test.c", "-o", "test", *flags
     # Don't have X/Wayland in Docker
-    on_macos do
-      system "./test"
-    end
+    system "./test" if OS.mac?
   end
 end

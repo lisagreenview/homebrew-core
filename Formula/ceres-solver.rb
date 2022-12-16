@@ -1,10 +1,10 @@
 class CeresSolver < Formula
   desc "C++ library for large-scale optimization"
   homepage "http://ceres-solver.org/"
-  url "http://ceres-solver.org/ceres-solver-2.0.0.tar.gz"
-  sha256 "10298a1d75ca884aa0507d1abb0e0f04800a92871cd400d4c361b56a777a7603"
+  url "http://ceres-solver.org/ceres-solver-2.1.0.tar.gz"
+  sha256 "f7d74eecde0aed75bfc51ec48c91d01fe16a6bf16bce1987a7073286701e2fc6"
   license "BSD-3-Clause"
-  revision 4
+  revision 1
   head "https://ceres-solver.googlesource.com/ceres-solver.git", branch: "master"
 
   livecheck do
@@ -13,13 +13,15 @@ class CeresSolver < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "779e1f5201ca4605fa35191a4aaf75d86f70e0bdc926d29e7d061d0ca3c75cb1"
-    sha256 cellar: :any,                 arm64_big_sur:  "1b729631e1d4e35fa8cdb4e38daeab4db1900273bb3b3a97800d6609c9048011"
-    sha256 cellar: :any,                 monterey:       "e331ba4a260953f79cc693e323515cd11047e181c104affded4e9c60a93fd3f7"
-    sha256 cellar: :any,                 big_sur:        "ae150dc0c639a5e4efdbd7bf2f01c933f9852a20f78056670eb5b27fe3bc28f0"
-    sha256 cellar: :any,                 catalina:       "de7e1776beb556708bfb34af3b1e26f67ce5f9ecfb7e4332a56d25c456e01082"
-    sha256 cellar: :any,                 mojave:         "c7d6078d42b69ebc67ef7e2ed8cabcc9cbcfb32f0509a2a20f869fe627b1f53d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "af15dc42554f737ec56596c94232ff83d8eb546bb6bf8bf5af352887f1b1340f"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "4854064146581d467e76483acf43e32cac3870cd0d9d12b7ac2bf7b3b7924806"
+    sha256 cellar: :any,                 arm64_monterey: "8853908633eb208b01f8c837f25f21d26e7ab25467989a1e41d8fb169818a9e3"
+    sha256 cellar: :any,                 arm64_big_sur:  "c2248770066bdb4efaed2e8cdd28665d2b250b0f22323e3fb081e78ebfc5e558"
+    sha256 cellar: :any,                 ventura:        "c79050cc85fd6502a13f1b6077cd0bf570a908b3cd4890cc990ffce16dff4e5f"
+    sha256 cellar: :any,                 monterey:       "5ec1c84cbbae986126cb0876f46bd74621ff9b1a562ac60e5ae4bcc69c893468"
+    sha256 cellar: :any,                 big_sur:        "4904e364045a99496a2a299221b4a333088a988265cca04af91c05df89c8091a"
+    sha256 cellar: :any,                 catalina:       "ad19523c11bb9c90599c32ac22af103a96b29b77b046065fd1cc3c93c518e419"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "aa7039f64b965c7c0f5e028da2a445b9a98dd80c043bb6b2257675c839a3d146"
   end
 
   depends_on "cmake" => [:build, :test]
@@ -31,13 +33,7 @@ class CeresSolver < Formula
   depends_on "suite-sparse"
   depends_on "tbb"
 
-  # Fix compatibility with TBB 2021.1
-  # See https://github.com/ceres-solver/ceres-solver/issues/669
-  # Remove in the next release
-  patch do
-    url "https://github.com/ceres-solver/ceres-solver/commit/941ea13475913ef8322584f7401633de9967ccc8.patch?full_index=1"
-    sha256 "c61ca2ff1e92cc2134ba8e154bd9052717ba3fcae085e8f44957b9c22e6aa4ff"
-  end
+  fails_with gcc: "5" # C++17
 
   def install
     system "cmake", ".", *std_cmake_args,
@@ -47,7 +43,6 @@ class CeresSolver < Formula
     system "make"
     system "make", "install"
     pkgshare.install "examples", "data"
-    doc.install "docs/html" unless build.head?
   end
 
   test do

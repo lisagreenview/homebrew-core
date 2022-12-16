@@ -4,7 +4,7 @@ class Libcdr < Formula
   url "https://dev-www.libreoffice.org/src/libcdr/libcdr-0.1.7.tar.xz"
   sha256 "5666249d613466b9aa1e987ea4109c04365866e9277d80f6cd9663e86b8ecdd4"
   license "MPL-2.0"
-  revision 1
+  revision 3
 
   livecheck do
     url "https://dev-www.libreoffice.org/src/"
@@ -12,13 +12,14 @@ class Libcdr < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "52c71577c0e2915f38ce1718e6ca9af2f466f14f834a3b32548cb4b549f8ff6c"
-    sha256 cellar: :any,                 arm64_big_sur:  "5ae923701714fad81fced4eb8c7eb2c171c3e675c685a0649b561004a587a03b"
-    sha256 cellar: :any,                 monterey:       "1982525feceb04d6555522d6198d6df1adc26e75d6cc26dca0bbee09306223de"
-    sha256 cellar: :any,                 big_sur:        "0c5c055abec9d36ae8beaaf07e0268cb5b4495ec3103b933b03ff2676d96d049"
-    sha256 cellar: :any,                 catalina:       "e79b945338269508e453ed4f8748d0a9b5e19304658621765c2eae54120d0537"
-    sha256 cellar: :any,                 mojave:         "42016c8a3b6e75ce702e84f2afdf3c328807b776b10e9c809772c0f69d569d1a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b6cf82a1af01f907eb5476947c63b6a9241c5d5d72291f3f2263c1e6c5b70cdf"
+    sha256 cellar: :any,                 arm64_ventura:  "cf2e771405921f6b7794f5b8d841d7a53402c6f236aea40cf37b269448186694"
+    sha256 cellar: :any,                 arm64_monterey: "d989d83c9a258d96ac00a54a25a7b71c2cc3fde0c79d7c265ad92f856c4965b9"
+    sha256 cellar: :any,                 arm64_big_sur:  "f81e9a7ceeaaa6d1fca79a35c1a6c8f1d082e710d5563ab4cd5fb71b38e5ad8d"
+    sha256 cellar: :any,                 ventura:        "906eccb4f2b71dc326efef9316303d28db4cfaf20f6098d86bf60057859e315b"
+    sha256 cellar: :any,                 monterey:       "b15778df4e7ada6bd037466bf5ce04ac7d598dd9beafa00d7fdd59c0f023aa77"
+    sha256 cellar: :any,                 big_sur:        "09cf51a1689edb6f7c3114dd02462e3076ffc81ddd91b2200fbcd49644a26d8f"
+    sha256 cellar: :any,                 catalina:       "3f609d4dd59bf7bba036003ab23c99bfe91768bd55a4ced75e94cb1bcc947ec6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ab941fc0fe3c07b68d2ede656e338c948a14bd1fd268a4240ab294b9d7df5876"
   end
 
   depends_on "cppunit" => :build

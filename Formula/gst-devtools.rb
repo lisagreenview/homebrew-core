@@ -3,10 +3,11 @@ class GstDevtools < Formula
 
   desc "GStreamer development and validation tools"
   homepage "https://gstreamer.freedesktop.org/modules/gstreamer.html"
-  url "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-1.18.5.tar.xz"
-  sha256 "fecffc86447daf5c2a06843c757a991d745caa2069446a0d746e99b13f7cb079"
+  url "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-1.20.3.tar.xz"
+  sha256 "bbbd45ead703367ea8f4be9b3c082d7b62bef47b240a39083f27844e28758c47"
   license "LGPL-2.1-or-later"
-  head "https://gitlab.freedesktop.org/gstreamer/gst-devtools.git"
+  revision 1
+  head "https://gitlab.freedesktop.org/gstreamer/gst-devtools.git", branch: "master"
 
   livecheck do
     url "https://gstreamer.freedesktop.org/src/gst-devtools/"
@@ -14,13 +15,14 @@ class GstDevtools < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "98d8f50b933ba73a496c847bf8468a9703766cfc33de874c1025627a85a81318"
-    sha256 arm64_big_sur:  "f80540ba393407aceb95c070461ad5ebbbb9bd9869e9148777350657d6491cfa"
-    sha256 monterey:       "140957153cd0d4b572e10820ebd22f1ea60793b7baeabf20776dda7419644cd4"
-    sha256 big_sur:        "d592155862275fb39caccda2a52faee2478755fdf3c44f63cf43043cc823a2ca"
-    sha256 catalina:       "a3867172205b79066778fc3b0337b569bbdf44c4d7c21e51720d10f0af070da9"
-    sha256 mojave:         "10ca693d40baa57b6c8c161923de066c23f1fbba9004ba7106cfa09739effe8f"
-    sha256 x86_64_linux:   "e5cd968f9cdf62927fd3054ca7205e79470a3ac11109bccc15dd89d5cab5dedd"
+    sha256 arm64_ventura:  "def50d0cb223897a3eb61986e6a47c9738e2a070863d53976cf99ab11bf8c4e1"
+    sha256 arm64_monterey: "3095ec9f22237b0c5404954ac1ff5200040eed7917b182229c31324250cc4b75"
+    sha256 arm64_big_sur:  "9d0bf56c0adaafd48d91edcd36ed78de13acf92100471af791a6b9f3b49f1789"
+    sha256 ventura:        "e33ccbd945ec00ccc134fc262ae34fc30c0e895795109e9ab397b2ce0528a423"
+    sha256 monterey:       "0358177078512fd1bde0aa1ec4d4bbf1bbcfa7578ed522e463ab707902c85cc2"
+    sha256 big_sur:        "f03b752496981a59428124478fc5dc1595137fbf8d69a3130fa2d19602801eb4"
+    sha256 catalina:       "cd0dc00c2cef759be7c1bd4ec6efd81f14258ac781696f457d80ec37fa9b2972"
+    sha256 x86_64_linux:   "c3e9c440677b235ea209c56435a95737a8a8422c2acf77d0b87d4f42395b8697"
   end
 
   depends_on "gobject-introspection" => :build
@@ -31,25 +33,23 @@ class GstDevtools < Formula
   depends_on "gst-plugins-base"
   depends_on "gstreamer"
   depends_on "json-glib"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
 
   def install
-    args = std_meson_args + %w[
+    args = %w[
       -Dintrospection=enabled
       -Dvalidate=enabled
       -Dtests=disabled
     ]
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", "setup", "build", *args, *std_meson_args
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
 
     rewrite_shebang detected_python_shebang, bin/"gst-validate-launcher"
   end
 
   test do
-    system "#{bin}/gst-validate-launcher", "--usage"
+    system bin/"gst-validate-launcher", "--usage"
   end
 end

@@ -3,8 +3,8 @@ class Nginx < Formula
   homepage "https://nginx.org/"
   # Use "mainline" releases only (odd minor version number), not "stable"
   # See https://www.nginx.com/blog/nginx-1-12-1-13-released/ for why
-  url "https://nginx.org/download/nginx-1.21.4.tar.gz"
-  sha256 "d1f72f474e71bcaaf465dcc7e6f7b6a4705e4b1ed95c581af31df697551f3bfe"
+  url "https://nginx.org/download/nginx-1.23.3.tar.gz"
+  sha256 "75cb5787dbb9fae18b14810f91cc4343f64ce4c24e27302136fb52498042ba54"
   license "BSD-2-Clause"
   head "https://hg.nginx.org/nginx/", using: :hg
 
@@ -14,18 +14,20 @@ class Nginx < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "15228cc0e51e265e8aa287f44e09217c5afc44dae0ae61947d950f797ced42e8"
-    sha256 arm64_big_sur:  "4dd0e6520d694faecd67208c88e02a65e8ea41ddc57d117809f4cb631a6372d9"
-    sha256 monterey:       "1705176bc483a5fe2dfaa0872a370f6b7d05f2e3283a49c444276ad72673a71e"
-    sha256 big_sur:        "dbae394ff91462356cd7a0c7503310c1978a5d6ffad89eb364a01b3d18cb12d1"
-    sha256 catalina:       "f41c58466bc3104d0b2950227c0a4e17426f08c70e4c2b98513ce0316a329a74"
-    sha256 x86_64_linux:   "3289075c07e1cda0ca9cdc76aea71c54cdfa77ebfd6c4266d78cb640f84c2f9a"
+    sha256 arm64_ventura:  "fd95ddcaeabfc3a38523a72000f4738730d3163e565a9693ba40422f5a929149"
+    sha256 arm64_monterey: "1a5ca9ef1443da42401e35d41ac58d81a874f94449c76aa69fd3ec2d0e775bcc"
+    sha256 arm64_big_sur:  "d508ffc8165c81413d84046a47bfd95a8ec40d5709a423429c33a9f81b538380"
+    sha256 ventura:        "8de46606c7c3a4fda4d93f723af91831793028c23fe2d9e24e2a06bb8fdea61d"
+    sha256 monterey:       "2abd6923892bea21c46f5b70d18051a25560af9196a9b0963faac05f5dff17c9"
+    sha256 big_sur:        "540376a9e7c7dbef24a9f66025cf2030b143eabef0bed82fb15595aa410620d2"
+    sha256 x86_64_linux:   "e0528d587c273db0546ecc75552deca4436ca4ad2774f210a7089fb3942056ea"
   end
 
   depends_on "openssl@1.1"
-  depends_on "pcre"
+  depends_on "pcre2"
 
   uses_from_macos "xz" => :build
+  uses_from_macos "libxcrypt"
 
   def install
     # keep clean copy of source for compiling dynamic modules e.g. passenger
@@ -39,7 +41,7 @@ class Nginx < Formula
     end
 
     openssl = Formula["openssl@1.1"]
-    pcre = Formula["pcre"]
+    pcre = Formula["pcre2"]
 
     cc_opt = "-I#{pcre.opt_include} -I#{openssl.opt_include}"
     ld_opt = "-L#{pcre.opt_lib} -L#{openssl.opt_lib}"
@@ -143,7 +145,11 @@ class Nginx < Formula
   end
 
   service do
-    run [opt_bin/"nginx", "-g", "daemon off;"]
+    if OS.linux?
+      run [opt_bin/"nginx", "-g", "'daemon off;'"]
+    else
+      run [opt_bin/"nginx", "-g", "daemon off;"]
+    end
     keep_alive false
     working_dir HOMEBREW_PREFIX
   end

@@ -1,43 +1,35 @@
 class Xkeyboardconfig < Formula
   desc "Keyboard configuration database for the X Window System"
   homepage "https://www.freedesktop.org/wiki/Software/XKeyboardConfig/"
-  url "https://xorg.freedesktop.org/archive/individual/data/xkeyboard-config/xkeyboard-config-2.34.tar.bz2"
-  sha256 "b321d27686ee7e6610ffe7b56e28d5bbf60625a1f595124cd320c0caa717b8ce"
+  url "https://xorg.freedesktop.org/archive/individual/data/xkeyboard-config/xkeyboard-config-2.37.tar.xz"
+  sha256 "eb1383a5ac4b6210d7c7302b9d6fab052abdf51c5d2c9b55f1f779997ba68c6c"
   license "MIT"
-  head "https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config.git"
+  head "https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "398ac2d1d40d278c0fd762e2d092db031ae082e0279a376a7e956c423b21d200"
+    sha256 cellar: :any_skip_relocation, all: "6f921f65160528b1903c09edd032524ac4e8d723998184d28157e0e139cc4a83"
   end
 
   depends_on "gettext" => :build
-  depends_on "intltool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => [:build, :test]
-  depends_on "python@3.9" => :build
+  depends_on "python@3.10" => :build
+
   uses_from_macos "libxslt" => :build
 
   def install
-    # Needed by intltool (xml::parser)
-    ENV.prepend_path "PERL5LIB", "#{Formula["intltool"].libexec}/lib/perl5"
-
-    args = %W[
-      --prefix=#{prefix}
-      --sysconfdir=#{etc}
-      --localstatedir=#{var}
-      --disable-dependency-tracking
-      --disable-silent-rules
-      --with-xkb-rules-symlink=xorg
-      --disable-runtime-deps
-    ]
-
-    system "./configure", *args
-    system "make"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", *std_meson_args, ".."
+      system "ninja", "-v"
+      system "ninja", "install", "-v"
+    end
   end
 
   test do
     assert_predicate man7/"xkeyboard-config.7", :exist?
     assert_equal "#{share}/X11/xkb", shell_output("pkg-config --variable=xkb_base xkeyboard-config").chomp
-    assert_match "Language: en_GB", shell_output("strings #{share}/locale/en_GB/LC_MESSAGES/xkeyboard-config.mo")
+    assert_match "Language-Team: English",
+      shell_output("strings #{share}/locale/en_GB/LC_MESSAGES/xkeyboard-config.mo")
   end
 end

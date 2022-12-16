@@ -1,8 +1,8 @@
 class Antlr4CppRuntime < Formula
   desc "ANother Tool for Language Recognition C++ Runtime Library"
   homepage "https://www.antlr.org/"
-  url "https://www.antlr.org/download/antlr4-cpp-runtime-4.9.3-source.zip"
-  sha256 "5f0af6efd81f476c3e775c486eb0a71c25d6bbc14373e88a64690e2738d68e03"
+  url "https://www.antlr.org/download/antlr4-cpp-runtime-4.11.1-source.zip"
+  sha256 "8018c335316e61bb768e5bd4a743a9303070af4e1a8577fa902cd053c17249da"
   license "BSD-3-Clause"
 
   livecheck do
@@ -11,12 +11,15 @@ class Antlr4CppRuntime < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "b828aa3edfd6a877b7305e891ddcef3139f065d3fed62d4019c8dc647df342d1"
-    sha256 cellar: :any,                 arm64_big_sur:  "bb6f0596a63a9efcdebb911d1e89199acc7ba51f830832370c7eacd70d3c592f"
-    sha256 cellar: :any,                 monterey:       "24fedc44d4b5cd54807e2e0a4a2ecb7210278a8041323a8ab3272e4dd95490ef"
-    sha256 cellar: :any,                 big_sur:        "7dc07a14640606dd93e844b537a791695900fcb9682c9b29b25d75b4879fc144"
-    sha256 cellar: :any,                 catalina:       "b9757ab1d9c97d6295f1267ed90ae1fc9c115bdbee528d80478dc329fa23d546"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3655a8edd62c4afeb7e4884232240108590453b913b019f4127f4ebfcb6a707e"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "3438cd9ea3628bd4225bf29540a3c65ca917dc010af271e59cd4b1b6a58dac03"
+    sha256 cellar: :any,                 arm64_monterey: "0d3665ac36ff099aabc76da5efbdc35df244a105f14f81ad920934f0872dcbdb"
+    sha256 cellar: :any,                 arm64_big_sur:  "7e7032483b95b6286fc4c27ee158c37cbb5840fc53d854904277ebdd3fed041c"
+    sha256 cellar: :any,                 ventura:        "769ddfe6ba0f90416ce73584bb203c1f78109f26edb6f252d977710bc23a8d83"
+    sha256 cellar: :any,                 monterey:       "3ce1959cc02a180806e5c989b65c17cd1c8c5308a7fdf568150940efc92a6549"
+    sha256 cellar: :any,                 big_sur:        "80318c3d31be4b280796bd2c5f19de9bcf8a785d1fa01f20a5d33debb8544eb6"
+    sha256 cellar: :any,                 catalina:       "941580a718d7e380cbe6a186eb266b797d59393fb598fd6079e42cd689fd7633"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d758da9988efc719a29740af5655435bcd90ea92824b3c3c1a7558d33a29de79"
   end
 
   depends_on "cmake" => :build
@@ -26,8 +29,10 @@ class Antlr4CppRuntime < Formula
     depends_on "util-linux"
   end
 
+  fails_with gcc: "5"
+
   def install
-    system "cmake", ".", "-DANTLR4_INSTALL=ON", *std_cmake_args
+    system "cmake", ".", "-DANTLR4_INSTALL=ON", "-DANTLR_BUILD_CPP_TESTS=OFF", *std_cmake_args
     system "cmake", "--build", ".", "--target", "install"
   end
 
@@ -43,7 +48,7 @@ class Antlr4CppRuntime < Formula
           return 0 ;
       }
     EOS
-    system ENV.cxx, "-std=c++11", "-I#{include}/antlr4-runtime", "test.cc",
+    system ENV.cxx, "-std=c++17", "-I#{include}/antlr4-runtime", "test.cc",
                     "-L#{lib}", "-lantlr4-runtime", "-o", "test"
     system "./test"
   end

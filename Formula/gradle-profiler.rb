@@ -1,18 +1,17 @@
 class GradleProfiler < Formula
   desc "Profiling and benchmarking tool for Gradle builds"
   homepage "https://github.com/gradle/gradle-profiler/"
-  url "https://repo.gradle.org/gradle/ext-releases-local/org/gradle/profiler/gradle-profiler/0.16.0/gradle-profiler-0.16.0.zip"
-  sha256 "f376581ed7b788d9d3d640a2ddde88747ce2e8a0e297991a77b98e6b7a257fbb"
+  url "https://search.maven.org/remotecontent?filepath=org/gradle/profiler/gradle-profiler/0.19.0/gradle-profiler-0.19.0.zip"
+  sha256 "abc1f506a023752d5b4a23c5661baef3761ce802f5bb6904c486b3158bd893ac"
   license "Apache-2.0"
-  revision 1
 
   livecheck do
-    url "https://repo.gradle.org/ui/api/v1/download?repoKey=ext-releases-local&path=org%252Fgradle%252Fprofiler%252Fgradle-profiler%252Fmaven-metadata.xml"
+    url "https://search.maven.org/remotecontent?filepath=org/gradle/profiler/gradle-profiler/maven-metadata.xml"
     regex(%r{<version>\s*v?(\d+(?:\.\d+)+)\s*</version>}i)
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "92d79f184d9dff7724d483c56d3ab6822fde8e7b30008fa90b9a3f8b57bc304f"
+    sha256 cellar: :any_skip_relocation, all: "35eca25614876310b3769a9c36507ff4e43297c1089dc15360b312e9d107f9e8"
   end
 
   # gradle currently does not support Java 17 (ARM)

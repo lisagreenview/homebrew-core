@@ -2,18 +2,20 @@ class Goreleaser < Formula
   desc "Deliver Go binaries as fast and easily as possible"
   homepage "https://goreleaser.com/"
   url "https://github.com/goreleaser/goreleaser.git",
-      tag:      "v1.0.0",
-      revision: "4bd0b73e95e83cfaa51b19330c4b039d1d7c0d09"
+      tag:      "v1.13.1",
+      revision: "b0ffc7af05aa391b766e8e26f5ad5ec37c640d6e"
   license "MIT"
-  head "https://github.com/goreleaser/goreleaser.git", branch: "master"
+  head "https://github.com/goreleaser/goreleaser.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "7c78d7f4614d86f7b886e1a8dbd69b8afea89e0feee012e325cd045dcee21037"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "03b40130c68667cf2881a1afb051a4a120373d5937301d5299d2e7e87574484a"
-    sha256 cellar: :any_skip_relocation, monterey:       "fb875c82ee4570244dc76b75822f9398cefafd306cbf39f407a672e7a46db32d"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1bcf2b4a9329ab49f1b4145e59b30265b423028e51251745100952fa5a544345"
-    sha256 cellar: :any_skip_relocation, catalina:       "c44ecd50d1c4f1d7e0377e03c73fc57407f2629fa1be5ed56e9f342b8212d52a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7b057cdf5d44e00b58b11f9913a058c4f2c4c9e938eab6cca332685c0267b0d2"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "b1c3c7a5420b6b437800ea39fe42c26a491d927415dd37eba6c3c6893997a3c4"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "17fb3c062a4c718cab43e6584e1939c0d77c82be17d9e892058241a1c09a5d6f"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a58042ad59f93c6c6a041e1a75aa4d793aa69528e94e43d0117ab69d9d3d1058"
+    sha256 cellar: :any_skip_relocation, ventura:        "f3ff8ec1e83f285b05337e9a6567966fd0db08aa25c1b0d44865626b00451107"
+    sha256 cellar: :any_skip_relocation, monterey:       "845583622cbe3f37c648466e6c0d05beeffd9235350b44c359ca23820b5740c0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "5f9081b895786caef324c88804547e971d5d87256a27089b00205beb8728fe78"
+    sha256 cellar: :any_skip_relocation, catalina:       "7fc0c536b29c237b5c4ce5b270adb6bd435700a8b99184b951038a4712b0dc64"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ba945bc95056d922704941492c445c414afddbe3d875d459a8081a98e1e23387"
   end
 
   depends_on "go" => :build
@@ -24,19 +26,12 @@ class Goreleaser < Formula
       -X main.version=#{version}
       -X main.commit=#{Utils.git_head}
       -X main.builtBy=homebrew
-    ].join(" ")
+    ]
 
     system "go", "build", *std_go_args(ldflags: ldflags)
 
     # Install shell completions
-    output = Utils.safe_popen_read("#{bin}/goreleaser", "completion", "bash")
-    (bash_completion/"goreleaser").write output
-
-    output = Utils.safe_popen_read("#{bin}/goreleaser", "completion", "zsh")
-    (zsh_completion/"_goreleaser").write output
-
-    output = Utils.safe_popen_read("#{bin}/goreleaser", "completion", "fish")
-    (fish_completion/"goreleaser.fish").write output
+    generate_completions_from_executable(bin/"goreleaser", "completion")
   end
 
   test do

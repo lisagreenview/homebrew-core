@@ -1,18 +1,19 @@
 class Fizz < Formula
   desc "C++14 implementation of the TLS-1.3 standard"
   homepage "https://github.com/facebookincubator/fizz"
-  url "https://github.com/facebookincubator/fizz/releases/download/v2021.11.15.00/fizz-v2021.11.15.00.tar.gz"
-  sha256 "dac165508a3c6c0221cf3dffd9de4f87547237c70ffbcac313a93ca8fd6e6ed2"
-  license "BSD-2-Clause"
-  head "https://github.com/facebookincubator/fizz.git"
+  url "https://github.com/facebookincubator/fizz/releases/download/v2022.12.12.00/fizz-v2022.12.12.00.tar.gz"
+  sha256 "80e5002072d01bd94eecf68d13e2ad9dc008773d9abc0f328f08fc9a4a0067db"
+  license "BSD-3-Clause"
+  head "https://github.com/facebookincubator/fizz.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "8f06a0fd3da775befe9fe86bf7d96a4f382b4ab5c3d1c3426e6b8a1dfc8da97f"
-    sha256 cellar: :any,                 arm64_big_sur:  "50050e4e163d58c34e42ed6560edbe8e27500c5119af2dd3375d16965c451841"
-    sha256 cellar: :any,                 monterey:       "69c7c2e6a34d7e43031677546b9f8b897605933e5c872e0d1fa3a560c6451d62"
-    sha256 cellar: :any,                 big_sur:        "17780758574c40d94f04b8424d1f258d137b4a7eba60055e2826e4581851aade"
-    sha256 cellar: :any,                 catalina:       "a5161be48de185596db44a36f8d6def3287d90522696b4d22f541868c648e42a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a0ec67cfa3364ae71164de93e3b96d5af7a078350d19b430c31ad5cffe83e67e"
+    sha256 cellar: :any,                 arm64_ventura:  "17417ef34dc7a1e54d5ceacae1b7ef27b531482a993bb27117be073862c764a2"
+    sha256 cellar: :any,                 arm64_monterey: "5656004074b320c9d3088bfbcae95ea2213838361c0e5968ba02abe6b6f3c70e"
+    sha256 cellar: :any,                 arm64_big_sur:  "b1e407eec8666641c0d8b871647394b5db3f9ee19fa6fcc531b7f52cbe0a4da4"
+    sha256 cellar: :any,                 ventura:        "ac1fe38dad65cfcaabde8524a801d19d17ed8df122c347a375a172c730c4d663"
+    sha256 cellar: :any,                 monterey:       "c0328b3b8e6d7568fcdd7675582c27ff908da3f6717c9de6c017abb7903afda0"
+    sha256 cellar: :any,                 big_sur:        "5af72c8157600a1d610b3ce81e6aed96521f7d0e9bc2f4e9ac6100909d51f75e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b011defb0a50952c09e6509c174a27c3a16d21726a9ce05b9a33fc9b5eb78f19"
   end
 
   depends_on "cmake" => :build
@@ -29,21 +30,16 @@ class Fizz < Formula
   depends_on "snappy"
   depends_on "zstd"
 
-  on_linux do
-    depends_on "gcc"
-  end
-
   fails_with gcc: "5"
 
   def install
-    args = []
-    args << "-DLIBRT_LIBRARY=/usr/lib/x86_64-linux-gnu/librt.so" if OS.linux?
-
-    mkdir "fizz/build" do
-      system "cmake", "..", "-DBUILD_TESTS=OFF", "-DBUILD_SHARED_LIBS=ON", *std_cmake_args, *args
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", "fizz", "-B", "build",
+                    "-DBUILD_TESTS=OFF",
+                    "-DBUILD_SHARED_LIBS=ON",
+                    "-DCMAKE_INSTALL_RPATH=#{rpath}",
+                    *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

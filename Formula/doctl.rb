@@ -1,18 +1,19 @@
 class Doctl < Formula
   desc "Command-line tool for DigitalOcean"
   homepage "https://github.com/digitalocean/doctl"
-  url "https://github.com/digitalocean/doctl/archive/v1.67.0.tar.gz"
-  sha256 "97c9ee6f28efd621f04ff4bafa269d4f7f6632f5884178f443a22cb610e086a7"
+  url "https://github.com/digitalocean/doctl/archive/v1.90.0.tar.gz"
+  sha256 "4c53d56baf2be785f916fcc9b8f7afdd9b85b0987130de880cba1b86abe7e1e3"
   license "Apache-2.0"
-  head "https://github.com/digitalocean/doctl.git"
+  head "https://github.com/digitalocean/doctl.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "60bac0c13b24ac0d609d48309f1097558279d6d16f5408a83b194ea1f984cb84"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "108e2c7dcd8584626956f213b110af99c6f5bb2a773998f58ea77d3df45862e3"
-    sha256 cellar: :any_skip_relocation, monterey:       "afe1274a41e8db9bb426773d749cc5e96254466126e0e5813b6bc158dfd449b5"
-    sha256 cellar: :any_skip_relocation, big_sur:        "44846d72f1c5e2de4728736e1ff79c70599ddd922998c274470c4a08e97c82ea"
-    sha256 cellar: :any_skip_relocation, catalina:       "20df5d8937d68868ae375fa197dd64af25ab7f88a70643cab1cac271e70df363"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7c235dbbf49483325e38b76cb72263ec9301e1a6ffd958ee5d155bfb7024ce2e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "0193522ea8ae90011b5234edbfedbad2541aaf874cee4af53d80425ced82e8fa"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "ff2b681411b0027a4aedd14b43d4baafeff9b73e67ae1aaeb60f78a45fe892b2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0fa89331261a7ab01a89b5537f1767c86d22b59c1f5d0217dad883dac170f2ca"
+    sha256 cellar: :any_skip_relocation, ventura:        "f40c43208a3507d7db66383af338c59928d41b0bbdaa7d69d685095781e1442d"
+    sha256 cellar: :any_skip_relocation, monterey:       "9941c45d324ac9cd7e109402dbb46d737a912dc535aee7fec2658ef8a64c3f3c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f75bfba070cccb7fa117359f0cc2ce00e32b982e3191b377076b9acfc8fddc5f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2e05c1bc518a196ef52d961efa70dc830777257acc07d3caf5357962febf9398"
   end
 
   depends_on "go" => :build
@@ -24,13 +25,11 @@ class Doctl < Formula
       #{base_flag}.Minor=#{version.minor}
       #{base_flag}.Patch=#{version.patch}
       #{base_flag}.Label=release
-    ].join(" ")
+    ]
 
     system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/doctl"
 
-    (bash_completion/"doctl").write `#{bin}/doctl completion bash`
-    (zsh_completion/"_doctl").write `#{bin}/doctl completion zsh`
-    (fish_completion/"doctl.fish").write `#{bin}/doctl completion fish`
+    generate_completions_from_executable(bin/"doctl", "completion")
   end
 
   test do

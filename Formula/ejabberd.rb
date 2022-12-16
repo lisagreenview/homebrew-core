@@ -1,35 +1,32 @@
 class Ejabberd < Formula
   desc "XMPP application server"
   homepage "https://www.ejabberd.im"
-  url "https://static.process-one.net/ejabberd/downloads/21.07/ejabberd-21.07.tgz"
-  sha256 "0e90cfd6c03191ca8aef344b9d543a038e272770be14c2288d83cc4d34825868"
+  url "https://github.com/processone/ejabberd/archive/refs/tags/22.10.tar.gz"
+  sha256 "8539707da7e75785444edf402b5ff60fc3f956806c341b2565702dcc77900402"
   license "GPL-2.0-only"
-
-  livecheck do
-    url "https://www.process-one.net/en/ejabberd/downloads/"
-    regex(/href=.*?ejabberd[._-]v?(\d+(?:\.\d+)+)\.t/i)
-  end
+  head "https://github.com/processone/ejabberd.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "4b54e5246a1a00c93856d1786eb4067b3883f4293d3fb91a7345441fdc90ba76"
-    sha256 cellar: :any, arm64_big_sur:  "c22a2bd2a9dfcbbdc1e6df1ea63ae25924234f1ddd4cb5f4b016fc2013b97487"
-    sha256 cellar: :any, monterey:       "0e7930fc896f7e8136ed435743502e88820d1463a850537190b3d993aed6f202"
-    sha256 cellar: :any, big_sur:        "61ae3c224f34b18973bca8c311cdf990fe4e1c2be444d69ae5f9e2ecab6984b2"
-    sha256 cellar: :any, catalina:       "e864b717afec626c0a2b1e1038c1dcef082f6ef34d72085581f594d77b7a0ad1"
-    sha256 cellar: :any, mojave:         "8856dec9f546db393d17f66ec8427e0429650658e2622cad22f47347b563495b"
+    sha256 cellar: :any,                 arm64_ventura:  "e4f40e6ce813d70e58b60e2da13c0e7cc694fcc300f8a92c2159034b2414ad3d"
+    sha256 cellar: :any,                 arm64_monterey: "baae4960d92ae5d21d82382c3202bb9150b414d50ce97c8bdb756e4d3f777594"
+    sha256 cellar: :any,                 arm64_big_sur:  "3d3c3ce2dc52cfcd45b6e177c027f4e2b782ccdedf0aa81e458153725e5fac27"
+    sha256 cellar: :any,                 ventura:        "4cb756ab8aee7a8ef6fdac0cc81a09038bbae23f1b77c2f2e2f768d1d1d321f9"
+    sha256 cellar: :any,                 monterey:       "ef80593e0e0e03cc10393f861aaf209019dfd1f175a58b352e47a7ad6d2c73b7"
+    sha256 cellar: :any,                 big_sur:        "e379ec46b088099a3a323ed05c4d519894639c932ce28616ab69de8cb2b56aba"
+    sha256 cellar: :any,                 catalina:       "1b7baed8ffa349d7b02c7e0bf865d7c1506a116ea1a9ca07f1e5431bb572d018"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bb251bbf28ec6219f6200bbc23bf2a6733b85348f8d1d8454db23f8cb7276200"
   end
 
-  head do
-    url "https://github.com/processone/ejabberd.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-  end
-
-  depends_on "erlang@22"
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "erlang"
   depends_on "gd"
   depends_on "libyaml"
   depends_on "openssl@1.1"
+
+  on_linux do
+    depends_on "linux-pam"
+  end
 
   conflicts_with "couchdb", because: "both install `jiffy` lib"
 
@@ -46,12 +43,12 @@ class Ejabberd < Formula
             "--enable-odbc",
             "--enable-pam"]
 
-    system "./autogen.sh" if build.head?
+    system "./autogen.sh"
     system "./configure", *args
 
     # Set CPP to work around cpp shim issue:
     # https://github.com/Homebrew/brew/issues/5153
-    system "make", "CPP=clang -E"
+    system "make", "CPP=#{ENV.cc} -E"
 
     ENV.deparallelize
     system "make", "install"
@@ -82,33 +79,10 @@ class Ejabberd < Formula
     EOS
   end
 
-  plist_options manual: "#{HOMEBREW_PREFIX}/sbin/ejabberdctl start"
-
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-        <key>EnvironmentVariables</key>
-        <dict>
-          <key>HOME</key>
-          <string>#{var}/lib/ejabberd</string>
-        </dict>
-        <key>Label</key>
-        <string>#{plist_name}</string>
-        <key>ProgramArguments</key>
-        <array>
-          <string>#{opt_sbin}/ejabberdctl</string>
-          <string>start</string>
-        </array>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>WorkingDirectory</key>
-        <string>#{var}/lib/ejabberd</string>
-      </dict>
-      </plist>
-    EOS
+  service do
+    run [opt_sbin/"ejabberdctl", "start"]
+    environment_variables HOME: var/"lib/ejabberd"
+    working_dir var/"lib/ejabberd"
   end
 
   test do

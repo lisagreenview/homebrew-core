@@ -1,19 +1,19 @@
 class Asciidoctor < Formula
   desc "Text processor and publishing toolchain for AsciiDoc"
   homepage "https://asciidoctor.org/"
-  url "https://github.com/asciidoctor/asciidoctor/archive/v2.0.16.tar.gz"
-  sha256 "8fc1e3947012e22bccabe4d6faa31fee446f3719bb7478c79f45221b64fbd09f"
+  url "https://github.com/asciidoctor/asciidoctor/archive/v2.0.18.tar.gz"
+  sha256 "fad34373023f3212090635d7b793c2528e64c0593b2ba5c38b59f3fb6fd517f5"
   license "MIT"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e738bffee5905b12523ba2efa472071161f879333c1c85e06e856bf69cf990a6"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fc2493fc3c30964474cbe495313fe66921f1495e72c3fe61381ac6aea70045b6"
-    sha256 cellar: :any_skip_relocation, monterey:       "e447ecfd225140a4d1203f41abab2a527a270e73d91431e1dd672d52da9e539e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "16d6788131428a7fb9207f567061e657176422324da5a5aae3259ed42bd40861"
-    sha256 cellar: :any_skip_relocation, catalina:       "16d6788131428a7fb9207f567061e657176422324da5a5aae3259ed42bd40861"
-    sha256 cellar: :any_skip_relocation, mojave:         "3ee2e170d171c850e25d100c2a47fb2fdda7c3f3ca551bfd2b97896575379277"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "78113a6630aa5287c960805549500b3e047d240db16c6e8752c856f4d97e4b74"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "966b2a1a8e474335aaee4a1514b60798cd228460e2fd16ca361b34cc5327050b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "966b2a1a8e474335aaee4a1514b60798cd228460e2fd16ca361b34cc5327050b"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "acdef05b142ea26ac82e9bbf814e7caeeb2e91c34c73d028470c19ab49170bca"
+    sha256 cellar: :any_skip_relocation, ventura:        "838217c6bd960cab0b8cee9f32b2b668c6744b52f7bf3302b788d067a0ff9861"
+    sha256 cellar: :any_skip_relocation, monterey:       "838217c6bd960cab0b8cee9f32b2b668c6744b52f7bf3302b788d067a0ff9861"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9ebc210dafcb38de14b1481019e74ad092bbe68cd4165418dd6724b706edf534"
+    sha256 cellar: :any_skip_relocation, catalina:       "9ebc210dafcb38de14b1481019e74ad092bbe68cd4165418dd6724b706edf534"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f2fbcfc2cb751e46aff2a4f1cdd67501a479f0f8e780e15dca7bbc30cc6a286c"
   end
 
   uses_from_macos "ruby", since: :catalina
@@ -26,8 +26,8 @@ class Asciidoctor < Formula
 
   # asciidoctor-pdf requires concurrent-ruby ~> 1.1
   resource "concurrent-ruby" do
-    url "https://rubygems.org/gems/concurrent-ruby-1.1.8.gem"
-    sha256 "e35169e8e01c33cddc9d322e4e793a9bc8c3c00c967d206d17457e0d301f2257"
+    url "https://rubygems.org/gems/concurrent-ruby-1.1.9.gem"
+    sha256 "0ec0846d991c38f355b4228ad8ea77aa69c3fdaa320cd574dafedc10c4688a5b"
   end
 
   # prawn 2.4.0 requires pdf-core ~> 0.9.0
@@ -72,8 +72,8 @@ class Asciidoctor < Formula
 
   # prawn-svg requires css_parser ~> 1.6
   resource "css_parser" do
-    url "https://rubygems.org/gems/css_parser-1.9.0.gem"
-    sha256 "a19cbe6edf9913b596c63bc285681b24288820bbe32c51564e09b49e9a8d4477"
+    url "https://rubygems.org/gems/css_parser-1.11.0.gem"
+    sha256 "568926c3193579446ad3e3f9d761c73e2918ee5b3b7757a1a49ec166c67d6de1"
   end
 
   # prawn-svq requires rexml ~> 3.2
@@ -149,8 +149,8 @@ class Asciidoctor < Formula
   end
 
   resource "asciidoctor-pdf" do
-    url "https://rubygems.org/gems/asciidoctor-pdf-1.6.0.gem"
-    sha256 "89c730499bbc4086710ae0c1b9ac1510b8457d6861b9b31495e64871f1f8ae6b"
+    url "https://rubygems.org/gems/asciidoctor-pdf-1.6.2.gem"
+    sha256 "04385376cbc8d4d26e814b655e50189e58ecdeec2a4fa3ce9282943a3d3bd4c6"
   end
 
   resource "coderay" do

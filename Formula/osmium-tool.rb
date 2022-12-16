@@ -1,22 +1,27 @@
 class OsmiumTool < Formula
   desc "Libosmium-based command-line tool for processing OpenStreetMap data"
   homepage "https://osmcode.org/osmium-tool/"
-  url "https://github.com/osmcode/osmium-tool/archive/v1.13.2.tar.gz"
-  sha256 "a6516087bfe1f6c881c9087b448ee8965b7d1730e29e4e8e982cd2ef8c4f8d98"
+  url "https://github.com/osmcode/osmium-tool/archive/v1.14.0.tar.gz"
+  sha256 "67765fe6b612e791aab276af601dd12410b70486946e983753f6b0442f915233"
   license "GPL-3.0-or-later"
+  revision 2
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "a1e85864e81239d90e4e0592fcd1fe7eab4118d06f34e4b6ea4560fb9ec66294"
-    sha256 cellar: :any, arm64_big_sur:  "bb643b8ff8b55a149f0fb6b57c1abd347fdca943a6a8d44baf34cc123bf47b9a"
-    sha256 cellar: :any, monterey:       "ae1f3ea8a20597ec99ba4e43d46de8d45c0416dac1fed9464e111a5e6c1d307a"
-    sha256 cellar: :any, big_sur:        "589eb5fd205fe081a5fa470f44628a186c1ac0c9d6546d7aa02308ad32bd83f8"
-    sha256 cellar: :any, catalina:       "3c8ed5d3feb01942592c9ecbc6e32e5be0fbcce61411e75c7240f0d2d6ff2446"
-    sha256 cellar: :any, mojave:         "0c1d2dcf31540f5a0218d9413dc7b990d3dd9e21d5d261a3ff617365cec6d0ed"
+    sha256 cellar: :any,                 arm64_ventura:  "3259066785aa82d6dae6b4f1fcdd53c10858ba19bfe1672695e33a9d1beca680"
+    sha256 cellar: :any,                 arm64_monterey: "ecfb1b350bb2d92d32ff311a1659084db2000b244eb7351c30bf94283c35265a"
+    sha256 cellar: :any,                 arm64_big_sur:  "cfb56102bd3cb066cdfade5936679d4cf1c5ff7cb36464f901b7cb2071873aab"
+    sha256 cellar: :any,                 ventura:        "fee70d13913c52c1cb502f5150586c15d88228c1459edb566999f1687d816f5b"
+    sha256 cellar: :any,                 monterey:       "2e11f60463925a700b88a2b171905a8a8f64ee2cd7cfb44965a7d61ac4f7a8ef"
+    sha256 cellar: :any,                 big_sur:        "457422771493c4c8d432f7081c77d806113886da9dcaacf60f3c2c1465948acb"
+    sha256 cellar: :any,                 catalina:       "8f25a3775f55b6c72cca6714632ed5463b94a724ea619a8955c4fc94dc03ff38"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5a0c1361abc5a4d59d50e84438072f7903428a55372029578bdcd01cf068fee9"
   end
 
   depends_on "cmake" => :build
   depends_on "libosmium" => :build
+  depends_on "pandoc" => :build
   depends_on "boost"
+  depends_on "lz4"
 
   uses_from_macos "expat"
 

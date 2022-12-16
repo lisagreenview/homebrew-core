@@ -1,8 +1,8 @@
 class Aqbanking < Formula
   desc "Generic online banking interface"
-  homepage "https://www.aquamaniac.de/sites/aqbanking/"
-  url "https://www.aquamaniac.de/rdm/attachments/download/386/aqbanking-6.3.2.tar.gz"
-  sha256 "a97ab42f7298cbb2617b2bda53ca51a2b0fe5f780bde098a39a5f4a3243e3418"
+  homepage "https://www.aquamaniac.de/rdm/projects/aqbanking"
+  url "https://www.aquamaniac.de/rdm/attachments/download/467/aqbanking-6.5.3.tar.gz"
+  sha256 "6c62bf26aa42e69b21e188b54f6a5d825d6da34de1a14cbc3b67d85a9705136e"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -11,18 +11,14 @@ class Aqbanking < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "68e171896fd9c1c8e4da47726a8e6c8e40aaf318a2da026cba67fd0a89cdcf9f"
-    sha256 big_sur:       "2ec730d26adbca6c0745aa4301ab2aea51894b6b2db5bc4f61f06a91db678a6a"
-    sha256 catalina:      "7421db73ffd8f34a960d3a095ed93d32b22bbdda1eaf63675083750e42986ba9"
-    sha256 mojave:        "8f0fc769af2fcdc03281a0b0447e93ee6653df51650a43c5e5513dd16628ccde"
-  end
-
-  head do
-    url "https://git.aquamaniac.de/git/aqbanking.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
+    sha256 arm64_ventura:  "1ac366220ad338277a56f2923ae4298b8c7077ad1181a7aa49a726c045c4b828"
+    sha256 arm64_monterey: "e3a12de7657644364037be15c92717200409f4d94953452adf0a77e5c357c7e1"
+    sha256 arm64_big_sur:  "2e43a777b8c571a5bac1d1a0f5672c73209e73d6ec3ab2aab35ddd323beb3b26"
+    sha256 ventura:        "298dd362e2f7dd1e7c25405c6cef43d2495e8379f166c5c474a4831f5cf79382"
+    sha256 monterey:       "ddfbf5a556dc6cf7ef4e5695b37909e53d16dc33ac3479f78aa4a5de1b513f8e"
+    sha256 big_sur:        "8006ec44c588bb2d7e9aedf2c3ce0ff60c83359d7a897a6671007c1634431f66"
+    sha256 catalina:       "69ef4f19ee0347174f58a31ba063a426c66b4413ba8f3fbb0f458c02b53451f2"
+    sha256 x86_64_linux:   "6decd8373f661ce97d20985460570f52600a4f2c9633435885c79414eaa320ba"
   end
 
   depends_on "gettext"
@@ -31,17 +27,18 @@ class Aqbanking < Formula
   depends_on "ktoblzcheck"
   depends_on "libxml2"
   depends_on "libxmlsec1"
-  depends_on "libxslt"
+  depends_on "libxslt" # Our libxslt links with libgcrypt
   depends_on "pkg-config" # aqbanking-config needs pkg-config for execution
 
   def install
     ENV.deparallelize
     inreplace "aqbanking-config.in.in", "@PKG_CONFIG@", "pkg-config"
-    system "autoreconf", "-fiv" if build.head?
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--enable-cli"
+    # This is banking software, so let's run the test suite.
+    system "make", "check"
     system "make", "install"
   end
 
@@ -69,8 +66,8 @@ class Aqbanking < Formula
     EOS
 
     match = "110000000 000123456789 12.12.2022 -110.96 US44110000000000123456789 BYLADEM1001"
-    out = shell_output("#{bin}/aqbanking-cli -D .aqbanking listbal "\
-                       "-T '$(bankcode) $(accountnumber) $(dateAsString) "\
+    out = shell_output("#{bin}/aqbanking-cli -D .aqbanking listbal " \
+                       "-T '$(bankcode) $(accountnumber) $(dateAsString) " \
                        "$(valueAsString) $(iban) $(bic)' < #{context}")
     assert_match match, out.gsub(/\s+/, " ")
   end

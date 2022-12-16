@@ -1,17 +1,18 @@
 class Vale < Formula
   desc "Syntax-aware linter for prose"
-  homepage "https://errata-ai.github.io/vale/"
-  url "https://github.com/errata-ai/vale/archive/v2.12.1.tar.gz"
-  sha256 "0dda66e3f2b14f4be2e4a188d2acbfe4f0087b2086bcb59b3abb4dc87fa3633c"
+  homepage "https://docs.errata.ai/"
+  url "https://github.com/errata-ai/vale/archive/v2.21.3.tar.gz"
+  sha256 "09a64bff873134d794888615af3131a441d6b3763bdcb76d45162587386026df"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1718d0dc78ff5465305287210bf180e35478bb1b29cb39c57ccea4721b798687"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "86dff3ace534bbb2a977ff2dfcfc3ec9052a192addbc962735484d0210d9341e"
-    sha256 cellar: :any_skip_relocation, monterey:       "aef82dbce1b0de592d76153cf2e0e3c45574408da336150eff8e0f8641d4de1a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7bbfae4145d5db0624a28ccbf347561bade9c74693f0c47b92c0f7d49cfb3a8b"
-    sha256 cellar: :any_skip_relocation, catalina:       "7b7c2542dffada5e42a955bafeb1f8f4ad234532e343a2ad3c1542789d8c4396"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d4e55bea698d642edf2d4e562f4c3d77def70b3ada16c864717b34bda05c3bf5"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c4f7eddb865e8647e9802c4af3477d115d53fc332bb13844138c71758b199351"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "428b5f125ca1c2968ff317c7d2af86dee7c26b5e8d22604148d09932e9f4cded"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3a3ab6390d6a2eeb7249a338f6138934563254e81f73abda11937b34f3254d32"
+    sha256 cellar: :any_skip_relocation, ventura:        "f6a908333cad800846c322b9b74335effe1424c4b6a94d44533be11ba367aeef"
+    sha256 cellar: :any_skip_relocation, monterey:       "d85bdf59c44f6804718952683bdb3d7011879c5d215e76b41c536d2da91cb2bc"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8bbf319ea8e6546650ab006595c5ef864d8bdab1ba1a435d6e593ea566ece81a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4de684a2919b07345bb809167c08a7a491494a9060edf050e9ececd8aba16c08"
   end
 
   depends_on "go" => :build

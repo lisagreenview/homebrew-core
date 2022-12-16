@@ -1,30 +1,46 @@
 class Assimp < Formula
   desc "Portable library for importing many well-known 3D model formats"
   homepage "https://www.assimp.org/"
-  url "https://github.com/assimp/assimp/archive/v5.1.1.tar.gz"
-  sha256 "ccb71bcbd8b5047b3779f1732958ccdb7ada3f64e254f4293d9570a47e1ce803"
+  url "https://github.com/assimp/assimp/archive/v5.2.5.tar.gz"
+  sha256 "b5219e63ae31d895d60d98001ee5bb809fb2c7b2de1e7f78ceeb600063641e1a"
   license :cannot_represent
   head "https://github.com/assimp/assimp.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "50b38380e1bcf864f74b3d0512ed22b9302514cf23b1405b073f37588e67444c"
-    sha256 cellar: :any,                 arm64_big_sur:  "fa7836872947f3e94c0ce2bef479188f6b11d1d5eb2de828eab49a1c0c82a0bd"
-    sha256 cellar: :any,                 monterey:       "fb38e3e57e1cded0de722728d9537b58c19fb2bffd6d7cfba16942657f99575d"
-    sha256 cellar: :any,                 big_sur:        "da87f310481dc74fc52e3c679869696278dcc58e8629d56dbc4b84710515def8"
-    sha256 cellar: :any,                 catalina:       "652c965c646bae5a64d9ac8382accde938417d7d1111cbcd23fcd68b1ddd338b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ced187cbe7bbd7db639424ddef3ff3327861c41df91ba5f42fe82870d5e2cc58"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "38267be8c3911c4269de574dbb3f7a95523cf3eee9a37867900e35c62304d72a"
+    sha256 cellar: :any,                 arm64_monterey: "41d4dac7a778c2ce90ac37fed8719342f01955f853cc5f22e003039cff473706"
+    sha256 cellar: :any,                 arm64_big_sur:  "3193797fdee877db77e530640ed40ffaedc4faea785e7fb635a33f8f53276cab"
+    sha256 cellar: :any,                 ventura:        "df603dc822f5590620aada3ec00d52e3d4f701ed2ec5dba6c3fd93674fa10ba8"
+    sha256 cellar: :any,                 monterey:       "45a132fbf709f176c786bc68d46762278bb1becb970af8e1c6eae57536d549fa"
+    sha256 cellar: :any,                 big_sur:        "9e9aaeec7e775d4dabfa0bd8fdd7829e1fe41052ffc94e1463012a9c4a0991ab"
+    sha256 cellar: :any,                 catalina:       "36735fe1df202f856c7a30297b99283497ad7bb4d48e95aca55db30c03009084"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d2014dd56de28ba603d88dc9df9744569abe50b62d631e2d78e0a08f8e9ff62a"
   end
 
   depends_on "cmake" => :build
+  depends_on "ninja" => :build
 
   uses_from_macos "zlib"
 
+  fails_with gcc: "5"
+
+  # Fix for macOS 13, remove in next version
+  patch do
+    url "https://github.com/assimp/assimp/commit/5a89d6fee138f8bc979b508719163a74ddc9a384.patch?full_index=1"
+    sha256 "a5fa5be12dd782617d81cc867b40a0bca32718fda0c6cedcca60e2325de03453"
+  end
+
   def install
-    args = std_cmake_args
-    args << "-DASSIMP_BUILD_TESTS=OFF"
-    args << "-DCMAKE_INSTALL_RPATH=#{rpath}"
-    system "cmake", *args
-    system "make", "install"
+    args = %W[
+      -DASSIMP_BUILD_TESTS=OFF
+      -DASSIMP_BUILD_ASSIMP_TOOLS=ON
+      -DCMAKE_INSTALL_RPATH=#{rpath}
+    ]
+
+    system "cmake", " -S", ".", "-B", "build", "-G", "Ninja", *args, *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

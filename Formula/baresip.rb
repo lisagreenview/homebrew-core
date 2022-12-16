@@ -1,43 +1,50 @@
 class Baresip < Formula
   desc "Modular SIP useragent"
   homepage "https://github.com/baresip/baresip"
-  url "https://github.com/baresip/baresip/releases/download/v0.6.5/baresip-0.6.5.tar.gz"
-  sha256 "2b035bd8b2121c72bec674768579a3bdcc5d1d567ecb0a84125864d69807b18d"
+  url "https://github.com/baresip/baresip/archive/refs/tags/v2.10.0.tar.gz"
+  sha256 "1bbeda0cb6c0f0480fb67f4fcc389df42384da7da909d9d950538fbbbfb92495"
+  license "BSD-3-Clause"
 
   bottle do
-    sha256 monterey:    "b0d792db1c9ef6772cfccf172288fdc306b404bded7659f8d8caaee5d31a4e9c"
-    sha256 big_sur:     "26b195eb72f39e12b796100935469105d0a07968cf38d9dc1febec3322e40939"
-    sha256 catalina:    "dd71d2ba58f82dd58b4da6c350b2d52ff4e04fe64679a446778615550dfb95b8"
-    sha256 mojave:      "ec2fb4cba298c281b40a0929c227b563508ecaf5564e9381872c14469fb73ef9"
-    sha256 high_sierra: "b99e262d153eb3414c2a6fe813be98e78f71da205d66ede0ec799d1e07f0341a"
+    sha256 arm64_ventura:  "0cafcad6c6a3b13c298c0fef3646888cfc7d8e4ec5535f04ea16e8339a57d45b"
+    sha256 arm64_monterey: "0f8d6a6c4a3664cd275720fd810b5a210ccff1dc0c1f4d2687f59a51adc5f341"
+    sha256 arm64_big_sur:  "63640cb9406809b1ea99c17f3eb84860ab121bee4823a121952071203f903a97"
+    sha256 ventura:        "e7e179bbd15bee1b9da4c0f8de23e4f3864ca9222a6a5157e3a2755ee214a70f"
+    sha256 monterey:       "ac118460d14f62a5b6fd93eb678e371355ef97924fac51dcb7ec550c7a75e27f"
+    sha256 big_sur:        "77240b2aa79c92acffcffb51040a6c9567eda6e8c886eecf317a3f089bb61f95"
+    sha256 x86_64_linux:   "a2c7f7c663930e887c60ebae525bae0cada7be7368b684d9d110ec5159b900dc"
   end
 
   depends_on "libre"
   depends_on "librem"
 
   def install
-    # baresip doesn't like the 10.11 SDK when on Yosemite
-    if MacOS::Xcode.version.to_i >= 7
-      ENV.delete("SDKROOT")
-      ENV.delete("HOMEBREW_SDKROOT") if MacOS::Xcode.without_clt?
-    end
-
     libre = Formula["libre"]
-    system "make", "install", "PREFIX=#{prefix}",
-                              "LIBRE_MK=#{libre.opt_share}/re/re.mk",
-                              "LIBRE_INC=#{libre.opt_include}/re",
-                              "LIBRE_SO=#{libre.opt_lib}",
-                              "MOD_AUTODETECT=",
-                              "USE_AVCAPTURE=1",
-                              "USE_COREAUDIO=1",
-                              "USE_G711=1",
-                              "USE_OPENGL=1",
-                              "USE_STDIO=1",
-                              "USE_UUID=1",
-                              "HAVE_GETOPT=1"
+    librem = Formula["librem"]
+    args = %W[
+      PREFIX=#{prefix}
+      LIBRE_MK=#{libre.opt_share}/re/re.mk
+      LIBRE_INC=#{libre.opt_include}/re
+      LIBRE_SO=#{libre.opt_lib}
+      LIBREM_PATH=#{librem.opt_prefix}
+      LIBREM_SO=#{librem.opt_lib}
+      MOD_AUTODETECT=
+      USE_G711=1
+      USE_OPENGL=1
+      USE_STDIO=1
+      USE_UUID=1
+      HAVE_GETOPT=1
+      RELEASE=1
+      V=1
+    ]
+    if OS.mac?
+      args << "USE_AVCAPTURE=1"
+      args << "USE_COREAUDIO=1"
+    end
+    system "make", "install", *args
   end
 
   test do
-    system "#{bin}/baresip", "-f", "#{ENV["HOME"]}/.baresip", "-t"
+    system bin/"baresip", "-f", testpath/".baresip", "-t", "5"
   end
 end

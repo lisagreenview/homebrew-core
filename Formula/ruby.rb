@@ -1,10 +1,20 @@
 class Ruby < Formula
   desc "Powerful, clean, object-oriented scripting language"
   homepage "https://www.ruby-lang.org/"
-  url "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.2.tar.xz"
-  sha256 "570e7773100f625599575f363831166d91d49a1ab97d3ab6495af44774155c40"
   license "Ruby"
-  revision 1
+
+  stable do
+    url "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.3.tar.gz"
+    sha256 "5ea498a35f4cd15875200a52dde42b6eb179e1264e17d78732c3a57cd1c6ab9e"
+
+    # Should be updated only when Ruby is updated (if an update is available).
+    # The exception is Rubygem security fixes, which mandate updating this
+    # formula & the versioned equivalents and bumping the revisions.
+    resource "rubygems" do
+      url "https://rubygems.org/rubygems/rubygems-3.3.26.tgz"
+      sha256 "9b17a53a000a599926cf1ef19e9d2a35f87b436ae6500225eebe55db320dc68c"
+    end
+  end
 
   livecheck do
     url "https://www.ruby-lang.org/en/downloads/"
@@ -12,17 +22,17 @@ class Ruby < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "06ffbddcfc573a3403d33bc127b60a53e5d6b5442819f21f0d44868209018090"
-    sha256 arm64_big_sur:  "86f9be3f7ac26e69e3c856776569b1c10039716f5787821944645c6d0f10fe87"
-    sha256 monterey:       "a96e512f8f9e3b8b76be15aedf258df8ce7b2d0a54c67d9324801b9ef4d223c9"
-    sha256 big_sur:        "b11776c7e7209ddbfee2085de7027a6f987657045171dddb0692c18ea07f4bc5"
-    sha256 catalina:       "7929b11c278737feca268f8b3ad8a7174f6e7b6034248f0c743debfea3708ab8"
-    sha256 mojave:         "435dd2553367df11b8619cc7428362a633229e3c198d701ab399413c548bcf75"
-    sha256 x86_64_linux:   "122e95641ce5f32a78814e3b9f753f8504ab513f42016c0f6dd78825e05051fe"
+    sha256 arm64_ventura:  "0da05c51acf1a88a1d042de43159efa5ff829e4c0efef169a41b83c910567245"
+    sha256 arm64_monterey: "51db346a102e3985fb4419b5a44a42f081099bd2c2aa559e2c32c3e77415debb"
+    sha256 arm64_big_sur:  "75b245d424a56dc113fdb134ca2a7dcafb9ba1b97fa9662cf71b59d90c70bf0d"
+    sha256 ventura:        "48b781d84b953962d567871957dbfb328a28d9ad6a501f86a5780139097db392"
+    sha256 monterey:       "771ed9066e45a2b6bab6f6fa9bd1a5deb365643be0ca2db83bf317e2d1bed061"
+    sha256 big_sur:        "a2e42d8eada650fc3c6dc4da4be77b6d9ad6c5f2c17f26ca91026a1a4d0cb7ef"
+    sha256 x86_64_linux:   "a58222567efff5c6ad0de722edc0655ceee85f3ecc0bad60a50ae51d158ff109"
   end
 
   head do
-    url "https://github.com/ruby/ruby.git", branch: "trunk"
+    url "https://github.com/ruby/ruby.git", branch: "master"
     depends_on "autoconf" => :build
   end
 
@@ -34,15 +44,8 @@ class Ruby < Formula
   depends_on "readline"
 
   uses_from_macos "libffi"
+  uses_from_macos "libxcrypt"
   uses_from_macos "zlib"
-
-  # Should be updated only when Ruby is updated (if an update is available).
-  # The exception is Rubygem security fixes, which mandate updating this
-  # formula & the versioned equivalents and bumping the revisions.
-  resource "rubygems" do
-    url "https://rubygems.org/rubygems/rubygems-3.2.22.tgz"
-    sha256 "368979ef8103b550a98fc6479543831f0d55c3567d5ee4622d5aa569ee17418b"
-  end
 
   def api_version
     Utils.safe_popen_read("#{bin}/ruby", "-e", "print Gem.ruby_api_version")
@@ -55,6 +58,11 @@ class Ruby < Formula
   def install
     # otherwise `gem` command breaks
     ENV.delete("SDKROOT")
+
+    # Prevent `make` from trying to install headers into the SDK
+    # TODO: Remove this workaround when the following PR is merged/resolved:
+    #       https://github.com/Homebrew/brew/pull/12508
+    inreplace "tool/mkconfig.rb", /^(\s+val = )'"\$\(SDKROOT\)"'\+/, "\\1"
 
     system "./autogen.sh" if build.head?
 
@@ -94,6 +102,8 @@ class Ruby < Formula
     # A newer version of ruby-mode.el is shipped with Emacs
     elisp.install Dir["misc/*.el"].reject { |f| f == "misc/ruby-mode.el" }
 
+    return if build.head? # Use bundled RubyGems for --HEAD (will be newer)
+
     # This is easier than trying to keep both current & versioned Ruby
     # formulae repeatedly updated with Rubygem patches.
     resource("rubygems").stage do
@@ -101,16 +111,21 @@ class Ruby < Formula
 
       system "#{bin}/ruby", "setup.rb", "--prefix=#{buildpath}/vendor_gem"
       rg_in = lib/"ruby/#{api_version}"
+      rg_gems_in = lib/"ruby/gems/#{api_version}"
 
       # Remove bundled Rubygem and Bundler
-      rm_rf rg_in/"bundler"
-      rm_rf rg_in/"rubygems"
-      rm_f rg_in/"rubygems.rb"
-      rm_f rg_in/"ubygems.rb"
-      rm_f bin/"gem"
+      rm_r rg_in/"bundler"
+      rm rg_in/"bundler.rb"
+      rm_r Dir[rg_gems_in/"gems/bundler-*"]
+      rm Dir[rg_gems_in/"specifications/default/bundler-*.gemspec"]
+      rm_r rg_in/"rubygems"
+      rm rg_in/"rubygems.rb"
+      rm bin/"gem"
 
       # Drop in the new version.
       rg_in.install Dir[buildpath/"vendor_gem/lib/*"]
+      (rg_gems_in/"gems").install Dir[buildpath/"vendor_gem/gems/*"]
+      (rg_gems_in/"specifications/default").install Dir[buildpath/"vendor_gem/specifications/default/*"]
       bin.install buildpath/"vendor_gem/bin/gem" => "gem"
       (libexec/"gembin").install buildpath/"vendor_gem/bin/bundle" => "bundle"
       (libexec/"gembin").install_symlink "bundle" => "bundler"
@@ -232,10 +247,10 @@ class Ruby < Formula
 
     (testpath/"Gemfile").write <<~EOS
       source 'https://rubygems.org'
-      gem 'gemoji'
+      gem 'github-markup'
     EOS
     system bin/"bundle", "exec", "ls" # https://github.com/Homebrew/homebrew-core/issues/53247
     system bin/"bundle", "install", "--binstubs=#{testpath}/bin"
-    assert_predicate testpath/"bin/gemoji", :exist?, "gemoji is not installed in #{testpath}/bin"
+    assert_predicate testpath/"bin/github-markup", :exist?, "github-markup is not installed in #{testpath}/bin"
   end
 end

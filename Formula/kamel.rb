@@ -2,10 +2,10 @@ class Kamel < Formula
   desc "Apache Camel K CLI"
   homepage "https://camel.apache.org/"
   url "https://github.com/apache/camel-k.git",
-      tag:      "v1.6.1",
-      revision: "7f1a34f473275b3c40eb0e1c369901c030a71c93"
+      tag:      "v1.11.0",
+      revision: "13ca5a0570e81e7c03a911ae785bd1a73bb6b7e5"
   license "Apache-2.0"
-  head "https://github.com/apache/camel-k.git"
+  head "https://github.com/apache/camel-k.git", branch: "main"
 
   livecheck do
     url :stable
@@ -13,25 +13,25 @@ class Kamel < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "c5d4f1ab9b49df2038e7b194c025209c73ebec4b19593ab3dc669914ab2fdb3a"
-    sha256 cellar: :any_skip_relocation, big_sur:       "e053362633c04b93786d30df6d191aa740e1461acbbc180e84c49e39fecdcedd"
-    sha256 cellar: :any_skip_relocation, catalina:      "0ec32a5a191e484fbc33cb33beba54c81cf919188528cdc21de42cd1e749fae5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "70e07d9beecff17e3943e7f2ee70a7f7e496cf07d011ce1863556a2741946aa4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c0b929f8b4d7ba65376fbe2d0914687439f6a15c066507b15a87f668fad4aac2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "56ca18784815191b73ea9c7cf0ef727a398bb56393ba9679a81a6cee1e2aecbf"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a3871dbf94619608b54e4bb2d290c0cee92c1980618b919c035047b3ee01639b"
+    sha256 cellar: :any_skip_relocation, ventura:        "c293036aa73e13efe7d124fb5fee2207253656c3c4bae31be145295f4d366fd7"
+    sha256 cellar: :any_skip_relocation, monterey:       "79fb5a67f2d1d71c8bdabb33505a41d1fdaa5701e2419fd889ea609a3af129e8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8b8f66dac6a10bd79924b5566ed26d0ef41e3469fbb7cd1b52de178b6eb640e1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d5390e8b95ce6caaf3e026b7e208759dc85cc07b1645880884df104912d755d1"
   end
 
   depends_on "go" => :build
   depends_on "openjdk@11" => :build
+  depends_on "kubernetes-cli"
 
   def install
     ENV["JAVA_HOME"] = Language::Java.java_home("11")
-    system "make"
+    system "make", "build-kamel"
     bin.install "kamel"
 
-    output = Utils.safe_popen_read("#{bin}/kamel", "completion", "bash")
-    (bash_completion/"kamel").write output
-
-    output = Utils.safe_popen_read("#{bin}/kamel", "completion", "zsh")
-    (zsh_completion/"_kamel").write output
+    generate_completions_from_executable(bin/"kamel", "completion", shells: [:bash, :zsh])
   end
 
   test do
@@ -49,9 +49,6 @@ class Kamel < Formula
 
     run_output = shell_output("echo $(#{bin}/kamel run 2>&1)")
     assert_match "Error: run expects at least 1 argument, received 0", run_output
-
-    run_none_output = shell_output("echo $(#{bin}/kamel run None.java 2>&1)")
-    assert_match "cannot read sources: Missing file or unsupported scheme in None.java", run_none_output
 
     reset_output = shell_output("echo $(#{bin}/kamel reset 2>&1)")
     assert_match "Error: cannot get command client: invalid configuration", reset_output

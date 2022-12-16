@@ -1,18 +1,20 @@
 class Glfw < Formula
   desc "Multi-platform library for OpenGL applications"
   homepage "https://www.glfw.org/"
-  url "https://github.com/glfw/glfw/archive/3.3.5.tar.gz"
-  sha256 "32fdb8705784adfe3082f97e0d41e7c515963e977b5a14c467a887cf0da827b5"
+  url "https://github.com/glfw/glfw/archive/3.3.8.tar.gz"
+  sha256 "f30f42e05f11e5fc62483e513b0488d5bceeab7d9c5da0ffe2252ad81816c713"
   license "Zlib"
-  head "https://github.com/glfw/glfw.git"
+  head "https://github.com/glfw/glfw.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "f403c7bb3b896a27697b11dadc2ec57dfd0bcdd9677f06506e5b342fd8ef867b"
-    sha256 cellar: :any,                 arm64_big_sur:  "a27a303ba0d840adb0b4db81c0c8193b89657eac79d55edc230c41f720af25cd"
-    sha256 cellar: :any,                 monterey:       "2b946d54a5c83fae4e45773dece612471fa482881a48e7c92d860e2d352de0ce"
-    sha256 cellar: :any,                 big_sur:        "f444562fbb85b074137dabd8074ad783f385e6c50d3dbeaaeb767f31dddc4aab"
-    sha256 cellar: :any,                 catalina:       "278dcbbad6f20303f3eb533e45478ee47f3636a240748b2cf2413b5b3c5310e1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e54519e99c5f073c35d9b33a43b3fb838982c3d556ac7d0a13e135cef5e80489"
+    sha256 cellar: :any,                 arm64_ventura:  "3a55abbf4c07fdbc162a913d3ac189d015f39cc81f6b45c1d89cf7d7132f2696"
+    sha256 cellar: :any,                 arm64_monterey: "d979c217a8fc5751683d81a282adba61ed04cb7f6849fec877ca6c91738b2f29"
+    sha256 cellar: :any,                 arm64_big_sur:  "6cbdaf38af57b2184d5d5fd9100008ebf7ca38920e36c0047b0d10214c806c8c"
+    sha256 cellar: :any,                 ventura:        "966162dcdcc2ab70c7d821bce51d5fec9c52b6333d686a3c45a3461464744edd"
+    sha256 cellar: :any,                 monterey:       "38ebd6a36fb6197a334f7bafa907470c87d4f1e9a8b12f0901204ce366c896a0"
+    sha256 cellar: :any,                 big_sur:        "9fdc214eeb24662a4d7ac08a049d5dc0a48b7dbd31de40e1ee1530e343a9cf2a"
+    sha256 cellar: :any,                 catalina:       "7fa08baa7a8e14084d1b2d7a593529c3d38b47fad444af9212b2f37fad83fde5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "348b005f5bacae71410ff4ec043a1079edc349e0926332f1a80cb8834079bdfc"
   end
 
   depends_on "cmake" => :build
@@ -51,10 +53,7 @@ class Glfw < Formula
     system ENV.cc, "test.c", "-o", "test",
                    "-I#{include}", "-L#{lib}", "-lglfw"
 
-    on_linux do
-      # glfw does not work in headless mode
-      return if ENV["HOMEBREW_GITHUB_ACTIONS"]
-    end
+    return if OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]
 
     system "./test"
   end

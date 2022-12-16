@@ -1,33 +1,36 @@
 class Austin < Formula
   desc "Python frame stack sampler for CPython"
   homepage "https://github.com/P403n1x87/austin"
-  url "https://github.com/P403n1x87/austin/archive/v3.1.0.tar.gz"
-  sha256 "1d1776350a2a083cbacbd6100e815cb5e4184bcc35517290c8f82e4e78f4ed7f"
+  url "https://github.com/P403n1x87/austin/archive/v3.4.1.tar.gz"
+  sha256 "e668af1172f0c2f8740bd7d2eed6613e916e97a7cc88aa6b0cf8420055c2bcc1"
   license "GPL-3.0-or-later"
   head "https://github.com/P403n1x87/austin.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "08d4e88d3c9120c1a7ac772e0a6721ab3bb22baf4e7b0d290622922b5b327994"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8518c4eba263717f2e9a7ef064a1f8705b9912d5e6f100938bcc39697d37584a"
-    sha256 cellar: :any_skip_relocation, monterey:       "2d99b1c5f140bd2acf9307059ef9e5b79449d60e9d29fa735300a001238a9d64"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e2e5e713ff069787934d451ef095fa018a76ee0b21b4269ea0ba7ed1660e8e66"
-    sha256 cellar: :any_skip_relocation, catalina:       "7902abd05301381f1f335db81b44ecf6659c20d82d957fc13a0989ca07e95eb7"
-    sha256 cellar: :any_skip_relocation, mojave:         "a07f0785ccbe654e3351d7ca620e93c40efb520a92be20b3d7b88a62099afe9d"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "6bab13415d7f55de2a23fb2999f6ea488ecad35f22b7018aa5703a7b695be9b5"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "0dab8db7b1dd16ff66fbca2418a97d417eb52faef357cec251c3572d1073b4fe"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "cecb73317bf7a9d1ddd4d7f2f5f8a77b8e7d67460f053c64b749b8c31aef9652"
+    sha256 cellar: :any_skip_relocation, ventura:        "5e86c762a55f01f8cfbeb3db004911398a08ace0734780f341ac64a1df806584"
+    sha256 cellar: :any_skip_relocation, monterey:       "d06f2a100fc20694a37c473afeeb02b15f105f47c3488e7d1c57fc705547d819"
+    sha256 cellar: :any_skip_relocation, big_sur:        "89d0b2e60aad15b293af9f078c86d7cdb6c1c1ebd15d5137b76093003d8b4bfb"
+    sha256 cellar: :any_skip_relocation, catalina:       "ba5abcfa7d962bb2ef2c0d3737a2387946b54c5ccbb2a6b4fd76a40cbe116f3b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ff1d5d18203da0ac96a98871b73d53c8c511c55afe8a6c38ab7f6f7a68c359ab"
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
-  depends_on "python@3.10" => :test
+  depends_on "python@3.11" => :test
 
   def install
     system "autoreconf", "--install"
-    system "./configure", "--prefix=#{prefix}"
+    system "./configure", *std_configure_args, "--disable-silent-rules"
     system "make"
     system "make", "install"
     man1.install "src/austin.1"
   end
 
   test do
-    shell_output(bin/"austin #{Formula["python@3.10"].opt_bin}/python3 -c \"from time import sleep; sleep(1)\"", 37)
+    python3 = "python3.11"
+    shell_output(bin/"austin #{python3} -c \"from time import sleep; sleep(1)\"", 37)
   end
 end

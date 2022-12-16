@@ -1,17 +1,19 @@
 class DockerGen < Formula
   desc "Generate files from docker container metadata"
-  homepage "https://github.com/jwilder/docker-gen"
-  url "https://github.com/jwilder/docker-gen/archive/0.8.0.tar.gz"
-  sha256 "3d969c32d1a612d44c8193422649b375ea9cea8d78a044be463d58fe128c525a"
+  homepage "https://github.com/nginx-proxy/docker-gen"
+  url "https://github.com/nginx-proxy/docker-gen/archive/0.9.1.tar.gz"
+  sha256 "6e91460f1b72940aa6cb5ac110696f335061791ecdca56d5b3e422b31152c1c5"
   license "MIT"
+  head "https://github.com/nginx-proxy/docker-gen.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "4dc799e86dfa297d94d05de294564a04acb28a95bac9871ace56a69f1d3a19a9"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "eacba5ac36276e0aa5de4f71b3d26a11f5e00f89f10bfb81ecb29415bdfa1cb3"
-    sha256 cellar: :any_skip_relocation, monterey:       "208331344c9feaa4404957d4f4f384b2ca0788320a38e626db541d522fc883c2"
-    sha256 cellar: :any_skip_relocation, big_sur:        "9a490c2b1f72c1855d117c7dd88fb0214e4dd69ad1409e940eb7bbb116cedd89"
-    sha256 cellar: :any_skip_relocation, catalina:       "34c5a01ca13bcd79fec6287375b95832455b886d20eb8f799513a0c189523509"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "39cc3af1ef20613483280f3785c29ff8694eeb04016c9381c1dcb462ba5ce5f9"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "079e181fba60bb23fa7be90e395efe7aaeac905b0dc695092f494f8df8e24e05"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "ab051c89b15e483b6b7746006cf26bd13d22adc3f360d472dc762dfa433c40d1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "64ef3dd0358d5cb6338b24627779531ff9c5ae0d9d6db3911fc38c4b97920814"
+    sha256 cellar: :any_skip_relocation, ventura:        "11ff3b95f0ea8d09cb67594adda1f4cac043da21aee9e55f729d695eb426b292"
+    sha256 cellar: :any_skip_relocation, monterey:       "620396df7b68dee55cff0c30d527aae811d462cfe07e11b0d0948953365ea428"
+    sha256 cellar: :any_skip_relocation, big_sur:        "7c92c3453ac07ee874d9fcc567e4bcd59effd285d666131dd3ed29e1b85b6ab3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8bccd92a0a654ab585f235192ee0d9ce1f907bdaa7c2a5fa84063e61b0b479ef"
   end
 
   depends_on "go" => :build

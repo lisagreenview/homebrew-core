@@ -3,22 +3,24 @@ class Xxh < Formula
 
   desc "Bring your favorite shell wherever you go through the ssh"
   homepage "https://github.com/xxh/xxh"
-  url "https://files.pythonhosted.org/packages/2d/71/3fbc4861cc5dbf9bdc0515aa98526fe1dfd0d666a90252a43f922f74a174/xxh-xxh-0.8.7.tar.gz"
-  sha256 "3608144e2035b7d3a8a24873b3dd74ea1b4460892971e265506fd46274ad2973"
+  url "https://files.pythonhosted.org/packages/78/2b/1e77800918dce31e99c84a26657a01e1544cbf2fa301a27ac45872872c55/xxh-xxh-0.8.12.tar.gz"
+  sha256 "0d71c0e12de2f90534060613dd24c4eb7fb1d7285566bc18a49912423b09f203"
   license "BSD-2-Clause"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "1568bf8ddbffef649c1184ab8fd1c8e1add294b15333c2eaba896bc0e3ba4390"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d9d1f7e84ff619ffc721847256a3cb6621f73d0f50e8a3a9b05b1070faadcbc4"
-    sha256 cellar: :any_skip_relocation, monterey:       "c6b94cf93576f3e0c36af9a7214ca791588e3d743560c9cd8ec9419ac460c8c9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "eef06592cabd88edf515e64b7814c6a235081522c5789557151b210990b4bb98"
-    sha256 cellar: :any_skip_relocation, catalina:       "89a119013535bc9e651ae15037cc926c54d7086acdd66bf0c2490fd189e38b72"
-    sha256 cellar: :any_skip_relocation, mojave:         "bad0b4899fb415178eb58559fe81dcf1eb4013431fede475ceea423d14d058f6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3684ca87a1a2cba24227fe9615c9a0afdc6de1e80004911d10021a790beb7b98"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3a69d8012317f6d887403af6695817e8f68ce8b0884132a6663b72aa6946e4c1"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b38d55cda2bcd7b4bfe898f42585c6fc8b30865439c7126262b3a5a3fefe4fe9"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "acdf2d90e74d9f9a695cb28f8397ed5b04ced16cbd5898b14900354e4fa7f573"
+    sha256 cellar: :any_skip_relocation, ventura:        "e6aea90d000df6897044aeb7f32cc4680b674a7b2ea5b3fb9ad5116d085aa811"
+    sha256 cellar: :any_skip_relocation, monterey:       "21164a6f91fb009f97f9754ff294423dc683c55e510fdf4bdc9bdcb49e5f55f8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "4c39f3328e4fd3120da656889b62fed687d7406d2e012f46c14d82fe0d40f9b8"
+    sha256 cellar: :any_skip_relocation, catalina:       "1027b023243ac643cda97f528e06f13da5bcb59861acb7c596806f77001b8cfb"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f27a4c3773d9f2fe00f3582e1b10a9b37717b729b6ba7c1f2fc84e9ea6d4a0a3"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
 
   resource "pexpect" do
     url "https://files.pythonhosted.org/packages/e5/9b/ff402e0e930e70467a7178abb7c128709a30dfb22d8777c043e501bc1b10/pexpect-4.8.0.tar.gz"
@@ -28,11 +30,6 @@ class Xxh < Formula
   resource "ptyprocess" do
     url "https://files.pythonhosted.org/packages/20/e5/16ff212c1e452235a90aeb09066144d0c5a6a8c0834397e03f5224495c4e/ptyprocess-0.7.0.tar.gz"
     sha256 "5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"
-  end
-
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
   end
 
   def install

@@ -1,20 +1,20 @@
 class Ttyd < Formula
   desc "Command-line tool for sharing terminal over the web"
   homepage "https://tsl0922.github.io/ttyd/"
-  url "https://github.com/tsl0922/ttyd/archive/1.6.3.tar.gz"
-  sha256 "1116419527edfe73717b71407fb6e06f46098fc8a8e6b0bb778c4c75dc9f64b9"
+  url "https://github.com/tsl0922/ttyd/archive/1.7.1.tar.gz"
+  sha256 "e1e9993b1320c8623447304ae27031502569a1e37227ec48d4e21dae7db6eb66"
   license "MIT"
-  revision 4
   head "https://github.com/tsl0922/ttyd.git", branch: "main"
 
   bottle do
-    sha256 arm64_monterey: "97d637edb8f541ca79760c6f95ac1f64ec418e7204fd6a4cce50fde4c14be8b1"
-    sha256 arm64_big_sur:  "c447da2fb5319fb4f14156e6df03aced1a4eff128538c05674a3872a3843a5e0"
-    sha256 monterey:       "28a8e002ddb777a9abe3eebe67795b9d9dc5008c31d1451aa6387fdd43705ced"
-    sha256 big_sur:        "1d05dbb4c06fdf46c47195d4cbd32939e484fbff6b973ce111166a6fead65b5c"
-    sha256 catalina:       "201f490f7ccbb978085190d01585deda06430aada52271cc4ea8f434d16492c6"
-    sha256 mojave:         "555135cdd2ff20f6e0c7d95e756e1be4561c458b2f2411c6478b574e726b8b5d"
-    sha256 x86_64_linux:   "00890703377dc26256a8209f0ba0f33cbab1f43e563b4cb3b28b096cdf25ee00"
+    sha256 arm64_ventura:  "f6f251fdfc7a65889efe2b428ee6ccf9be62258d717a8e9cb9adb5fef7c0e93f"
+    sha256 arm64_monterey: "2dcb7ed95b83914ae3c477e8272955224b51d34b906e6057fe3f667be66154fa"
+    sha256 arm64_big_sur:  "01c674bc7a80ac4ffc7d91f3557bfd0056a36337285d90b3ccc4595b8e9c9a54"
+    sha256 ventura:        "801da0da28dad4fb164565159342d3fdba5884e3b34c8fa6ad89dc244c2ac1b5"
+    sha256 monterey:       "59f8a5afd097792730fe54ee3d71f92ae58e1a0baa87fac4d2faf3d58591fee3"
+    sha256 big_sur:        "07d576a2efe91de00f31fc47c13c7396abc2cac37ea6501833b669ee6824457f"
+    sha256 catalina:       "436a5cd144aadb451d4f0ec657d2b878ba3c4d1e239b18eed8cd78519937bd83"
+    sha256 x86_64_linux:   "4ec0f91928dc35c61fbdcc509cc91a96584a54c00ef542f409884746b677efe0"
   end
 
   depends_on "cmake" => :build
@@ -27,10 +27,12 @@ class Ttyd < Formula
   uses_from_macos "vim" # needed for xxd
 
   def install
-    system "cmake", ".",
-                    *std_cmake_args,
-                    "-DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}"
-    system "make", "install"
+    system "cmake", "-S", ".", "-B", "build",
+                    "-DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}",
+                    "-Dlibwebsockets_DIR=#{Formula["libwebsockets"].opt_lib/"cmake/libwebsockets"}",
+                    *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

@@ -2,18 +2,19 @@ class Tile38 < Formula
   desc "In-memory geolocation data store, spatial index, and realtime geofence"
   homepage "https://tile38.com/"
   url "https://github.com/tidwall/tile38.git",
-      tag:      "1.26.4",
-      revision: "f7980eaa3f2e1f3024d7d17c7c1c16f8a977c00b"
+      tag:      "1.30.1",
+      revision: "cf745b17d6afcb80c5a2f75bcb72c51b9bd44a1a"
   license "MIT"
   head "https://github.com/tidwall/tile38.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "dafe973e532fb1bff31914de94ed01c385028aef564f00cf9f86129da30a910f"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "286538bcce0ce8fcc41120a3bcc945d44aac13c58e997e0dfe650db97889c14b"
-    sha256 cellar: :any_skip_relocation, monterey:       "d89cbd7c487486daa2a7dab89e0e7c687ea82c1f37b34196e29d8876c177bcf3"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e176bbffe3d06c909d3259a25c2c184987e0f9d3b80e860df341ab6f9c74520a"
-    sha256 cellar: :any_skip_relocation, catalina:       "f0b427df3a46e118f78de35a56a7e8baa97b9f20cb324da79d61f5d1309cd5c0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d9a994ccbfa467bef9c94b93e70366629d642921d6c903892e32077bf6109563"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "30d507633db19c272a95e8dab1c90f371b2c472bb8155a82cc840ce6fa1b3f42"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "aaf134bea5ea6d6ec8f3f846b6842e612ad718ec5479814c580d5bfc33e444c3"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6f299742faa317bc4fb3fa01888e8ed0df93546c82a14593ff8fccc17d059080"
+    sha256 cellar: :any_skip_relocation, ventura:        "2477e8eed400d80ce0d6617eaec161a6d32b1c23eea27e3f719afe227c45e94e"
+    sha256 cellar: :any_skip_relocation, monterey:       "50744c26a767eabbf7985988338a423c369b36134ee39f5987ca85c85013dc5d"
+    sha256 cellar: :any_skip_relocation, big_sur:        "ca0c92609be8a4d39d86d54d0be2fd7cf9db478465121ab4c5c7745299ff6f8d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "557d98338981e481d89128a3fbb2ef7c07c1894fd7a2eebe88f12298e7a141e4"
   end
 
   depends_on "go" => :build

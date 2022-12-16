@@ -1,19 +1,21 @@
 class GitLfs < Formula
   desc "Git extension for versioning large files"
-  homepage "https://github.com/git-lfs/git-lfs"
-  url "https://github.com/git-lfs/git-lfs/releases/download/v3.0.2/git-lfs-v3.0.2.tar.gz"
-  sha256 "7179a357a0d0e7beaba217489f7f784ca8717035a5e3f1ee91ca7193ba3a35f3"
+  homepage "https://git-lfs.github.com/"
+  url "https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-v3.3.0.tar.gz"
+  sha256 "964c200bb7dcd6da44cbf0cfa88575f7e48d26925f8ec86d634d3f83306a0920"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c29212adc03440123d3732cecc321bdf8e7e946ee13580e00882c8f2e415c567"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "064d030a26d7928685602c3fbd6daeb30e4d81b3a94f86aa3ddd2ffe1bd8396c"
-    sha256 cellar: :any_skip_relocation, monterey:       "79dc4e28ac75d8ee526215b10c16d17873009a9cb8fcfd50c92069868a01e2ef"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a2cac31dfa6ded45a6633c730816551bd3e4810a2b7fe3cdc414a830a02e7c10"
-    sha256 cellar: :any_skip_relocation, catalina:       "6f86300bf487d24aace589b4c78521b6dce3f834e660b926d81dd28544d561e9"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1c8824cdcda78651cfd106352af9ae9834b8c4996081a9cb35f564afd1139689"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "d2494e1f9476db089187db2ad87b19f6db6005ad5dad592dcc525325931386f9"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "27330db9c9e56a99ae73549aad8b0175713238e443bbff427ea78d1f55a00cab"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7d5ee372ff1ea648838d260b7b545adeb2b156005bfb59d001739ce9a93ad66b"
+    sha256 cellar: :any_skip_relocation, ventura:        "e5e655f93e3ba8f92b63b39f0eb78f2d3312ac05e583112d7142a30cda4eaa42"
+    sha256 cellar: :any_skip_relocation, monterey:       "ae55db055bdc131b491b6b35ea41edeff9d5bde71afda7c06a0374569be78bf0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c215057bd7ebb8535d58690798effe6f18ad42f3d2605539627166e40b6a3a16"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f18741e398a3419f41e4e9a524e4f6044418a14930304fb1048a68852192eae2"
   end
 
+  depends_on "asciidoctor" => :build
   depends_on "go" => :build
   depends_on "ronn" => :build
   depends_on "ruby" => :build
@@ -22,17 +24,14 @@ class GitLfs < Formula
     ENV["GIT_LFS_SHA"] = ""
     ENV["VERSION"] = version
 
-    (buildpath/"src/github.com/git-lfs/git-lfs").install buildpath.children
-    cd "src/github.com/git-lfs/git-lfs" do
-      system "make", "vendor"
-      system "make"
-      system "make", "man", "RONN=#{Formula["ronn"].bin}/ronn"
+    system "make"
+    system "make", "man", "RONN=#{Formula["ronn"].bin}/ronn"
 
-      bin.install "bin/git-lfs"
-      man1.install Dir["man/*.1"]
-      man5.install Dir["man/*.5"]
-      doc.install Dir["man/*.html"]
-    end
+    bin.install "bin/git-lfs"
+    man1.install Dir["man/man1/*.1"]
+    man5.install Dir["man/man5/*.5"]
+    man7.install Dir["man/man7/*.7"]
+    doc.install Dir["man/html/*.html"]
   end
 
   def caveats

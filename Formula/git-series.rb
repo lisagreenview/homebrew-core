@@ -4,16 +4,18 @@ class GitSeries < Formula
   url "https://github.com/git-series/git-series/archive/0.9.1.tar.gz"
   sha256 "c0362e19d3fa168a7cb0e260fcdecfe070853b163c9f2dfd2ad8213289bc7e5f"
   license "MIT"
-  revision 5
+  revision 7
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "a238e7eea725642aafeaeb5f90d66a97f4e5b2caa681d51aaa47abe4d2ec371b"
-    sha256 cellar: :any,                 arm64_big_sur:  "d75d535676dda5c4289d8547cd6959f02aa6d5fa47364ebb561fe8a858683c95"
-    sha256 cellar: :any,                 monterey:       "83049175c7154cda07fcb03ec3d2950412e49be5a50180aa51e67d2721815fe8"
-    sha256 cellar: :any,                 big_sur:        "40f73d58772d698175f87acceaf11f97720e3248f2cf7182bae19889899ed61d"
-    sha256 cellar: :any,                 catalina:       "944e5375b6975f35b298b03f8ccdd9d530a9991593c6374aa3d93a69a8a0baac"
-    sha256 cellar: :any,                 mojave:         "9edf9487a836d8ddb3b822f1a14931d2e2413edd9d3df29b389259a684681190"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "52c715891324bf3e223e02ca509db21d171fcddc8e741479ad18164f385c3d4f"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "76107d37585c43d3c7ea8f69971b1a2485a221e3ce0c87b2b1860ff097e76f17"
+    sha256 cellar: :any,                 arm64_monterey: "908fc5596af1e413b3f9aa6a50f50adda016ddb025f2eeaf4b532072e0364d95"
+    sha256 cellar: :any,                 arm64_big_sur:  "24739f0dd29b00b52ef26a38658662184801d30b7dc8c33e9e46e5e1ec351aeb"
+    sha256 cellar: :any,                 ventura:        "9afeaf659a5b2b490e829c9d1cd75dc26458af33402e63738ecda3998bbe4008"
+    sha256 cellar: :any,                 monterey:       "386da3ab9a088239de9d642c164768504517293fff3d0189783e3ab8aad8f791"
+    sha256 cellar: :any,                 big_sur:        "caf6563a0c6f3ff85c59c97464b05e2e27509d87ed344f1693d68d903b297770"
+    sha256 cellar: :any,                 catalina:       "3df33788f9498b11b518b7555b4ad7f3d4fd188777483eab9ab2d1aa3ce05e0a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7d5130d7d0265432d2f1dc775f20bbb09d6ff7ce5c98e9b839972c94308c2332"
   end
 
   depends_on "cmake" => :build

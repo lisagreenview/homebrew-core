@@ -1,100 +1,87 @@
 class YleDl < Formula
+  include Language::Python::Virtualenv
+
   desc "Download Yle videos from the command-line"
   homepage "https://aajanki.github.io/yle-dl/index-en.html"
-  url "https://files.pythonhosted.org/packages/c0/71/c24158ee110712569f2a4ff995a8b37d834c686474c11c95389b1d506b74/yle-dl-20210917.tar.gz"
-  sha256 "22e3a1417fdfbfe788d59cf608e131d7f0b90c799d0dd129a6d98f019f100776"
+  url "https://files.pythonhosted.org/packages/12/84/645771c885267d0a0452df9514ec024a6690960f208a2c979844a6bb52ef/yle-dl-20221111.tar.gz"
+  sha256 "6ba32fd8ee11d24dbbf71281e888b4621198bbe3835536cc783b221e807edee3"
   license "GPL-3.0-or-later"
   head "https://github.com/aajanki/yle-dl.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c873de356c76031225898cfc91952dc308167590c5e5cb5b713f26f932063ddb"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0227df9cc74fa2378e5f96d3cf021a1b242840621d21d1891e3448d470f76d12"
-    sha256 cellar: :any_skip_relocation, monterey:       "3ffb0952253e74d74b236b1ba0c8b261ebac5d3bd38599687911e8411d05eab9"
-    sha256 cellar: :any_skip_relocation, big_sur:        "74de7ba58e7fb1acac55cc45315c7ec39b60ec060349374c81baff6c0282af7b"
-    sha256 cellar: :any_skip_relocation, catalina:       "e2c69ab631d4248163131a3f52f5e4807768066d17f26df0245cea49c5cbc0be"
-    sha256 cellar: :any_skip_relocation, mojave:         "b6dac24972fca38490b5e18dfa37d926b597b05bc68ecb0a8c3bf82e50028014"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c42bf1e861338903291495ff808cef49fd4c4ebb00f082adfec6011a692c82fb"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "540ef201c496c129711387956e790196a57c10c3f742148c173323c05c91a06a"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "710c49400610594c867c01920f117e2f869f7afd97e9a2410207f3202c2aadd1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "309e7f86ea7e7199d617388b99b1de6c8296887e4eb082b2c34d57ca7878bdcc"
+    sha256 cellar: :any_skip_relocation, ventura:        "84293a9386e7a026bd4bb13b40dde97bd55b8f535e6c69e4d9df59ab73b07910"
+    sha256 cellar: :any_skip_relocation, monterey:       "42647331f5ca4293c2d98b135301968e0cedc8f2850b59cebab71443ba07bb38"
+    sha256 cellar: :any_skip_relocation, big_sur:        "2344c2eb8e2529a121d44ac9fcd7548bb2adc7a4805ba1f2793d1e679d0354ba"
+    sha256 cellar: :any_skip_relocation, catalina:       "ef362fc461271db02e24cb123ee66a3016c17bde9bb4be092789318b5b776206"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f530c69a648c7d82cc2f1246c0a713e8fa8b2be14017d1629bc80c34d79f005f"
   end
 
   depends_on "ffmpeg"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "rtmpdump"
 
   uses_from_macos "libxslt"
 
-  # `Cannot import name "Feature" from "setuptools" in version 46.0.0`, and lock setuptools to v45.0.0
-  # https://github.com/pypa/setuptools/issues/2017#issuecomment-605354361
-  resource "setuptools" do
-    url "https://files.pythonhosted.org/packages/fd/76/3c7f726ed5c582019937f178d7478ce62716b7e8263344f1684cbe11ab3e/setuptools-45.0.0.zip"
-    sha256 "c46d9c8f2289535457d36c676b541ca78f7dcb736b97d02f50d17f7f15b583cc"
-  end
-
-  resource "AdobeHDS.php" do
-    # NOTE: yle-dl always installs the HEAD version of AdobeHDS.php. We use a specific commit.
-    # Check if there are bugfixes at https://github.com/K-S-V/Scripts/commits/master/AdobeHDS.php
-    url "https://raw.githubusercontent.com/K-S-V/Scripts/7fea932cb012cba8c203d5b46b891167b0f609a6/AdobeHDS.php"
-    sha256 "b79e8a4c8544953c39b79a622049c4deced57354adb9697e8c73420c12547229"
-  end
-
   resource "attrs" do
-    url "https://files.pythonhosted.org/packages/ed/d6/3ebca4ca65157c12bd08a63e20ac0bdc21ac7f3694040711f9fd073c0ffb/attrs-21.2.0.tar.gz"
-    sha256 "ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"
+    url "https://files.pythonhosted.org/packages/1a/cb/c4ffeb41e7137b23755a45e1bfec9cbb76ecf51874c6f1d113984ecaa32c/attrs-22.1.0.tar.gz"
+    sha256 "29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6d/78/f8db8d57f520a54f0b8a438319c342c61c22759d8f9a1cd2e2180b5e5ea9/certifi-2021.5.30.tar.gz"
-    sha256 "2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
+  end
+
+  resource "cffi" do
+    url "https://files.pythonhosted.org/packages/2b/a8/050ab4f0c3d4c1b8aaa805f70e26e84d0e27004907c5b8ecc1d31815f92a/cffi-1.15.1.tar.gz"
+    sha256 "d400bfb9a37b1351253cb402671cea7e89bdecc294e8016a707f6d1d8ac934f9"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/eb/7f/a6c278746ddbd7094b019b08d1b2187101b1f596f35f81dc27f57d8fcf7c/charset-normalizer-2.0.6.tar.gz"
-    sha256 "5ec46d183433dcbd0ab716f2d7f29d8dee50505b3fdb40c6b985c7c4f5a3591f"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "ConfigArgParse" do
-    url "https://files.pythonhosted.org/packages/42/1c/3e40ae017361f30b01b391b1ee263ec93e4c2666221c69ebba297ff33be6/ConfigArgParse-1.5.2.tar.gz"
-    sha256 "c39540eb4843883d526beeed912dc80c92481b0c13c9787c91e614a624de3666"
+    url "https://files.pythonhosted.org/packages/16/05/385451bc8d20a3aa1d8934b32bd65847c100849ebba397dbf6c74566b237/ConfigArgParse-1.5.3.tar.gz"
+    sha256 "1b0b3cbf664ab59dada57123c81eff3d9737e0d11d8cf79e3d6eb10823f1739f"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/cb/38/4c4d00ddfa48abe616d7e572e02a04273603db446975ab46bbcd36552005/idna-3.2.tar.gz"
-    sha256 "467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "lxml" do
-    url "https://files.pythonhosted.org/packages/e5/21/a2e4517e3d216f0051687eea3d3317557bde68736f038a3b105ac3809247/lxml-4.6.3.tar.gz"
-    sha256 "39b78571b3b30645ac77b95f7c69d1bffc4cf8c3b157c435a34da72e78c82468"
+    url "https://files.pythonhosted.org/packages/70/bb/7a2c7b4f8f434aa1ee801704bf08f1e53d7b5feba3d5313ab17003477808/lxml-4.9.1.tar.gz"
+    sha256 "fe749b052bb7233fe5d072fcb549221a8cb1a16725c47c37e42b0b9cb3ff2c3f"
+  end
+
+  resource "pycparser" do
+    url "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz"
+    sha256 "e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/4f/5a/597ef5911cb8919efe4d86206aa8b2658616d676a7088f0825ca08bd7cb8/urllib3-1.26.6.tar.gz"
-    sha256 "f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"
+    url "https://files.pythonhosted.org/packages/b2/56/d87d6d3c4121c0bcec116919350ca05dc3afd2eeb7dc88d07e8083f8ea94/urllib3-1.26.12.tar.gz"
+    sha256 "3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"
+  end
+
+  resource "xattr" do
+    url "https://files.pythonhosted.org/packages/f8/84/8e2a2578c804545d55f684f86b6144c3924a849b5ec8e1f39336233be752/xattr-0.10.0.tar.gz"
+    sha256 "722652d2a5324e17891c416d4c76d91ccf98830a8f516a0de8533ce867f3acaf"
   end
 
   def install
-    # Fix "ld: file not found: /usr/lib/system/libsystem_darwin.dylib" for lxml
-    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra
-
-    xy = Language::Python.major_minor_version "python3"
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python#{xy}/site-packages"
-    (resources - [resource("AdobeHDS.php")]).each do |r|
-      r.stage do
-        system "python3", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
-
-    resource("AdobeHDS.php").stage(pkgshare)
-
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
-    system "python3", *Language::Python.setup_install_args(libexec)
-
-    bin.install Dir["#{libexec}/bin/*"]
-    bin.env_script_all_files(libexec/"bin", PYTHONPATH: ENV["PYTHONPATH"])
+    virtualenv_install_with_resources
   end
 
   test do

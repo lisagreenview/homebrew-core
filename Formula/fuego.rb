@@ -3,19 +3,17 @@ class Fuego < Formula
   homepage "https://fuego.sourceforge.io/"
   url "https://svn.code.sf.net/p/fuego/code/trunk", revision: "1981"
   version "1.1.SVN"
-  revision 2
+  revision 5
   head "https://svn.code.sf.net/p/fuego/code/trunk"
 
   bottle do
-    sha256 arm64_monterey: "43988eeddfae34640a7890439ca629123223a3a8c02aa179720b4ce731d438ea"
-    sha256 arm64_big_sur:  "57ea9783adb183338f1d50209385b2dd8cebac5bd346b047cf5ab7e7a617030c"
-    sha256 monterey:       "c560c92950af060198a37e9e153e0a6ad15f9b46bb1058387ca91a5fcdfb17b8"
-    sha256 big_sur:        "4c9e5e90e68912f757e31c6e5fdbc091a456e5a86e0abbc8c5277823b33003e2"
-    sha256 catalina:       "3fcaf6036c24d8771fb2bb55a5e697bbb811aa03c37bae887982b96be70a422f"
-    sha256 mojave:         "2e8c65ddbcbb76158ab22805982c75940ed1a6eddc033cc157a03bee1364d502"
-    sha256 high_sierra:    "7efef5865934cb21cce5a12c7adf39d3c74a86990067220d456e53db69f8861f"
-    sha256 sierra:         "828c076fbcd288d4cc2348323497983f78aceb8bd1b607403b13e35fa209a86f"
-    sha256 el_capitan:     "e0c9f36a60667bea6757170232cf45caeca7bff3cf75adb4994b3007d0fe6eb9"
+    sha256 arm64_ventura:  "b312acb9bb04fc31cc2e630ca130e9a7f78d8a4e3f631a83d4a585be80c438be"
+    sha256 arm64_monterey: "f6301e86813d55ba476153d0ada58d1cb40791527f59b5cb8c3602426f666a89"
+    sha256 arm64_big_sur:  "65dfab9714a6866134dbcd17de0db06148eec4164b00e5dd259ff0fd1732c29d"
+    sha256 ventura:        "52dd4347c0f40e9a243a08c1e8811df758604645eb9b55e764da2a1fd61e2937"
+    sha256 monterey:       "73d6548393b805dfc42ece561040c1549682cc862a671aa090b32b5f2b2d210e"
+    sha256 big_sur:        "73abec7b9dad7cb5bddb944b7ded1f184850543db10c7ed8e4d09ef5f3efbbf1"
+    sha256 catalina:       "3df75cc7d8fc3f2975108e15e9a751bbc9b072ab9e4e8355e750a1402bb3526d"
   end
 
   depends_on "autoconf" => :build
@@ -28,7 +26,7 @@ class Fuego < Formula
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
                           "--with-boost=#{Formula["boost"].opt_prefix}"
-    system "make", "install"
+    system "make", "install", "LIBS=-lpthread"
   end
 
   test do

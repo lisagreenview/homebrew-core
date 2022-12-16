@@ -3,17 +3,18 @@ require "language/node"
 class Esbuild < Formula
   desc "Extremely fast JavaScript bundler and minifier"
   homepage "https://esbuild.github.io/"
-  url "https://registry.npmjs.org/esbuild/-/esbuild-0.13.15.tgz"
-  sha256 "6d6aadafc53657ca2481219716f6e5c392d4fce992099d422fec8d5671d79e2e"
+  url "https://registry.npmjs.org/esbuild/-/esbuild-0.16.7.tgz"
+  sha256 "ad2fc674788265b96628d8089fd90f764a05552cfe50522db07237969770bed0"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "8838055a6be0f52a0a9393bf1e0740c7c4774d64f94b15d66ef8e8b00f0af048"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8838055a6be0f52a0a9393bf1e0740c7c4774d64f94b15d66ef8e8b00f0af048"
-    sha256 cellar: :any_skip_relocation, monterey:       "b968e55813a34836d4b216cdd0f0a1af4bfd092ff522cc6852de56bd8d14fa62"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b968e55813a34836d4b216cdd0f0a1af4bfd092ff522cc6852de56bd8d14fa62"
-    sha256 cellar: :any_skip_relocation, catalina:       "b968e55813a34836d4b216cdd0f0a1af4bfd092ff522cc6852de56bd8d14fa62"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e3119f8ec20bd221e665a5872fb78723364901c56a4ffa47eb0935a8c3ece720"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "30bbddbfb4d86a4a1d4c0bffee0e61e52b9b9206d8ec1d215256fb2f976a9425"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "30bbddbfb4d86a4a1d4c0bffee0e61e52b9b9206d8ec1d215256fb2f976a9425"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "30bbddbfb4d86a4a1d4c0bffee0e61e52b9b9206d8ec1d215256fb2f976a9425"
+    sha256 cellar: :any_skip_relocation, ventura:        "b18f490ee85a80a59e1ecef4341b825d2d06f6f248c1f9d911c20ec4c9c44b53"
+    sha256 cellar: :any_skip_relocation, monterey:       "b18f490ee85a80a59e1ecef4341b825d2d06f6f248c1f9d911c20ec4c9c44b53"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b18f490ee85a80a59e1ecef4341b825d2d06f6f248c1f9d911c20ec4c9c44b53"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a842eaf141609cb8e6087f35e1f5ef150feb55be43b0879c8a74874360a35848"
   end
 
   depends_on "node"
@@ -35,6 +36,6 @@ class Esbuild < Formula
     system Formula["node"].libexec/"bin/npm", "install", "react", "react-dom"
     system bin/"esbuild", "app.jsx", "--bundle", "--outfile=out.js"
 
-    assert_equal "<h1 data-reactroot=\"\">Hello, world!</h1>\n", shell_output("node out.js")
+    assert_equal "<h1>Hello, world!</h1>\n", shell_output("node out.js")
   end
 end

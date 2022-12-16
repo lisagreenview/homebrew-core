@@ -4,17 +4,19 @@ class Amp < Formula
   url "https://github.com/jmacdonald/amp/archive/0.6.2.tar.gz"
   sha256 "9279efcecdb743b8987fbedf281f569d84eaf42a0eee556c3447f3dc9c9dfe3b"
   license "GPL-3.0-or-later"
-  revision 1
-  head "https://github.com/jmacdonald/amp.git", branch: "master"
+  revision 2
+  head "https://github.com/jmacdonald/amp.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a16ac20a15f1ff7716824be467f4980b0e3ab1f99326539d9a8b086eece946bb"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f001a886b5ea456bc925ae37ef45c6f5ae70ef8506ae576fe3f831e78f2ecbcb"
-    sha256 cellar: :any_skip_relocation, monterey:       "08fbf3e6231fec7cafca9fcaa85e498276b12a5866bb4f918384b551a704599e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "db4b6bdf3468476c2f2b6696f755c05b2471f6d09bc47bf783fbd6c65b1b1aac"
-    sha256 cellar: :any_skip_relocation, catalina:       "6b886491460ff6245f9f6ecd22d0a856f51afbd06ec7adf13e2c8be974693656"
-    sha256 cellar: :any_skip_relocation, mojave:         "8d11d70c1a7ae6bb4cf3c4460ad93a303a7ec4bdc63166ce0796f4025c05d517"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3c6bbda9b197a6d0e83923d15d82cee7e0f72cd5d7416dc32dd3bd993c8a8fc4"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7318b0f8536a81b08e98f80f1bc409758122aaad61fd38ff09f4540fb0b5a3b2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "2a76be7ab5cd8388905d353c50f2a8b760b6b9082f3a715ba481f2d4ae8d622e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "dc1fe0166588fb8770bef1b17d88d2c818fe24167604833f799fc7e75c118bee"
+    sha256 cellar: :any_skip_relocation, ventura:        "a2efcbff4e557ec7e2060838a7925ae8908955fc1b5306245ef5caa11dd83550"
+    sha256 cellar: :any_skip_relocation, monterey:       "b7c26461404cfb029ccd3b90180a70821d1a028c24a550143916c293fa105e30"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f95b210ee770d8909bb5190c504658b818b307f909b82f8df3ec87f2a5e55e57"
+    sha256 cellar: :any_skip_relocation, catalina:       "81535aa6c50a8b0dab7386bc7efbd6fe6307724b95fc18bfff51e1ebf5c30730"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "57b03b886d4061d7eafac7dd9f72a15c6f2ce356883eb4fb76afd278fd24c2f7"
   end
 
   depends_on "cmake" => :build
@@ -23,7 +25,7 @@ class Amp < Formula
   uses_from_macos "zlib"
 
   on_linux do
-    depends_on "python@3.9" => :build
+    depends_on "python@3.10" => :build
     depends_on "libxcb"
   end
 
@@ -31,7 +33,7 @@ class Amp < Formula
     # Upstream specifies very old versions of onig_sys/cc that
     # cause issues when using Homebrew's clang shim on Apple Silicon.
     # Forcefully upgrade `onig_sys` and `cc` to slightly newer versions
-    # that enable a succesful build.
+    # that enable a successful build.
     # https://github.com/jmacdonald/amp/issues/222
     inreplace "Cargo.lock" do |f|
       f.gsub! "68.0.1", "68.2.1"

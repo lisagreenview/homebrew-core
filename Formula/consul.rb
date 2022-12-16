@@ -1,8 +1,8 @@
 class Consul < Formula
   desc "Tool for service discovery, monitoring and configuration"
   homepage "https://www.consul.io"
-  url "https://github.com/hashicorp/consul/archive/refs/tags/v1.10.4.tar.gz"
-  sha256 "6e3da1fb589586af4d68b2e924ccdb9f4aad644826aae452c31744c658eb66e4"
+  url "https://github.com/hashicorp/consul/archive/refs/tags/v1.13.3.tar.gz"
+  sha256 "bdc3dc7e4d5d4448528e9bf6fee1cb3b613a0f730820988d4fc550e189bfd46c"
   license "MPL-2.0"
   head "https://github.com/hashicorp/consul.git", branch: "main"
 
@@ -12,21 +12,17 @@ class Consul < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "095ddf73384581d0c6b599c9d4636527c2d89e8f93dce6fac83d25eb9037c7b7"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bad2049a228e9eeb1fa09948fb2b0e53466d21c9b024f790c743408830df2377"
-    sha256 cellar: :any_skip_relocation, monterey:       "db37199093d4ab2b93b28f44a8df282de04eab17d00971e71aef332bbbcf6eb4"
-    sha256 cellar: :any_skip_relocation, big_sur:        "8c9b8af982f25035ca4e5bde79782b7186a2cd3db9f944cd35594ad477dd5fc0"
-    sha256 cellar: :any_skip_relocation, catalina:       "08b93c993ed719ed28e67ae35d45f0f7f6d6b3425e45a811ca57f3571b3399f0"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5481162cf64edee4af01d358ebb9eb1c55e574a318a276eab76e78c0f54383ce"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "0f4e073d5b5e016044a4e47d3dabdbe22cbb30f33da13f4412c2f41c2f1c0b97"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "d167ce4266c1397e3905c2eceda4ca6e06a9e8e1bb651e47037fb0438a1d079a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7e39a1e36a9ff85057372ce3cf642e7a7e097355cf21bd4b05ad955be36c7ed7"
+    sha256 cellar: :any_skip_relocation, ventura:        "977037f7e8cf7e845d03af2adbc2c8a848c63500ba50470b4cbb96f9c4dfdbc9"
+    sha256 cellar: :any_skip_relocation, monterey:       "4c79d9775ed7bdea9f0c41e50e5bad96aca8aee86085357352e6fb797c6a10a3"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8feb852c1f5f09617faee8aa7b82e61ee70d890b9b73aca7f8ea08ad761827d2"
+    sha256 cellar: :any_skip_relocation, catalina:       "6143ff8b4a04cdde35d9b1933c087d13a0158f007ea078aac4fa6da5052f9bac"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d6ad31a4f93ee5bedbb9d2806c6bed1dbcf5a253cdcc3a01fb35d5c04df51100"
   end
 
   depends_on "go" => :build
-
-  # Support go 1.17, remove after next release
-  patch do
-    url "https://github.com/hashicorp/consul/commit/e43cf462679b6fdd8b15ac7891747e970029ac4a.patch?full_index=1"
-    sha256 "4f0edde54f0caa4c7290b17f2888159a4e0b462b5c890e3068a41d4c3582ca2f"
-  end
 
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w")

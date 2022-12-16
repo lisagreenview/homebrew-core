@@ -6,69 +6,72 @@ class Gcalcli < Formula
   url "https://files.pythonhosted.org/packages/e8/d9/9d1f03b9b47c3082bf664a2f789a3aded0674dca9e0b894540d754b937cc/gcalcli-4.3.0.tar.gz"
   sha256 "d00081460276027196e8fb957880b29ba4f22ea43136f9e232a9408016abc110"
   license "MIT"
-  revision 1
-  head "https://github.com/insanum/gcalcli.git"
+  revision 3
+  head "https://github.com/insanum/gcalcli.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2e67e167840ac9eb7f74ff86f92fcec21a3521c9d646bffe627cf6c1e7159b9a"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d2af2f27ffd790abe6ccf04eee3da3c108d262dde8b21f98021c23e31caae13f"
-    sha256 cellar: :any_skip_relocation, monterey:       "d33aabdfc7f9678ad4ea595321114b5ac899d06876d3223b0c96e9074f8cde52"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a336b96d3024378005c666f33f3d9090d2f8050b91ab72422895789e75de2b54"
-    sha256 cellar: :any_skip_relocation, catalina:       "bda1c0fdefccdb4595c7b09b37c948714cb2f28496d502130ec03cfd4d434f1d"
-    sha256 cellar: :any_skip_relocation, mojave:         "10b1036a3250e6738b79f24159ca959cdf74191bb7dfaec2d6945afd16f272d3"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8ca29edf941829aa281b8a23b8c9072793d5ff6c6b00d0fd4dc7a280fa28aa53"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "647db2920a3aac360641d94ff3aba55aba409ff30bfc3dda18ec4c35bf9ed235"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "0cb737f803ec855e7d82cc9e45767bec4c3a5f2a5bc9dcf5e71691a1551f33d1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b3c926180129ccce11722b008d2076e4b60ccde8afd465214b1645a27a5d44e5"
+    sha256 cellar: :any_skip_relocation, ventura:        "40e153cd7ae1340effb8d7753dbe404df5580d388157caae0c804539c3d2e12c"
+    sha256 cellar: :any_skip_relocation, monterey:       "954673f5cec0e8f3f302f21f7542791aef6ccc6a910ceaa0332509d45682b241"
+    sha256 cellar: :any_skip_relocation, big_sur:        "15d2d1e712430ed3d19f43bc8acf4609446fc30376471bfd6259b16afa422647"
+    sha256 cellar: :any_skip_relocation, catalina:       "cab8f9e8a0d8a56ab6d6fc56de7fac11fd17e575efff7ca35a64835f0bc7259f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2df855bd896289ba642e7d458e1ac933107f6a67d57f04b1b7c14849e660d585"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "six"
 
   resource "cachetools" do
-    url "https://files.pythonhosted.org/packages/fc/c8/0b52cf3132b4b85c9e83faa3e4d375575afeb3a1710c40b2b2cd2a3e5635/cachetools-4.1.1.tar.gz"
-    sha256 "bbaa39c3dede00175df2dc2b03d0cf18dd2d32a7de7beb68072d13043c9edb20"
+    url "https://files.pythonhosted.org/packages/c2/6f/278225c5a070a18a76f85db5f1238f66476579fa9b04cda3722331dcc90f/cachetools-5.2.0.tar.gz"
+    sha256 "6a94c6402995a99c3970cc7e4884bb60b4a8639938157eeed436098bf9831757"
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/40/a7/ded59fa294b85ca206082306bba75469a38ea1c7d44ea7e1d64f5443d67a/certifi-2020.6.20.tar.gz"
-    sha256 "5930595817496dd21bb8dc35dad090f1c2cd0adfaf21204bf6732ca5d8ee34d3"
+    url "https://files.pythonhosted.org/packages/cb/a4/7de7cd59e429bd0ee6521ba58a75adaec136d32f91a761b28a11d8088d44/certifi-2022.9.24.tar.gz"
+    sha256 "0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"
   end
 
-  resource "chardet" do
-    url "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz"
-    sha256 "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"
+  resource "charset-normalizer" do
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "google-api-core" do
-    url "https://files.pythonhosted.org/packages/e9/0b/3053f546d5150c9130c892034ba7eeff09b79e499ec122220dcb8ed6f64f/google-api-core-1.22.4.tar.gz"
-    sha256 "4a9d7ac2527a9e298eebb580a5e24e7e41d6afd97010848dd0f306cae198ec1a"
+    url "https://files.pythonhosted.org/packages/fe/d6/5dd223fc5cb476ab62966849f3e6466056799dbfc005d74da800eb097f7d/google-api-core-2.10.2.tar.gz"
+    sha256 "10c06f7739fe57781f87523375e8e1a3a4674bf6392cd6131a3222182b971320"
   end
 
   resource "google-api-python-client" do
-    url "https://files.pythonhosted.org/packages/36/76/5e27bab1fb7e449fe3564019f36c96dd0fc0240132e9a8744835ec6c3567/google-api-python-client-1.12.3.tar.gz"
-    sha256 "844ef76bda585ea0ea2d5e7f8f9a0eb10d6e2eba66c4fea0210ec7843941cb1a"
+    url "https://files.pythonhosted.org/packages/0f/36/b82e5cc246ce698953c42003284e2779688daa7448099bc0a0027e63b52a/google-api-python-client-2.65.0.tar.gz"
+    sha256 "b8a0ca8454ad57bc65199044717d3d214197ae1e2d666426bbcd4021b36762e0"
   end
 
   resource "google-auth" do
-    url "https://files.pythonhosted.org/packages/dc/fa/a22e99cf47b2d8fd5e7e17a2a6500a6b1feb3187c1e41bf411e4c54097ef/google-auth-1.22.1.tar.gz"
-    sha256 "9c0f71789438d703f77b94aad4ea545afaec9a65f10e6cc1bc8b89ce242244bb"
+    url "https://files.pythonhosted.org/packages/e5/f9/47e309e4df306111d94ae8879c5677fa41f92f4e1fe4a33141086057dcff/google-auth-2.14.0.tar.gz"
+    sha256 "cf24817855d874ede2efd071aa22125445f555de1685b739a9782fcf408c2a3d"
   end
 
   resource "google-auth-httplib2" do
-    url "https://files.pythonhosted.org/packages/6c/5e/97a5e7573457020351a275c74c559dbe2ebe1c606119f991541c98ffa651/google-auth-httplib2-0.0.4.tar.gz"
-    sha256 "8d092cc60fb16517b12057ec0bba9185a96e3b7169d86ae12eae98e645b7bc39"
+    url "https://files.pythonhosted.org/packages/c6/b5/a9e956fd904ecb34ec9d297616fe98fa4106fc12f3b0a914dec983c267b9/google-auth-httplib2-0.1.0.tar.gz"
+    sha256 "a07c39fd632becacd3f07718dfd6021bf396978f03ad3ce4321d060015cc30ac"
   end
 
   resource "googleapis-common-protos" do
-    url "https://files.pythonhosted.org/packages/95/3f/a1282d82def57e0c28bab597d25785774a4e64433aac9cc136e65c500da8/googleapis-common-protos-1.52.0.tar.gz"
-    sha256 "560716c807117394da12cecb0a54da5a451b5cf9866f1d37e9a5e2329a665351"
+    url "https://files.pythonhosted.org/packages/f0/8e/190b3ac9bc75d6ead661398a07c6d6f013502c364fd6cc3d5c06427b8023/googleapis-common-protos-1.56.4.tar.gz"
+    sha256 "c25873c47279387cfdcbdafa36149887901d36202cb645a0e4f29686bf6e4417"
   end
 
   resource "httplib2" do
-    url "https://files.pythonhosted.org/packages/98/3f/0769a851fbb0ecc458260055da67d550d3015ebe6b8b861c79ad00147bb9/httplib2-0.18.1.tar.gz"
-    sha256 "8af66c1c52c7ffe1aa5dc4bcd7c769885254b0756e6e69f953c7f0ab49a70ba3"
+    url "https://files.pythonhosted.org/packages/c2/37/a093aaa902f6b2301f0f2cff5285548dbc4ab9b9a29215eb440381cbb32b/httplib2-0.21.0.tar.gz"
+    sha256 "fc144f091c7286b82bec71bdbd9b27323ba709cc612568d3000893bfd9cb4b34"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/ea/b7/e0e3c1c467636186c39925827be42f16fee389dc404ac29e930e9136be70/idna-2.10.tar.gz"
-    sha256 "b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "oauth2client" do
@@ -82,8 +85,8 @@ class Gcalcli < Formula
   end
 
   resource "protobuf" do
-    url "https://files.pythonhosted.org/packages/25/ef/8f36bc7e4c3dcad241a9e7a51520d30712a7abc034343bed841ff4ea3289/protobuf-3.13.0.tar.gz"
-    sha256 "6a82e0c8bb2bf58f606040cc5814e07715b2094caeba281e2e7d0b0e2e397db5"
+    url "https://files.pythonhosted.org/packages/0f/cd/165eaac1c43a5ba391a36087dc909e03c3ae3f7dbcab74f287631208ba92/protobuf-4.21.9.tar.gz"
+    sha256 "61f21493d96d2a77f9ca84fefa105872550ab5ef71d21c458eb80edcf4885a99"
   end
 
   resource "pyasn1" do
@@ -96,39 +99,34 @@ class Gcalcli < Formula
     sha256 "905f84c712230b2c592c19470d3ca8d552de726050d1d1716282a1f6146be65e"
   end
 
-  resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/be/ed/5bbc91f03fa4c839c4c7360375da77f9659af5f7086b7a7bdda65771c8e0/python-dateutil-2.8.1.tar.gz"
-    sha256 "73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"
+  resource "pyparsing" do
+    url "https://files.pythonhosted.org/packages/71/22/207523d16464c40a0310d2d4d8926daffa00ac1f5b1576170a32db749636/pyparsing-3.0.9.tar.gz"
+    sha256 "2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"
   end
 
-  resource "pytz" do
-    url "https://files.pythonhosted.org/packages/f4/f6/94fee50f4d54f58637d4b9987a1b862aeb6cd969e73623e02c5c00755577/pytz-2020.1.tar.gz"
-    sha256 "c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"
+  resource "python-dateutil" do
+    url "https://files.pythonhosted.org/packages/4c/c4/13b4776ea2d76c115c1d1b84579f3764ee6d57204f6be27119f13a61d0a9/python-dateutil-2.8.2.tar.gz"
+    sha256 "0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/da/67/672b422d9daf07365259958912ba533a0ecab839d4084c487a5fe9a5405f/requests-2.24.0.tar.gz"
-    sha256 "b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "rsa" do
-    url "https://files.pythonhosted.org/packages/a2/d5/04b8a9719149583fec76efdff2e7a81c6e3cc34909ee818d3fbf115edc2e/rsa-4.6.tar.gz"
-    sha256 "109ea5a66744dd859bf16fe904b8d8b627adafb9408753161e766a92e7d681fa"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/6b/34/415834bfdafca3c5f451532e8a8d9ba89a21c9743a0c59fbd0205c7f9426/six-1.15.0.tar.gz"
-    sha256 "30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"
+    url "https://files.pythonhosted.org/packages/aa/65/7d973b89c4d2351d7fb232c2e452547ddfa243e93131e7cfa766da627b52/rsa-4.9.tar.gz"
+    sha256 "e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21"
   end
 
   resource "uritemplate" do
-    url "https://files.pythonhosted.org/packages/42/da/fa9aca2d866f932f17703b3b5edb7b17114bb261122b6e535ef0d9f618f8/uritemplate-3.0.1.tar.gz"
-    sha256 "5af8ad10cec94f215e3f48112de2022e1d5a37ed427fbd88652fa908f2ab7cae"
+    url "https://files.pythonhosted.org/packages/d2/5a/4742fdba39cd02a56226815abfa72fe0aa81c33bed16ed045647d6000eba/uritemplate-4.1.1.tar.gz"
+    sha256 "4346edfc5c3b79f694bccd6d6099a322bbeb628dbf2cd86eea55a456ce5124f0"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/81/f4/87467aeb3afc4a6056e1fe86626d259ab97e1213b1dfec14c7cb5f538bf0/urllib3-1.25.10.tar.gz"
-    sha256 "91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"
+    url "https://files.pythonhosted.org/packages/b2/56/d87d6d3c4121c0bcec116919350ca05dc3afd2eeb7dc88d07e8083f8ea94/urllib3-1.26.12.tar.gz"
+    sha256 "3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"
   end
 
   def install

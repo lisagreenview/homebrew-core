@@ -1,9 +1,9 @@
 class Gtk4 < Formula
   desc "Toolkit for creating graphical user interfaces"
   homepage "https://gtk.org/"
-  url "https://download.gnome.org/sources/gtk/4.4/gtk-4.4.1.tar.xz"
-  sha256 "0faada983dc6b0bc409cb34c1713c1f3267e67c093f86b1e3b17db6100a3ddf4"
-  license "LGPL-2.0-or-later"
+  url "https://download.gnome.org/sources/gtk/4.8/gtk-4.8.2.tar.xz"
+  sha256 "85b7a160b6e02eafa4e7d38f046f8720fab537d3fe73c01c864333a983a692a9"
+  license "LGPL-2.1-or-later"
 
   livecheck do
     url :stable
@@ -11,16 +11,19 @@ class Gtk4 < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "21cfa9ea0cb1d4a894aa2055b178f204e814b9eaa89533ca00272c268b534a94"
-    sha256 arm64_big_sur:  "ebcdde6bcc46923c3846f8649f2985104841a595a80b74126594ea86d34a0213"
-    sha256 monterey:       "6fef029e3839d13d2a6813f9e34b84eb36addf8885113e6a2cbf7ffee447632a"
-    sha256 big_sur:        "92dde4ba678417f9832635306119890d880980fdfee1581559e2f41b2374603b"
-    sha256 catalina:       "ed2681c43dfbe6ddb05539a27330868d96ade6b3988995b6024af59113d0d495"
-    sha256 x86_64_linux:   "f16c2c380add2a64b162f8329673749e6346d7a56960f4a43aec83760d5fb5a1"
+    sha256 arm64_ventura:  "089c4910495b12bc499c03b43d7104b5a08b4a32feb1e95cdd8293999a00daa7"
+    sha256 arm64_monterey: "9b2cc47587ba3588815c96229d82ad5d77199cc9a7b81750545e8f26b2553d1d"
+    sha256 arm64_big_sur:  "ede3901da6fa0d04529fef6d7ce2cbe3ce6c274dfb2e7f3fcf8446b5883d1613"
+    sha256 ventura:        "c99295645c5eb7280bb95cf01a0f1e1c3b27078bab0c49d1707ccdd817990300"
+    sha256 monterey:       "26e679a751038269581c6b87f2551216dc0aedf8469062f6d8fe52c3711519f6"
+    sha256 big_sur:        "5a74446a65ebca85b0a0e8a92137f62fa0e95d9f8ca0e5a6469a21338d449012"
+    sha256 catalina:       "34de48c6434e13cf7c8cf4faa10749d09d94a2a0ef50b4f0e9fe73d2364aad0d"
+    sha256 x86_64_linux:   "c973dc27ac1dd7edf0d785404c303edef93203ba11f77305cc5085131b2c2d09"
   end
 
   depends_on "docbook" => :build
   depends_on "docbook-xsl" => :build
+  depends_on "docutils" => :build
   depends_on "gobject-introspection" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
@@ -30,26 +33,22 @@ class Gtk4 < Formula
   depends_on "glib"
   depends_on "graphene"
   depends_on "hicolor-icon-theme"
+  depends_on "jpeg-turbo"
   depends_on "libepoxy"
+  depends_on "libpng"
+  depends_on "libtiff"
   depends_on "pango"
 
   uses_from_macos "libxslt" => :build # for xsltproc
   uses_from_macos "cups"
 
   on_linux do
-    depends_on "libxkbcommon"
     depends_on "libxcursor"
+    depends_on "libxkbcommon"
   end
 
-  # This patch (embedded below) backports the upstream fix made by PR !4008
-  # (https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/4008) to 4.4.1. It was
-  # unfortunately missed when the changes for 4.4.1 were reviewed but Gtk apps
-  # will crash on Apple Silicon Macs without it. The fix should be included in
-  # 4.6.0 when it is released, so this patch can be removed at that point.
-  patch :DATA
-
   def install
-    args = std_meson_args + %w[
+    args = %w[
       -Dgtk_doc=false
       -Dman-pages=true
       -Dintrospection=enabled
@@ -73,11 +72,9 @@ class Gtk4 < Formula
     # Disable asserts and cast checks explicitly
     ENV.append "CPPFLAGS", "-DG_DISABLE_ASSERT -DG_DISABLE_CAST_CHECKS"
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", *std_meson_args, "build", *args
+    system "meson", "compile", "-C", "build", "-v"
+    system "meson", "install", "-C", "build"
   end
 
   def post_install
@@ -95,6 +92,7 @@ class Gtk4 < Formula
         return 0;
       }
     EOS
+    ENV.prepend_path "PKG_CONFIG_PATH", Formula["jpeg-turbo"].opt_lib/"pkgconfig"
     flags = shell_output("#{Formula["pkg-config"].opt_bin}/pkg-config --cflags --libs gtk4").strip.split
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"
@@ -102,19 +100,3 @@ class Gtk4 < Formula
     assert_match version.to_s, shell_output("cat #{lib}/pkgconfig/gtk4.pc").strip
   end
 end
-__END__
-diff --git a/gdk/macos/gdkmacosglcontext.c b/gdk/macos/gdkmacosglcontext.c
-index cc0b5fa..9ab268a 100644
---- a/gdk/macos/gdkmacosglcontext.c
-+++ b/gdk/macos/gdkmacosglcontext.c
-@@ -227,8 +227,8 @@ gdk_macos_gl_context_real_realize (GdkGLContext  *context,
- 
-   swapRect[0] = 0;
-   swapRect[1] = 0;
--  swapRect[2] = surface->width;
--  swapRect[3] = surface->height;
-+  swapRect[2] = surface ? surface->width : 0;
-+  swapRect[3] = surface ? surface->height : 0;
- 
-   CGLSetParameter (cgl_context, kCGLCPSwapRectangle, swapRect);
-   CGLSetParameter (cgl_context, kCGLCPSwapInterval, &sync_to_framerate);

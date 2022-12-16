@@ -4,78 +4,64 @@ class Dmd < Formula
   license "BSL-1.0"
 
   stable do
-    url "https://github.com/dlang/dmd/archive/v2.098.0.tar.gz"
-    sha256 "437e7abae7f747ce8a027e512d2f98f0c27badd623347141c3f6fb0834d85ad0"
-
-    resource "druntime" do
-      url "https://github.com/dlang/druntime/archive/v2.098.0.tar.gz"
-      sha256 "f150400756c7940bc9d67a3ed7f89777e49b42a1ef2dff6f40727f83b3cea6f4"
-    end
+    url "https://github.com/dlang/dmd/archive/v2.101.0.tar.gz"
+    sha256 "4e93c453e8e7016dcd3dee8f8b6c843095e3136b16b767b57862b5f9892ad6d3"
 
     resource "phobos" do
-      url "https://github.com/dlang/phobos/archive/v2.098.0.tar.gz"
-      sha256 "f91c6c7f2d5683af2804a183c287bf6991b99c49692759d7844e1919ca59e974"
+      url "https://github.com/dlang/phobos/archive/v2.101.0.tar.gz"
+      sha256 "c88040678f2478cdedd1954d25058a3a87c3c858acd2528c6b9d60852abe7c5d"
     end
 
     resource "tools" do
-      url "https://github.com/dlang/tools/archive/v2.098.0.tar.gz"
-      sha256 "9466e62ed2cf80802158524fc4e7ff80cbefc0fadff23a8933f6f2892b42cb56"
+      url "https://github.com/dlang/tools/archive/v2.101.0.tar.gz"
+      sha256 "a74cdc177cfcb7605d803787774497e11d499428459f1f2fd2384b41b93825de"
     end
   end
 
   bottle do
-    sha256 monterey:     "8618eddb935558875b1c57bbf023334c6767b27d7e915bcfa07f38a91e2cdc47"
-    sha256 big_sur:      "b2c95835a1295b25169b3e96eacfddc479cd24efc6d58285e42a1436c2b097ce"
-    sha256 catalina:     "ec5dec4305424b179a815a4d15a8f85591bfb73d5cc92ca34b4ada0f05c34743"
-    sha256 mojave:       "82a178b02a4001d6a7f0e466d33bc6479be456b27bd29b124973164a164fde5f"
-    sha256 x86_64_linux: "1e65207b55d3c04987dd3679145db28e5952aa6cb2cc5bbf8aa227eb3cfd7b5a"
+    sha256 ventura:      "c6066c448834620489dbf6481ae2233da0e7da055f07dae8d144c63281c1b8df"
+    sha256 monterey:     "90623baa71ebe8039c546a9b90b642ae3f4efc7c353bc1c8f2be61fee3991168"
+    sha256 big_sur:      "544b5326c155da76fe61318bff98697b88949a33eaec79d6c8d1fe69fd55fc2d"
+    sha256 catalina:     "d1d76fc20cd153f1dd18e33ddd49319ee91fc727fb832105612f5a29714e98be"
+    sha256 x86_64_linux: "24a89eaf002814aaa4b11e3877825ef1b32c70577773c4cd8413b186598dac06"
   end
 
   head do
-    url "https://github.com/dlang/dmd.git"
-
-    resource "druntime" do
-      url "https://github.com/dlang/druntime.git"
-    end
+    url "https://github.com/dlang/dmd.git", branch: "master"
 
     resource "phobos" do
-      url "https://github.com/dlang/phobos.git"
+      url "https://github.com/dlang/phobos.git", branch: "master"
     end
 
     resource "tools" do
-      url "https://github.com/dlang/tools.git"
+      url "https://github.com/dlang/tools.git", branch: "master"
     end
   end
 
+  depends_on "ldc" => :build
   depends_on arch: :x86_64
 
-  uses_from_macos "unzip" => :build
-  uses_from_macos "xz" => :build
-
   def install
-    # DMD defaults to v2.088.0 to bootstrap as of DMD 2.090.0
-    # On MacOS Catalina, a version < 2.087.1 would not work due to TLS related symbols missing
+    dmd_make_args = %W[
+      INSTALL_DIR=#{prefix}
+      SYSCONFDIR=#{etc}
+      HOST_DMD=#{Formula["ldc"].opt_bin/"ldmd2"}
+      ENABLE_RELEASE=1
+      VERBOSE=1
+    ]
+
+    system "ldc2", "compiler/src/build.d", "-of=compiler/src/build"
+    system "./compiler/src/build", *dmd_make_args
 
     make_args = %W[
       INSTALL_DIR=#{prefix}
       MODEL=64
       BUILD=release
+      DMD_DIR=#{buildpath}
+      DRUNTIME_PATH=#{buildpath}/druntime
+      PHOBOS_PATH=#{buildpath}/phobos
       -f posix.mak
     ]
-
-    dmd_make_args = %W[
-      SYSCONFDIR=#{etc}
-      TARGET_CPU=X86
-      AUTO_BOOTSTRAP=1
-      ENABLE_RELEASE=1
-    ]
-
-    system "make", *dmd_make_args, *make_args
-
-    make_args.unshift "DMD_DIR=#{buildpath}", "DRUNTIME_PATH=#{buildpath}/druntime", "PHOBOS_PATH=#{buildpath}/phobos"
-
-    (buildpath/"druntime").install resource("druntime")
-    system "make", "-C", "druntime", *make_args
 
     (buildpath/"phobos").install resource("phobos")
     system "make", "-C", "phobos", "VERSION=#{buildpath}/VERSION", *make_args
@@ -87,8 +73,8 @@ class Dmd < Formula
 
     kernel_name = OS.mac? ? "osx" : OS.kernel_name.downcase
     bin.install "generated/#{kernel_name}/release/64/dmd"
-    pkgshare.install "samples"
-    man.install Dir["docs/man/*"]
+    pkgshare.install "compiler/samples"
+    man.install Dir["compiler/docs/man/*"]
 
     (include/"dlang/dmd").install Dir["druntime/import/*"]
     cp_r ["phobos/std", "phobos/etc"], include/"dlang/dmd"
@@ -123,7 +109,7 @@ class Dmd < Formula
   end
 
   test do
-    system bin/"dmd", pkgshare/"samples/hello.d"
+    system bin/"dmd", "-fPIC", pkgshare/"samples/hello.d"
     system "./hello"
   end
 end

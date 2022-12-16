@@ -1,18 +1,19 @@
 class TerraformProviderLibvirt < Formula
   desc "Terraform provisioning with Linux KVM using libvirt"
   homepage "https://github.com/dmacvicar/terraform-provider-libvirt"
-  url "https://github.com/dmacvicar/terraform-provider-libvirt/archive/v0.6.11.tar.gz"
-  sha256 "1b13a64d52ee672178b278cd705ebb4529e06e3692ed5dbddd1a09f2ef8e5e4f"
+  url "https://github.com/dmacvicar/terraform-provider-libvirt/archive/v0.7.0.tar.gz"
+  sha256 "d377acb44e5a2383495125494d5590345224313ba35ec116e46593867a560f9c"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "6d368171de77d235069741c96abf783953366f65bd828ef5107a753febc1d620"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9ab4ad2414c19304136f40737e4106480fa4a9263529b88631033c1a1029943f"
-    sha256 cellar: :any_skip_relocation, monterey:       "c7cff5db890d05e819e26e41909e1a16d00afc1c4fc8414e1f7e7b5a9beaf2d7"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a3edd031a2893cad825db3a00140cb6ffb949cd20e1d8c7d7f4de64aafbcd6be"
-    sha256 cellar: :any_skip_relocation, catalina:       "c2783859d88adbd62994dc3a1c81d19ac363429636fff8f6e84658c6ccdab115"
-    sha256 cellar: :any_skip_relocation, mojave:         "a9a2db100d57c0485bb9b807d819c5b942bba212d88b10845cdda1f18bf54e2a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fb290f4b615487538a06594679e884eb06789c707c6ca5fe9626927b4e2392b4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "79958ac5244163ac45d7e7fdd3e0f16ce0d5c3b97216f84da56615006061d096"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "bb615807297c7c263475c9aefc77b7a71b4191bb95578ff1255bdf5a10d957f8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c3790a8e0e8aad43a45487fdedc2cd5d47b882be05f8ab77e14cb425072322de"
+    sha256 cellar: :any_skip_relocation, ventura:        "7fc84fe86de04cf04061e6f79d15716c71ea1eb8394b09113dc31992fc7c87fc"
+    sha256 cellar: :any_skip_relocation, monterey:       "d36befb071e615c232e155c48a6a3270ae2577b6dcbad08e247a18251aa3b7cd"
+    sha256 cellar: :any_skip_relocation, big_sur:        "6d8799365da3bba56f1161bd425d8b24f83879cb50ba8b4501e6e46282094b63"
+    sha256 cellar: :any_skip_relocation, catalina:       "e31788236c8bca8c1947965082c91ab129ed3384061a4d7ee70e4a12f1c9f6aa"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5e7da33b7fd0a2f4b39e47db6da54213b9de1dedbd263adc3a30ddb5adb2634c"
   end
 
   depends_on "go" => :build

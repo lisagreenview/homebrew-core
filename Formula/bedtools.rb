@@ -6,23 +6,27 @@ class Bedtools < Formula
   license "MIT"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "de37a80ddd3decf4a0a5ad0269de8a15a65dee4192b2e817a033010c0c5772fc"
-    sha256 cellar: :any,                 arm64_big_sur:  "d43458d5a8f50a7db0f7f728ed82c0a980d9202126624d594d17c99c2c9ea76d"
-    sha256 cellar: :any,                 monterey:       "19b9705e968d7003f9511258154ee94366a68dc4af9a7644b671d56c8595f913"
-    sha256 cellar: :any,                 big_sur:        "6554348743d3efba64e47294f8cb229229f168902234dd7e0ee0b4dfa85bb4d7"
-    sha256 cellar: :any,                 catalina:       "32d302a56df9044ce36d44db851318fc4fb45676086e48a6d913f2286ae3a756"
-    sha256 cellar: :any,                 mojave:         "69b80814d21b11edf9d45d67de8536d5db965dd6743e56079e1f3d6cf77bb6d2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b255c530815fd12473089bb12c3adfa1cb290dc40c802a8e4716b1ef434de4b5"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "2e8a782328689c862e6bda675fc80554974a9e4d31b87c2437ebd138146dc10e"
+    sha256 cellar: :any,                 arm64_monterey: "f49bc2e2da620dc8e11f972de610ba8c181e187f326b0e684c3886fa0b3724f6"
+    sha256 cellar: :any,                 arm64_big_sur:  "142bd16e4896e944960d472b3f0063b7e15785ecc6eea30da9a25d70455868b4"
+    sha256 cellar: :any,                 ventura:        "4e142190372423e97db273ee80646b926b9298a857d4e3bd15316286ee37de5f"
+    sha256 cellar: :any,                 monterey:       "6cb9009902dc477cdd5c22c8a5868f2a7ff60b0c5a5f09461aa9ddd6380385f9"
+    sha256 cellar: :any,                 big_sur:        "cf105e55c3da5874d9c351c13c341b0898fa48731aadf5dc1b08b02f1ef36733"
+    sha256 cellar: :any,                 catalina:       "775e107f0f6de74aaaf1f03a3d2441355a740e2198b7d3f9cc41bb0108338a5f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8396c0906988ec6abf7324769e46a673ae7f960761c628dedd74ac9ea3b3aa82"
   end
 
-  depends_on "python@3.9" => :build
   depends_on "xz"
 
+  uses_from_macos "python" => :build
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
 
   def install
-    inreplace "Makefile", "python", "python3"
+    # Remove on the next release which has commit try both python and python3
+    # Ref: https://github.com/arq5x/bedtools2/commit/ffbc4e18d100ccb488e4a9e7e64146ec5d3af849
+    inreplace "Makefile", "python", "python3" if !OS.mac? || MacOS.version >= :catalina
 
     system "make"
     system "make", "install", "prefix=#{prefix}"

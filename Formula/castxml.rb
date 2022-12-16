@@ -1,8 +1,8 @@
 class Castxml < Formula
   desc "C-family Abstract Syntax Tree XML Output"
   homepage "https://github.com/CastXML/CastXML"
-  url "https://github.com/CastXML/CastXML/archive/v0.4.4.tar.gz"
-  sha256 "e7343edf262b291a9a3d702dbfa6d660e8ed81170454eab6af10a6dbf8c8141d"
+  url "https://github.com/CastXML/CastXML/archive/v0.5.1.tar.gz"
+  sha256 "a7b40b1530585672f9cf5d7a6b6dd29f20c06cd5edf34ef34c89a184a4d1a006"
   license "Apache-2.0"
   head "https://github.com/CastXML/castxml.git", branch: "master"
 
@@ -12,28 +12,24 @@ class Castxml < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "d76eb4f4e3cce08d062334f2c99f1cba63a3f831857ad00899ac7f5d82ccb2d7"
-    sha256 cellar: :any,                 arm64_big_sur:  "90aa62c5229d1084a1f197090b3c44b9cd85abddaf1695e2fecce2a2720b3f12"
-    sha256 cellar: :any,                 monterey:       "d8f8b6e5b027ae5707cdd74aba6f194babf02413b2251dbbab747426fd21ccac"
-    sha256 cellar: :any,                 big_sur:        "edd91bafec4e441ccbbcacd735d204873db448e36a2c45e84342c7e8f33a21d1"
-    sha256 cellar: :any,                 catalina:       "f44f3a928ad632cc5dd323d1122b597fd93562f83ebad2fbe4663764ad449726"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d3fad7d88989008f812bc20583e05db10f9489e8fd9315afc03a22c9f0f9f0fc"
+    sha256 cellar: :any,                 arm64_ventura:  "057c4ab8947ded01c09f7a4e5f06d0d2495c46e8378e72f95818ef131cf77c47"
+    sha256 cellar: :any,                 arm64_monterey: "34889b9e8b79d22bd8610c27e9e041ce9b798558bca0fe19f17a52a0b90b7d93"
+    sha256 cellar: :any,                 arm64_big_sur:  "a47fe4eca6599684eeedef864862c99e6b6287040551e6ac3c5b4afb3727570c"
+    sha256 cellar: :any,                 ventura:        "e6959eadabdadb05d81e14f7a4fdf9fe6d1bcfe95191daca967bd31f7746e958"
+    sha256 cellar: :any,                 monterey:       "eeb130876c000ebeb9747ca6c038f1aeb46461e832ec8aec1e02960a6d892696"
+    sha256 cellar: :any,                 big_sur:        "c23d8f6e9513ce5023ec23e90631f9d399784df6a21653bd3f6e29d5029dfd43"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6d1a73cec631dc4089f80da7631198186bd7ebcf007acbd710ebc564c137af99"
   end
 
   depends_on "cmake" => :build
   depends_on "llvm"
 
-  on_linux do
-    depends_on "gcc"
-  end
-
   fails_with gcc: "5"
 
   def install
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do
@@ -42,7 +38,7 @@ class Castxml < Formula
         return 0;
       }
     EOS
-    system "#{bin}/castxml", "-c", "-x", "c++", "--castxml-cc-gnu", "clang++",
-                             "--castxml-gccxml", "-o", "test.xml", "test.cpp"
+    system bin/"castxml", "-c", "-x", "c++", "--castxml-cc-gnu", "clang++",
+                          "--castxml-gccxml", "-o", "test.xml", "test.cpp"
   end
 end

@@ -1,25 +1,27 @@
 class Aerc < Formula
   desc "Email client that runs in your terminal"
   homepage "https://aerc-mail.org/"
-  url "https://git.sr.ht/~sircmpwn/aerc/archive/0.5.2.tar.gz"
-  sha256 "dec6560c1359d1d56124a85692e877e319036f0312ce9b7a31f9828f99b92c61"
+  url "https://git.sr.ht/~rjarry/aerc/archive/0.13.0.tar.gz"
+  sha256 "d8717ab2c259699b6e818a8f8db1e24033a2e09142e2e9b873fa5de6ee660bd8"
   license "MIT"
+  head "https://git.sr.ht/~rjarry/aerc", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "2112563cca068f8f53ace15fc44b194f1b60841b2413bb1b300fa9d724ed7e28"
-    sha256 arm64_big_sur:  "a4639b3dd82342db1626a79c90b5275bafaa87a23c415b92fb24577a49c94f53"
-    sha256 monterey:       "6586b1560c063d2d758a907e0ffb32f51008ff54619113a8c3d80bfacd462666"
-    sha256 big_sur:        "bfbdc6552a248e34e2a85f24664568a8bfc80a3941eb01bc05f9c9b97b6bc811"
-    sha256 catalina:       "52d1557638048defbd2c5dfc83ecd929acbbecbd3ee40a6dd8c2460a2232f81d"
-    sha256 mojave:         "fe2c485199cdf423c32e27d69ebc5a2af2b355b6a8b2e24ff467a4fc23899b4d"
-    sha256 x86_64_linux:   "fec7ba00c4eab6ae87ea98bad514b50d43c06189e8eece0f63beaa3487d84ab7"
+    sha256 arm64_ventura:  "d14161489279adff83ab696d008290069051018c40e722c1815cc48df8a8b974"
+    sha256 arm64_monterey: "f660d7ceb8bfbf36ce223d58681262039fe025fe8a80ec1ff7ad0dce12167a1d"
+    sha256 arm64_big_sur:  "75e3075aed7579774d740ced173c261ed4eb16e543b3cfd7876e7e48d280d983"
+    sha256 ventura:        "f26343e0a1fac3c7a421e4848f2b7cbe5a9fc8954f69a097752d6d5d31fa146e"
+    sha256 monterey:       "60529eb9bce505a6c3317b645100f646cc77b8ab3f2e353821190954f1c79d9b"
+    sha256 big_sur:        "0b6a2c62f75a94888425e61793f4b7a16de9f85825d0fc2395a55798a26c4a43"
+    sha256 catalina:       "cf152e4053bfb8945634112d510ee38fdae83a3afe168226f9c08fe3bc6ba7ac"
+    sha256 x86_64_linux:   "c82fd881c987a7ee7d168b99d44713946aacf9cd3856671f17aee0748f216aa7"
   end
 
   depends_on "go" => :build
   depends_on "scdoc" => :build
 
   def install
-    system "make", "PREFIX=#{prefix}"
+    system "make", "PREFIX=#{prefix}", "VERSION=#{version}"
     system "make", "install", "PREFIX=#{prefix}"
   end
 

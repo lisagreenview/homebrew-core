@@ -1,25 +1,26 @@
 class Fetch < Formula
   desc "Download assets from a commit, branch, or tag of GitHub repositories"
   homepage "https://www.gruntwork.io/"
-  url "https://github.com/gruntwork-io/fetch/archive/v0.4.2.tar.gz"
-  sha256 "b8ba80823e961fd2761ef2d855d308b69313930e0ffd445e34840a2ef9b4c6fb"
+  url "https://github.com/gruntwork-io/fetch/archive/v0.4.5.tar.gz"
+  sha256 "baa14d521cf0c59668dd5e84451579f48b623e16bb4d3b2254fa3c54b504fc9b"
   license "MIT"
-  head "https://github.com/gruntwork-io/fetch.git"
+  head "https://github.com/gruntwork-io/fetch.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "cf51eff4cbaa2c04a0e44dd3b720694df1c3fa3a396d0a42ff9c2a089b1c2f27"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "dad3c162a7e7856f05418531b52e57b637f2c996c41a471eb8b8fadd4aec0770"
-    sha256 cellar: :any_skip_relocation, monterey:       "bfee44ee5a7daff97a9f8059fbdf65de2dbbc5e9e7ed9f4d9ff53f6939f8a312"
-    sha256 cellar: :any_skip_relocation, big_sur:        "85cdfcf652c09182573850736a47b509dee83710c6fba83f6e36d58ea04c0257"
-    sha256 cellar: :any_skip_relocation, catalina:       "1c753e963f8cf9b1b9ea7af0a056fcc7e9f88246894a51865c115d1e3991b03d"
-    sha256 cellar: :any_skip_relocation, mojave:         "2acd0666bf17c0e50b7324647dae8b46c2e35360e37e15733487d2c72e66aacf"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8a045530b21c651ad2ac4c095e44179ff2c69ca9dd666ef4418e1e8ea75e6720"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e553d2f05c680a1c412ff3bd0df98fc1f4c25a3dab7b44203e8c3bbe8a68f322"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "24c8ec351ec9dbc8f71b679e94e1d8930c761b21b3bf4168be0b8d9aab32be0e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5f10cdef839a155b13ae6ade9db0033303a0651e94958ff950d7585ef76d70b3"
+    sha256 cellar: :any_skip_relocation, ventura:        "484b25a8a74dcedaea5d234a8a45e87a40451a07a010bedfa5dbb6718e92863b"
+    sha256 cellar: :any_skip_relocation, monterey:       "52f270c33fb1323e965aef897c8067ad993723ce1ab2269df630fc29badef701"
+    sha256 cellar: :any_skip_relocation, big_sur:        "121acdd239dfbde5c29565b6719974acfd6bf0793f163773374740a64f243f3a"
+    sha256 cellar: :any_skip_relocation, catalina:       "2e13409b0cfbfae80a0aba1f012163529e978090b8eb39dae2feb349e5063201"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "35d3950442bc4c81b649a7563b2047b991aa13121b42dc47140d915f85ce4420"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", "-ldflags", "-X main.VERSION=v#{version}", *std_go_args
+    system "go", "build", *std_go_args(ldflags: "-X main.VERSION=v#{version}")
   end
 
   test do

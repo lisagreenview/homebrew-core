@@ -2,22 +2,29 @@ class NewrelicInfraAgent < Formula
   desc "New Relic infrastructure agent"
   homepage "https://github.com/newrelic/infrastructure-agent"
   url "https://github.com/newrelic/infrastructure-agent.git",
-      tag:      "1.20.7",
-      revision: "b17a417d4745da7be9c00ecc72619523867f7add"
+      tag:      "1.36.0",
+      revision: "3a0f7f089f529e0ce2f29785735b05b30e730d2b"
   license "Apache-2.0"
   head "https://github.com/newrelic/infrastructure-agent.git", branch: "master"
 
-  bottle do
-    sha256 cellar: :any_skip_relocation, monterey:     "ffdb274016361a220fbc8fb21cfae1b90347c03ff7c86e128d20a6c3a0a6053b"
-    sha256 cellar: :any_skip_relocation, big_sur:      "bf1f38cc2c2f73370f92c7645eb9c228dbaf5f760b700477f1c40e7de34690b7"
-    sha256 cellar: :any_skip_relocation, catalina:     "966da6a25822e35c9e96e518336b3d1bb3ceb9e06c88d9456c19e2305ab45570"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "93328d150756320c4ea4a9aba6c66dd773cdc1b7c63db1165918f64ca8409194"
+  # Upstream sometimes creates a tag with a stable version format but marks it
+  # as pre-release on GitHub.
+  livecheck do
+    url :stable
+    strategy :github_latest
   end
 
-  # https://github.com/newrelic/infrastructure-agent/issues/723
-  depends_on "go@1.16" => :build
-  # https://github.com/newrelic/infrastructure-agent/issues/695
-  depends_on arch: :x86_64
+  bottle do
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "979f04e051e60832d9a9c340cd75c2076db9953ff226dfd5116f1f268f22ef90"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "80c103918fb4dff17d18872a69f301632d067ee0a8b1e270fc59b92b7b97fa37"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fc726827017da470444badb495fabc8de532ef3dddb0fe8e44ac4e5c48d17c6a"
+    sha256 cellar: :any_skip_relocation, ventura:        "0fd7744c5111e6086ef310810b638a48ff3a57617702a9a30930036d8c98c157"
+    sha256 cellar: :any_skip_relocation, monterey:       "794169f583930e3e48140a7840afdadc013cbaf862e2e5d8c8e238cd71cfe6e9"
+    sha256 cellar: :any_skip_relocation, big_sur:        "346ede5ddc5102f51c495805cbe24337b0030dd4ef20b17b2e354a0a7572b13c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d7e57e6c69730ea6174657814c18514599e80b9c588feb2c12ea5d33f9f74f2a"
+  end
+
+  depends_on "go" => :build
 
   def install
     goarch = Hardware::CPU.intel? ? "amd64" : Hardware::CPU.arch.to_s
@@ -25,6 +32,7 @@ class NewrelicInfraAgent < Formula
     ENV["VERSION"] = version.to_s
     ENV["GOOS"] = os
     ENV["CGO_ENABLED"] = OS.mac? ? "1" : "0"
+    ENV["GOARCH"] = goarch
 
     system "make", "dist-for-os"
     bin.install "dist/#{os}-newrelic-infra_#{os}_#{goarch}/newrelic-infra"

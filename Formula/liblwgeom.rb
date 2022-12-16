@@ -5,7 +5,7 @@ class Liblwgeom < Formula
   sha256 "146d59351cf830e2a2a72fa14e700cd5eab6c18ad3e7c644f57c4cee7ed98bbe"
   license "GPL-2.0-or-later"
   revision 1
-  head "https://git.osgeo.org/gitea/postgis/postgis.git"
+  head "https://git.osgeo.org/gitea/postgis/postgis.git", branch: "master"
 
   bottle do
     rebuild 1
@@ -21,7 +21,7 @@ class Liblwgeom < Formula
   keg_only "conflicts with PostGIS, which also installs liblwgeom.dylib"
 
   # See details in https://github.com/postgis/postgis/pull/348
-  deprecate! date: "2020-11-23", because: "liblwgeom headers are not installed anymore, use librttopo instead"
+  disable! date: "2022-07-31", because: "liblwgeom headers are not installed anymore, use librttopo instead"
 
   depends_on "autoconf@2.69" => :build
   depends_on "automake" => :build

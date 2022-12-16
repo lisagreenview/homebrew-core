@@ -1,9 +1,9 @@
 class Logtalk < Formula
   desc "Declarative object-oriented logic programming language"
   homepage "https://logtalk.org/"
-  url "https://github.com/LogtalkDotOrg/logtalk3/archive/lgt3510stable.tar.gz"
-  version "3.51.0"
-  sha256 "6ac6aed12c6d26e8a6b06f995a95ad24a9f2d29db021c050812db2da4e61196e"
+  url "https://github.com/LogtalkDotOrg/logtalk3/archive/lgt3600stable.tar.gz"
+  version "3.60.0"
+  sha256 "254997f38c67756b1087f3caa958403a7a30ae2b241b9fada4ad9e07fae4d120"
   license "Apache-2.0"
 
   livecheck do
@@ -12,12 +12,12 @@ class Logtalk < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "38a164fde20433b8c37f9637347958a82c8dba13e808bc9d63ed7fe7546b7ec1"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "7ce4ced9760c85f795439d4bb722c6b709568919b7839f629bd83d475bd9b2d1"
-    sha256 cellar: :any_skip_relocation, monterey:       "d65196c7f69a6be87b2e0994c468656d2f182dd460d1c39c1df1178b16ea5939"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a90438cb7197c9b3602a9b4ced05fcf72a88769405e508d9d506b2cbad38e8dd"
-    sha256 cellar: :any_skip_relocation, catalina:       "e64c70973ad23731d66c98d936e02baa0ba4d2e96799db082185cdb3025af053"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c2bc934c985bf58834c22e5ee95279522eebe19a8f1256bf822df98dadc4276b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "10748c1aa30753d42918f24275f79af5aab452a275002e2beb6d92c7defd8b26"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4a7770c7d1c565e180ac85005e0b4b270a8416c2d59bf153806a9c961cc57b5a"
+    sha256 cellar: :any_skip_relocation, monterey:       "5f42a36626ae64931f4c1583b33f01db615f9b03fa8e9e48cadfcca06525f43b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f1024a6bb2c90e640243f2253ccc6b7e2b0e8bdea30ea4c844c993744bcd3d8b"
+    sha256 cellar: :any_skip_relocation, catalina:       "5ba79224bbd85842875cec82f074725769d43003afa4c23ab843776689fb32f5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5128e04513564f3c32acc6412b9a1fe9eb6c66f770ef675280387e8a55d01883"
   end
 
   depends_on "gnu-prolog"

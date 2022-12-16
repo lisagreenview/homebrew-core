@@ -1,17 +1,17 @@
 class Antlr < Formula
   desc "ANother Tool for Language Recognition"
   homepage "https://www.antlr.org/"
-  url "https://www.antlr.org/download/antlr-4.9.3-complete.jar"
-  sha256 "afcd40946d3de4d81e28d7c88d467289e0587285d27adb172aecc5494a17df36"
+  url "https://www.antlr.org/download/antlr-4.11.1-complete.jar"
+  sha256 "62975e192b4af2622b72b5f0131553ee3cbce97f76dc2a41632dcc55e25473e1"
   license "BSD-3-Clause"
 
   livecheck do
-    url "https://www.antlr.org/download/"
+    url "https://www.antlr.org/download.html"
     regex(/href=.*?antlr[._-]v?(\d+(?:\.\d+)+)-complete\.jar/i)
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "9ef377a05b308173e57853c4fee1adda353ce8efb145b16941dc3b8c8363f88e"
+    sha256 cellar: :any_skip_relocation, all: "9e5d18110040bd130207bfa3daab67bf83f66042e3feed715676c5e7b4adee18"
   end
 
   depends_on "openjdk"

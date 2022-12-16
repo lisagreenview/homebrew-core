@@ -1,10 +1,9 @@
 class Ocamlbuild < Formula
   desc "Generic build tool for OCaml"
   homepage "https://github.com/ocaml/ocamlbuild"
-  url "https://github.com/ocaml/ocamlbuild/archive/0.14.0.tar.gz"
-  sha256 "87b29ce96958096c0a1a8eeafeb6268077b2d11e1bf2b3de0f5ebc9cf8d42e78"
-  license "LGPL-2.0"
-  revision 2
+  url "https://github.com/ocaml/ocamlbuild/archive/0.14.2.tar.gz"
+  sha256 "62d2dab6037794c702a83ac584a7066d018cf1645370d1f3d5764c2b458791b1"
+  license "LGPL-2.0-only" => { with: "OCaml-LGPL-linking-exception" }
   head "https://github.com/ocaml/ocamlbuild.git", branch: "master"
 
   livecheck do
@@ -13,14 +12,14 @@ class Ocamlbuild < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "f1db7b36700c95ce9ecf78fdbfd39444a2f1f6a338a38f9a5b195fea26ee2d09"
-    sha256 arm64_big_sur:  "3959adfee1e78a7194faf82338106d5a281dfa14a55e37a7506dd5970f416358"
-    sha256 monterey:       "028e644d34d4735929477809fca3a5587f96bb4cfe94e5efa7b9f3eddd06443c"
-    sha256 big_sur:        "3daa705ce9d023a2679f609671d06de48e8dd1dd13ece8db46068802abbdd41f"
-    sha256 catalina:       "8f6fc7e7413b24faa041b7651349a3128f9eadefae5c9aa0c50f0d1a56e010f6"
-    sha256 mojave:         "04fed811edb4dd3903f742ec6678643f9959e85c4fcb763972c8779dec059515"
-    sha256 high_sierra:    "e4cd0274f9657874e29add30545055af4ea8697d426ed95f799ddce63aef5cfe"
-    sha256 x86_64_linux:   "6b0804c980c27a7df543c4b31811a9b1509d88692d1b9da5f44eb1297da9aa76"
+    sha256 arm64_ventura:  "231ebb957bc74819336ca55e48987714dea31d104b4e84db210c78618c91b087"
+    sha256 arm64_monterey: "3d47c72ddcd5a6bead87487dd503bd8cf98b015e04c17a5b2b0696bb75ce83de"
+    sha256 arm64_big_sur:  "85b92b0677aa8eb69c0d5835eb2c13d4cf188caec95352060bf7e174950f82ea"
+    sha256 ventura:        "75d8634b4512010a45bb4972feccd672c11f1e480f13feedc7b1dc5a040a4c65"
+    sha256 monterey:       "4b209b5cac1d988448bd636f92af9d136d789ba0fdf94c92ac691b42294aa987"
+    sha256 big_sur:        "7b3e3b42d3183983c581948a3cd125179da47bc000edf3c0fe143cad820589ec"
+    sha256 catalina:       "ad29ad617242569e40fa04743c82fffd31e7f095d78e940d022d7077de1bc0fe"
+    sha256 x86_64_linux:   "c6dd0b3abbbeab25bfd412f2aaf4a3683b04eb6050c49ccec5d36b99959e20a1"
   end
 
   depends_on "ocaml"

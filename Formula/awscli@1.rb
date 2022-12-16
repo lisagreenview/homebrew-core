@@ -4,8 +4,8 @@ class AwscliAT1 < Formula
   desc "Official Amazon AWS command-line interface"
   homepage "https://aws.amazon.com/cli/"
   # awscli should only be updated every 10 releases on multiples of 10
-  url "https://files.pythonhosted.org/packages/32/2d/a4e09a2964dabcc51232c8d90bc363491f9ff81f4947409030a05f87ad06/awscli-1.22.10.tar.gz"
-  sha256 "0dd718a1a2f90e98f01a52969d04a9106eac185dfa5d67f3289ecdbbde13ff0d"
+  url "https://files.pythonhosted.org/packages/83/ae/20dee06bafa3af0592c1ada96394856f51319565446eef98143a69335700/awscli-1.27.20.tar.gz"
+  sha256 "921a5a99f2febbd32c83288f05c23e513ef1cd135cabb8c7357b8beaddaa9153"
   license "Apache-2.0"
 
   livecheck do
@@ -14,41 +14,41 @@ class AwscliAT1 < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "83ef0f2c0f12517b1e2d638e382e62f4118491b2e37f9ba29664bcfdc013bfda"
-    sha256 cellar: :any,                 arm64_big_sur:  "8fcf6fa2708b4f68f453779cb8e895784c9179a8de9677738cd69663d26faa4b"
-    sha256 cellar: :any,                 monterey:       "231c4615e365420e1fd08cfe635fcda624d999e9aee03334c5bbb69dff657c23"
-    sha256 cellar: :any,                 big_sur:        "b769e312412dd8ac7bea3fd30ce79631b09e5300040e57f99997af11aaf0ba33"
-    sha256 cellar: :any,                 catalina:       "ea0fde68eaee623f0e0662f61f9939fbcf72a84eda75d753453cce92e3840c3b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "498423d26c75298e3a85fe22777097489612afbc7fa4752eac733ebbb89c753b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "dbd3ae85558f4a1c2ffb2973cb9fcd967ef0435c5fa40319d923374a4b2153a3"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "848ab1e51c75181f106ac8fc66bc51209959bd0a854584d5f91889c18c72be32"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bc9a5e503c8b1e6712de2a6475e7c324e9758a5a290b54544f4b2d1ea404e6e5"
+    sha256 cellar: :any_skip_relocation, ventura:        "b3e354f82ebab7be7dc6df3bbf092bbd8b1f17b44287a82fd4514037b3a7d826"
+    sha256 cellar: :any_skip_relocation, monterey:       "3ff090243feed8cc013119ed7608cca789a92906ed388669be627b06c30a241a"
+    sha256 cellar: :any_skip_relocation, big_sur:        "702d0ab8d4a968079375867bb3b525a2e0466c78d70215110c81965ee80788c2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "aa7a09fca21b2a8ecb14a1c33aa08ffbc0b5df35681ae39c6c33bee47579d1b3"
   end
 
   keg_only :versioned_formula
 
-  depends_on "libyaml" # for faster PyYAML
-  # Some AWS APIs require TLS1.2, which system Python doesn't have before High Sierra
-  depends_on "python@3.9"
+  depends_on "docutils"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
   depends_on "six"
 
-  uses_from_macos "groff"
+  # Remove this dependency when the version is at or above 1.27.6
+  # and replace with `uses_from_macos "mandoc"`
+  on_system :linux, macos: :ventura_or_newer do
+    depends_on "groff"
+  end
 
   resource "botocore" do
-    url "https://files.pythonhosted.org/packages/26/79/ba027d96c5a670fb0715f483afa4eff5ecb2456aba302b7367b12b282453/botocore-1.23.10.tar.gz"
-    sha256 "0adda9a4a95221027312eaaee0ec9fe2239fb2f285fced3ddca54b1310b864ee"
+    url "https://files.pythonhosted.org/packages/4a/2e/98977bb2ed68d0b8fb8fccadc5f7e7b30c3147f49d55465d2cdd1fc7a976/botocore-1.29.20.tar.gz"
+    sha256 "806dab6358b0b44d7b283f133aadd26846f31fab12c97d348a1849b3b5a36c74"
   end
 
   resource "colorama" do
-    url "https://files.pythonhosted.org/packages/82/75/f2a4c0c94c85e2693c229142eb448840fba0f9230111faa889d1f541d12d/colorama-0.4.3.tar.gz"
-    sha256 "e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"
-  end
-
-  resource "docutils" do
-    url "https://files.pythonhosted.org/packages/93/22/953e071b589b0b1fee420ab06a0d15e5aa0c7470eb9966d60393ce58ad61/docutils-0.15.2.tar.gz"
-    sha256 "a2aeea129088da402665e92e0b25b04b073c04b2dce4ab65caaa38b7ce2e1a99"
+    url "https://files.pythonhosted.org/packages/1f/bb/5d3246097ab77fa083a61bd8d3d527b7ae063c7d8e8671b1cf8c4ec10cbe/colorama-0.4.4.tar.gz"
+    sha256 "5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"
   end
 
   resource "jmespath" do
-    url "https://files.pythonhosted.org/packages/3c/56/3f325b1eef9791759784aa5046a8f6a1aff8f7c898a2e34506771d3b99d8/jmespath-0.10.0.tar.gz"
-    sha256 "b85d0567b8666149a93172712e68920734333c0ce7e89b78b3e987f71e5ed4f9"
+    url "https://files.pythonhosted.org/packages/00/2a/e867e8531cf3e36b41201936b7fa7ba7b5702dbef42922193f05c8976cd6/jmespath-1.0.1.tar.gz"
+    sha256 "90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"
   end
 
   resource "pyasn1" do
@@ -61,24 +61,19 @@ class AwscliAT1 < Formula
     sha256 "0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"
   end
 
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
-  end
-
   resource "rsa" do
     url "https://files.pythonhosted.org/packages/db/b5/475c45a58650b0580421746504b680cd2db4e81bc941e94ca53785250269/rsa-4.7.2.tar.gz"
     sha256 "9d689e6ca1b3038bc82bf8d23e944b6b6037bc02301a574935b2dd946e0353b9"
   end
 
   resource "s3transfer" do
-    url "https://files.pythonhosted.org/packages/88/ef/4d1b3f52ae20a7e72151fde5c9f254cd83f8a49047351f34006e517e1655/s3transfer-0.5.0.tar.gz"
-    sha256 "50ed823e1dc5868ad40c8dc92072f757aa0e653a192845c94a3b676f4a62da4c"
+    url "https://files.pythonhosted.org/packages/e1/eb/e57c93d5cd5edf8c1d124c831ef916601540db70acd96fa21fe60cef1365/s3transfer-0.6.0.tar.gz"
+    sha256 "2ed07d3866f523cc561bf4a00fc5535827981b117dd7876f036b0c1aca42c947"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
+    url "https://files.pythonhosted.org/packages/c2/51/32da03cf19d17d46cce5c731967bf58de9bd71db3a379932f53b094deda4/urllib3-1.26.13.tar.gz"
+    sha256 "c083dd0dce68dbfbe1129d5271cb90f9447dea7d52097c6e0126120c521ddea8"
   end
 
   def install

@@ -5,12 +5,14 @@ class ReconNg < Formula
   homepage "https://github.com/lanmaster53/recon-ng"
   url "https://github.com/lanmaster53/recon-ng/archive/v5.1.2.tar.gz"
   sha256 "18d05030b994c9b37f624628251d3376d590f3d1eec155f67aca88fa5f3490cc"
-  license "GPL-3.0"
+  license "GPL-3.0-only"
   revision 1
 
   bottle do
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3234c6a086bea3cea57358943f75f2b412b0a179760f2319643e8517439e57bd"
     sha256 cellar: :any_skip_relocation, arm64_monterey: "2e2e45a733f31ec9e0530cfc1e8fff4be936a47aa9d16e5f18bdc6cf5604db61"
     sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0c67a45b9343f19d54224ea3d2d315395e2671e3956230cf773dcdb5809fc74e"
+    sha256 cellar: :any_skip_relocation, ventura:        "14c93add3cf9d93b8b501ae3fdf8bd465753a9988de714ebcd2afa4c6cd49ebf"
     sha256 cellar: :any_skip_relocation, monterey:       "a61255c42019f8ca5865e11a54bc9e55a37ca6deefbb3f9f3f3502bca7b9a556"
     sha256 cellar: :any_skip_relocation, big_sur:        "b7641d98fbac1452c6bad5e4a07b8901faf28dbd66f7201db11a128f92650f84"
     sha256 cellar: :any_skip_relocation, catalina:       "d1c3ff3698802850447b16d31118f020479b68e38f6f07a59e6f5ad33cec4da8"
@@ -183,11 +185,8 @@ class ReconNg < Formula
   end
 
   def install
-    # Fix "ld: file not found: /usr/lib/system/libsystem_darwin.dylib" for lxml
-    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra
-
     libexec.install Dir["*"]
-    venv = virtualenv_create(libexec, "python3")
+    venv = virtualenv_create(libexec, "python3.10")
     venv.pip_install resources
 
     # Replace shebang with virtualenv python

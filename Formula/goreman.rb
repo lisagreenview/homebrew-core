@@ -1,10 +1,10 @@
 class Goreman < Formula
   desc "Foreman clone written in Go"
   homepage "https://github.com/mattn/goreman"
-  url "https://github.com/mattn/goreman/archive/v0.3.8.tar.gz"
-  sha256 "b3d14310e84103d7557505dbd0d4649109c0574a3677a459683fba2721aedfc6"
+  url "https://github.com/mattn/goreman/archive/v0.3.13.tar.gz"
+  sha256 "dfc20682714626c69db2fde9ce48432e7116f267488a123b79d72f6dabcca7a3"
   license "MIT"
-  head "https://github.com/mattn/goreman.git"
+  head "https://github.com/mattn/goreman.git", branch: "master"
 
   livecheck do
     url :homepage
@@ -12,13 +12,14 @@ class Goreman < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "c848d97a3dd01b0766e9e150f1ec348bc678e09023f52beaa01fd37376a844ce"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2f01e123072da262770e58be58d02cd4420109afc60ad4a9b3e40736f252ca91"
-    sha256 cellar: :any_skip_relocation, monterey:       "a4b7a2a1678d86ee83ead87697ab42c15493a80d367a642d9aec30359b3e59b8"
-    sha256 cellar: :any_skip_relocation, big_sur:        "379ff164b5c3f6cd46a38fcbee2763bf5720f968999752aa361eb12c9fc280fa"
-    sha256 cellar: :any_skip_relocation, catalina:       "9659197993188b2456b33a701f636bcbde07f8585a8bb3409c13ed85296fe687"
-    sha256 cellar: :any_skip_relocation, mojave:         "81050a32c568ca72e553e74e1758b9767cfe938252c94bffd9c87b7151a6c29a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f2a5eb0ed131894cccafe025849ac67541c18658e4658fb3a33cddc0bb0a71c7"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "8c095f2360084a1477500f8d6684accceb6f09b22805a8d44ad08f9a64753ef7"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "986155fa8952bfc2f2e642a3dd8fef50d273fe086aa7a4c33774a4d13f4eca18"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f4b24f1d784da2b808ef927b8432d0a8cc12ba573f4a5e714be0eaeb735eb8c1"
+    sha256 cellar: :any_skip_relocation, ventura:        "2c132a1b7cdd09a873a83f992013144ed7fbf3d0fc980380f43fd7d0dfbc4776"
+    sha256 cellar: :any_skip_relocation, monterey:       "8a43d0685955570af59741794d37c4b215860b2b3c9d60823774b2c047a1cf98"
+    sha256 cellar: :any_skip_relocation, big_sur:        "bab40f093c03c2e988489dee4ab7387df524831e21c502c9585846f41c3a7735"
+    sha256 cellar: :any_skip_relocation, catalina:       "31c67a12dc71a363b8ba88fbeff4c15eabc40aeb8cc194aabb123752744fc673"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d6966ffced430d09be24f06c54954cdfba15a149e9d1d518c883a7ff3a9f150b"
   end
 
   depends_on "go" => :build

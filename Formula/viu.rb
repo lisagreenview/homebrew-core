@@ -1,19 +1,21 @@
 class Viu < Formula
   desc "Simple terminal image viewer written in Rust"
   homepage "https://github.com/atanunq/viu"
-  url "https://github.com/atanunq/viu/archive/refs/tags/v1.3.0.tar.gz"
-  sha256 "ee049c065945a528699799f18de4d82355d5b2f5509d2435b9f5332c8dd520c5"
+  url "https://github.com/atanunq/viu/archive/refs/tags/v1.4.0.tar.gz"
+  sha256 "9b359c2c7e78d418266654e4c94988b0495ddea62391fcf51512038dd3109146"
   license "MIT"
   head "https://github.com/atanunq/viu.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2269576ed41f39754a5a19c14d683d6cb49a3f542ae2c01f5ed4bdd407f4e0dc"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2522e8aca392e56f1517b092a8091bd3ba5c4ed45220fd92e4daa79240ee4182"
-    sha256 cellar: :any_skip_relocation, monterey:       "3a6fa60f802de0598b653d7625e94a4208e9f66820a31749a02b45f376e95106"
-    sha256 cellar: :any_skip_relocation, big_sur:        "572858e897b2e307b45e02d6814b4e562682554bfaab4c1a827cbb07b679ecf7"
-    sha256 cellar: :any_skip_relocation, catalina:       "0029a7093ea3cf9e65b8eaa168ace9a0c424dced8ca233bcb74a67139be10277"
-    sha256 cellar: :any_skip_relocation, mojave:         "051cee6ee32390448b48ba56e2e9d60be22c6d9b43687f3713482d9e3dfe6017"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "06d513576fa431015bbc55fd6d118aff7be75a6fa468f5a42ee567439442cb16"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "d5518815ffa424b2f4341703d8e12b62a7b0c7b86591e24e48f22e5dbebf9499"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "31abf104e6a99f2168f865b6461657aa6a7a30c014239eb72f76bffc525bec95"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fefcfa184185f643d81e7a206e782349a0813e947222f2ea092eff3f92dfa5b1"
+    sha256 cellar: :any_skip_relocation, ventura:        "9729333077ff480c91b5cba9108ba95dfff75fc0860c76691b4434932c066b10"
+    sha256 cellar: :any_skip_relocation, monterey:       "9f01ea745004309835c0ee4ebee71ff8186246ea0c74b2c5286a3f021d425238"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1d88e2dcf78308bdb60b2072cb03a31d6fad4d84d760360b597feea0a0a1b2a5"
+    sha256 cellar: :any_skip_relocation, catalina:       "d2082f85f1290d91864b6ff81b8ea76c93ae6482cf5375efede73afe69bb96fc"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a9affa5440243080d044e7dce00b6d2efa411cfcbbbce88aeb4c2b5268b5107a"
   end
 
   depends_on "rust" => :build
@@ -23,7 +25,7 @@ class Viu < Formula
   end
 
   test do
-    expected_output = "\e[0m\e[38;5;202m\e[48;5;202m▄\e[0m"
+    expected_output = "\e[0m\e[38;5;202m▀\e[0m"
     output = shell_output("#{bin}/viu #{test_fixtures("test.jpg")}").chomp
     assert_equal expected_output, output
   end

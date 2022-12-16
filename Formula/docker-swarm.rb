@@ -4,7 +4,7 @@ class DockerSwarm < Formula
   url "https://github.com/docker/classicswarm/archive/v1.2.9.tar.gz"
   sha256 "13d0d39dbd2bccb32016e6aa782da67b6207f203e253e06b0f6eb4f25da85474"
   license "Apache-2.0"
-  head "https://github.com/docker/classicswarm.git"
+  head "https://github.com/docker/classicswarm.git", branch: "master"
 
   bottle do
     rebuild 1
@@ -20,7 +20,7 @@ class DockerSwarm < Formula
   # "Classic Swarm has been archived and is no longer actively developed. You
   # may want to use the Swarm mode built into the Docker Engine instead, or
   # another orchestration system."
-  deprecate! date: "2020-06-11", because: :repo_archived
+  disable! date: "2022-07-31", because: :repo_archived
 
   depends_on "go" => :build
 

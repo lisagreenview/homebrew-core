@@ -1,14 +1,20 @@
 class Dartsim < Formula
   desc "Dynamic Animation and Robotics Toolkit"
   homepage "https://dartsim.github.io/"
-  url "https://github.com/dartsim/dart/archive/v6.12.1.tar.gz"
-  sha256 "e0d47bbc191903b93474da00bbd1042cefdc85f5ead3e9a9282b5f4187d53304"
+  url "https://github.com/dartsim/dart/archive/v6.12.2.tar.gz"
+  sha256 "db1b3ef888d37f0dbc567bc291ab2cdb5699172523a58dd5a5fe513ee38f83b0"
   license "BSD-2-Clause"
+  revision 1
 
   bottle do
-    sha256 arm64_big_sur: "06dd58e3b58e8a23472acd89bc80aad7635f37b2fdb1d8bab14db0d183467fd4"
-    sha256 big_sur:       "9e56f2d89dce4d858b316ae13559a9755d8a1959a14a40aa5b09095700e066e3"
-    sha256 catalina:      "b04ace54191630297c72bbab499c8be46d83359d9d6d723cd703e162f9df63bf"
+    sha256                               arm64_ventura:  "eb6259f4a573e4166a88961bc76bf7b56730538cf1c193de7075d5e6ba5b76a3"
+    sha256                               arm64_monterey: "e5de7bd2b3c5527e461e4eeaf8f3e78846b51136316dd965254c46b7d9c61b19"
+    sha256                               arm64_big_sur:  "32f47556d7768bf110b4942aa807b37fd75ed15e316efdec2a3b9f3abbc6ac25"
+    sha256                               ventura:        "bcbde8e2a2029ad3d3b0fc96fc6c863b8cd86d3ba83c3ff26be835ce4349ed1d"
+    sha256                               monterey:       "24300e8d8f39767443f6fd3d8d660de38ed322bf95a008128b05d6f29390101f"
+    sha256                               big_sur:        "431876c374f8a29b5bbd360d8783cb238631c6fbc9a0067bde5d8f3248b6bbc1"
+    sha256                               catalina:       "e7a647c4fa42791c5cfe1b563fb1e1fc49eee5d34cf5dba5e98636a3d76e5147"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "09834b6e3f3c4f58e56a625ecf3b3093930f051169e6d2dd3a4bcd51e19959f4"
   end
 
   depends_on "cmake" => :build
@@ -26,6 +32,8 @@ class Dartsim < Formula
   depends_on "open-scene-graph"
   depends_on "tinyxml2"
   depends_on "urdfdom"
+
+  fails_with gcc: "5"
 
   def install
     ENV.cxx11
@@ -59,6 +67,8 @@ class Dartsim < Formula
                     "-I#{include}", "-L#{lib}", "-ldart",
                     "-L#{Formula["assimp"].opt_lib}", "-lassimp",
                     "-L#{Formula["boost"].opt_lib}", "-lboost_system",
+                    "-L#{Formula["libccd"].opt_lib}", "-lccd",
+                    "-L#{Formula["fcl"].opt_lib}", "-lfcl",
                     "-std=c++14", "-o", "test"
     system "./test"
   end

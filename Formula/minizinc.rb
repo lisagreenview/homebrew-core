@@ -1,35 +1,33 @@
 class Minizinc < Formula
   desc "Medium-level constraint modeling language"
   homepage "https://www.minizinc.org/"
-  url "https://github.com/MiniZinc/libminizinc/archive/2.5.5.tar.gz"
-  sha256 "c6c81fa8bdc2d7f8c8d851e5a4b936109f5d996abd8c6f809539f753581c6288"
+  url "https://github.com/MiniZinc/libminizinc/archive/2.6.4.tar.gz"
+  sha256 "f1f5adba23c749ddfdb2420e797d7ff46e72b843850529978f867583dbc599ca"
   license "MPL-2.0"
-  revision 1
   head "https://github.com/MiniZinc/libminizinc.git", branch: "develop"
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "2b42bf0200d3994836e19b182071d6e01356d73a142f8e05cb0262503a51388a"
-    sha256 cellar: :any,                 monterey:      "21face194a18f55c82a3c556a752fe346d15261021c036d8325b97eed34a25ad"
-    sha256 cellar: :any,                 big_sur:       "5b5cf302b7e196dbfea011879a2bace24d9991f398cc243e4146e3500565ec30"
-    sha256 cellar: :any,                 catalina:      "1a3f200f314c8f89090e5bfbda0e241023a5efbbe17ce0ee67bcc50d0edd3138"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "3a190fa33d43ac9219a8b13cf3ff23eb7dc2db83d457af2affbc8eee172db03a"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "1193b0a0333c98a90e740e7b83494bd2b2c594cdf58f78c330daee0ee5827206"
+    sha256 cellar: :any,                 arm64_monterey: "1e9b22bedeac1d802335797e45a482806b607aa20b1a38e406f10fcb0d933473"
+    sha256 cellar: :any,                 arm64_big_sur:  "4543525b1036daa085faff48d9ea158bcb029683f2b207be1f4c86832d1169b0"
+    sha256 cellar: :any,                 ventura:        "9fc9fde36a396fde4644334ae7a7f65d05febe1ba2162c7ae97768cd3b7b4fe9"
+    sha256 cellar: :any,                 monterey:       "08544ad457361b71dd8bb8b223d22e4c4ccbcb9dd544d5f706a50a177414ef8e"
+    sha256 cellar: :any,                 big_sur:        "90d6a2c51750101f1efc1797de6a0f127b797dda2f502e3673ac23c5ed012e76"
+    sha256 cellar: :any,                 catalina:       "8a9e1de8f0b12cda3283b4113ca6e948ef6ccfa1c70a422c009169c0291cf1f1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4bb570bd601da0bc9530ae31a44b3bb5817b00726813eaa6f13a75699227cbca"
   end
 
   depends_on "cmake" => :build
   depends_on "cbc"
   depends_on "gecode"
 
-  on_linux do
-    depends_on "gcc"
-  end
-
   fails_with gcc: "5"
 
   def install
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args
-      system "cmake", "--build", ".", "--target", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

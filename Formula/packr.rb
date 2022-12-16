@@ -1,23 +1,30 @@
 class Packr < Formula
   desc "Easy way to embed static files into Go binaries"
   homepage "https://github.com/gobuffalo/packr"
-  url "https://github.com/gobuffalo/packr/archive/v2.8.2.tar.gz"
-  sha256 "bb5e64442b3165b99d9efab7acdbefc0f8faab0204fbeae453d20a736c36960d"
+  url "https://github.com/gobuffalo/packr/archive/v2.8.3.tar.gz"
+  sha256 "67352bb3a73f6b183d94dd94f1b5be648db6311caa11dcfd8756193ebc0e2db9"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "17f7cbbcb3bec0a72bda849bc4aaab8f0cce5ad2ff00eacca19c7c5f23c2d8ec"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "795ec96787f9d2f6b53e074ad3cb13d131672e42dd4abd7f09f69be56f0a03d5"
-    sha256 cellar: :any_skip_relocation, monterey:       "71f0dfcdb4c44dd96d702f6a1244f633ff391ffe6b6626a58f006e418b2a8854"
-    sha256 cellar: :any_skip_relocation, big_sur:        "006868e5cf2c7e3cb2de845fd77be15d5b5c5fcc4c8a444ff69c90b89f507852"
-    sha256 cellar: :any_skip_relocation, catalina:       "ea3edf2b50873a10f88e2356706949fd99882cf16f03f789cf9861a3af8676e7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "dd1a47213ff76dce87c982588748502fa04fde7e82392e72cc0f6bd10efd2f14"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "012421ccb6766aa56682433e05e85b8c8b6afc1c2681edbc856a02c2fecc74d7"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "c7cf08f5bbb1612452c67526c02f0f9d48ca9837962c89ba6a60886280c61dc5"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "da232cec4e97f9565bd16bb0e3e4d64abbd4699883a4c1b380217312674ad5a7"
+    sha256 cellar: :any_skip_relocation, ventura:        "375adfa65193c1923987f2edabe0e145c98514eecabdf4b9868836ee1362e104"
+    sha256 cellar: :any_skip_relocation, monterey:       "035174493dcdafadae9f1c38c8e651f9d2511f37df2eeb9e9634e02dc5791f9c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3ced81e9a80049d9f1c878cb7b5850c7d1fe61b93b9f1847e659180f9ed0c215"
+    sha256 cellar: :any_skip_relocation, catalina:       "526c8d9706b0b3c7d9538fc85db542cc5fe1041ebc5a5d2df7f3e2c2fd93d67a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "71f763effa24fad2ae09028ea1d87f351cf0425ca40f1c25b5ef974839088f62"
   end
+
+  deprecate! date: "2022-11-27", because: :repo_archived
 
   depends_on "go" => [:build, :test]
 
   def install
     system "go", "build", *std_go_args, "-o", bin/"packr2", "./packr2"
+
+    generate_completions_from_executable(bin/"packr2", "completion", base_name: "packr2")
   end
 
   test do

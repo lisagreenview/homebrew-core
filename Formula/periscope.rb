@@ -2,37 +2,33 @@ class Periscope < Formula
   desc "Organize and de-duplicate your files without losing data"
   homepage "https://github.com/anishathalye/periscope"
   url "https://github.com/anishathalye/periscope.git",
-      tag:      "v0.3.1",
-      revision: "e434390fbc41345083b8cfe3d65c743b3299de06"
+      tag:      "v0.3.4",
+      revision: "e40c2c72f480e23b33d971185f007ad2e56867a8"
   license "GPL-3.0-only"
   head "https://github.com/anishathalye/periscope.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "ee724c8be393c6f09fb3d4d68091cfdc51ff1a1647391a9a53c901ee9a0f050b"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a316061e8574f8306a0db428030a80b1d881fa01f44d3fb5e11fbf262eb005dd"
-    sha256 cellar: :any_skip_relocation, monterey:       "9a1e52d7026e676bb53e8c8f11d4a93523d8b8a698a3225f33dcc71de215f02e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ce293d18056b44958098f6950986676ba6747df28fda897ef6f7f9e83c19b724"
-    sha256 cellar: :any_skip_relocation, catalina:       "b27894c43a915698a3667d5c77ee120e097195bb42f039ad12fc8aabb684f168"
-    sha256 cellar: :any_skip_relocation, mojave:         "175b7fa2671aa807ae3574326c65efec9e2ec7599ce4645ffcbb4ee4b3b14056"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b2998259acfde7a53687bf3f46df9c7258cefe94ee1a7a6e5bfca3ed187f969c"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "333a5aa8a2e0355a024ea1778b69195ae74d6dc55d9a531cdf94d65c9dd213df"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "fb703f5a039afb1320ce823bd1f3380d901ad27df0a16d1b21a9536540d0ddfa"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "af13a3dc34d5c9503ada0c6616b4d438abeb7f1328e87540b12895b68f85ce5c"
+    sha256 cellar: :any_skip_relocation, ventura:        "5e2e69dfd4cb029246a57c0b227c37f28ac29aeea7533cee1fbbddd80b2d2888"
+    sha256 cellar: :any_skip_relocation, monterey:       "18c34f3e8ad43b73e4fe4ab5bc212a515b908fd142a891086333d194b9f29674"
+    sha256 cellar: :any_skip_relocation, big_sur:        "bf6c1bc225c635708e7e928093c6d010b08687017166019131789fdaebd48a8c"
+    sha256 cellar: :any_skip_relocation, catalina:       "31123f9309c7d37633d5116e4854d2a0e9dc7c36b02290f54fdd2d01613e4a3f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d6d5a3b2f1276ef010a250c017020e2737f0298773b270df650581ea514002cf"
   end
 
   depends_on "go" => :build
 
   def install
-    system "go", "build", "-ldflags",
-      "-s -w -X main.version=#{version} -X main.commit=#{Utils.git_head}",
-      "-trimpath", "./cmd/psc"
+    ldflags = %W[
+      -s -w
+      -X main.version=#{version}
+      -X main.commit=#{Utils.git_head}
+    ]
+    system "go", "build", *std_go_args(output: bin/"psc", ldflags: ldflags), "./cmd/psc"
 
-    bin.install "psc"
-
-    # install bash completion
-    output = Utils.safe_popen_read("#{bin}/psc", "completion", "bash")
-    (bash_completion/"psc").write output
-
-    # install zsh completion
-    output = Utils.safe_popen_read("#{bin}/psc", "completion", "zsh")
-    (zsh_completion/"_psc").write output
+    generate_completions_from_executable(bin/"psc", "completion", base_name: "psc")
   end
 
   test do

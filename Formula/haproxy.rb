@@ -1,8 +1,8 @@
 class Haproxy < Formula
   desc "Reliable, high performance TCP/HTTP load balancer"
   homepage "https://www.haproxy.org/"
-  url "https://www.haproxy.org/download/2.4/src/haproxy-2.4.8.tar.gz"
-  sha256 "e3e4c1ad293bc25e8d8790cc5e45133213dda008bfd0228bf3077259b32ebaa5"
+  url "https://www.haproxy.org/download/2.7/src/haproxy-2.7.0.tar.gz"
+  sha256 "0f7bdebd9b0d7abfd89087bf36af6bd1520d3234266349786654e32e186b4768"
   license "GPL-2.0-or-later" => { with: "openvpn-openssl-exception" }
 
   livecheck do
@@ -11,35 +11,35 @@ class Haproxy < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "4d3dc56b786ae357d367d088a4b7ff7d76b485c4659a2904e0e1fa1a4b9e35c0"
-    sha256 cellar: :any,                 arm64_big_sur:  "42958ac6ee14c305fc0da4ea93681be39c19a07e9143ce7e88b58253bf5a8449"
-    sha256 cellar: :any,                 monterey:       "d73895018e1ab5bc47f967a1dbc9dadf5d5a3c8b67fa011e6c8aa5762dced507"
-    sha256 cellar: :any,                 big_sur:        "cf2242232f6dab6a9fe54cc98df31ac1eb0925f8fbbecf159187226a0ea7f84b"
-    sha256 cellar: :any,                 catalina:       "b5e767828ef1d07474f5a7da82495ec04210da5c9e9bc77295c38bdd0a83cc93"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9fc76f52825a9c8100c058d059e3254eefdac63de11d5ff8d59c8030423e747a"
+    sha256 cellar: :any,                 arm64_ventura:  "8023bee5a29f2701c1f41c83c69cab61633b9014bd37821bbe87fb2843e4e2a9"
+    sha256 cellar: :any,                 arm64_monterey: "51068e8ed65711f87cf7d48eda36c8cc68a3a3e5716edcc4b73e70c4fa69217a"
+    sha256 cellar: :any,                 arm64_big_sur:  "f3fab924433fbc04c94728c0cdc0d46ce188e288225b66d1ff94c6cc3a254aa5"
+    sha256 cellar: :any,                 ventura:        "4ff58a45a1ee44666c0b11f89f3ff03c8ac3f7f2f5b3c8c78d72829cf4a36167"
+    sha256 cellar: :any,                 monterey:       "bc29696dc106a37d9e402ecd1cf29e5931978066c83057a4421adf5c4f9553eb"
+    sha256 cellar: :any,                 big_sur:        "0732598694cd3261f5418dd34539b67214cb8c2e2c83ce9468af0ea3d566a9e5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "96fff3f1ee61aa5d5b3c5e3200f1f79bcb46e2b2232b9ace0cc1eb80e57ec6aa"
   end
 
-  depends_on "openssl@1.1"
-  depends_on "pcre"
+  depends_on "openssl@3"
+  depends_on "pcre2"
 
+  uses_from_macos "libxcrypt"
   uses_from_macos "zlib"
 
   def install
     args = %w[
-      USE_POLL=1
-      USE_PCRE=1
+      USE_PCRE2=1
+      USE_PCRE2_JIT=1
       USE_OPENSSL=1
-      USE_THREAD=1
       USE_ZLIB=1
-      ADDLIB=-lcrypto
     ]
-    if OS.mac?
-      args << "TARGET=generic"
-      # BSD only:
-      args << "USE_KQUEUE=1"
+
+    target = if OS.mac?
+      "osx"
     else
-      args << "TARGET=linux-glibc"
+      "linux-glibc"
     end
+    args << "TARGET=#{target}"
 
     # We build generic since the Makefile.osx doesn't appear to work
     system "make", *args

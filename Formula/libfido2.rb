@@ -1,18 +1,19 @@
 class Libfido2 < Formula
   desc "Provides library functionality for FIDO U2F & FIDO 2.0, including USB"
   homepage "https://developers.yubico.com/libfido2/"
-  url "https://github.com/Yubico/libfido2/archive/1.9.0.tar.gz"
-  sha256 "ba39e3af3736d2dfc8ad3d1cb6e3be7eccc09588610a3b07c865d0ed3e58c2d2"
+  url "https://github.com/Yubico/libfido2/archive/1.12.0.tar.gz"
+  sha256 "813d6d25116143d16d2e96791718a74825da16b774a8d093d96f06ae1730d9c5"
   license "BSD-2-Clause"
-  revision 1
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "599d48182dd42d72a78f197c53ef50c766abd75eeec93d4632c4f556f502baa6"
-    sha256 cellar: :any,                 arm64_big_sur:  "c0d26a6b4ad524140267c476891a2eb662c246f207f7bf91a3663de0f6ed2bb3"
-    sha256 cellar: :any,                 monterey:       "78928cd0a6cd31e2761f30b413e08e543a998051b290bb62cdd3b26016f58fcd"
-    sha256 cellar: :any,                 big_sur:        "3d7b20b6e5e2a025761e840d612610fede420619e40ef90a657de46545cbaebe"
-    sha256 cellar: :any,                 catalina:       "cd405fd77e328489c41789ec3ac6eecec75e67784729d5d10e9afd9de8c8b54c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4f6e1e3da72a1601746322fd0b229d33f2c0056e774d52c4f86c688c7d98ef73"
+    sha256 cellar: :any,                 arm64_ventura:  "1693534c09d366ff8c420e11fe483ce3ad4453d7864975b91585c559df881614"
+    sha256 cellar: :any,                 arm64_monterey: "2caf7758a5816420678d11fb81f0bef74837e12539c4c8be6d074d1a5b074d51"
+    sha256 cellar: :any,                 arm64_big_sur:  "a7cf0ef4f36cce15ab3b26b5681580d5af122b547f9b017ff7fda022517a0d2c"
+    sha256 cellar: :any,                 ventura:        "273a33cef92fcf44eb3661355becfa69477f92852d7ded6240577ebceb847374"
+    sha256 cellar: :any,                 monterey:       "130062c883742f34580c1ca5c63dca5215dae1ed6ff79c0f638be73daffd6ebf"
+    sha256 cellar: :any,                 big_sur:        "756ac14a01eb7e2162c100cc0b2ec6c310b33d00252f1a04144dd1d2f9a8b920"
+    sha256 cellar: :any,                 catalina:       "b7c9d561152606201046daf4c55aa743ada5c8f4fad36c27edd2e7964d897a7e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e518efa37cf76abee49f01988fe40a61396d207cf3b66fd62edc3e5f5d9847fd"
   end
 
   depends_on "cmake" => :build

@@ -5,18 +5,21 @@ class Mytop < Formula
   mirror "https://deb.debian.org/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
   sha256 "179d79459d0013ab9cea2040a41c49a79822162d6e64a7a85f84cdc44828145e"
   license "GPL-2.0-or-later"
-  revision 9
+  revision 11
 
   livecheck do
     skip "Upstream is gone and the formula uses archive.org URLs"
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "0443f8710ab6f1be3e60afc59c15546091982df6f76e31855ff16a1bd86fcb4b"
-    sha256 cellar: :any,                 big_sur:       "7bbece0e0eeb32f4c8217c232d190990290625e16fa9e542fd6c68dd8aad1727"
-    sha256 cellar: :any,                 catalina:      "8ec423770dabfb5da68e626af379f73290cd7e04c118db9608d2ce5decf0e489"
-    sha256 cellar: :any,                 mojave:        "a7512239e490916ef7753a380e638e383b2dd0e0967b6b560c48adf6597b491b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "01929f92371862962f1be2d9e8cf99dc19c80cfedc6472deffa06a9e2b7537b7"
+    sha256 cellar: :any,                 arm64_ventura:  "0eb04ca2f9d13e1c62bea17ef96e34e01189d5d1b58160105338801f205fa888"
+    sha256 cellar: :any,                 arm64_monterey: "8f02659e8b735fdf311c10368016aaf4b44a6e24c830439bdff91f9bd8ac2f6c"
+    sha256 cellar: :any,                 arm64_big_sur:  "75452c7d92536a9ea9f92a1a22a9271e1db9f180ffc6ac5d3504c092e91f3adc"
+    sha256 cellar: :any,                 ventura:        "52a13013f86290fdd2b52f76097871d9c0c637575385ec28c94b34012b25ba22"
+    sha256 cellar: :any,                 monterey:       "c5b43ff2ce82566006e3fb37f869d65d23fad64004458d2e9b3d895e8b867979"
+    sha256 cellar: :any,                 big_sur:        "1d2309a462b4bbe804c4e944e4e799bafdd2e0f8d5b0095c815ec377e99b1dcd"
+    sha256 cellar: :any,                 catalina:       "f376b1839b64b69043db8abe25c876b617c3d89ec1a2a8a9bc7112aa0b8d6137"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d9e6242116e773721a6a5e8beb39c5936d6f986043118f3216a750cd3d777dfc"
   end
 
   depends_on "mysql-client"
@@ -24,14 +27,14 @@ class Mytop < Formula
 
   uses_from_macos "perl"
 
-  on_linux do
-    resource "Term::ReadKey" do
+  conflicts_with "mariadb", because: "both install `mytop` binaries"
+
+  resource "Term::ReadKey" do
+    on_linux do
       url "https://cpan.metacpan.org/authors/id/J/JS/JSTOWE/TermReadKey-2.38.tar.gz"
       sha256 "5a645878dc570ac33661581fbb090ff24ebce17d43ea53fd22e105a856a47290"
     end
   end
-
-  conflicts_with "mariadb", because: "both install `mytop` binaries"
 
   resource "List::Util" do
     url "https://cpan.metacpan.org/authors/id/P/PE/PEVANS/Scalar-List-Utils-1.46.tar.gz"

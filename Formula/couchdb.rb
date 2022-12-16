@@ -1,10 +1,11 @@
 class Couchdb < Formula
   desc "Apache CouchDB database server"
   homepage "https://couchdb.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=couchdb/source/3.2.0/apache-couchdb-3.2.0.tar.gz"
-  mirror "https://archive.apache.org/dist/couchdb/source/3.2.0/apache-couchdb-3.2.0.tar.gz"
-  sha256 "8bea574faa6bb0926c670542d8318c322268cf7e6614dab318dea734ccf1b00c"
+  url "https://www.apache.org/dyn/closer.lua?path=couchdb/source/3.2.2/apache-couchdb-3.2.2.tar.gz"
+  mirror "https://archive.apache.org/dist/couchdb/source/3.2.2/apache-couchdb-3.2.2.tar.gz"
+  sha256 "69c9fd6f80133557f68a02e92dda72a4fd646d646f429f45bb8329a30f82f20e"
   license "Apache-2.0"
+  revision 1
 
   livecheck do
     url :homepage
@@ -12,30 +13,54 @@ class Couchdb < Formula
   end
 
   bottle do
-    sha256 cellar: :any, big_sur:  "4d0f0c145720db23f52483fdf3b35363f9343e3b39285c91255da1993ab91bff"
-    sha256 cellar: :any, catalina: "3a2892f1076c575372e4012c8858c23fc05a787abfa679376ce1c4a7ea4fa8ae"
-    sha256 cellar: :any, mojave:   "ef4e1a3ef761a58fe16b4d163c0b4331f1ffd3833b7fe6d7cf820c6a5064c37d"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "1861396808675089a1605817913ec967a42b20b6ebba377a2b778240efb1b92a"
+    sha256 cellar: :any,                 arm64_monterey: "10915b592f151923cfdbb897fdfce09472428acf706c47270be15bbb7e03519d"
+    sha256 cellar: :any,                 arm64_big_sur:  "2fa3cd31dc3c53a80f389cca0cfcb01e6437f5769fd016af407e71a07454b5f6"
+    sha256 cellar: :any,                 ventura:        "3c3f87a257aca14d55eb434487b0384b625a0be3b9c52e51ecb0954e0b99b7a8"
+    sha256 cellar: :any,                 monterey:       "f62c2ccecaadc5de7caccd62d4f4500afebca0dc69d8d4d2dbe0b7ad5d68bd1e"
+    sha256 cellar: :any,                 big_sur:        "5f927c75898000afb985bd0574ac155869f1348fe018fc0b7c15ba4ae3950de5"
+    sha256 cellar: :any,                 catalina:       "ace6e1b4a44b08522fc49bfa65e194502a886fec1c0d5a8edad890eee43ecc3a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "af86b0a02aec04ac0b6d33027b4056ac3dad0794c1bdae9485c67626363ca5ed"
   end
 
   depends_on "autoconf" => :build
   depends_on "autoconf-archive" => :build
   depends_on "automake" => :build
-  depends_on "erlang@22" => :build
+  # Use Erlang 24 to work around a sporadic build error with rebar (v2) and Erlang 25.
+  # beam/beam_load.c(551): Error loading function rebar:save_options/2: op put_tuple u x:
+  #   please re-compile this module with an Erlang/OTP 25 compiler
+  # escript: exception error: undefined function rebar:main/1
+  # Ref: https://github.com/Homebrew/homebrew-core/pull/105876
+  depends_on "erlang@24" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "icu4c"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
+  # NOTE: Supported `spidermonkey` versions are hardcoded at
+  # https://github.com/apache/couchdb/blob/#{version}/src/couch/rebar.config.script
   depends_on "spidermonkey"
 
   conflicts_with "ejabberd", because: "both install `jiffy` lib"
 
+  fails_with :gcc do
+    version "5"
+    cause "mfbt (and Gecko) require at least gcc 6.1 to build."
+  end
+
   def install
-    system "./configure"
+    spidermonkey = Formula["spidermonkey"]
+    inreplace "src/couch/rebar.config.script" do |s|
+      s.gsub! "-I/usr/local/include/mozjs", "-I#{spidermonkey.opt_include}/mozjs"
+      s.gsub! "-L/usr/local/lib", "-L#{spidermonkey.opt_lib} -L#{HOMEBREW_PREFIX}/lib"
+    end
+
+    system "./configure", "--spidermonkey-version", spidermonkey.version.major
     system "make", "release"
     # setting new database dir
     inreplace "rel/couchdb/etc/default.ini", "./data", "#{var}/couchdb/data"
     # remove windows startup script
-    File.delete("rel/couchdb/bin/couchdb.cmd") if File.exist?("rel/couchdb/bin/couchdb.cmd")
+    rm_rf("rel/couchdb/bin/couchdb.cmd")
     # install files
     prefix.install Dir["rel/couchdb/*"]
     if File.exist?(prefix/"Library/LaunchDaemons/org.apache.couchdb.plist")

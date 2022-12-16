@@ -1,18 +1,20 @@
 class Oauth2Proxy < Formula
   desc "Reverse proxy for authenticating users via OAuth 2 providers"
   homepage "https://oauth2-proxy.github.io/oauth2-proxy/"
-  url "https://github.com/oauth2-proxy/oauth2_proxy/archive/v7.2.0.tar.gz"
-  sha256 "2e1d15083902137c7939dea235ec72fc2cc818de8af540302a2ca66cdabdf4e6"
+  url "https://github.com/oauth2-proxy/oauth2_proxy/archive/v7.4.0.tar.gz"
+  sha256 "f9c5791537b1286b5985b0123f19ad84d390a7fffc1edc1b7c50c5d66c67ebdd"
   license "MIT"
   head "https://github.com/oauth2-proxy/oauth2-proxy.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2d80ccdedcd39fef312774b9fb03a38f1620a5e8785c52e996a285ca38b2bf5c"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4711f05aad5403a07683f1506548c2dcbd120de9fe7d7dbd272633e2a46e97b2"
-    sha256 cellar: :any_skip_relocation, monterey:       "4fad35aa9831749fa67d830806d4970023cd2efe916657a85422e8dcd41d53ee"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b6a4c2f5dc2196c0b2a110bef21e717b5073d258409e52ef5f98271c8728d44d"
-    sha256 cellar: :any_skip_relocation, catalina:       "0d98e96bbbd926774ae07441f115732755d2d871897d371af0e1a1df9e6c6a28"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "03d8171193bae05af58e33086db444f92ec829038a3c3750a7d5a7dea211fc92"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "2deab940416c36a506300ce0a03d047169212327b2bb658a5119469ee5f983d2"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "1813499b6d63547f16af1b40833a8f8cb95053f6b04e67f2a3f5b86533e0debc"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8de92ac8df98b26aadfe3ab97025d61285d57cf40d4509a1559fab6475803270"
+    sha256 cellar: :any_skip_relocation, ventura:        "64d6ff728f148317e71607a49c090f28bfb343cbf2d66161a114e0d7e2509a83"
+    sha256 cellar: :any_skip_relocation, monterey:       "0af00d421c7605c8199bc1a9c0e5482d14db98608fff1b4f2413b1742911e546"
+    sha256 cellar: :any_skip_relocation, big_sur:        "fdee9a9322baf39ec39ace1c84166946bb1f9b2f1330a01356486783b851a11f"
+    sha256 cellar: :any_skip_relocation, catalina:       "d8e4cc0cfdaf43bbfda3ae3144e1ec0a8bad83f5bd07082cf8a8d30eb4eb1c91"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a50775f653494005e9d967fa5fa26c97983e3b28886989526bb092b76cf63486"
   end
 
   depends_on "go" => :build

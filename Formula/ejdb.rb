@@ -1,25 +1,39 @@
 class Ejdb < Formula
   desc "Embeddable JSON Database engine C11 library"
   homepage "https://ejdb.org"
-  url "https://github.com/Softmotions/ejdb/archive/v2.62.tar.gz"
-  sha256 "8369b09483bb639c6cbc75a307a7ac5d605740c44c9281bad6df0748eaf7bbd6"
+  url "https://github.com/Softmotions/ejdb.git",
+      tag:      "v2.73",
+      revision: "bc370d1aab86d5e2b8b15cbd7f804d3bbc6db185"
   license "MIT"
-  head "https://github.com/Softmotions/ejdb.git"
+  head "https://github.com/Softmotions/ejdb.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2c80641ca8f801cfbf20f0da4cf9612aa12c22975362235da788b89ec54f1b5b"
-    sha256 cellar: :any,                 arm64_big_sur:  "7bbd139116b2a6b85e30aaece1637c4f6828d465b8982f33242b562c46eeee0b"
-    sha256 cellar: :any,                 monterey:       "3fa834a6ca34a7e964a3bbc395edb5e22fc8a58d9d23077679de80267d68850e"
-    sha256 cellar: :any,                 big_sur:        "d86d8dff6fc510f15a659b6cdb6c7656fe06999c9fea1e5fa5e41b03bc898987"
-    sha256 cellar: :any,                 catalina:       "4ea564bb023a59c3c54523e64dc6ff7c34c6d5e21cf06810ae7e7ada2649be35"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "44ac2dd666214547d6b3440517d389d82618cf598880fc3a6bf6d562d4c54667"
+    sha256 cellar: :any,                 arm64_ventura:  "4d04af75587bace755ce51b52efbb350f21fe9ff68e627e46ba6df5c0b3d802d"
+    sha256 cellar: :any,                 arm64_monterey: "651db63cf52361e30d51e00be5d21d0312a987ecf6fb13ca4db0aaa6e36419fc"
+    sha256 cellar: :any,                 arm64_big_sur:  "a8c53e49e903e393a00c1f8f252f24427aa3d597621b0a60aa625fed023e47f6"
+    sha256 cellar: :any,                 ventura:        "d1ea43ae8a72ba4c3fd46ea22cc0959a6db9ef46d99dad2443ed1896b6f745ca"
+    sha256 cellar: :any,                 monterey:       "be42fe4d45f8c3ee1e9780df885e2a9176685f741ba936cc7969e7a1dffb881a"
+    sha256 cellar: :any,                 big_sur:        "d015a8db5f02bc71e50daf8dfc76ac9224815abab9637bdb19bbb1adf814ad4d"
+    sha256 cellar: :any,                 catalina:       "70fd430780b4d69ff1f6c63984f7f8ef01e0a478e9cf9753c6ec4b2eabed4bd6"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "69a8f6d1769f13275c84bb8b1bc96eb68727d85863bbf4f423f6cc6aefa1aed9"
   end
 
   depends_on "cmake" => :build
 
+  uses_from_macos "curl" => :build
+
+  fails_with :gcc do
+    version "7"
+    cause <<-EOS
+      build/src/extern_iwnet/src/iwnet.c: error: initializer element is not constant
+      Fixed in GCC 8.1, see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69960
+    EOS
+  end
+
   def install
     mkdir "build" do
       system "cmake", "..", *std_cmake_args
+      ENV.deparallelize # CMake Error: WSLAY Not Found
       system "make", "install"
     end
   end
@@ -98,7 +112,8 @@ class Ejdb < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "-I#{include}", "test.c", "-L#{lib}", "-lejdb2", "-o", testpath/"test"
+
+    system ENV.cc, "-I#{include}/ejdb2", "test.c", "-L#{lib}", "-lejdb2", "-o", testpath/"test"
     system "./test"
   end
 end

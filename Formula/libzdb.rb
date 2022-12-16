@@ -1,10 +1,9 @@
 class Libzdb < Formula
   desc "Database connection pool library"
   homepage "https://tildeslash.com/libzdb/"
-  url "https://tildeslash.com/libzdb/dist/libzdb-3.2.2.tar.gz"
-  sha256 "d51e4e21ee1ee84ac8763de91bf485360cd76860b951ca998e891824c4f195ae"
+  url "https://tildeslash.com/libzdb/dist/libzdb-3.2.3.tar.gz"
+  sha256 "a1957826fab7725484fc5b74780a6a7d0d8b7f5e2e54d26e106b399e0a86beb0"
   license "GPL-3.0-only"
-  revision 1
 
   livecheck do
     url :homepage
@@ -12,27 +11,26 @@ class Libzdb < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "db54eac2ef107864c43f2888628a30ed7af5d3eae6f892b491ea7f2fe542a35b"
-    sha256 cellar: :any,                 big_sur:       "ae4c8d97236e248f1fa8fe189a4f7c049009335bc8038f541c8faf6c47c3d0e4"
-    sha256 cellar: :any,                 catalina:      "846888a4d5e47cccac9d41c95223974b16724b681c57e12e616a503409507014"
-    sha256 cellar: :any,                 mojave:        "7040dee7ee6eeb60e81aeacf6cc33f2e6e1ea5895c9a53e4a2b94ca509852974"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "4f196f9126a86ccd959083301741b9d68e0e49352cb51b83cf3d82c52a0669be"
+    sha256 cellar: :any,                 arm64_ventura:  "d9a1e85054f21d735dc85853908b1685df18539775bcc7be208ed089b68e7715"
+    sha256 cellar: :any,                 arm64_monterey: "e8e69ee7caa822faeefbbd3beb5e42d60796daae8e9865d351b35a09d30eab23"
+    sha256 cellar: :any,                 arm64_big_sur:  "bd1c26eb89919f26a72458310340981f2360444facb8a06007f831cdde8969c3"
+    sha256 cellar: :any,                 ventura:        "4f337503e65d099fee98d7cccf111ab51d45bbaf9ea8ad4bd7ee8f39adf59a2b"
+    sha256 cellar: :any,                 monterey:       "fb27c254646707f49b4c220493a904d52c166b8432e29ac89df1c2c0bdb1842a"
+    sha256 cellar: :any,                 big_sur:        "503b5ac11a438ee0ce95b4a905575061f6710948e1fbb0d25e8c1a2b555d1bb8"
+    sha256 cellar: :any,                 catalina:       "9de6c1b21c609053ff01c54f5595dcc7185d9b7a6b6ecf8d65076ef7c9f93d3c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6dcf7be43843a73041a75abfbb79fa2cdb72a82d3356e7413fd9b12ab40ac3ea"
   end
 
+  depends_on "libpq"
   depends_on macos: :high_sierra # C++ 17 is required
   depends_on "mysql-client"
   depends_on "openssl@1.1"
-  depends_on "postgresql"
   depends_on "sqlite"
 
-  on_linux do
-    depends_on "gcc" # C++ 17 is required
-  end
-
-  fails_with gcc: "5"
+  fails_with gcc: "5" # C++ 17 is required
 
   def install
-    system "./configure", "--prefix=#{prefix}", "--disable-dependency-tracking"
+    system "./configure", *std_configure_args
     system "make", "install"
     (pkgshare/"test").install Dir["test/*.{c,cpp}"]
   end

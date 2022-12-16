@@ -1,10 +1,9 @@
 class PostgresqlAT11 < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v11.14/postgresql-11.14.tar.bz2"
-  sha256 "965c7f4be96fb64f9581852c58c4f05c3812d4ad823c0f3e2bdfe777c162f999"
+  url "https://ftp.postgresql.org/pub/source/v11.18/postgresql-11.18.tar.bz2"
+  sha256 "d24f20efc52e918acfbcca21e9cea28e0e263b846a0c408fcfac3b3c4a0f7504"
   license "PostgreSQL"
-  revision 1
 
   livecheck do
     url "https://ftp.postgresql.org/pub/source/"
@@ -12,12 +11,14 @@ class PostgresqlAT11 < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "f25b99cfd35c4acef61f280d7ef6131d256d20f91c078e39d4f4c163f9ac74f2"
-    sha256 arm64_big_sur:  "e1d203c7c934386eba75e7155f270421d89d2332479ea0a4687e74aaf94099f7"
-    sha256 monterey:       "dd15bcd71343eaa00478023cbd95ed9607c33e554f279d4e4888a8ce39bc070a"
-    sha256 big_sur:        "f5c368ef4663d8da89014adf3d1533a9281523563734d98044eb0cd726039440"
-    sha256 catalina:       "8bdacf41dc01ae753a1a8842637e189fd75b9d86f877111d546b9676df6a63ce"
-    sha256 x86_64_linux:   "d01f0b212c75dbe97fe7147b283ae85ccf2974e4c027952b0ea2d92e1c12503e"
+    sha256 arm64_ventura:  "d1e93e00d2362f9231865a711fb335d4cbc3de26755ee495e963b0731a23b7ad"
+    sha256 arm64_monterey: "1d88e95d35640b6728509ce734362e4a579f5868ca8ef7f4ee986856e7a8951f"
+    sha256 arm64_big_sur:  "1321ce810c9e72cf7a2b2ae453eb9d51050fb3f51e475855ee517269e05758e8"
+    sha256 ventura:        "1f9124677e54f3a530577e8be92f76eb41bddaf98f66a47a9c288bbc61258ff8"
+    sha256 monterey:       "f956a70860e9adef9444991706b3fb1ae50df3d8cb7a530ed31e095dfba8d760"
+    sha256 big_sur:        "15e0e05530a5c7925f40cc4de41530071a8581aa11e2a21a1eab507d76370369"
+    sha256 catalina:       "853693f9da62f66afc71625c1245c13fa3efc701553838c517306a8ea3fa5245"
+    sha256 x86_64_linux:   "32c05e19ed89dbb3c158f7f8fab7640bdb406061b935f55f04a1d32a7e51bc98"
   end
 
   keg_only :versioned_formula
@@ -124,10 +125,10 @@ class PostgresqlAT11 < Formula
   end
 
   service do
-    run [opt_bin/"postgres", "-D", var/"postgresql@11"]
+    run [opt_bin/"postgres", "-D", f.postgresql_datadir]
     keep_alive true
-    log_path var/"log/postgresql@11.log"
-    error_log_path var/"log/postgresql@11.log"
+    log_path f.postgresql_log_path
+    error_log_path f.postgresql_log_path
     working_dir HOMEBREW_PREFIX
   end
 

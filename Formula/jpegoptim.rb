@@ -1,30 +1,26 @@
 class Jpegoptim < Formula
   desc "Utility to optimize JPEG files"
   homepage "https://github.com/tjko/jpegoptim"
-  url "https://github.com/tjko/jpegoptim/archive/RELEASE.1.4.6.tar.gz"
-  sha256 "c44dcfac0a113c3bec13d0fc60faf57a0f9a31f88473ccad33ecdf210b4c0c52"
-  license "GPL-2.0"
-  head "https://github.com/tjko/jpegoptim.git"
+  url "https://github.com/tjko/jpegoptim/archive/v1.5.0.tar.gz"
+  sha256 "67b0feba73fd72f0bd383f25bf84149a73378d34c0c25bc0b9b25b0264d85824"
+  license "GPL-3.0-or-later"
+  head "https://github.com/tjko/jpegoptim.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "35c8849ace2b6b5e3ecab77e67ca84ff8e929a6ffb8782562b8c8d2cee70ce6b"
-    sha256 cellar: :any,                 arm64_big_sur:  "38149f489f36745c9be64ccaff694c53a07c6a8d4c98335703e7c1ba6206c5e0"
-    sha256 cellar: :any,                 monterey:       "1cf486d47809250bc5c67819ee9f82e5eba1fb4b6b8910229316f366d034ef23"
-    sha256 cellar: :any,                 big_sur:        "ca4714cf1b1ecbc166a78b8143648fa639b70495f54dc75bcd1a71b9a2c4e604"
-    sha256 cellar: :any,                 catalina:       "f6acdfbe5b3ff49f922bfccb936c39609bb1a0f9dbebd1289d1679bf7fe5b2a4"
-    sha256 cellar: :any,                 mojave:         "c60d59cfe20db5ad448c4da58d7c43ca072f15a31502b989a51b9020da445880"
-    sha256 cellar: :any,                 high_sierra:    "9588bffa63f2041939e480ff8dbce25a004ef2414fc7ea9d5b5177a38bfb8eaf"
-    sha256 cellar: :any,                 sierra:         "89b7f8465e95066c6bf19515affed14037841ea5d0a86b8c3d6cf026f507e938"
-    sha256 cellar: :any,                 el_capitan:     "cc6c60a27cba7bb5f0e1b4a7c8ae3567db4eeaf1e1384488b818da7a1409f837"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9519adbc40ad2a3bdc57c0aef19e8e7accf1eaa3f862de4433569dbc293a0bfa"
+    sha256 cellar: :any,                 arm64_ventura:  "0685110ec476b42334f2f073a2081e966393d639eb8094b1c2352cb5bb8c27fe"
+    sha256 cellar: :any,                 arm64_monterey: "a065955f3a71c461b1526ecaa6657878038223a596ef42ecaf56bc0697147081"
+    sha256 cellar: :any,                 arm64_big_sur:  "2644d6450068596ae2a52fcde92be5292a69e2cc0dd96208a36213aed7f53e07"
+    sha256 cellar: :any,                 ventura:        "713bf5260a864a3950fc8c0f6c4eff22a674c34c06d2098775f99a65e703409e"
+    sha256 cellar: :any,                 monterey:       "94ab3fe10229f457b92c4d4afb137d5ac6e26cf6fef1fa6dcb55d05ddb2f5eff"
+    sha256 cellar: :any,                 big_sur:        "de3346241e917c201f413363768731aef8eba491e42336ace80af842d0bb8da8"
+    sha256 cellar: :any,                 catalina:       "080f3a10875090e6f23a96ecbc29b6d0bb06d80b48044e9b663f8c60ed2def5a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6dc8cee452107422a698f91ece275e8a69a42b58aa5420ea880b7648c90951cb"
   end
 
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
 
   def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--prefix=#{prefix}"
+    system "./configure", *std_configure_args
     ENV.deparallelize # Install is not parallel-safe
     system "make", "install"
   end

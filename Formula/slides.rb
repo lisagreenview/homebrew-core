@@ -1,17 +1,20 @@
 class Slides < Formula
   desc "Terminal based presentation tool"
   homepage "https://github.com/maaslalani/slides"
-  url "https://github.com/maaslalani/slides/archive/refs/tags/v0.7.2.tar.gz"
-  sha256 "e93fde699dc3fd8db8bb36b2d89871089f5ba35c8fd407d4f8bdcb4ed4ce6c3b"
+  url "https://github.com/maaslalani/slides/archive/refs/tags/v0.9.0.tar.gz"
+  sha256 "fcce0dbbe767e0b1f0800e4ea934ee9babbfb18ab2ec4b343e3cd6359cd48330"
   license "MIT"
   head "https://github.com/maaslalani/slides.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2a6e085526f3cfe257b87273e912a147f2400fb563e784ba2e0547293893769b"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "17056f16da03e15f0fb17d0aa52d6e06542b8b4f17ccf4a060904e45ab4e9ec3"
-    sha256 cellar: :any_skip_relocation, monterey:       "fdddd44cf36c91dc6e55a5fbfa97acb40122692572c7cdffdcae642ebf1710ab"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b63ef5fc2d3bdb2412cf338f320624f49026582c02fc789b5d33371a09948bf0"
-    sha256 cellar: :any_skip_relocation, catalina:       "5587929d8f98cf22a246e525abc2b3a6dc45d3b4dbad5f4651f294900a9ae80b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "335ffbac50cfea46abb4afa92116f16c1d351d77deb103a19e6434b11d2a540d"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a17e1f07ab13a27bca222b103799a247e15d2bb6f3b239d5f973029886e4e1d8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e0faa8a0d8f1d87a0a16a294b35e5d98528be06dd4069aca905d5fdc7464ab73"
+    sha256 cellar: :any_skip_relocation, ventura:        "59795376dc3819201011a4f97014d5510b29f5b2056760f21cb78b92e2e1ec4e"
+    sha256 cellar: :any_skip_relocation, monterey:       "3ffaaae9819ccd022e0e2a7091b09389ec26bdd1eac7e3ff9c97b494a887b9d6"
+    sha256 cellar: :any_skip_relocation, big_sur:        "47e7d151b73e9132506410808df33d3ee8516d4739d53fda0d8cd759d7ede76f"
+    sha256 cellar: :any_skip_relocation, catalina:       "142e0dba029f7c87501f7a0460cc9e909819ed60f81e3da4255000a553275346"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4bcfad497512ded3dbe7ed81e2683a3c67f211c0a811c7265d171e79212eebfe"
   end
 
   depends_on "go" => :build
@@ -39,6 +42,10 @@ class Slides < Formula
     r, _, pid = PTY.spawn "#{bin}/slides test.md"
     sleep 1
     Process.kill("TERM", pid)
-    assert_match(/\e\[/, r.read)
+    begin
+      assert_match(/\e\[/, r.read)
+    rescue Errno::EIO
+      # GNU/Linux raises EIO when read is done on closed pty
+    end
   end
 end

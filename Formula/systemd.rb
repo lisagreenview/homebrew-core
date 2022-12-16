@@ -1,14 +1,14 @@
 class Systemd < Formula
   desc "System and service manager"
   homepage "https://wiki.freedesktop.org/www/Software/systemd/"
-  url "https://github.com/systemd/systemd/archive/v246.tar.gz"
-  sha256 "4268bd88037806c61c5cd1c78d869f7f20bf7e7368c63916d47b5d1c3411bd6f"
+  url "https://github.com/systemd/systemd/archive/v252.tar.gz"
+  sha256 "113a9342ddf89618a17c4056c2dd72c4b20b28af8da135786d7e9b4f1d18acfb"
   license all_of: ["GPL-2.0-or-later", "LGPL-2.1-or-later"]
   head "https://github.com/systemd/systemd.git", branch: "main"
 
   bottle do
-    rebuild 2
-    sha256 x86_64_linux: "e9a110ca3890c88a257831d4ed305a995ece7cebdbb3994cb376ecc521e445ee"
+    rebuild 1
+    sha256 x86_64_linux: "f46b1935aaf0347a8d10154aafe14cbe015d9649d43309d0c4f77920eabd37ea"
   end
 
   depends_on "coreutils" => :build
@@ -16,6 +16,7 @@ class Systemd < Formula
   depends_on "gettext" => :build
   depends_on "gperf" => :build
   depends_on "intltool" => :build
+  depends_on "jinja2-cli" => :build
   depends_on "libgpg-error" => :build
   depends_on "libtool" => :build
   depends_on "libxslt" => :build
@@ -23,6 +24,7 @@ class Systemd < Formula
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
+  depends_on "python@3.11" => :build
   depends_on "rsync" => :build
   depends_on "expat"
   depends_on "libcap"
@@ -33,33 +35,29 @@ class Systemd < Formula
   depends_on "xz"
   depends_on "zstd"
 
-  # Fix newer meson compatibility, remove after next release
-  patch do
-    url "https://github.com/systemd/systemd/commit/c29537f39e4f413a6cbfe9669fa121bdd6d8b36f.patch?full_index=1"
-    sha256 "fc7f07d3f4710a6b798a3976f51bd375f4051495246ae519e887146a13dc6130"
-  end
+  uses_from_macos "libxcrypt"
 
   def install
-    args = %W[
-      --prefix=#{prefix}
-      --libdir=lib
+    ENV["PYTHONPATH"] = Formula["jinja2-cli"].opt_libexec/Language::Python.site_packages("python3.11")
+    ENV.append "LDFLAGS", "-Wl,-rpath,#{lib}/systemd"
+
+    args = std_meson_args + %W[
       --sysconfdir=#{etc}
       --localstatedir=#{var}
       -Drootprefix=#{prefix}
-      -Dsysvinit-path=#{prefix}/etc/init.d
-      -Dsysvrcnd-path=#{prefix}/etc/rc.d
-      -Dpamconfdir=#{prefix}/etc/pam.d
+      -Dsysvinit-path=#{etc}/init.d
+      -Dsysvrcnd-path=#{etc}/rc.d
+      -Dpamconfdir=#{etc}/pam.d
+      -Dbashcompletiondir=#{bash_completion}
       -Dcreate-log-dirs=false
       -Dhwdb=false
       -Dlz4=true
       -Dgcrypt=false
     ]
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", "setup", *args, "build"
+    system "meson", "compile", "-C", "build"
+    system "meson", "install", "-C", "build"
   end
 
   test do

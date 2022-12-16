@@ -1,20 +1,20 @@
 class GoJsonnet < Formula
   desc "Go implementation of configuration language for defining JSON data"
   homepage "https://jsonnet.org/"
-  url "https://github.com/google/go-jsonnet/archive/v0.17.0.tar.gz"
-  sha256 "4fd04d0c9e38572ef388d28ea6b1ac151b8a9a5026ff94e3a68bdbc18c4db38a"
+  url "https://github.com/google/go-jsonnet/archive/v0.19.1.tar.gz"
+  sha256 "7ff57d4d11d8e7a91114acb4506326226ae4ed1954e90d68aeb88b33c35c5b71"
   license "Apache-2.0"
-  head "https://github.com/google/go-jsonnet.git"
+  head "https://github.com/google/go-jsonnet.git", branch: "master"
 
   bottle do
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5a0ab911c3a8d77eb9c2cd9ef75e8027b19c5bbb442f5b7c6c6aea076a3a211c"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "93ba8dab3baf9865126d55705bcc357bf6a7d850e545ce43a5633748dcc95efb"
-    sha256 cellar: :any_skip_relocation, monterey:       "7441633a7ab1a076ddf2b3fd519b9be5d81e8147e35affe0c53a35d09f46c040"
-    sha256 cellar: :any_skip_relocation, big_sur:        "e79f3ad29f00746532ded81842fae95a980fba36980e8d6299aa7195eb0de0da"
-    sha256 cellar: :any_skip_relocation, catalina:       "9e5ee375c84608de8566d017c9e8a0f9b3806c44156b56650918b78ffc0db9f9"
-    sha256 cellar: :any_skip_relocation, mojave:         "83baf9f7af774dcdc0fb3484eef18c74d6ee20b2ca1e2c1b37f470c76d8d5d21"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3318e83a2961f88e5859e1a6700cd0ec09b2c93744460c968bfb1582ef204c2f"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "a7f8dfba1c4375efe666659690858fa3158dce7d30a6d75ff92a758187ea955e"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "f887f81f923d669cc0008c821d337da78db1d82062bcd66929cc897fe8eea9ff"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "086c86fb80853faa49d5483f506a6d8250013c8fea9df75776ee69caad76fab2"
+    sha256 cellar: :any_skip_relocation, ventura:        "507d42c01d892c04ddb056aa76a7833de6f29e92fc27c9ad4a937eea25c2acf4"
+    sha256 cellar: :any_skip_relocation, monterey:       "2d75ab2e8ad3830574b7bad0609816403a6ef9a7f5959de37b2ab683598c7b47"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0d129795c442bc6126bafa740e008b9ad7fd6ad0a2d544af3cb21bb9c4c3ab51"
+    sha256 cellar: :any_skip_relocation, catalina:       "7d654505048776d7280f994863d32673684c68396f9d13f1d250eb720404413c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "077d5fce549320657feeec94738fae8608d72744d2bba530980a27a224f2089e"
   end
 
   depends_on "go" => :build

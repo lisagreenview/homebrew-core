@@ -1,41 +1,69 @@
 class Citus < Formula
   desc "PostgreSQL-based distributed RDBMS"
   homepage "https://www.citusdata.com"
-  url "https://github.com/citusdata/citus/archive/v10.2.2.tar.gz"
-  sha256 "5dd2c8235bf406c3f5e0b1d5def6280a356744efb18f97467f26120555823c35"
+  url "https://github.com/citusdata/citus/archive/v11.1.4.tar.gz"
+  sha256 "7c60de176c02c7082716c0c98d7084f0d4e0bef7862a53487411ee0e5622ab2c"
   license "AGPL-3.0-only"
-  head "https://github.com/citusdata/citus.git", branch: "master"
+  head "https://github.com/citusdata/citus.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "e83494e8cd572da3a0bde221f24eb60a50fa73aff13cdcd6d149cad32b24a893"
-    sha256 cellar: :any, arm64_big_sur:  "b908cb7df76f9ec5dfb3d6cd0d763b4b109c16a11bfdc696a0e52a65dff5a90c"
-    sha256 cellar: :any, monterey:       "88eb7b2ee529c584127418d3e65357ad246f1d8a3d34141ffc7022fc12a7e1e7"
-    sha256 cellar: :any, big_sur:        "04071b6d71d5592141bc01b6118979a64a9c28cb9fceef071c781b1be8989ae8"
-    sha256 cellar: :any, catalina:       "1812524584d286b57329a58cac23a5d5a4a86af25cee83c1fbc6252da97a0fe8"
-    sha256 cellar: :any, mojave:         "a5a2d8975aac4af7d069edc040a88ad99361845e29414c17c7afd7eb0cecf254"
+    sha256 cellar: :any,                 arm64_ventura:  "8463888de4ced29c89328b4d2b6f9c884ba63e5e940e15ad33515fbebd4d15a8"
+    sha256 cellar: :any,                 arm64_monterey: "f37360c3a53ba771527889b30cf374fb1a1a2d7843b6170a4033639bfcadd609"
+    sha256 cellar: :any,                 arm64_big_sur:  "3fa5cbfcfa015284ccf9e8b2f41b0c772abac4085ddff1e8c30a670d60ab2dfb"
+    sha256 cellar: :any,                 ventura:        "62f159bd9bfc9f80f3c08ef2c7f210cec2ce2437af43954258e8780c819440f7"
+    sha256 cellar: :any,                 monterey:       "9f96a4093f7567b3eee91f285b438da3c1d66d0f8cec24ae77e09e18e444c9dc"
+    sha256 cellar: :any,                 big_sur:        "963d98999189f952d5a024e409d5132519776b324d1af2aaa2325cd3b9e8e891"
+    sha256 cellar: :any,                 catalina:       "c05d2ec56cfc657dbf61338c23dcd5c2344f96371acdb57ff9d678eea483041a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b7115a0eb7db6e4d8398a76cb73bc1483a4b9b94512019e164c8f7805bc2f33c"
   end
 
   depends_on "lz4"
-  depends_on "postgresql"
+  depends_on "postgresql@14"
   depends_on "readline"
   depends_on "zstd"
 
+  uses_from_macos "curl"
+
+  def postgresql
+    Formula["postgresql@14"]
+  end
+
   def install
-    ENV["PG_CONFIG"] = Formula["postgresql"].opt_bin/"pg_config"
+    ENV["PG_CONFIG"] = postgresql.opt_bin/"pg_config"
 
     system "./configure"
-
-    # workaround for https://github.com/Homebrew/homebrew/issues/49948
-    system "make", "libpq=-L#{Formula["postgresql"].opt_lib} -lpq"
+    # workaround for https://github.com/Homebrew/legacy-homebrew/issues/49948
+    system "make", "libpq=-L#{postgresql.opt_lib} -lpq"
 
     # Use stage directory to prevent installing to pg_config-defined dirs,
     # which would not be within this package's Cellar.
     mkdir "stage"
     system "make", "install", "DESTDIR=#{buildpath}/stage"
 
-    bin.install Dir["stage/**/bin/*"]
-    lib.install Dir["stage/**/lib/*"]
-    include.install Dir["stage/**/include/*"]
-    (share/"postgresql/extension").install Dir["stage/**/share/postgresql/extension/*"]
+    stage_path = File.join("stage", HOMEBREW_PREFIX)
+    lib.install (buildpath/stage_path/"lib").children
+    include.install (buildpath/stage_path/"include").children
+    share.install (buildpath/stage_path/"share").children
+
+    bin.install (buildpath/File.join("stage", postgresql.bin.realpath)).children
+  end
+
+  test do
+    pg_ctl = postgresql.opt_bin/"pg_ctl"
+    psql = postgresql.opt_bin/"psql"
+    port = free_port
+
+    system pg_ctl, "initdb", "-D", testpath/"test"
+    (testpath/"test/postgresql.conf").write <<~EOS, mode: "a+"
+
+      shared_preload_libraries = 'citus'
+      port = #{port}
+    EOS
+    system pg_ctl, "start", "-D", testpath/"test", "-l", testpath/"log"
+    begin
+      system psql, "-p", port.to_s, "-c", "CREATE EXTENSION \"citus\";", "postgres"
+    ensure
+      system pg_ctl, "stop", "-D", testpath/"test"
+    end
   end
 end

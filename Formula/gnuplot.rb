@@ -1,17 +1,19 @@
 class Gnuplot < Formula
   desc "Command-driven, interactive function plotting"
   homepage "http://www.gnuplot.info/"
-  url "https://downloads.sourceforge.net/project/gnuplot/gnuplot/5.4.2/gnuplot-5.4.2.tar.gz"
-  sha256 "e57c75e1318133951d32a83bcdc4aff17fed28722c4e71f2305cfc2ae1cae7ba"
+  url "https://downloads.sourceforge.net/project/gnuplot/gnuplot/5.4.5/gnuplot-5.4.5.tar.gz"
+  sha256 "66f679115dd30559e110498fc94d926949d4d370b4999a042e724b8e910ee478"
   license "gnuplot"
 
   bottle do
-    sha256 arm64_monterey: "d0472338d81e365141cc79b78cbfcf955240b77ef521bcbf5682a1b3c426d9fa"
-    sha256 arm64_big_sur:  "27a1fe2a1a18339f161cf3e8e5798864265bea2e7c826d2c4f73f644656b0098"
-    sha256 big_sur:        "c2ee49f0e0df611f3955e6380a30020d2d4a2b7cfff4a769d32f20b9bf46b250"
-    sha256 catalina:       "8419141f6d01b54a0df20e6f1606f8555fbb915bf236a0a225711eaea4886ac5"
-    sha256 mojave:         "a617cb5b3bcc7f961f1b107ee56d5da12108b51797f92b11081b2c1ff54c279e"
-    sha256 x86_64_linux:   "6fda7e17bb4f7ebab74bc77b43d8b63cf4386d319b0c29f476f61717da46851a"
+    sha256 arm64_ventura:  "c246651856ca531f7d8363b9ad595860c7c4d8147921b7b7c4331c52b6e603fb"
+    sha256 arm64_monterey: "51ecb988ca7a8ce2ef5dbcb62216c3bcb3ad1e1d5a5f9e2ff96cc8fa0a4df545"
+    sha256 arm64_big_sur:  "c3daac6fbc91bec92a684618c0d09748d4ce8839a11174022796834d9328b649"
+    sha256 ventura:        "b2fc809c4c735e51ba9619c1db049f647d1d577e862e73710569a006660554e1"
+    sha256 monterey:       "3da9430c2b26efc609638ccaa705894287f60525fdb5e801386a0eaf05718aaa"
+    sha256 big_sur:        "f818709ded2f6eb3cb14beb9e20dbe31ff7be2d4e8655ee3dff9f81339499474"
+    sha256 catalina:       "b348f93e05234b05ccd399be81bde105eee3a06c7a675de2092156982f7edf03"
+    sha256 x86_64_linux:   "3ccc8649fe2dcde51f217fe74d4b033a2024d6dd23b904665214e86d89d4b7c7"
   end
 
   head do
@@ -29,10 +31,6 @@ class Gnuplot < Formula
   depends_on "pango"
   depends_on "qt@5"
   depends_on "readline"
-
-  on_linux do
-    depends_on "gcc"
-  end
 
   fails_with gcc: "5"
 

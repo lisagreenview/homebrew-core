@@ -1,23 +1,23 @@
 class Libarchive < Formula
   desc "Multi-format archive and compression library"
   homepage "https://www.libarchive.org"
-  url "https://www.libarchive.org/downloads/libarchive-3.5.2.tar.xz"
-  sha256 "f0b19ff39c3c9a5898a219497ababbadab99d8178acc980155c7e1271089b5a0"
+  url "https://www.libarchive.org/downloads/libarchive-3.6.2.tar.xz"
+  sha256 "9e2c1b80d5fbe59b61308fdfab6c79b5021d7ff4ff2489fb12daf0a96a83551d"
   license "BSD-2-Clause"
 
   livecheck do
-    url "https://libarchive.org/downloads/"
+    url :homepage
     regex(/href=.*?libarchive[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "909e772216b15d9a0d12bda588f49d79e4dd470f3fbaaa316ef2041c3ae20ebd"
-    sha256 cellar: :any,                 arm64_big_sur:  "54ce08391c24b94f6a78380dcaa9829eb3c10b1cf7f9681fa51325034fc5e4a6"
-    sha256 cellar: :any,                 monterey:       "38e84e45290ef05a5005b859548c92e4a6607b72127890834e47b258b4b073ea"
-    sha256 cellar: :any,                 big_sur:        "465c65961a4bb3b17ad6c59ccc3077bf38ef7b3d862bd1d6b4cc4c08a9fdb086"
-    sha256 cellar: :any,                 catalina:       "b6a3b5424cfc25a2514c35988aaa4b1e274105cfeae3f6083ed5864a85c87b6e"
-    sha256 cellar: :any,                 mojave:         "6f5a155af0e351635e4f547c39b8a1a9aea845e043bc996f908b4b10b3385ae4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2628745c8bcf953cecd72ac4b7e0b9a1c3e7136525039aa6c91ee4535fd3cbf4"
+    sha256 cellar: :any,                 arm64_ventura:  "7875b099adf5d4e1849aad7cc821ef42eab778754ba9c4d8d120627e73dd526b"
+    sha256 cellar: :any,                 arm64_monterey: "a50e5026469436a003651754a6a19355505c9431d0303136d19169e712d4fa7f"
+    sha256 cellar: :any,                 arm64_big_sur:  "455f93f00649d131b31e3ac8d062ad1a7c1e9aeefc808bdd24c2b6063e35ba2b"
+    sha256 cellar: :any,                 ventura:        "2be5517c185bbfd88f0d60836b209286c1315be3b4b31c3f1d5837a8ac0a5bbd"
+    sha256 cellar: :any,                 monterey:       "dbb5277eefb301b4143d0ca0adfb6c579818824c66f8346d96b567bc917de97d"
+    sha256 cellar: :any,                 big_sur:        "bd27460ed8639a1f552163cb09e6c5b8670eb133e6303f5ea0ac9be96bceb330"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "bbff046632857e48d0146467dd298d1ed6b8315ceb405cc296b09410a6c7f1bb"
   end
 
   keg_only :provided_by_macos
@@ -31,11 +31,6 @@ class Libarchive < Formula
   uses_from_macos "expat"
   uses_from_macos "zlib"
 
-  on_linux do
-    conflicts_with "cpio", because: "both install `cpio` binaries"
-    conflicts_with "gnu-tar", because: "both install `tar` binaries"
-  end
-
   def install
     system "./configure",
            "--prefix=#{prefix}",
@@ -46,6 +41,8 @@ class Libarchive < Formula
            "--with-expat"       # best xar hashing option
 
     system "make", "install"
+
+    return unless OS.mac?
 
     # Just as apple does it.
     ln_s bin/"bsdtar", bin/"tar"

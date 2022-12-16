@@ -1,42 +1,48 @@
 class Mpi4py < Formula
   desc "Python bindings for MPI"
-  homepage "https://mpi4py.readthedocs.io"
-  url "https://bitbucket.org/mpi4py/mpi4py/downloads/mpi4py-3.1.2.tar.gz"
-  sha256 "40dd546bece8f63e1131c3ceaa7c18f8e8e93191a762cd446a8cfcf7f9cce770"
+  homepage "https://mpi4py.github.io/"
+  url "https://github.com/mpi4py/mpi4py/releases/download/3.1.4/mpi4py-3.1.4.tar.gz"
+  sha256 "17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480"
+  license "BSD-2-Clause"
+  revision 1
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "350da7c76c749159e384b65271a7107f5a11f50551d24af50cc12a74f4f435c4"
-    sha256 cellar: :any, arm64_big_sur:  "ffd1fb9532eb300ce207ee90f9639adb66d6a92c04ae858f3e4833f8e45c5e80"
-    sha256 cellar: :any, monterey:       "840c485c2cd77c090e6357e01de11e7d978e07e3af532fd3443616e3c69e595c"
-    sha256 cellar: :any, big_sur:        "373301a51fae0801ddd32dfb31bb78efc33aa2e137440f7cab9968686839cd4b"
-    sha256 cellar: :any, catalina:       "16bd58266cfa05fc6702543dcb39b0a5eba2795db2b01cb3cc5c8ff9186bd2e3"
-    sha256               x86_64_linux:   "8e464b664c635e1a446fa24a0167d1b9bbf97ebfcb0cfe692b0b4bd7d21f145e"
+    sha256 cellar: :any, arm64_ventura:  "b30806b3afe2be3c9e592c2064e812a1bdcf8662ab99aa7430e4193bd07c144b"
+    sha256 cellar: :any, arm64_monterey: "4583823ac899d99e53091846606a60b533e2fa714a6b14c0b782b77df41ef0bb"
+    sha256 cellar: :any, arm64_big_sur:  "0fe1dc462308e559acab6f9f6be17eb8281db02f3ea215dd2e3f3563416363be"
+    sha256 cellar: :any, ventura:        "bc6e01f2b0ea8fb52d03fc9709f40aa3d3dfd709ebbbd777253799fceb398c12"
+    sha256 cellar: :any, monterey:       "99ed2832a24166cfa1b07730265a0d2bd381d94008ecbbf518a19aa6d8770724"
+    sha256 cellar: :any, big_sur:        "f53ed4d49183522ed690a93b6ea43977fa4d12a7b510334ede16bc9eda3ec69f"
+    sha256 cellar: :any, catalina:       "df0baae9ef9c3052d98771b25759485949ce6f94757b33e1b55ffd2c36f115dd"
+    sha256               x86_64_linux:   "781835f0d3ca64ffbd4f3344ea1e428c3dce993f749268ed5f232b87a2c84434"
   end
 
-  depends_on "cython" => :build
+  depends_on "libcython" => :build
   depends_on "open-mpi"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
+
+  def python3
+    "python3.11"
+  end
 
   def install
-    system "#{Formula["python@3.9"].opt_bin}/python3",
-           *Language::Python.setup_install_args(libexec)
+    system python3, *Language::Python.setup_install_args(libexec, python3)
 
-    system Formula["python@3.9"].bin/"python3", "setup.py",
-      "build", "--mpicc=mpicc -shared", "--parallel=#{ENV.make_jobs}",
-      "install", "--prefix=#{prefix}",
-      "--single-version-externally-managed", "--record=installed.txt"
+    system python3, "setup.py",
+                    "build", "--mpicc=mpicc -shared", "--parallel=#{ENV.make_jobs}",
+                    "install", "--prefix=#{prefix}",
+                    "--single-version-externally-managed", "--record=installed.txt",
+                    "--install-lib=#{prefix/Language::Python.site_packages(python3)}"
   end
 
   test do
-    python = Formula["python@3.9"].opt_bin/"python3"
-
-    system python, "-c", "import mpi4py"
-    system python, "-c", "import mpi4py.MPI"
-    system python, "-c", "import mpi4py.futures"
+    system python3, "-c", "import mpi4py"
+    system python3, "-c", "import mpi4py.MPI"
+    system python3, "-c", "import mpi4py.futures"
 
     system "mpiexec", "-n", ENV.make_jobs, "--use-hwthread-cpus",
-           python, "-m", "mpi4py.run", "-m", "mpi4py.bench", "helloworld"
+           python3, "-m", "mpi4py.run", "-m", "mpi4py.bench", "helloworld"
     system "mpiexec", "-n", ENV.make_jobs, "--use-hwthread-cpus",
-           python, "-m", "mpi4py.run", "-m", "mpi4py.bench", "ringtest", "-l", "10", "-n", "1024"
+           python3, "-m", "mpi4py.run", "-m", "mpi4py.bench", "ringtest", "-l", "10", "-n", "1024"
   end
 end

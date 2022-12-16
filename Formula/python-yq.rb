@@ -1,34 +1,33 @@
 class PythonYq < Formula
+  include Language::Python::Virtualenv
+
   desc "Command-line YAML and XML processor that wraps jq"
   homepage "https://kislyuk.github.io/yq/"
-  url "https://files.pythonhosted.org/packages/c0/1b/fe6b9ab599384e95c9b7a63e4801409170fccfc107d03573cc4bb5df49f0/yq-2.12.2.tar.gz"
-  sha256 "2f156d0724b61487ac8752ed4eaa702a5737b804d5afa46fa55866951cd106d2"
+  url "https://files.pythonhosted.org/packages/55/b2/0c4409c0e677ea9e6870538b4cdf4959fad92a8aaa73ee41cf03876bddf9/yq-3.1.0.tar.gz"
+  sha256 "30a84aa22486c749ba269256bd586c0bcd370b7e2a71e76c3924ead4867e74f2"
   license "Apache-2.0"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "01daaf8e43008c395ccf72223e825a93aa18a123dcb8d5d84209dbb8ecc87c92"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "01daaf8e43008c395ccf72223e825a93aa18a123dcb8d5d84209dbb8ecc87c92"
-    sha256 cellar: :any_skip_relocation, monterey:       "9cf9533ef71e83cc6736a1f20b108895616644a8e437a73fbe45f6fe0670e46e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "9cf9533ef71e83cc6736a1f20b108895616644a8e437a73fbe45f6fe0670e46e"
-    sha256 cellar: :any_skip_relocation, catalina:       "9cf9533ef71e83cc6736a1f20b108895616644a8e437a73fbe45f6fe0670e46e"
-    sha256 cellar: :any_skip_relocation, mojave:         "9cf9533ef71e83cc6736a1f20b108895616644a8e437a73fbe45f6fe0670e46e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "01daaf8e43008c395ccf72223e825a93aa18a123dcb8d5d84209dbb8ecc87c92"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "6dd233dcf2e5b6ed7b1c283fb8c77713a6a38d303e305ede045c5f0b44bbd62c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "6dd233dcf2e5b6ed7b1c283fb8c77713a6a38d303e305ede045c5f0b44bbd62c"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "6dd233dcf2e5b6ed7b1c283fb8c77713a6a38d303e305ede045c5f0b44bbd62c"
+    sha256 cellar: :any_skip_relocation, ventura:        "8388ac02e37b6e1921e87745b7ac2f6e840a37d5c80c200750bda121027eef0c"
+    sha256 cellar: :any_skip_relocation, monterey:       "8388ac02e37b6e1921e87745b7ac2f6e840a37d5c80c200750bda121027eef0c"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8388ac02e37b6e1921e87745b7ac2f6e840a37d5c80c200750bda121027eef0c"
+    sha256 cellar: :any_skip_relocation, catalina:       "8388ac02e37b6e1921e87745b7ac2f6e840a37d5c80c200750bda121027eef0c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "53761567742c674ff7ccdf231d34562bb606b76cc4f468283abeb5b10a78bd8a"
   end
 
   depends_on "jq"
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
 
   conflicts_with "yq", because: "both install `yq` executables"
 
   resource "argcomplete" do
-    url "https://files.pythonhosted.org/packages/6a/b4/3b1d48b61be122c95f4a770b2f42fc2552857616feba4d51f34611bd1352/argcomplete-1.12.3.tar.gz"
-    sha256 "2c7dbffd8c045ea534921e63b0be6fe65e88599990d8dc408ac8c542b72a5445"
-  end
-
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
+    url "https://files.pythonhosted.org/packages/05/f8/67851ae4fe5396ba6868c5d84219b81ea6a5d53991a6853616095c30adc0/argcomplete-2.0.0.tar.gz"
+    sha256 "6372ad78c89d662035101418ae253668445b391755cfe94ea52f1b9d22425b20"
   end
 
   resource "toml" do
@@ -37,30 +36,12 @@ class PythonYq < Formula
   end
 
   resource "xmltodict" do
-    url "https://files.pythonhosted.org/packages/58/40/0d783e14112e064127063fbf5d1fe1351723e5dfe9d6daad346a305f6c49/xmltodict-0.12.0.tar.gz"
-    sha256 "50d8c638ed7ecb88d90561beedbf720c9b4e851a9fa6c47ebd64e99d166d8a21"
+    url "https://files.pythonhosted.org/packages/39/0d/40df5be1e684bbaecdb9d1e0e40d5d482465de6b00cbb92b84ee5d243c7f/xmltodict-0.13.0.tar.gz"
+    sha256 "341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56"
   end
 
   def install
-    xy = Language::Python.major_minor_version "python3"
-    ENV["PYTHONPATH"] = libexec/"lib/python#{xy}/site-packages"
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python#{xy}/site-packages"
-
-    resources.each do |r|
-      r.stage do
-        system "python3", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
-
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
-    system "python3", *Language::Python.setup_install_args(libexec)
-
-    bin.install Dir[libexec/"bin/*"]
-    env = {
-      PATH:       "#{Formula["jq"].opt_bin}:$PATH",
-      PYTHONPATH: ENV["PYTHONPATH"],
-    }
-    bin.env_script_all_files(libexec/"bin", env)
+    virtualenv_install_with_resources
   end
 
   test do

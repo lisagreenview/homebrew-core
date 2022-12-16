@@ -1,26 +1,19 @@
 class Goffice < Formula
   desc "Gnumeric spreadsheet program"
   homepage "https://gitlab.gnome.org/GNOME/goffice"
+  url "https://download.gnome.org/sources/goffice/0.10/goffice-0.10.53.tar.xz"
+  sha256 "27fd58796faa1cd4cc0120c34ea85315a0891ec71f55bc6793c14ecf168a3f57"
   license any_of: ["GPL-3.0-only", "GPL-2.0-only"]
 
-  stable do
-    url "https://download.gnome.org/sources/goffice/0.10/goffice-0.10.50.tar.xz"
-    sha256 "2c5c3ddc7b08b3452408c81b121c5f012a734981d75e444debccb1c58e5cbfdc"
-
-    # Fix -flat_namespace being used on Big Sur and later.
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-    end
-  end
-
   bottle do
-    sha256 arm64_big_sur: "e571776d6027505872945c458da49905765f260bc76c197f83565ff1f9c06a6b"
-    sha256 monterey:      "d15ea11e14aac441e2fc89b977e5799d6248ec3dd4a89b8098c3a4a30f1e37a9"
-    sha256 big_sur:       "4cbc19a7ea37b8d511e2c908ab810c5655d76af9f13cffbaafdc39bac01ad009"
-    sha256 catalina:      "b21162268cc6c6dc2bdb7c63f6ea7b95eb3db9228f75536b98bf7fabff4ea9e8"
-    sha256 mojave:        "e7e8f0d817617e0b4450bc77905d988cd06918e45992881eeaba24c61b2e4030"
-    sha256 x86_64_linux:  "624e24a561aa035fec52a249672fc38368754cb64c00f4b2b72e22bb53fa0f7b"
+    sha256 arm64_ventura:  "2fb61cc9cf1a09b28dd4cce9e605afd312c91650ae6ab8ba4bf70e869aa095eb"
+    sha256 arm64_monterey: "2426ed9aaf3e27647f2c1d2f94f1bbec28508a523a7b3d3c85275b3c3c7be6e4"
+    sha256 arm64_big_sur:  "1f4b90257ea35b0ab860a699a4157c58f516fd1eb4e5b96db57df1b97749b517"
+    sha256 ventura:        "f175281be8b894ac62b17ccbce96fe1fa70f4ef33b191f33cdab07ef7655a66e"
+    sha256 monterey:       "57727191aa501e1a7f354f02bdc3afdcd3dc416fc0341115852d15bd9170cec5"
+    sha256 big_sur:        "4d58399efa826a093d22b526c5d3e8a6411dcd3eebec6dea69741b0338c251d0"
+    sha256 catalina:       "e9d2ffd833d7d450c00deb779bac5dba5721db7b45350ca41b827bb232e50bbe"
+    sha256 x86_64_linux:   "7aca0ab34ebbae29dbe4ea367f1e58feb4e00ca7e011152172265074b561afd6"
   end
 
   head do
@@ -73,9 +66,10 @@ class Goffice < Formula
           return 0;
       }
     EOS
-    libxml2 = "#{MacOS.sdk_path}/usr/include/libxml2"
-    on_linux do
-      libxml2 = Formula["libxml2"].opt_include/"libxml2"
+    libxml2 = if OS.mac?
+      "#{MacOS.sdk_path}/usr/include/libxml2"
+    else
+      Formula["libxml2"].opt_include/"libxml2"
     end
     system ENV.cc, "-I#{include}/libgoffice-0.10",
            "-I#{Formula["glib"].opt_include}/glib-2.0",

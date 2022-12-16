@@ -3,28 +3,34 @@ class Ipython < Formula
 
   desc "Interactive computing in Python"
   homepage "https://ipython.org/"
-  url "https://files.pythonhosted.org/packages/36/dc/3ffa7cd738bc12c2be6b759d8d68a19120deea1cb6e764751cf4dc419a2f/ipython-7.29.0.tar.gz"
-  sha256 "4f69d7423a5a1972f6347ff233e38bbf4df6a150ef20fbb00c635442ac3060aa"
+  url "https://files.pythonhosted.org/packages/82/2b/026af47da09998404f51064d328f5f1f68c78829082d2945be489343fde6/ipython-8.7.0.tar.gz"
+  sha256 "882899fe78d5417a0aa07f995db298fa28b58faeba2112d2e3a4c95fe14bb738"
   license "BSD-3-Clause"
-  head "https://github.com/ipython/ipython.git"
+  head "https://github.com/ipython/ipython.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "014458b351b8742b5c5b0d858bd1ba4901dbe2fd5bec679a61c4bec5e617c128"
-    sha256 cellar: :any,                 arm64_big_sur:  "06046ff5fb4fff0a6dcdd3196c66705508437005294d882c299585b7850226ae"
-    sha256 cellar: :any,                 monterey:       "dd76222eca8eb7c315ab802e8ff7380c82606d2e3a8395cefb56434b6a9e2451"
-    sha256 cellar: :any,                 big_sur:        "602f07740beda879f42866035b6df353e039d5c3462421b92b8075b74ae10dad"
-    sha256 cellar: :any,                 catalina:       "7396f64a1ebf50a668205a5d85aa9930707e8b37fa266338252cb82038fcf5d1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e4cca11ee2e3b2b437873b5e80e16bf2ce9cd2db06a424bfd44bb9ddab36af8e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "359fd48f88b24aa9c923f57a1011d06989354ca6f9a92911cb71177768c29895"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "bb403185699cdaeacf0ef295c38a89416e5bc1980c050005e4e63f3b4f050868"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b943cff64833f6b3b533bb3359969e89d605c78f0725e27de5a858a452fa1d70"
+    sha256 cellar: :any_skip_relocation, ventura:        "11a67e0e2181be258cfbd618cb9ed9033b6190cf6d3115a4eaec07bab0b75aa3"
+    sha256 cellar: :any_skip_relocation, monterey:       "c2ea6f5a3130dad732927077f541feb4a38f4cd310b37e92608581b32b215a76"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c15371b0547ea850dc339cd43f6a99a39083dbc06cf6b3aef46afdfa593e8082"
+    sha256 cellar: :any_skip_relocation, catalina:       "c86425fd6f908fba08066cf13b36129f196873885c410df4854de33eec43c5d4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e586285226ad8fc26c162c306f608e3188fb747b46ccaa5a8967c98afbad8f01"
   end
 
+  depends_on "pygments"
   depends_on "python@3.10"
   depends_on "six"
-  depends_on "zeromq"
 
-  # use resources from ipykernel (which includes ipython)
   resource "appnope" do
-    url "https://files.pythonhosted.org/packages/e9/bc/2d2c567fe5ac1924f35df879dbf529dd7e7cabd94745dc9d89024a934e76/appnope-0.1.2.tar.gz"
-    sha256 "dd83cd4b5b460958838f6eb3000c660b1f9caf2a5b1de4264e941512f603258a"
+    url "https://files.pythonhosted.org/packages/6a/cd/355842c0db33192ac0fc822e2dcae835669ef317fe56c795fb55fcddb26f/appnope-0.1.3.tar.gz"
+    sha256 "02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24"
+  end
+
+  resource "asttokens" do
+    url "https://files.pythonhosted.org/packages/ff/b9/40d8b5f23c59def4f4a67a807e899e00200db11f63b4ac9bde5838b709de/asttokens-2.1.0.tar.gz"
+    sha256 "4aa76401a151c8cc572d906aad7aea2a841780834a19d780f4321c0fe1b54635"
   end
 
   resource "backcall" do
@@ -32,59 +38,29 @@ class Ipython < Formula
     sha256 "5cbdbf27be5e7cfadb448baf0aa95508f91f2bbc6c6437cd9cd06e2a4c215e1e"
   end
 
-  resource "debugpy" do
-    url "https://files.pythonhosted.org/packages/68/8a/aba73af65eb84e0c61c658d2aa2f2a9b4d2939a7f87294dd396f4987efac/debugpy-1.5.1.zip"
-    sha256 "d2b09e91fbd1efa4f4fda121d49af89501beda50c18ed7499712c71a4bf3452e"
-  end
-
   resource "decorator" do
-    url "https://files.pythonhosted.org/packages/92/3c/34f8448b61809968052882b830f7d8d9a8e1c07048f70deb039ae599f73c/decorator-5.1.0.tar.gz"
-    sha256 "e59913af105b9860aa2c8d3272d9de5a56a4e608db9a2f167a8480b323d529a7"
+    url "https://files.pythonhosted.org/packages/66/0c/8d907af351aa16b42caae42f9d6aa37b900c67308052d10fdce809f8d952/decorator-5.1.1.tar.gz"
+    sha256 "637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"
   end
 
-  resource "entrypoints" do
-    url "https://files.pythonhosted.org/packages/b4/ef/063484f1f9ba3081e920ec9972c96664e2edb9fdc3d8669b0e3b8fc0ad7c/entrypoints-0.3.tar.gz"
-    sha256 "c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"
-  end
-
-  resource "ipykernel" do
-    url "https://files.pythonhosted.org/packages/e6/37/73f6d7f09c13eab777248747c7c128843c9b66c6aea20ae04aa404f421e2/ipykernel-6.4.2.tar.gz"
-    sha256 "0140f78bfd60e47e387b6433b4bed0f228986420dc4d5fac0e251c9711e23e29"
-  end
-
-  resource "ipython_genutils" do
-    url "https://files.pythonhosted.org/packages/e8/69/fbeffffc05236398ebfcfb512b6d2511c622871dca1746361006da310399/ipython_genutils-0.2.0.tar.gz"
-    sha256 "eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"
+  resource "executing" do
+    url "https://files.pythonhosted.org/packages/8f/ac/89ff37d8594b0eef176b7cec742ac868fef853b8e18df0309e3def9f480b/executing-1.2.0.tar.gz"
+    sha256 "19da64c18d2d851112f09c287f8d3dbbdf725ab0e569077efb6cdcbd3497c107"
   end
 
   resource "jedi" do
-    url "https://files.pythonhosted.org/packages/ac/11/5c542bf206efbae974294a61febc61e09d74cb5d90d8488793909db92537/jedi-0.18.0.tar.gz"
-    sha256 "92550a404bad8afed881a137ec9a461fed49eca661414be45059329614ed0707"
-  end
-
-  resource "jupyter-client" do
-    url "https://files.pythonhosted.org/packages/be/4f/7d2e1764ba352cf764d5e08fa4a1576c3e11e5c233e832b7f03af2e39482/jupyter_client-7.0.6.tar.gz"
-    sha256 "8b6e06000eb9399775e0a55c52df6c1be4766666209c22f90c2691ded0e338dc"
-  end
-
-  resource "jupyter-core" do
-    url "https://files.pythonhosted.org/packages/78/fa/a949d1f0d2aaaef1890c2ab7fee9e58ed7cc6301ebc26c0afbffff4ea6e3/jupyter_core-4.9.1.tar.gz"
-    sha256 "dce8a7499da5a53ae3afd5a9f4b02e5df1d57250cf48f3ad79da23b4778cd6fa"
+    url "https://files.pythonhosted.org/packages/15/02/afd43c5066de05f6b3188f3aa74136a3289e6c30e7a45f351546cab0928c/jedi-0.18.2.tar.gz"
+    sha256 "bae794c30d07f6d910d32a7048af09b5a39ed740918da923c6b780790ebac612"
   end
 
   resource "matplotlib-inline" do
-    url "https://files.pythonhosted.org/packages/0f/98/838f4c57f7b2679eec038ad0abefd1acaeec35e635d4d7af215acd7d1bd2/matplotlib-inline-0.1.3.tar.gz"
-    sha256 "a04bfba22e0d1395479f866853ec1ee28eea1485c1d69a6faf00dc3e24ff34ee"
-  end
-
-  resource "nest-asyncio" do
-    url "https://files.pythonhosted.org/packages/ad/82/2fdf6a92eed4ddf5e9d9a735d019af1ef3a56f084d9549972b2527a43a48/nest_asyncio-1.5.1.tar.gz"
-    sha256 "afc5a1c515210a23c461932765691ad39e8eba6551c055ac8d5546e69250d0aa"
+    url "https://files.pythonhosted.org/packages/d9/50/3af8c0362f26108e54d58c7f38784a3bdae6b9a450bab48ee8482d737f44/matplotlib-inline-0.1.6.tar.gz"
+    sha256 "f887e5f10ba98e8d2b150ddcf4702c1e5f8b3a20005eb0f74bfdbd360ee6f304"
   end
 
   resource "parso" do
-    url "https://files.pythonhosted.org/packages/5e/61/d119e2683138a934550e47fc8ec023eb7f11b194883e9085dca3af5d4951/parso-0.8.2.tar.gz"
-    sha256 "12b83492c6239ce32ff5eed6d3639d6a536170723c6f3f1506869f1ace413398"
+    url "https://files.pythonhosted.org/packages/a2/0e/41f0cca4b85a6ea74d66d2226a7cda8e41206a624f5b330b958ef48e2e52/parso-0.8.3.tar.gz"
+    sha256 "8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0"
   end
 
   resource "pexpect" do
@@ -98,8 +74,8 @@ class Ipython < Formula
   end
 
   resource "prompt-toolkit" do
-    url "https://files.pythonhosted.org/packages/b7/bb/2629a132aab8eb43f9fefa89bd91481fbe2aeca8b32e58bc114a62d4e826/prompt_toolkit-3.0.21.tar.gz"
-    sha256 "27f13ff4e4850fe8f860b77414c7880f67c6158076a7b099062cc8570f1562e5"
+    url "https://files.pythonhosted.org/packages/c4/6e/6ff7938f47981305a801a4c5b8d8ed282b58a28c01c394d43c1fbcfc810b/prompt_toolkit-3.0.33.tar.gz"
+    sha256 "535c29c31216c77302877d5120aef6c94ff573748a5b5ca5b1b1f76f5e700c73"
   end
 
   resource "ptyprocess" do
@@ -107,29 +83,19 @@ class Ipython < Formula
     sha256 "5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"
   end
 
-  resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/b7/b3/5cba26637fe43500d4568d0ee7b7362de1fb29c0e158d50b4b69e9a40422/Pygments-2.10.0.tar.gz"
-    sha256 "f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"
+  resource "pure-eval" do
+    url "https://files.pythonhosted.org/packages/97/5a/0bc937c25d3ce4e0a74335222aee05455d6afa2888032185f8ab50cdf6fd/pure_eval-0.2.2.tar.gz"
+    sha256 "2b45320af6dfaa1750f543d714b6d1c520a1688dec6fd24d339063ce0aaa9ac3"
   end
 
-  resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/4c/c4/13b4776ea2d76c115c1d1b84579f3764ee6d57204f6be27119f13a61d0a9/python-dateutil-2.8.2.tar.gz"
-    sha256 "0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"
-  end
-
-  resource "pyzmq" do
-    url "https://files.pythonhosted.org/packages/6c/95/d37e7db364d7f569e71068882b1848800f221c58026670e93a4c6d50efe7/pyzmq-22.3.0.tar.gz"
-    sha256 "8eddc033e716f8c91c6a2112f0a8ebc5e00532b4a6ae1eb0ccc48e027f9c671c"
-  end
-
-  resource "tornado" do
-    url "https://files.pythonhosted.org/packages/cf/44/cc9590db23758ee7906d40cacff06c02a21c2a6166602e095a56cbf2f6f6/tornado-6.1.tar.gz"
-    sha256 "33c6e81d7bd55b468d2e793517c909b139960b6c790a60b7991b9b6b76fb9791"
+  resource "stack-data" do
+    url "https://files.pythonhosted.org/packages/db/18/aa7f2b111aeba2cd83503254d9133a912d7f61f459a0c8561858f0d72a56/stack_data-0.6.2.tar.gz"
+    sha256 "32d2dd0376772d01b6cb9fc996f3c8b57a357089dec328ed4b6553d037eaf815"
   end
 
   resource "traitlets" do
-    url "https://files.pythonhosted.org/packages/db/cf/e6cbf07ce2d21a17c8379f3f2f12db413a38da5ee20809638226b1490e48/traitlets-5.1.1.tar.gz"
-    sha256 "059f456c5a7c1c82b98c2e8c799f39c9b8128f6d0d46941ee118daace9eb70c7"
+    url "https://files.pythonhosted.org/packages/dd/a8/278742d17c9e95ccb0dcb86ae216df114d2166d88e72f42b60a7b58b600b/traitlets-5.5.0.tar.gz"
+    sha256 "b122f9ff2f2f6c1709dab289a05555be011c87828e911c0cf4074b85cb780a79"
   end
 
   resource "wcwidth" do
@@ -138,57 +104,17 @@ class Ipython < Formula
   end
 
   def install
-    xy = Language::Python.major_minor_version Formula["python@3.10"].opt_bin/"python3"
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python#{xy}/site-packages"
+    python3 = "python3.10"
+    venv = virtualenv_create(libexec, python3)
+    res = resources.reject { |r| r.name == "appnope" && OS.linux? }
+    venv.pip_install res
+    venv.pip_install_and_link buildpath
 
-    # install other resources
-    ipykernel = resource("ipykernel")
-    res = resources - [ipykernel]
-    res -= [resource("appnope")] if OS.linux?
-    res.each do |r|
-      r.stage do
-        system Formula["python@3.10"].opt_bin/"python3", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
-
-    # install and link IPython
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
-    system Formula["python@3.10"].opt_bin/"python3", *Language::Python.setup_install_args(libexec)
-    bin.install libexec/"bin/ipython"
-    bin.env_script_all_files(libexec/"bin", PYTHONPATH: ENV["PYTHONPATH"] + "${PYTHONPATH:+:}$PYTHONPATH")
-
-    # install IPython man page
+    # Install man page
     man1.install libexec/"share/man/man1/ipython.1"
-
-    # install IPyKernel
-    ipykernel.stage do
-      system Formula["python@3.10"].opt_bin/"python3", *Language::Python.setup_install_args(libexec/"vendor")
-    end
-
-    # install kernel
-    kernel_dir = Dir.mktmpdir
-    system libexec/"bin/ipython", "kernel", "install", "--prefix", kernel_dir
-    (share/"jupyter/kernels/python3").install Dir["#{kernel_dir}/share/jupyter/kernels/python3/*"]
-    inreplace share/"jupyter/kernels/python3/kernel.json", "]", <<~EOS
-      ],
-      "env": {
-        "PYTHONPATH": "#{ENV["PYTHONPATH"]}"
-      }
-    EOS
-
-    pydevd_vendor_dir = libexec/"vendor"/Language::Python.site_packages("python3")/"debugpy/_vendored/pydevd"
-    pydevd_vendor_dir.rmtree # remove pre-built binaries
-  end
-
-  def post_install
-    rm_rf etc/"jupyter/kernels/python3"
-    (etc/"jupyter/kernels/python3").install Dir[share/"jupyter/kernels/python3/*"]
   end
 
   test do
     assert_equal "4", shell_output("#{bin}/ipython -c 'print(2+2)'").chomp
-
-    system bin/"ipython", "kernel", "install", "--prefix", testpath
-    assert_predicate testpath/"share/jupyter/kernels/python3/kernel.json", :exist?, "Failed to install kernel"
   end
 end

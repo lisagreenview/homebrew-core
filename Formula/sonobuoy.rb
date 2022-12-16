@@ -1,17 +1,18 @@
 class Sonobuoy < Formula
   desc "Kubernetes component that generates reports on cluster conformance"
   homepage "https://github.com/vmware-tanzu/sonobuoy"
-  url "https://github.com/vmware-tanzu/sonobuoy/archive/v0.55.0.tar.gz"
-  sha256 "2f1db8498fbe7de614cbb7255c6680ce3cc57ddc520c74f6ecd651b9920e116d"
+  url "https://github.com/vmware-tanzu/sonobuoy/archive/v0.56.13.tar.gz"
+  sha256 "5567f60aba3346b77f022362382756b23127e5dedc6de5068e865cb5d9e3606f"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "27e2c48b5f44fabf2ddd94b8176f17bd1da68582fefbf55b803e7de8b9d429b3"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c52f9b1ca2b2f0dd1ec0eb06425cec68d8c00ed4066db97aef175f62ec94c16a"
-    sha256 cellar: :any_skip_relocation, monterey:       "177fc1a9b7f47f94fb63ef383545c531804e11742764eec62418b9c355e4d190"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1d0820c51132f00dbb200b65802aee8cb01b9fb6e162033ec6ca2c12dabd5b52"
-    sha256 cellar: :any_skip_relocation, catalina:       "5ea27875f15df6ac8ab6e4c75394caa7aa64dcb65329805dc3f6848d5be3dc7e"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3b7130b1c45d4aa24daef9168305abdf6a017c822568dd027bc2c1a2802e3716"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "894ef27e7469c7c58f9c8cf16e2393d7d0ebb4e093ce5cc9ce4b1da831964e95"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b7787ab390ce76f4957050b82c7fa941d4f8628ba8e3025be0e3939b5a5e2c41"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0dd0a7e3482e59a0358e952554a7d192593a90077d73e0abf35dfa110a2a82f8"
+    sha256 cellar: :any_skip_relocation, ventura:        "7a3fe3124a7f9899b6c1f2eb08cd22bc0a815909dfb8c6a3db59000946a86d03"
+    sha256 cellar: :any_skip_relocation, monterey:       "0b7c647e1bd1276fda1c3d0f4243ce916764aafe3b8d5cb3f7b35d1fd043cf6d"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c19655e3a3b6058e3a79ca08ae5024707f9ed58254e8b392ed399c02c6c9cb3d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "36a5bb33e9a1f77c6aab3f84f53dd4d2c649e3c6a19deb417ffa2a505d37543d"
   end
 
   depends_on "go" => :build

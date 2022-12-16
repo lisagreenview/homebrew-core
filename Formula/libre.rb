@@ -1,27 +1,27 @@
 class Libre < Formula
   desc "Toolkit library for asynchronous network I/O with protocol stacks"
-  homepage "https://github.com/creytiv/re"
-  url "https://github.com/creytiv/re/releases/download/v0.6.1/re-0.6.1.tar.gz"
-  sha256 "cd5bfc79640411803b200c7531e4ba8a230da3806746d3bd2de970da2060fe43"
+  homepage "https://github.com/baresip/re"
+  url "https://github.com/baresip/re/archive/refs/tags/v2.10.0.tar.gz"
+  sha256 "4d2b6f8fc73efdbcb5a7b2a98d0b46ac6eb28ede5ae90f9596b49663eec623a9"
+  license "BSD-3-Clause"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "f4bc1ae32fab88d187eaa9e4ae4d7dd2fdc0323c39e3d4465f841b1270f1f808"
-    sha256 cellar: :any,                 arm64_big_sur:  "48714fc735db00829b900935b7a0640a74f9f39174fc57775fa145428acd7759"
-    sha256 cellar: :any,                 monterey:       "e9bea2c2d27fb9c93e2b8608e17cf5217b3e980e6fb479918074ab5a8bbd6e32"
-    sha256 cellar: :any,                 big_sur:        "73bb1c1c6ebe022f294cc73e672154579e4d8e634f109883bcbb68818e1f3374"
-    sha256 cellar: :any,                 catalina:       "0ca7e76631b5f30d72b4bc4248e894d00f05cfb785c98856d82cd5cc13e591f9"
-    sha256 cellar: :any,                 mojave:         "5d43d79ef2406e40c858463189ca8a40f0b13ede8a7090b56ba0fd1ef942dabc"
-    sha256 cellar: :any,                 high_sierra:    "32787ca36540a0c7c330560076e25726bcca0f08a7b77014d3837bd9c7ca1840"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "75db7f192f53fd5e420b9eaa3c5fea8e0875f4b951751b07698682e9196d3ac2"
+    sha256 cellar: :any,                 arm64_ventura:  "c7d463b9a3cd136b2bd71565b1976355145ff79aefefee8e0e2826936d1a6b5e"
+    sha256 cellar: :any,                 arm64_monterey: "c1639d21606975a56d5f0093900f3cffc604f3057f0127e6cc3b3b9b8447cb02"
+    sha256 cellar: :any,                 arm64_big_sur:  "44df50d7545a2d48ef61ec184d776e1c604ef12873723e9128ec99e6088df8f8"
+    sha256 cellar: :any,                 ventura:        "d8738736cdd1c1aaf26df6357fb8d4da0821e3e85e055f2b9abfdce8cee57f8f"
+    sha256 cellar: :any,                 monterey:       "915f96fa9d8346e9e4ff7c8cb271287c122d84eb6347e93059f2d5da154996ec"
+    sha256 cellar: :any,                 big_sur:        "daaa97bbaf3c5acd4464a8a1d8da7e25668434907faf1222b185a7749886e1f2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c0553f193f135f8ca44a3d04bbac3510049b98bff41512f6fc8616ed17150665"
   end
 
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   uses_from_macos "zlib"
 
   def install
     sysroot = "SYSROOT=#{MacOS.sdk_path}/usr" if OS.mac?
-    system "make", *sysroot, "install", "PREFIX=#{prefix}"
+    system "make", *sysroot, "install", "PREFIX=#{prefix}", "RELEASE=1", "V=1"
   end
 
   test do

@@ -3,41 +3,37 @@ class Ykdl < Formula
 
   desc "Video downloader that focus on China mainland video sites"
   homepage "https://github.com/SeaHOH/ykdl"
-  url "https://files.pythonhosted.org/packages/bb/15/ab7977a060f55a90f5cffb86dbc1327f3eaffbfdf88f0844a04add1199a8/ykdl-1.7.2.tar.gz"
-  sha256 "abef7b5f3fbdbfc240fe3a6222b3feecc8d1f71969ad09d5f82779088272b9a8"
+  url "https://files.pythonhosted.org/packages/1e/a2/8d68c0f5bfda82033fac0d36875c185241de37e1ac56f8b3f161e825a1e6/ykdl-1.8.1.post1.tar.gz"
+  sha256 "97b179ef7059685fbbb24d4f50ae6e5e01f08e9c0998b292dc1ca44c1af09dc1"
   license "MIT"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "39aefc022aa9daea3338724628bf3002e33472493c10ffe9ff73f27607cd46aa"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d82ad8983d2cd9766a29cd8f7415151460f5cabac0782b6d597a0d6bc4226b97"
-    sha256 cellar: :any_skip_relocation, monterey:       "bf0188f59eca3eac428d48b6ed0d4bd1903d76a8accb50231272ba4c17650b82"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ec883ed447e8ee74d10904010377223e0b9bf042ebbeeaa92ff869080e33d77b"
-    sha256 cellar: :any_skip_relocation, catalina:       "692e3b5bb7fabef1923b442cd22ac031cfabeeb6611c957dbfc2b093f86a2db9"
-    sha256 cellar: :any_skip_relocation, mojave:         "13076db8244670953c255a987d418b9246194bb0f77ebdb750cf39fb33298dde"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "45bc962c832fab796962b9822ae4e21715231da50e9cb98a2caff4c390984472"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "640bc5ee77d8ea688159fa49036e16598af7daa688b4c4273ad8af4c0073784b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "3925aefb6ab1b1aaaed0017b58389fda5d41caa3576b5abd6d3f90c7b6ad032e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "525b278ce098cc7db35e67ba9b646b4fab11b336165e8154b8182b74fc080a5e"
+    sha256 cellar: :any_skip_relocation, ventura:        "c4240dcdf6441c43f6843b157eea6234f91df256c778d70a25bf2529d4c0f22a"
+    sha256 cellar: :any_skip_relocation, monterey:       "a41ee9274c1ce3ac32efaf68e39e1dbd23c6b1200edba87b29ac0348c7934e93"
+    sha256 cellar: :any_skip_relocation, big_sur:        "679aecf0ff6c8e8ad66673e12430c00c48ee8c36ca975cefb72cc576fb4cfacf"
+    sha256 cellar: :any_skip_relocation, catalina:       "a3cb7962ec480fc511d09b8c4ff730b472ce275e5502de686667a2d34da378ab"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d85fa3fe5e540fc474f73817e7936bd01544b5b36786701231336ef1dd99e6ad"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   resource "iso8601" do
-    url "https://files.pythonhosted.org/packages/45/66/a943f702763c879e2754b46089a136ee1e58f0f720c58fa640c00281d3fd/iso8601-0.1.16.tar.gz"
-    sha256 "36532f77cc800594e8f16641edae7f1baf7932f05d8e508545b95fc53c6dc85b"
+    url "https://files.pythonhosted.org/packages/31/8c/1c342fdd2f4af0857684d16af766201393ef53318c15fa785fcb6c3b7c32/iso8601-1.1.0.tar.gz"
+    sha256 "32811e7b81deee2063ea6d2e94f8819a86d1f3811e49d23623a41fa832bef03f"
+  end
+
+  resource "jsengine" do
+    url "https://files.pythonhosted.org/packages/1c/1c/899994765c0395caec18b3e5381e61bac256c35a43f80fb468f3de689f95/jsengine-1.0.5.tar.gz"
+    sha256 "f9676bad44904483f0b17bf2838b07893c9fbaf575f2153e46735b767243199f"
   end
 
   resource "m3u8" do
-    url "https://files.pythonhosted.org/packages/f4/1f/6370b6c5ba1975f5299bdda0e953e381880accbad1d2daa8fb0da3548051/m3u8-0.9.0.tar.gz"
-    sha256 "3ee058855c430dc364db6b8026269d2b4c1894b198bcc5c824039c551c05f497"
-  end
-
-  resource "pycryptodome" do
-    url "https://files.pythonhosted.org/packages/88/7f/740b99ffb8173ba9d20eb890cc05187677df90219649645aca7e44eb8ff4/pycryptodome-3.10.1.tar.gz"
-    sha256 "3e2e3a06580c5f190df843cdb90ea28d61099cf4924334d5297a995de68e4673"
-  end
-
-  resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/4f/5a/597ef5911cb8919efe4d86206aa8b2658616d676a7088f0825ca08bd7cb8/urllib3-1.26.6.tar.gz"
-    sha256 "f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"
+    url "https://files.pythonhosted.org/packages/e7/ee/4c675ee27a03fcfda19e5bdeb52de1ed8f3383e27c04c6b1246345b550a4/m3u8-3.3.0.tar.gz"
+    sha256 "2b1f4ffceb6c488b9d87bcbbd22f7fb92afd8965ba161d882f29e9b23dcb1939"
   end
 
   def install
@@ -49,6 +45,6 @@ class Ykdl < Formula
   end
 
   test do
-    system bin/"ykdl", "--info", "https://v.youku.com/v_show/id_XNTAzNDM5NTQ5Mg==.html"
+    system bin/"ykdl", "--info", "https://v.youku.com/v_show/id_XNTAwNjY3MjU3Mg==.html"
   end
 end

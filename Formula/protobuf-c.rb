@@ -1,18 +1,20 @@
 class ProtobufC < Formula
   desc "Protocol buffers library"
   homepage "https://github.com/protobuf-c/protobuf-c"
-  url "https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.0/protobuf-c-1.4.0.tar.gz"
-  sha256 "26d98ee9bf18a6eba0d3f855ddec31dbe857667d269bc0b6017335572f85bbcb"
+  url "https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/protobuf-c-1.4.1.tar.gz"
+  sha256 "4cc4facd508172f3e0a4d3a8736225d472418aee35b4ad053384b137b220339f"
   license "BSD-2-Clause"
+  revision 1
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "26abd73290938018b40214fbf1d76dba12f9fa5d96bcd51aa719e1793eb0c366"
-    sha256 cellar: :any,                 arm64_big_sur:  "1ca90f4286b3c7210aeb15ba9ce34c09972806c1477f40dbd2e7b3bafcdbb275"
-    sha256 cellar: :any,                 monterey:       "5948d96ab2e7476bfab2ca0fe18ae8bdb876ef06cff93664f6faae8735b250c0"
-    sha256 cellar: :any,                 big_sur:        "a79fd80a8a0fb8dd05a014cc34ac7281441c167659c0bf1ea36df7be8db3084b"
-    sha256 cellar: :any,                 catalina:       "4caae0df2e6727218460e8ef1a0cf18aa0bee6fd14841e6f3456fa325faf4326"
-    sha256 cellar: :any,                 mojave:         "96cf2cab8b8b7e5e8228fb5c6bf9bfdd34c7b54ab208eda056ace3648600777a"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "adfaa9b5233ac90599f13933525f2e12fcaab3b1099aa8fc80eac7580c6b3ce5"
+    sha256 cellar: :any,                 arm64_ventura:  "51daa29261e512d3a61089e74942c0d085f6bbccfbf8c4e8828856344b797fb2"
+    sha256 cellar: :any,                 arm64_monterey: "201a08aabe9bc83897b908019d7dd8aba6dcddf46224eb15bbccdd5f70f6a21b"
+    sha256 cellar: :any,                 arm64_big_sur:  "48ea3989f31b6f44c8170479f5115064ed32ccd4ccf6784ea4ad254697d4f53e"
+    sha256 cellar: :any,                 ventura:        "06eadf1c5ac5bcc4eb1416751163864d7724a4c77703540cde2f9f31ad26a452"
+    sha256 cellar: :any,                 monterey:       "eeb51fce7f9a32e9c64ed31ffaa0c9e1fe747b0e047065fcd7e69cc6361b039c"
+    sha256 cellar: :any,                 big_sur:        "06b3fc06f5fe8b09353ac6aa106373833d897a960bb607a6caf84ba0043634ac"
+    sha256 cellar: :any,                 catalina:       "5c3d841771a3527b3c118abb738b2ab04345de884588cf313d8ed14fe8514288"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4fd6aa2c3972f3b24248fb0a75638c61dc658cd0c2bc3005b088715e68f6a106"
   end
 
   depends_on "pkg-config" => :build
@@ -20,6 +22,9 @@ class ProtobufC < Formula
 
   def install
     ENV.cxx11
+
+    # https://github.com/protocolbuffers/protobuf/issues/9947
+    ENV.append_to_cflags "-DNDEBUG"
 
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
     system "make", "install"

@@ -1,8 +1,8 @@
 class Libpipeline < Formula
   desc "C library for manipulating pipelines of subprocesses"
-  homepage "https://libpipeline.nongnu.org/"
-  url "https://download.savannah.nongnu.org/releases/libpipeline/libpipeline-1.5.4.tar.gz"
-  sha256 "db785bddba0a37ef14b4ef82ae2d18b8824e6983dfb9910319385e28df3f1a9c"
+  homepage "https://libpipeline.gitlab.io/libpipeline/"
+  url "https://download.savannah.nongnu.org/releases/libpipeline/libpipeline-1.5.7.tar.gz"
+  sha256 "b8b45194989022a79ec1317f64a2a75b1551b2a55bea06f67704cb2a2e4690b0"
   license "GPL-3.0-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Libpipeline < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "6c0e638760186cc65964b13cbef1c02cb62bd445ddcbaafb5968122e08e2cc92"
-    sha256 cellar: :any,                 arm64_big_sur:  "88b581ef72ef218c98d11fd16fefc6988a4e26338726384c9848be3c5ab33700"
-    sha256 cellar: :any,                 monterey:       "32582c61e92be4a8327cd38a2f5dcde4b69b43c2a4900754f8d1e4ab0fa880b0"
-    sha256 cellar: :any,                 big_sur:        "0ae6625daee8bfc66e83c6d0176ebd45cc4cc10d682313e6dd4c6f8016f773ff"
-    sha256 cellar: :any,                 catalina:       "a2ab80d839a14d5568de6bd78c2e8ccc16efb2d78ad0dafd6c684a850d430d09"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "88464e66b9f58c437fbca14cdb88850cd4a2bf533a165060565c4696cf4f5ac4"
+    sha256 cellar: :any,                 arm64_ventura:  "35abc98e794d1de477dae0c1982a34e6be42caf701cfe4e08c335ac0ec180463"
+    sha256 cellar: :any,                 arm64_monterey: "2dff66f60f4e5256cbdc39fce9dafbe19c1a682620455e0e120d1b9d6b6e5bf4"
+    sha256 cellar: :any,                 arm64_big_sur:  "2d9eb02b496aa0dbb565bcfca50ccb294c37b9b6f8055bd41e472b4f8cf34b6c"
+    sha256 cellar: :any,                 ventura:        "3c8cc5bee3e315a280a8ab7d87078fa46177e44f25987482164354f61e6d243a"
+    sha256 cellar: :any,                 monterey:       "646e4743ba1587ccf3c768307121277d6379acdc3582392e0565d92fa7ba7345"
+    sha256 cellar: :any,                 big_sur:        "4a8a4755b0c043a39a0ea76ed633c2e4f256428c37f9ba5e6cc798394ee8d24d"
+    sha256 cellar: :any,                 catalina:       "a796215ec7260521454da16526254ab307461ae584e074df5a864a6b4257f9fc"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "01849a18b428e505f03acab84ec2051994cb0b62935c350dba41c74a24dcadf8"
   end
 
   def install

@@ -1,24 +1,26 @@
 class Gosec < Formula
   desc "Golang security checker"
   homepage "https://securego.io/"
-  url "https://github.com/securego/gosec/archive/v2.9.3.tar.gz"
-  sha256 "391445dd905588016345c01982bfd7e9ede39dc57112b675c5fc965841ec55b9"
+  url "https://github.com/securego/gosec/archive/v2.14.0.tar.gz"
+  sha256 "9ad3fe3106d33b638bf1212e96a7770ab6abb3877382e7bf2d98fecf09deef1f"
   license "Apache-2.0"
-  head "https://github.com/securego/gosec.git"
+  head "https://github.com/securego/gosec.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "0984caec30c7528542ec7ab13ebb0340f9faaba567d14b6688c2161cfabcdf77"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "3f53a861e242018be6cfdc0db4674fff4b3ac9f5e6e11a7fe434b4fa28924f9f"
-    sha256 cellar: :any_skip_relocation, monterey:       "ca0521f8a815f1f494e65bba51e7e7487058a0396c2746e4594353b3dd701cc8"
-    sha256 cellar: :any_skip_relocation, big_sur:        "1d8fde9385e477df7c0b3940d9fca87e7c6740ef5214a0d90a845a7993ca84e0"
-    sha256 cellar: :any_skip_relocation, catalina:       "688fadb5fb26bc491fdfc5743e0a4e30db0edf658cedeee5912db8067f787d6f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c6e52caef44bec351e2b241d56df7417cc0cd403a92a0412d6bd39f1762022c3"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "591c852bbcd88a449437201a9e4d2bfa1c3c7154a1ec5bc032f644568428f2ec"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "2eab7c34be69b98d5d99007df9732a22f472171a0bd63ac8d27f06edbb75396a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d714544adca04bd7f7e9169ff88ac2bb2dbabdec063573dff653816d6915f067"
+    sha256 cellar: :any_skip_relocation, ventura:        "cdc2039f3153fb48533bd29faecb83095003afde4a8add7f3b623003c11a2cbf"
+    sha256 cellar: :any_skip_relocation, monterey:       "928628df9881a812b1defc03416166a131b30fd0a6dd4db39dc21ccb4e84b6b5"
+    sha256 cellar: :any_skip_relocation, big_sur:        "3c54bd579517d84a03ce1cf0dcf5d3953ddce9f11620d67071f67a4604ba9f85"
+    sha256 cellar: :any_skip_relocation, catalina:       "ae86679cda4bdcfde37da70d505aa693807ddac8ca9f698804398b760834d15b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "69a61727e67de81502884b8bf25c185d09d0a8f442f0a9d074fc7835909b2e33"
   end
 
   depends_on "go"
 
   def install
-    system "go", "build", *std_go_args, "-ldflags", "-X main.version=v#{version}", "./cmd/gosec"
+    system "go", "build", *std_go_args(ldflags: "-X main.version=v#{version}"), "./cmd/gosec"
   end
 
   test do

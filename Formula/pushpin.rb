@@ -1,32 +1,39 @@
 class Pushpin < Formula
   desc "Reverse proxy for realtime web services"
   homepage "https://pushpin.org/"
-  url "https://github.com/fanout/pushpin/releases/download/v1.33.1/pushpin-1.33.1.tar.bz2"
-  sha256 "37b8ed8a262492e86fd02fe55c3b6f280cff2da718400ce926b5480745cec4a4"
+  url "https://github.com/fanout/pushpin/releases/download/v1.36.0/pushpin-1.36.0.tar.bz2"
+  sha256 "9f8243e9b4052a4ddc26fed5e46a74fefc39f0497e5f363d9f097985e8250f8e"
   license "AGPL-3.0-or-later"
   head "https://github.com/fanout/pushpin.git", branch: "master"
 
   bottle do
-    sha256 big_sur:  "5d4b6f4f552d6e2ce51e7b69c460841b10544061291f01d7935457a4fe59514d"
-    sha256 catalina: "459df44b74ec23db384e8e6235de59e2a8c2e74bb4199c71fcbb391982a58c1e"
-    sha256 mojave:   "ec5af70cb4c9164cb881fa0bc63ce8809b351b28db3188e8e17d578150f63beb"
+    rebuild 1
+    sha256 ventura:      "812691f678a11153b1c81bc116a5ffb3e16f71d8c55ebefb1684e2215c7d91c6"
+    sha256 monterey:     "ce250ecc703f631f4a613ac6e2fe8a63e8eef24e49af5dfa0cf1c4683fbd68f1"
+    sha256 big_sur:      "f553c2932f6650caa39126bc0fab6bda2c2a2394ade2fd292196bc683b461198"
+    sha256 x86_64_linux: "512449c5c34beb705907ff40485f8d0a7ca80c6a6dcc24c174b50af2f63ea0f9"
   end
 
   depends_on "pkg-config" => :build
   depends_on "rust" => :build
   depends_on "condure"
   depends_on "mongrel2"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "qt@5"
   depends_on "zeromq"
   depends_on "zurl"
 
+  fails_with gcc: "5"
+
   def install
-    system "./configure", "--prefix=#{prefix}",
-                          "--configdir=#{etc}",
-                          "--rundir=#{var}/run",
-                          "--logdir=#{var}/log",
-                          "--extraconf=QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
+    args = %W[
+      --configdir=#{etc}
+      --rundir=#{var}/run
+      --logdir=#{var}/log
+    ]
+    args << "--extraconf=QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}" if OS.mac?
+
+    system "./configure", *std_configure_args, *args
     system "make"
     system "make", "install"
   end
@@ -85,7 +92,7 @@ class Pushpin < Formula
 
     begin
       sleep 3 # make sure pushpin processes have started
-      system Formula["python@3.9"].opt_bin/"python3", runfile
+      system Formula["python@3.11"].opt_bin/"python3.11", runfile
     ensure
       Process.kill("TERM", pid)
       Process.wait(pid)

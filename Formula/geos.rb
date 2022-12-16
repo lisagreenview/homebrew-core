@@ -1,8 +1,8 @@
 class Geos < Formula
   desc "Geometry Engine"
   homepage "https://trac.osgeo.org/geos"
-  url "https://download.osgeo.org/geos/geos-3.10.1.tar.bz2"
-  sha256 "a8148eec9636814c8ab0f8f5266ce6f9b914ed65b0d083fc43bb0bbb01f83648"
+  url "https://download.osgeo.org/geos/geos-3.11.1.tar.bz2"
+  sha256 "6d0eb3cfa9f92d947731cc75f1750356b3bdfc07ea020553daf6af1c768e0be2"
   license "LGPL-2.1-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Geos < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "4480b5c6681e03dc42f75a0f90551a253c9de3c95d250cd77c60014806735155"
-    sha256 cellar: :any,                 arm64_big_sur:  "7c8880d253274db92992bb2ac5ba988d13e9a90a366d45d6d8d95bf3a034d98b"
-    sha256 cellar: :any,                 monterey:       "712ef045ef32864ad97ab88232567aaad7b63327cd48d418a509cb80a3f9ab3a"
-    sha256 cellar: :any,                 big_sur:        "f462c830dd04b4387bf86d8d589ba047ed8eb25b78dd366223e577ac3f074660"
-    sha256 cellar: :any,                 catalina:       "7d9e28e907668c1b0864a8011d002b26f0c16b5880c6c2470f6dd08a47d9ca2f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a182a9635ec806025fcd1ef7d471792b324c6091646c664149382611da59914d"
+    sha256 cellar: :any,                 arm64_ventura:  "9750b3496da8c44a49c4c4489c1e4a3232ec609cf97ea70bc34bd9db4ef60b0a"
+    sha256 cellar: :any,                 arm64_monterey: "12545b3c2976b4f7598ba16e28a3a6df73dd0fcb28444ce1e913e6522d510770"
+    sha256 cellar: :any,                 arm64_big_sur:  "49e7548ee22cf9fe67a14c9324b06871a2ea730e807676d7ab2cfc4a5660e8d7"
+    sha256 cellar: :any,                 ventura:        "f10ded36947f353f140ac312c7f337d950993f4bb0b12fc12704e7ff85f57ee2"
+    sha256 cellar: :any,                 monterey:       "6e51f012221d4e8900f7ba72be4d6d3664c29022c3106d43de412989141ca3c5"
+    sha256 cellar: :any,                 big_sur:        "db3008471b5f37ae7cde2a734c3f3e939159bf118149f8616e184f9ea715825a"
+    sha256 cellar: :any,                 catalina:       "64e309838456b245c85401c200799a9fbaaf35e36c17ca52d79c7ee141acb306"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c04b4438271d959c4e9752e7c9c1b56f855841c01d369f826a59b3c25e7ef55f"
   end
 
   depends_on "cmake" => :build
@@ -25,6 +27,9 @@ class Geos < Formula
     system "cmake", "-S", ".", "-B", "build", *std_cmake_args, "-DCMAKE_INSTALL_RPATH=#{rpath}"
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
+    system "cmake", "-S", ".", "-B", "static", *std_cmake_args, "-DBUILD_SHARED_LIBS=OFF"
+    system "cmake", "--build", "static"
+    lib.install Dir["static/lib/*.a"]
   end
 
   test do

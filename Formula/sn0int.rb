@@ -1,17 +1,19 @@
 class Sn0int < Formula
   desc "Semi-automatic OSINT framework and package manager"
   homepage "https://github.com/kpcyrd/sn0int"
-  url "https://github.com/kpcyrd/sn0int/archive/v0.23.0.tar.gz"
-  sha256 "38600bfb1df61f0640f52ab23b990eb25cd422df95af30bf1d290fb455849a95"
+  url "https://github.com/kpcyrd/sn0int/archive/v0.24.3.tar.gz"
+  sha256 "547103793aa40dac6907985294b1b1940eb16d36ed4cd564bc705911d681c382"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "26726fcff875d9bf48aaf82d10199c3d835675f4796863fc44786b0b8950d5b2"
-    sha256 cellar: :any,                 arm64_big_sur:  "917c9cb08c392e891d5c7b8d6cc712fb98681769466c99b32aaa1654bd90570a"
-    sha256 cellar: :any,                 monterey:       "bd744522f273266e8e2d9c2b2c690373b17cc3567e68202c0c12b7305b7c6e3b"
-    sha256 cellar: :any,                 big_sur:        "72813ea3748851d0d6afdf7ccc9529be510a40bf5aea9d6f0e88ed45011594f0"
-    sha256 cellar: :any,                 catalina:       "b1768826a0d1558668fe80c8a189ce37d4050722cb3e09591a771ea00565c5b4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c709f2f83a1b8d38f239c2b2239cebf74358785f757d1b58819d802951d55877"
+    sha256 cellar: :any,                 arm64_ventura:  "a90e8342177824675573530b191caea8aa865429c5e6f79e00a4a714709b0e93"
+    sha256 cellar: :any,                 arm64_monterey: "ce8a71195896f236bb4197010c26461f7bcfb86e46844b9a11b204f44890d847"
+    sha256 cellar: :any,                 arm64_big_sur:  "a5d82879dda3f8366a48cdb7d19bb1aea19f7accf774629bb62a916550e7c7cb"
+    sha256 cellar: :any,                 ventura:        "698ebfde69e1fdbbbfd586e3a2ad882e678950cd7a5e47225b11fcee5dc91b7b"
+    sha256 cellar: :any,                 monterey:       "061757edca3f1edbe015bf5a0d085b30d556771ae507098cebcd0bb8cf39a310"
+    sha256 cellar: :any,                 big_sur:        "7958a53ef4cb65dbb8be16eee3d392698f23f29cba2d157721efc35f35c38a52"
+    sha256 cellar: :any,                 catalina:       "1670ddd7b8c207c3207a9458c06632585774dd44cf9a4bd7d9601ae80718c4f8"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "be0feebb57eb8a9e61748e38a17f0c282f6f591f273fa0f00c72aff7892d6fd1"
   end
 
   depends_on "pkg-config" => :build
@@ -28,12 +30,7 @@ class Sn0int < Formula
   def install
     system "cargo", "install", *std_cargo_args
 
-    bash_output = Utils.safe_popen_read(bin/"sn0int", "completions", "bash")
-    (bash_completion/"sn0int").write bash_output
-    zsh_output = Utils.safe_popen_read(bin/"sn0int", "completions", "zsh")
-    (zsh_completion/"_sn0int").write zsh_output
-    fish_output = Utils.safe_popen_read(bin/"sn0int", "completions", "fish")
-    (fish_completion/"sn0int.fish").write fish_output
+    generate_completions_from_executable(bin/"sn0int", "completions")
 
     system "make", "-C", "docs", "man"
     man1.install "docs/_build/man/sn0int.1"

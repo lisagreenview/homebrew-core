@@ -1,9 +1,9 @@
 class Libosip < Formula
   desc "Implementation of the eXosip2 stack"
   homepage "https://www.gnu.org/software/osip/"
-  url "https://ftp.gnu.org/gnu/osip/libosip2-5.2.1.tar.gz"
-  mirror "https://ftpmirror.gnu.org/osip/libosip2-5.2.1.tar.gz"
-  sha256 "ee3784bc8e7774f56ecd0e2ca6e3e11d38b373435115baf1f1aa0ca0bfd02bf2"
+  url "https://ftp.gnu.org/gnu/osip/libosip2-5.3.1.tar.gz"
+  mirror "https://ftpmirror.gnu.org/osip/libosip2-5.3.1.tar.gz"
+  sha256 "fe82fe841608266ac15a5c1118216da00c554d5006e2875a8ac3752b1e6adc79"
   license "LGPL-2.1-or-later"
 
   livecheck do
@@ -12,13 +12,14 @@ class Libosip < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "d4906f9955e78e9d96dff148bfbd46bd39496dabd88b7502e436c479e2217b0b"
-    sha256 cellar: :any,                 arm64_big_sur:  "223cf167c2b2be056352ca25c6c78045f2f319fdee374310286e3e0383aad67e"
-    sha256 cellar: :any,                 monterey:       "a3ad0c1cd8614931026eea4d6ec674c216571c75baefb6f2fe74fe7dd84afd02"
-    sha256 cellar: :any,                 big_sur:        "c3855ed4bae9affb5007127469eda97fb91b395ca17f23639b4f3b08faed24cb"
-    sha256 cellar: :any,                 catalina:       "51a594ab9b9237fadbf236b6b91e7dff12b1d762a9084a9ceefa38e368236175"
-    sha256 cellar: :any,                 mojave:         "398471b49b724ac90cba0c87a44220adc0efbeb64b902429856531c263fa4404"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "56d76f7c03d4eedb0bb87a94fb46380f3c8dc2213863c66ea55ae1d67b9c9464"
+    sha256 cellar: :any,                 arm64_ventura:  "34fbd0c4413173a442968eec773e3a9b5f60a9a08b48af2f3e2d9d4ee21e6dab"
+    sha256 cellar: :any,                 arm64_monterey: "2bcc9aaabdfd1b5afe6a05a3cd694f91b3dae3a23189f450cbe028a9416a28dc"
+    sha256 cellar: :any,                 arm64_big_sur:  "97a6519a92630d395d060289ebd2959d91302d84efa15d72aa9f37f9293ce7fa"
+    sha256 cellar: :any,                 ventura:        "c7fca9a24a759d0716ef0293fdff8361cdadab5963e7d3f36fbc4405b49e27a1"
+    sha256 cellar: :any,                 monterey:       "208378ce5567b92f8d1fcf79a9e07bea8313c90da24f7e14b4d5a5c9f9a3c9ab"
+    sha256 cellar: :any,                 big_sur:        "947aa52f8073bc404457457f25c121066c6bb6af9ebeb42b3c50e4168b3cbac6"
+    sha256 cellar: :any,                 catalina:       "eb877b96fdc42eca7b4df03ae438982a3fc1e0abc51373bd6c559ba39d2077e3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ca0d378c03efdfb96e5e0610357fab268feb1a92de587ac55fa453e4f20b75e4"
   end
 
   def install

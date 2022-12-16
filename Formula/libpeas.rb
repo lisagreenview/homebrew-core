@@ -1,16 +1,19 @@
 class Libpeas < Formula
   desc "GObject plugin library"
-  homepage "https://developer.gnome.org/libpeas/stable/"
-  url "https://download.gnome.org/sources/libpeas/1.30/libpeas-1.30.0.tar.xz"
-  sha256 "0bf5562e9bfc0382a9dcb81f64340787542568762a3a367d9d90f6185898b9a3"
+  homepage "https://wiki.gnome.org/Projects/Libpeas"
+  url "https://download.gnome.org/sources/libpeas/1.34/libpeas-1.34.0.tar.xz"
+  sha256 "4305f715dab4b5ad3e8007daec316625e7065a94e63e25ef55eb1efb964a7bf0"
   license "LGPL-2.1-or-later"
 
   bottle do
-    sha256 arm64_big_sur: "826333c759333b483af3466322a0c7f21cb723674f4a71e118ca8ad78ade4a70"
-    sha256 big_sur:       "204fd26d92f3a9585d6823fff5df8a8108a0ed904c80a845e0bfd5173152c934"
-    sha256 catalina:      "cddddc6a29c533bbff776cb2635a4494f3d7024f0c4aeb80e4e378427f790100"
-    sha256 mojave:        "1df3679b835916a8c135edbbfa246e27cfdeac82717250505363f117130f9832"
-    sha256 x86_64_linux:  "11d56ef35cd8c957bf3fde1cc63eeb5d3083cec638ae0520c63da1ed85c472df"
+    sha256 arm64_ventura:  "e0c2f4f3d793b2cb31c147335b8b8a73a936b3a1c92716360906719e36d847ba"
+    sha256 arm64_monterey: "f31169f0a56251d8250a7aa3607e4d1dd48c713573af071f94ab53e5023571cf"
+    sha256 arm64_big_sur:  "ef7e7384713bc1ff69fe899f7ccc93c9650127a093d1e624b5c23db171ed7e1b"
+    sha256 ventura:        "e5519ec916ba85ceffbfe7a6f237eb8569e399d72ec933bc20e728c7387cf8de"
+    sha256 monterey:       "e392e3b05c1f5e86bed510ccf197282ad97a6d5ff4e2fb4cfa33b8656806ffb4"
+    sha256 big_sur:        "9ee9248b680889d1586a0593d5429d61c3d74bdf007135c0a0813133482ea2c3"
+    sha256 catalina:       "ec22a78bc5ec276e481be7c48418e6b47a9540cd3a3ee86e2b8bc33ad145df1a"
+    sha256 x86_64_linux:   "cbeeed81c14de0eca458731003ad9558f3b5bb1d159d40b217d3b7c5d1aa3f23"
   end
 
   depends_on "meson" => :build
@@ -21,10 +24,10 @@ class Libpeas < Formula
   depends_on "gobject-introspection"
   depends_on "gtk+3"
   depends_on "pygobject3"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
 
   def install
-    args = std_meson_args + %w[
+    args = %w[
       -Dpython3=true
       -Dintrospection=true
       -Dvapi=true
@@ -32,11 +35,9 @@ class Libpeas < Formula
       -Ddemos=false
     ]
 
-    mkdir "build" do
-      system "meson", *args, ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", "setup", "build", *args, *std_meson_args
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
   end
 
   test do
@@ -71,9 +72,7 @@ class Libpeas < Formula
       -lgobject-2.0
       -lpeas-1.0
     ]
-    on_macos do
-      flags << "-lintl"
-    end
+    flags << "-lintl" if OS.mac?
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"
   end

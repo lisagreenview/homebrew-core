@@ -1,23 +1,24 @@
 class Emacs < Formula
   desc "GNU Emacs text editor"
   homepage "https://www.gnu.org/software/emacs/"
-  url "https://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.xz"
-  mirror "https://ftpmirror.gnu.org/emacs/emacs-27.2.tar.xz"
-  sha256 "b4a7cc4e78e63f378624e0919215b910af5bb2a0afc819fad298272e9f40c1b9"
+  url "https://ftp.gnu.org/gnu/emacs/emacs-28.2.tar.xz"
+  mirror "https://ftpmirror.gnu.org/emacs/emacs-28.2.tar.xz"
+  sha256 "ee21182233ef3232dc97b486af2d86e14042dbb65bbc535df562c3a858232488"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 arm64_monterey: "89d8ecc54baa2d25ffed5cb54ed2f4a088c8b7907446bbf320bf2334adacef72"
-    sha256 arm64_big_sur:  "f08cd18fa19f49b85606cc4a871272ef4ff9da656c4c952bd91ac03a70dbb0e3"
-    sha256 monterey:       "6b5cf4c587d0b36c4ab36596006721399e073b766ee5a1ca2e798d7a1fdce051"
-    sha256 big_sur:        "5d3af874e5acd76ddc881406ed1e7db8b84f96e01812961f3bee347d278a28ac"
-    sha256 catalina:       "53b0d78af688a20e12e89751217c9da81cc9621222f289836d44011762355879"
-    sha256 mojave:         "4b3cd25d5f6977ecad49d9b5ebd2dec3c7e41efa8f4f22d2805917e0024cf3af"
-    sha256 x86_64_linux:   "3a22201d4ecf2d32fc7a0d402e14e20ce043bc25b6ac53ec15d48f585e51c9e2"
+    sha256 arm64_ventura:  "d020b6a9144f8fa619c067eeb0885969d5f1a171f238950ead32c8a037681c84"
+    sha256 arm64_monterey: "109fb5a7ab9ad048b04169c10bc7af54814ea366a1b7d8d45a54692aed585a41"
+    sha256 arm64_big_sur:  "824782de415411e7bb107143d1505fc9f844ecc15ffa2157a0987e0e282a396f"
+    sha256 ventura:        "9609f3ab6395623867ab8856b42127d37d837074060060f6bed2fc2c3a349d21"
+    sha256 monterey:       "d47f7fabda9e2e2e3679608253debb6865061a28f45045c8319b65d569268096"
+    sha256 big_sur:        "2163de8aa7c2150522e7d8b025ad4ea68ad628118ae4f9602f616c6866aaec95"
+    sha256 catalina:       "387278e4f542a29ca68598ead7a9671074fd75744db3a643db1af2702aa0f835"
+    sha256 x86_64_linux:   "ad7f9af688ff25c9a7ec44cda8a287529c27e9e32ed3a1e8cd0c33d1f4a430ca"
   end
 
   head do
-    url "https://github.com/emacs-mirror/emacs.git"
+    url "https://github.com/emacs-mirror/emacs.git", branch: "master"
 
     depends_on "autoconf" => :build
     depends_on "gnu-sed" => :build

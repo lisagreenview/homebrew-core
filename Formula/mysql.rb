@@ -1,8 +1,8 @@
 class Mysql < Formula
   desc "Open source relational database management system"
   homepage "https://dev.mysql.com/doc/refman/8.0/en/"
-  url "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-boost-8.0.27.tar.gz"
-  sha256 "74b5bc6ff88fe225560174a24b7d5ff139f4c17271c43000dbcf3dcc9507b3f9"
+  url "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-boost-8.0.31.tar.gz"
+  sha256 "7867f3fd8ca423d283a6162c819c766863ecffbf9b59b4756dc7bb81184c1d6a"
   license "GPL-2.0-only" => { with: "Universal-FOSS-exception-1.0" }
 
   livecheck do
@@ -11,41 +11,48 @@ class Mysql < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "193e3eed782b0200217dee216d54be860a55e93edd89f5b3ef4686a56c32ed56"
-    sha256 big_sur:       "c9e0edee036bc06a5b8c73f8e483cf9731401253058a60ff230667e5af866328"
-    sha256 catalina:      "e7bb052589e7bcf05ba647190be0d38be8c9f2be83936c19f6365bfd0b21bbb9"
-    sha256 mojave:        "66bb243acf7532b7c16cde86419390872756d71d68beee2089095585fd268229"
-    sha256 x86_64_linux:  "148a853686c00e9c32b41c2b8e6ddfdd7498c63894c76e343033bd682675c70f"
+    sha256 arm64_ventura:  "73a817585b4aa253b0984698b6e2d2fde197332d3de144855d4489969f94fb9f"
+    sha256 arm64_monterey: "3b17e7d3888bf63e7d778e1d38ad363efb92a1a593ee279ce18b3105e3d2e4aa"
+    sha256 arm64_big_sur:  "8fc37f512c9754ecaaacd84503790bddec4ea50f4454cc3335a789d18b452598"
+    sha256 ventura:        "060ac12104e90e62049852f99226424c570624217be883a9115ee7fd388b7290"
+    sha256 monterey:       "92eef344bc3a1687c0463234bad3ac0741d032dd572bb51afecdb1aa8afe3792"
+    sha256 big_sur:        "021f60febd7740d5b1f64b9309a8f3fefc88a0c5ff9f5c97bfb4a3a145124bef"
+    sha256 catalina:       "dac28aca0e336686b213582cb72602da5cef8ab84c55d52728103e82f3c2d630"
+    sha256 x86_64_linux:   "08493b15c16627f848e755eba7a99a8ac0ff5d8a0793b0db4f2c182019d98f92"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "icu4c"
   depends_on "libevent"
+  depends_on "libfido2"
   depends_on "lz4"
   depends_on "openssl@1.1"
   depends_on "protobuf"
+  depends_on "zlib" # Zlib 1.2.12+
   depends_on "zstd"
 
   uses_from_macos "curl"
   uses_from_macos "cyrus-sasl"
   uses_from_macos "libedit"
-  uses_from_macos "zlib"
 
   on_linux do
     depends_on "patchelf" => :build
-    depends_on "gcc" # for C++17
-
-    ignore_missing_libraries "metadata_cache.so"
-
-    # Disable ABI checking
-    patch :DATA
+    depends_on "libtirpc"
   end
 
   conflicts_with "mariadb", "percona-server",
     because: "mysql, mariadb, and percona install the same binaries"
 
-  fails_with gcc: "5"
+  fails_with gcc: "5" # for C++17
+
+  # Patch out check for Homebrew `boost`.
+  # This should not be necessary when building inside `brew`.
+  # https://github.com/Homebrew/homebrew-test-bot/pull/820
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/030f7433e89376ffcff836bb68b3903ab90f9cdc/mysql/boost-check.patch"
+    sha256 "af27e4b82c84f958f91404a9661e999ccd1742f57853978d8baec2f993b51153"
+  end
 
   def datadir
     var/"mysql"
@@ -57,6 +64,9 @@ class Mysql < Formula
       # against `_ZN17Gcs_debug_options12m_debug_noneB5cxx11E' can not be used when making
       # a shared object; recompile with -fPIC
       ENV.append_to_cflags "-fPIC"
+
+      # Disable ABI checking
+      inreplace "cmake/abi_check.cmake", "RUN_ABI_CHECK 1", "RUN_ABI_CHECK 0"
     end
 
     # -DINSTALL_* are relative to `CMAKE_INSTALL_PREFIX` (`prefix`)
@@ -74,6 +84,7 @@ class Mysql < Formula
       -DWITH_SYSTEM_LIBS=ON
       -DWITH_BOOST=boost
       -DWITH_EDITLINE=system
+      -DWITH_FIDO=system
       -DWITH_ICU=system
       -DWITH_LIBEVENT=system
       -DWITH_LZ4=system
@@ -93,15 +104,6 @@ class Mysql < Formula
     (prefix/"mysql-test").cd do
       system "./mysql-test-run.pl", "status", "--vardir=#{Dir.mktmpdir}"
     end
-
-    # Remove libssl copies as the binaries use the keg anyway and they create problems for other applications
-    # Reported upstream at https://bugs.mysql.com/bug.php?id=103227
-    rm_rf lib/"libssl.dylib"
-    rm_rf lib/"libssl.1.1.dylib"
-    rm_rf lib/"libcrypto.1.1.dylib"
-    rm_rf lib/"libcrypto.dylib"
-    rm_rf lib/"plugin/libcrypto.1.1.dylib"
-    rm_rf lib/"plugin/libssl.1.1.dylib"
 
     # Remove the tests directory
     rm_rf prefix/"mysql-test"
@@ -149,7 +151,7 @@ class Mysql < Formula
       MySQL is configured to only allow connections from localhost by default
 
       To connect run:
-          mysql -uroot
+          mysql -u root
     EOS
     if (my_cnf = ["/etc/my.cnf", "/etc/mysql/my.cnf"].find { |x| File.exist? x })
       s += <<~EOS
@@ -183,18 +185,3 @@ class Mysql < Formula
     system "#{bin}/mysqladmin", "--port=#{port}", "--user=root", "--password=", "shutdown"
   end
 end
-
-__END__
-diff --git a/cmake/abi_check.cmake b/cmake/abi_check.cmake
-index 0e1886bb..87b7aff7 100644
---- a/cmake/abi_check.cmake
-+++ b/cmake/abi_check.cmake
-@@ -30,7 +30,7 @@
- # (Solaris) sed or diff might act differently from GNU, so we run only 
- # on systems we can trust.
- IF(LINUX)
--  SET(RUN_ABI_CHECK 1)
-+  SET(RUN_ABI_CHECK 0)
- ELSE()
-   SET(RUN_ABI_CHECK 0)
- ENDIF()

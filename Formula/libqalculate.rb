@@ -1,16 +1,19 @@
 class Libqalculate < Formula
   desc "Library for Qalculate! program"
   homepage "https://qalculate.github.io/"
-  url "https://github.com/Qalculate/libqalculate/releases/download/v3.21.0/libqalculate-3.21.0.tar.gz"
-  sha256 "2a2b6f8de4b43acdff98efdda338436db1a3f7ecd994e1bc2a422a65fba03479"
+  url "https://github.com/Qalculate/libqalculate/releases/download/v4.4.0/libqalculate-4.4.0.tar.gz"
+  sha256 "79cfdc4d4af9dfcd6902c2ec680ed1f3d5845d07b5ee1c76255fdca731a8b758"
   license "GPL-2.0-or-later"
 
   bottle do
-    sha256 arm64_monterey: "474bd715cfef115d357e6c5b42937ac31ec6d610d726ed433a166fbe5df27b46"
-    sha256 arm64_big_sur:  "c5fa566c1bfcee52df79e2b352c851d06e35a6d62cb5e173f468d1db00196236"
-    sha256 big_sur:        "3691489924b0d10808f7b28f2a9a5144e1695195fe9af5fb18cc6cf34aa9902e"
-    sha256 catalina:       "8fe96ee96986175d97ae18b9e10ed75712f28f7a43167a120d1e9fd5eb42e598"
-    sha256 mojave:         "1c11025d7abd80744bc4077822571c77db47d6999e0ad7c5957ec1a87272bb5c"
+    sha256                               arm64_ventura:  "d7cb7a82954467dc0623647f7aa570ef5b1b47bc4ed88d3a705aa4f967fb5a0b"
+    sha256                               arm64_monterey: "5b8d9b023b2153d4042c97cec6995821f9c84241931fa054449fe9937e100d6c"
+    sha256                               arm64_big_sur:  "d4c17c7a04f7f1cd5f3989fb68fc451bc9e2891ffa4b2f0355973bdcb35c1b43"
+    sha256                               ventura:        "07b66d62156d3e30f14b0a9ee31868712ee8f9d18657028de4b11c5ffe13c705"
+    sha256                               monterey:       "49d4ff7ba3f090971676ec245f8a35d2def4b8ca59c9b2ae52dbf57f47b81492"
+    sha256                               big_sur:        "6fd59074edcb41db56f8e4f35eca6ea5e74505f6c26cab09a191560c525efa0d"
+    sha256                               catalina:       "efb83a30e40370da78f1c939403bf7e3c986d95de6511df48d6036e871571b60"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "edb59cd03c5f352355308bd222b46ea3f012145d95f586811ceb0fddb2adab4c"
   end
 
   depends_on "intltool" => :build
@@ -20,7 +23,11 @@ class Libqalculate < Formula
   depends_on "mpfr"
   depends_on "readline"
 
+  uses_from_macos "perl" => :build
+  uses_from_macos "curl"
+
   def install
+    ENV.prepend_path "PERL5LIB", Formula["intltool"].libexec/"lib/perl5" unless OS.mac?
     ENV.cxx11
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",

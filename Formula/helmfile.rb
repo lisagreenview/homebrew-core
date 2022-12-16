@@ -1,25 +1,36 @@
 class Helmfile < Formula
   desc "Deploy Kubernetes Helm Charts"
-  homepage "https://github.com/roboll/helmfile"
-  url "https://github.com/roboll/helmfile/archive/v0.142.0.tar.gz"
-  sha256 "5475a041f0a1eb5777cc45e3fb06458ae76b1d4840aec89f2fed509d833d0cde"
+  homepage "https://github.com/helmfile/helmfile"
+  url "https://github.com/helmfile/helmfile/archive/v0.149.0.tar.gz"
+  sha256 "5149156beda7d1c420368b9d1b098c5823dda6c494e47e28a77f6b74e007e04e"
   license "MIT"
+  version_scheme 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "29cf096405cc834e7888ebdee9c811a3e375e8a43b2e045ec0295e8ff654bad3"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "80e9c9d81f57b0331038108026263d6d9b184403659b66a976172e9dde916792"
-    sha256 cellar: :any_skip_relocation, monterey:       "73e5bab63a7d9c0af77ccc72f8bca63cc8f72b96923ebfe41430a356cbf2cdeb"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ca024a40610d455dce99ef913baee47fa1d82dc821d780b94e56a54b3ecbde7b"
-    sha256 cellar: :any_skip_relocation, catalina:       "7fa829db664c78079ba1c8ac19ec75b47e9664dfc55cf79d18970070e81d0fc2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "53ff4d7a0816b82fcd87c791e6a9db70699425931bbba96181b545a837fb7fb7"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "fbaa11be560bc3ab9f047239ba04f03513274e37ba2876319fd50937e1493425"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "04eae4c543cc72c4f72508e75e3ba3630fbc678490996c13b76b3ec4294b4d5e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0d055c30289a27d310e07d460143597c3282c9cb61b59a88297069c69f3d643f"
+    sha256 cellar: :any_skip_relocation, ventura:        "eee80b6dde10def00fabf418d57c7d08289fa1ed288d796fbe86c4d45997f584"
+    sha256 cellar: :any_skip_relocation, monterey:       "171e28c3808814f868b2718dd638620feb0aec766286c51d00c7d0e130a5d8c8"
+    sha256 cellar: :any_skip_relocation, big_sur:        "30bdadceb6e79a3432db9eab1dd0da763cd433b620e09bea42cca3663e3dbec2"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5a767a6c677d9c45fb5bdde14a31547d578dea7387c6d73fcd23f3edbbdbcddc"
   end
 
   depends_on "go" => :build
   depends_on "helm"
 
   def install
-    system "go", "build", "-ldflags", "-X github.com/roboll/helmfile/pkg/app/version.Version=v#{version}",
-             "-o", bin/"helmfile", "-v", "github.com/roboll/helmfile"
+    ldflags = %W[
+      -s -w
+      -X go.szostok.io/version.version=v#{version}
+      -X go.szostok.io/version.buildDate=#{time.iso8601}
+      -X go.szostok.io/version.commit="brew"
+      -X go.szostok.io/version.commitDate=#{time.iso8601}
+      -X go.szostok.io/version.dirtyBuild=false
+    ]
+    system "go", "build", *std_go_args(ldflags: ldflags)
+
+    generate_completions_from_executable(bin/"helmfile", "completion")
   end
 
   test do

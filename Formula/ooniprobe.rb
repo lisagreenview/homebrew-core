@@ -1,9 +1,9 @@
 class Ooniprobe < Formula
   desc "Network interference detection tool"
   homepage "https://ooni.org/"
-  url "https://github.com/ooni/probe-cli/archive/v3.10.1.tar.gz"
-  sha256 "2b81c14133f39ac91c4ea6761be7a27d768cd88989b52ae72376d1d7b69de322"
-  license "BSD-3-Clause"
+  url "https://github.com/ooni/probe-cli/archive/v3.16.7.tar.gz"
+  sha256 "a019fd9e6f35a3dd4520b7d63d109e236b27121b835d901d6a7fbe12d608b070"
+  license "GPL-3.0-or-later"
 
   livecheck do
     url :stable
@@ -11,23 +11,28 @@ class Ooniprobe < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "cb7cd7169ba6aec0328574528a405a1b037fb9039f642a3a5e87144ec13eea72"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "746cd38569b353bd25d8984e90b83754c7ec5c1ee48417ff007d43a8a935fb5e"
-    sha256 cellar: :any_skip_relocation, monterey:       "36f081fc1520b637fb18f032eef6cbdfb706ff8cf5daa0f3e11507d5a1a38b2f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "89e6b871207538537ae7dfd73c5cd40885aad95e2440fce531100df0b4957dd5"
-    sha256 cellar: :any_skip_relocation, catalina:       "b8268996f24122c5bf53c27b225f5fca1b8cd16b217eb8ecdf8395aabead0348"
-    sha256 cellar: :any_skip_relocation, mojave:         "6e049ae4eb2529c020aa4dd5d09fcfdde562a05b99f9ad41a9183ac38dab8054"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "02d9e088beb99f91c8a0e2c38272bb82d648b63af467c745104229ac9e483d21"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "22ef037a15f6a841f1f70eeca34a810b55a49ded1554c6966948cd6cc6db8b55"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8066a81a3c627d576f440d2964e2cebf565daa3a0cde04078ae58572ceef5b26"
+    sha256 cellar: :any_skip_relocation, ventura:        "0cb6d743a1af9fced7be384db34f0d52c8c85dec54da4f7372f19363bdb70554"
+    sha256 cellar: :any_skip_relocation, monterey:       "46e38c6c115c1b200601ecbb6b65a8d22914eda2e9f6308f3a10892b342bac39"
+    sha256 cellar: :any_skip_relocation, big_sur:        "0f251667b9758bdcb4497c4611d39c99e5abc90d163f132ef7e314d72e492b32"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f2070c9d8c9454ab033107f7a54776d97ff7bc63695312081a777ec11b4794eb"
   end
 
   depends_on "go" => :build
+  depends_on "tor"
 
   def install
-    system "go", "run", "./internal/cmd/getresources"
     system "go", "build", *std_go_args, "-ldflags", "-s -w", "./cmd/ooniprobe"
     (var/"ooniprobe").mkpath
   end
 
   test do
+    assert_match version.to_s, shell_output("#{bin}/ooniprobe version")
+    # failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 2048 kiB, got: 416 kiB).
+    return if OS.linux?
+
     (testpath/"config.json").write <<~EOS
       {
         "_version": 3,

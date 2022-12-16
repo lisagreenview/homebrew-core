@@ -1,18 +1,20 @@
 class Allureofthestars < Formula
   desc "Near-future Sci-Fi roguelike and tactical squad combat game"
   homepage "https://www.allureofthestars.com/"
-  url "https://hackage.haskell.org/package/Allure-0.10.3.0/Allure-0.10.3.0.tar.gz"
-  sha256 "0ae3ffbdf8bff2647ed95c2b68073874829b26d7e33231a284a2720cf3414fdc"
+  url "https://hackage.haskell.org/package/Allure-0.11.0.0/Allure-0.11.0.0.tar.gz"
+  sha256 "6125cc585e2a5f28c88855c3c328385c1f21bed093d7606478f1b2af0cb2b6d6"
   license all_of: ["AGPL-3.0-or-later", "GPL-2.0-or-later", "OFL-1.1", "MIT", :cannot_represent]
+  revision 2
   head "https://github.com/AllureOfTheStars/Allure.git", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "cde6ae4feb79ecd891aafa2d4d0ebbbbe140a2d71b86770a8f46479c2165f0e2"
-    sha256 arm64_big_sur:  "d5e1044e0fc88046d9a25881d4474f1b717aa45351e88c3a2cb468a7b963351b"
-    sha256 monterey:       "39a6422266e1c94f31bc3b58554f8e2558e27bd37e9c3a884a5e3d7166e9014f"
-    sha256 big_sur:        "3cdd74a916009522c1311f9c5652b14b9fbd3b6efd2f5bceed76e4e38ee83d08"
-    sha256 catalina:       "9cce7401b41c975014dffb656baa00077e71ee580c25773725f57ce79acec98c"
-    sha256 x86_64_linux:   "e3926e9981b416b9bd8698ea5ab721b5b38b1fd374e228d4ec6e3e3ecbe34e5c"
+    sha256 arm64_ventura:  "7b817a675a66d28cd4d431ebe632f191c008268dd6e4e220f4f0a2ba537b0214"
+    sha256 arm64_monterey: "6ae827beabe27357dc2508cb2df02ee6fc91334b82b89f7f224c1b2d1547f950"
+    sha256 arm64_big_sur:  "b5575dc7c4003a656fd86e9bb6ccc1bb32ca6e7cc69b269b5119185fe026d4ef"
+    sha256 ventura:        "a55f0d42d41db620f24a58b4254e201805f096f9df3900bc73d4494992c7ff9d"
+    sha256 monterey:       "2c92d0873b2bdf32c9ab2950c6e2c5c534160a077ab8b708a9a79364cc2caf4e"
+    sha256 big_sur:        "bae28a26bd04288ed862ba47abce420f52ac48a647e3d6ee9cb05e0ccd8cceb3"
+    sha256 x86_64_linux:   "9ea9c63c0ce29a8397987c038517853faf066e95b9967e7ff436797177d0a00c"
   end
 
   depends_on "cabal-install" => :build
@@ -27,11 +29,10 @@ class Allureofthestars < Formula
   end
 
   test do
-    assert_equal "",
-      shell_output("#{bin}/Allure --dbgMsgSer --dbgMsgCli --logPriority 0 --newGame 3 --maxFps 100000 " \
-                   "--stopAfterFrames 50 --automateAll --keepAutomated --gameMode battle " \
-                   "--setDungeonRng \"SMGen 7 7\" --setMainRng \"SMGen 7 7\"")
-    assert_equal "", (testpath/".Allure/stderr.txt").read
+    assert_empty shell_output("#{bin}/Allure --dbgMsgSer --dbgMsgCli --logPriority 0 --newGame 3 " \
+                              "--maxFps 100000 --stopAfterFrames 50 --automateAll --keepAutomated " \
+                              "--gameMode battle --setDungeonRng \"SMGen 7 7\" --setMainRng \"SMGen 7 7\"")
+    assert_empty (testpath/".Allure/stderr.txt").read
     assert_match "Client FactionId 1 closed frontend.", (testpath/".Allure/stdout.txt").read
   end
 end

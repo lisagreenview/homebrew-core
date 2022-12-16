@@ -2,15 +2,15 @@ class Audacious < Formula
   desc "Free and advanced audio player based on GTK+"
   homepage "https://audacious-media-player.org/"
   license "BSD-2-Clause"
-  revision 1
+  revision 2
 
   stable do
-    url "https://distfiles.audacious-media-player.org/audacious-4.1.tar.bz2"
-    sha256 "1f58858f9789e867c513b5272987f13bdfb09332b03c2814ad4c6e29f525e35c"
+    url "https://distfiles.audacious-media-player.org/audacious-4.2.tar.bz2"
+    sha256 "feb304e470a481fe2b3c4ca1c9cb3b23ec262540c12d0d1e6c22a5eb625e04b3"
 
     resource "plugins" do
-      url "https://distfiles.audacious-media-player.org/audacious-plugins-4.1.tar.bz2"
-      sha256 "dad6fc625055349d589e36e8e5c8ae7dfafcddfe96894806509696d82bb61d4c"
+      url "https://distfiles.audacious-media-player.org/audacious-plugins-4.2.tar.bz2"
+      sha256 "6fa0f69c3a1041eb877c37109513ab4a2a0a56a77d9e8c13a1581cf1439a417f"
     end
   end
 
@@ -20,19 +20,21 @@ class Audacious < Formula
   end
 
   bottle do
-    rebuild 1
-    sha256 arm64_big_sur: "c8cf37b67448119b2fdef16c9eaf1b924a433f645037f9fd8a8f37fef46832a7"
-    sha256 big_sur:       "e2a1c27f807d9df77b5572cecf17e03bb59e344468f7cd017c6b427812072d5d"
-    sha256 catalina:      "032de1da579c13edd37c77bb3b57e8189b290a8c7235523a9cb4ca9fe8c51636"
-    sha256 mojave:        "121c7484b3210d173fc5704adad85c1238b097c475ffdb78a56af6e25dbe3c8b"
-    sha256 x86_64_linux:  "77d5c5d671b6a28d855747fda5fe1d76b3ed81084f81f740ceabbeaa6e8a8959"
+    sha256 arm64_ventura:  "54de674d0590c05be8d17fddbe15175919e137de43b65ce70aded7173a4df72f"
+    sha256 arm64_monterey: "a3015cefc23d7e52def1896203de76922c652b8234ddc2cf0c4e4a90bace04d7"
+    sha256 arm64_big_sur:  "325d25c7d0998253960ad4344e5dbd0055806de247163d79724a0392dc5c3730"
+    sha256 ventura:        "946f75f5419edb4d49193cc616c5d0a9b3d1e59813ad273c3b592cb96c7b63ec"
+    sha256 monterey:       "4d85ec6a6ee927388bf4f1d3956116901798ca30f1a63a85c674df5037097ee9"
+    sha256 big_sur:        "3016b1ce25b2055357f52138030166773ec5445cf45c87032d7771133c352886"
+    sha256 catalina:       "0ab3edc5ffe3f71c8f7c453bdd929939264b4e4f51373909da3720111b96466d"
+    sha256 x86_64_linux:   "a9b7551315f0fab21041da8c8d6f864573ed83c9db54f01bc0b099cadac87583"
   end
 
   head do
-    url "https://github.com/audacious-media-player/audacious.git"
+    url "https://github.com/audacious-media-player/audacious.git", branch: "master"
 
     resource "plugins" do
-      url "https://github.com/audacious-media-player/audacious-plugins.git"
+      url "https://github.com/audacious-media-player/audacious-plugins.git", branch: "master"
     end
   end
 
@@ -60,21 +62,18 @@ class Audacious < Formula
   depends_on "sdl2"
   depends_on "wavpack"
 
-  on_linux do
-    depends_on "gcc"
-  end
+  uses_from_macos "curl"
 
   fails_with gcc: "5"
 
   def install
     args = std_meson_args + %w[
-      -Ddbus=false
       -Dgtk=false
       -Dqt=true
     ]
 
     mkdir "build" do
-      system "meson", *args, ".."
+      system "meson", *args, "-Ddbus=false", ".."
       system "ninja", "-v"
       system "ninja", "install", "-v"
     end

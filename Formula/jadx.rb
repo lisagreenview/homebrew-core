@@ -1,12 +1,12 @@
 class Jadx < Formula
   desc "Dex to Java decompiler"
   homepage "https://github.com/skylot/jadx"
-  url "https://github.com/skylot/jadx/releases/download/v1.3.0/jadx-1.3.0.zip"
-  sha256 "29c831c49f53df86c65b5d0c94b8335c7cf78b64b42cc222c6ce9b73ebc6d731"
+  url "https://github.com/skylot/jadx/releases/download/v1.4.5/jadx-1.4.5.zip"
+  sha256 "f1d982d35fbea5ca64f2b1ab074841771e3990070016a3d2a3f936f3875fc0d2"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "9a0965e2788af2f934de56a78eae5f084850ea2b813a08a34a74e572a725b0f6"
+    sha256 cellar: :any_skip_relocation, all: "abbe08f40c9f574352998d1472ce8d5ea7f51bfad1021a6c98cc3da46bd0bb69"
   end
 
   head do
@@ -16,7 +16,7 @@ class Jadx < Formula
 
   depends_on "openjdk"
 
-  resource "sample.apk" do
+  resource "homebrew-sample.apk" do
     url "https://github.com/downloads/stephanenicolas/RoboDemo/robodemo-sample-1.0.1.apk"
     sha256 "bf3ec04631339538c8edb97ebbd5262c3962c5873a2df9022385156c775eb81f"
   end
@@ -34,7 +34,7 @@ class Jadx < Formula
   end
 
   test do
-    resource("sample.apk").stage do
+    resource("homebrew-sample.apk").stage do
       system "#{bin}/jadx", "-d", "out", "robodemo-sample-1.0.1.apk"
     end
   end

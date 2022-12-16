@@ -1,8 +1,8 @@
 class NodeAT16 < Formula
   desc "Platform built on V8 to build network applications"
   homepage "https://nodejs.org/"
-  url "https://nodejs.org/dist/v16.13.0/node-v16.13.0.tar.xz"
-  sha256 "32114b3dc3945ed0f95f8bc33b42c68e0ef18c408cb56122572a163d907ecbcc"
+  url "https://nodejs.org/dist/v16.19.0/node-v16.19.0.tar.xz"
+  sha256 "4f1fec1aea2392f6eb6d1d040b01e7ee3e51e762a9791dfea590920bc1156706"
   license "MIT"
 
   livecheck do
@@ -11,30 +11,31 @@ class NodeAT16 < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "dcdf255a4d63c2b755acfd59480b7a02c195a3c386ca20c82f26f13e205b6f92"
-    sha256 cellar: :any,                 arm64_big_sur:  "e2ac62e70da685a6aadc76141c21dcdff0ba91b894b23e92bb586a9be8be84c5"
-    sha256 cellar: :any,                 monterey:       "8c16a935d3dee5bdd4a6f4b0f06264d7338a60571d9fea267736ef6536326ce4"
-    sha256 cellar: :any,                 big_sur:        "6b1e3bc494da5d9d9cd04bc52f014390151b600266a3bc56d4bc4f02820c5489"
-    sha256 cellar: :any,                 catalina:       "a1c9d9d4c12828045abf5fa188425c9248e34329c3ce76f57905e01ec64aae98"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1929e48ab8f6c793af9ee4972172bddd9a0d833ca2b57a6cfaaaa6bdef1883fd"
+    sha256 cellar: :any,                 arm64_ventura:  "0e877b5e2c90bf72aae114f0befe0ebc0efd3735919377e228cd21e411a8a378"
+    sha256 cellar: :any,                 arm64_monterey: "4ea748bf3d6c90f60ae04d823b363b82de3d05fa49cca4539d65597ff8b9be02"
+    sha256 cellar: :any,                 arm64_big_sur:  "48f60d8d4d7bb9743fa5107dda4ffdea575690ef2c98edb610bd8dbeab1bb27b"
+    sha256 cellar: :any,                 ventura:        "a3e0ddd531c81b9f76f9b0bdff1c065a6627625115e39e5fd8f872dfa9a1bf5d"
+    sha256 cellar: :any,                 monterey:       "6aaee79c3ce17469fce42c6e8fc793fa1c07f3daf831e9bb4120c93eb2734502"
+    sha256 cellar: :any,                 big_sur:        "4d61461224e2375eb07197d478dc8a933769ef934c90b6da8201de0d67d67997"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ec78b2537f296671435f0294b6d7e96b83181488feea11b207ab70fd4705b637"
   end
 
   keg_only :versioned_formula
 
+  # https://nodejs.org/en/about/releases/
+  # disable! date: "2023-09-11", because: :unsupported
+
   depends_on "pkg-config" => :build
+  depends_on "python@3.11" => :build
   depends_on "brotli"
   depends_on "c-ares"
   depends_on "icu4c"
   depends_on "libnghttp2"
   depends_on "libuv"
   depends_on "openssl@1.1"
-  depends_on "python@3.10"
 
+  uses_from_macos "python", since: :catalina
   uses_from_macos "zlib"
-
-  on_linux do
-    depends_on "gcc"
-  end
 
   fails_with :clang do
     build 1099
@@ -44,8 +45,9 @@ class NodeAT16 < Formula
   fails_with gcc: "5"
 
   def install
+    python3 = "python3.11"
     # make sure subprocesses spawned by make are using our Python 3
-    ENV["PYTHON"] = which("python3")
+    ENV["PYTHON"] = which(python3)
 
     args = %W[
       --prefix=#{prefix}
@@ -68,13 +70,8 @@ class NodeAT16 < Formula
       --shared-cares-libpath=#{Formula["c-ares"].lib}
       --openssl-use-def-ca-store
     ]
-    system "python3", "configure.py", *args
+    system python3, "configure.py", *args
     system "make", "install"
-
-    # Make sure that:
-    # - `node` can find our keg-only `python3`
-    # - npm and npx use our keg-only `node`
-    bin.env_script_all_files libexec, PATH: "#{which("python3").dirname}:#{bin}:${PATH}"
   end
 
   def post_install
@@ -104,6 +101,6 @@ class NodeAT16 < Formula
     system "#{bin}/npm", *npm_args, "install", "ref-napi"
     assert_predicate bin/"npx", :exist?, "npx must exist"
     assert_predicate bin/"npx", :executable?, "npx must be executable"
-    assert_match "< hello >", shell_output("#{bin}/npx cowsay hello")
+    assert_match "< hello >", shell_output("#{bin}/npx --yes cowsay hello")
   end
 end

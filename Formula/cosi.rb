@@ -20,7 +20,8 @@ class Cosi < Formula
 
   # Deprecated in favor of the Cothority `blcosi` package.
   # See: https://github.com/dedis/cothority/tree/master/cosi
-  deprecate! date: "2018-03-01", because: :deprecated_upstream
+  # Original deprecation date: 2018-03-01
+  disable! date: "2022-01-09", because: :deprecated_upstream
 
   depends_on "go" => :build
 
@@ -59,8 +60,8 @@ class Cosi < Formula
         revision: "0c607074acd38c5f23d1344dfe74c977464d1257"
   end
 
-  go_resource "gopkg.in/codegangsta/cli.v1" do
-    url "https://gopkg.in/codegangsta/cli.v1.git",
+  go_resource "gopkg.in/urfave/cli.v1" do
+    url "https://gopkg.in/urfave/cli.v1.git",
         revision: "01857ac33766ce0c93856370626f9799281c14f4"
   end
 

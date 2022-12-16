@@ -1,19 +1,20 @@
 class Weechat < Formula
   desc "Extensible IRC client"
   homepage "https://www.weechat.org"
-  url "https://weechat.org/files/src/weechat-3.3.tar.xz"
-  sha256 "cafeab8af8be4582ccfd3e74fd40e5086a1efa158231f2c26b8b05c3950fcbdf"
+  url "https://weechat.org/files/src/weechat-3.7.1.tar.xz"
+  sha256 "c311c9de9f5d87404b667e0c690959388295485bce986fac4ab934ebd43589aa"
   license "GPL-3.0-or-later"
   head "https://github.com/weechat/weechat.git", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "4a1e008cf76feb26be4037753389ddd5259768e40478dce3e43089cb576ff12e"
-    sha256 arm64_big_sur:  "e4f9d439f3a83efdf7c0f88fcc7d638c1b4b8a1bff55e6c6215c174ac3cddf16"
-    sha256 monterey:       "c8c53f4df53f45f666515d0e012b54c05625a8fd9e155bcf964131bd96298c12"
-    sha256 big_sur:        "f176eda50d9ef8ab5858b35a1a572c0bd50fd531f912f33210afdebb3e200677"
-    sha256 catalina:       "ccfa0fff385966e6ff08de5e280f49defac48eafc0d649c3ebe983e0475631ff"
-    sha256 mojave:         "e68941b11b7b86d8603c809420ac6fba6761ad095bcf5c6087d0f560dd542114"
-    sha256 x86_64_linux:   "d7d367abe8fe2a22ac47b929332176d22215fa230f886d52be5f5f78e1c4c940"
+    rebuild 1
+    sha256 arm64_ventura:  "f1ea6c50ba3c3dfbc58005c37106de92115afaee632c61b9103892239ce36551"
+    sha256 arm64_monterey: "540376a4064b7bc874b8df0fc4b337a8d527e422396561e791f473df0820ef9f"
+    sha256 arm64_big_sur:  "9be093b738588fe3e928e2f58396787bc2beeffb9e1f85032b1659e8b830ef56"
+    sha256 ventura:        "5ffbaa90b8a56f9092d19e10872d60055f7112028b62a2c061e82c26ef8b4648"
+    sha256 monterey:       "4349087b698ed8380bc028ce5ef555b12679e0af6a08d72240d442f81a078b70"
+    sha256 big_sur:        "70f76462cd9e24a619475437175d195d8fe56a4febc7deaf68ff6bc16910b7de"
+    sha256 x86_64_linux:   "f18a6c85fa0f462e55e345fe3ff614d541f718fd4c6d8669a0f0b11dfdf4fdff"
   end
 
   depends_on "asciidoctor" => :build
@@ -26,8 +27,9 @@ class Weechat < Formula
   depends_on "lua"
   depends_on "ncurses"
   depends_on "perl"
-  depends_on "python@3.9"
+  depends_on "python@3.10"
   depends_on "ruby"
+  depends_on "zstd"
 
   uses_from_macos "curl"
   uses_from_macos "tcl-tk"
@@ -44,10 +46,6 @@ class Weechat < Formula
       -DENABLE_JAVASCRIPT=OFF
       -DENABLE_PHP=OFF
     ]
-
-    # Fix error: '__declspec' attributes are not enabled
-    # See https://github.com/weechat/weechat/issues/1605
-    args << "-DCMAKE_C_FLAGS=-fdeclspec" if ENV.compiler == :clang
 
     # Fix system gem on Mojave
     ENV["SDKROOT"] = ENV["HOMEBREW_SDKROOT"]

@@ -3,32 +3,28 @@ class ReorderPythonImports < Formula
 
   desc "Rewrites source to reorder python imports"
   homepage "https://github.com/asottile/reorder_python_imports"
-  url "https://files.pythonhosted.org/packages/f8/8c/447338a4a8098f28bed79b264a43fbfae4d5d70ec2cc034fc4bc4cfaa827/reorder_python_imports-2.6.0.tar.gz"
-  sha256 "f4dc03142bdb57625e64299aea80e9055ce0f8b719f8f19c217a487c9fa9379e"
+  url "https://files.pythonhosted.org/packages/23/98/f2c8c5ee8cc406e1352b5aaad7b2f927b9a5a081ee2050eb302f5ec1b780/reorder_python_imports-3.9.0.tar.gz"
+  sha256 "49292ed537829a6bece9fb3746fc1bbe98f52643be5de01a4e13680268a5b0ec"
   license "MIT"
-  revision 1
-  head "https://github.com/asottile/reorder_python_imports.git", branch: "master"
+  head "https://github.com/asottile/reorder_python_imports.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f9200d4865b878afb55a5a76c0ab72524a0d72d5644e9a3c21255e830185af27"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f9200d4865b878afb55a5a76c0ab72524a0d72d5644e9a3c21255e830185af27"
-    sha256 cellar: :any_skip_relocation, monterey:       "52040315f49c7a21aff570a1abfaf3639533a0799fce504f1a3dc6e319261944"
-    sha256 cellar: :any_skip_relocation, big_sur:        "52040315f49c7a21aff570a1abfaf3639533a0799fce504f1a3dc6e319261944"
-    sha256 cellar: :any_skip_relocation, catalina:       "52040315f49c7a21aff570a1abfaf3639533a0799fce504f1a3dc6e319261944"
-    sha256 cellar: :any_skip_relocation, mojave:         "52040315f49c7a21aff570a1abfaf3639533a0799fce504f1a3dc6e319261944"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e81637407b24856b731462f94f13aab0f200bebfa9bba1c4533402042dd18335"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e845aa0e5a6c2883566796d00f932350f988968c04ba4980e594408d811a374b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e845aa0e5a6c2883566796d00f932350f988968c04ba4980e594408d811a374b"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "e845aa0e5a6c2883566796d00f932350f988968c04ba4980e594408d811a374b"
+    sha256 cellar: :any_skip_relocation, ventura:        "b4f03287329d4021b1dddc22c05e0424c357ec794fbe9899fa66c8d35781db25"
+    sha256 cellar: :any_skip_relocation, monterey:       "b4f03287329d4021b1dddc22c05e0424c357ec794fbe9899fa66c8d35781db25"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b4f03287329d4021b1dddc22c05e0424c357ec794fbe9899fa66c8d35781db25"
+    sha256 cellar: :any_skip_relocation, catalina:       "b4f03287329d4021b1dddc22c05e0424c357ec794fbe9899fa66c8d35781db25"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d95bd5815215402bf15e21cf741e8979cb0d45a288ab165b3fa4cb96f11739d6"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
-  resource "aspy.refactor-imports" do
-    url "https://files.pythonhosted.org/packages/a9/e9/cabb3bd114aa24877084f2bb6ecad8bd77f87724d239d360efd08f6fe9db/aspy.refactor_imports-2.2.0.tar.gz"
-    sha256 "78ca24122963fd258ebfc4a8dc708d23a18040ee39dca8767675821e84e9ea0a"
-  end
-
-  resource "cached-property" do
-    url "https://files.pythonhosted.org/packages/61/2c/d21c1c23c2895c091fa7a91a54b6872098fea913526932d21902088a7c41/cached-property-1.5.2.tar.gz"
-    sha256 "9fa5755838eecbb2d234c3aa390bd80fbd3ac6b6869109bfc1b499f7bd89a130"
+  resource "classify-imports" do
+    url "https://files.pythonhosted.org/packages/7e/b6/6cdc486fced92110a8166aa190b7d60435165119990fc2e187a56d15144b/classify_imports-4.2.0.tar.gz"
+    sha256 "7abfb7ea92149b29d046bd34573d247ba6e68cc28100c801eba4af17964fc40e"
   end
 
   def install

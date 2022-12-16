@@ -1,24 +1,29 @@
 class Qrcp < Formula
   desc "Transfer files to and from your computer by scanning a QR code"
   homepage "https://claudiodangelis.com/qrcp"
-  url "https://github.com/claudiodangelis/qrcp/archive/0.8.4.tar.gz"
-  sha256 "b77673bad880c9ffec1fa20cef6e46ae717702edd95bca3076919225e396db57"
+  url "https://github.com/claudiodangelis/qrcp/archive/0.9.1.tar.gz"
+  sha256 "1ee0d1b04222fb2a559d412b144a49051c3315cbc99c7ea1f281bdd4f13f07bf"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "a17126d0da69e86af27da5a5f519074c57fba00c3587895b802d2b862022123b"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8286ab8384850578862e84cceebb7aa8efc5d2bafd1d372a0e9e1f6930a7a726"
-    sha256 cellar: :any_skip_relocation, monterey:       "3e3a7ccb0226a080b8d0ef18e85d5e05c9aac9de20ace9c2b409624d475df7cf"
-    sha256 cellar: :any_skip_relocation, big_sur:        "b90c0f156ce21a2ec39f23405fd1213008d96a8e1d62f17cd0d5c83c17b055ea"
-    sha256 cellar: :any_skip_relocation, catalina:       "954c095b0cd034464bd929a3b28855f932d09e0cb59a741939009221f6fdac94"
-    sha256 cellar: :any_skip_relocation, mojave:         "a319771dea04ac593d2928e8e937ce1fd5a7c55c67999e9505b258cbddbe226c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "564e4415f63d446ce140cbb3baccae5902ff4be08b041ceb8bc028c2c90376e8"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "889a88eb8962304e9a0f9cdca7f1a879585c99d7b7ee54fa89b9a670813d3a9c"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "72b5897e63349242e2c60cae3662a9126b626a0c61955dea13acc7985a91194b"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9561594ba75dca10b0ba413a3df8055f7009513a71694ea1ddab8f8ab7bdd125"
+    sha256 cellar: :any_skip_relocation, ventura:        "8e96085ce367c14aaaefb0438abbfcc2d8b6133e020da960cea07279a436a49b"
+    sha256 cellar: :any_skip_relocation, monterey:       "d50f012601dc63a2cd69060bf28cf33a0e31b1af92c7015667a3e9037df85732"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b413f243a3eb24dae58770f62005538e1c851c48781c75f5a755b87e9580b61f"
+    sha256 cellar: :any_skip_relocation, catalina:       "500c92e7643f664db127ab5c0eec5b4120e8715b0042100e619c2f986bce6137"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "28ca8979e794d2e04176f125c1445082a325930ec608c46e27e8f004a5f3542f"
   end
 
-  depends_on "go" => :build
+  # Bump to 1.18 on the next release, if possible.
+  depends_on "go@1.17" => :build
 
   def install
     system "go", "build", *std_go_args
+
+    generate_completions_from_executable(bin/"qrcp", "completion")
   end
 
   test do

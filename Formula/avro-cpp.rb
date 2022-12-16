@@ -5,14 +5,17 @@ class AvroCpp < Formula
   mirror "https://archive.apache.org/dist/avro/avro-1.11.0/cpp/avro-cpp-1.11.0.tar.gz"
   sha256 "ef70ca8a1cfeed7017dcb2c0ed591374deab161b86be6ca4b312bc24cada9c56"
   license "Apache-2.0"
+  revision 3
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "52aa8334c8c849b4d260c4dbe56d25073f759093a98b470d86e2b16180b8d832"
-    sha256 cellar: :any,                 arm64_big_sur:  "45f7b85124ea8c41ce28430e0a45191aae04991458548f7938b80f4ffb050783"
-    sha256 cellar: :any,                 monterey:       "bd9e8f962c8078fd513af74e8446707ea8d7c329bac37ec6b388c51780d748bd"
-    sha256 cellar: :any,                 big_sur:        "c153805420d4e6c1ba2d7f3778d6bfc9a353bd54c4a4154700b70066d7196901"
-    sha256 cellar: :any,                 catalina:       "52837c2b6a31fd403c29e53f701a051bdd42aac110ded8fec8dc69b36f7fe3dd"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3587194ff0ed059c7a60a218255248e61b689d59985874e8abf71c628cb620f9"
+    sha256 cellar: :any,                 arm64_ventura:  "420cac15fff9dda19db5497843b911a74a054f6fd0d510b42bf6e6d783fccdb1"
+    sha256 cellar: :any,                 arm64_monterey: "77718ea59837565dd4e1c18261dce764f0289e77037b3f9a98cf25f86177ddb7"
+    sha256 cellar: :any,                 arm64_big_sur:  "00aefc17916fcf9db163d87277e8cc6a39de888808fe632b65c85502e9b8ad6e"
+    sha256 cellar: :any,                 ventura:        "5ca3629631713d14a6aeddfebeaf7f19647f64f0da5fe78754db83925aec1aca"
+    sha256 cellar: :any,                 monterey:       "f2c81739502b2119c1193b6a085c7c8dbd50af8b844ff38834f2a5b6413e0298"
+    sha256 cellar: :any,                 big_sur:        "a5201a6b40e7be69951a963b87f68e1eeb27a1beaa3b3a2234bb4422bd728b0c"
+    sha256 cellar: :any,                 catalina:       "9826694c526d5e952bafa2b547d5a85b877210c5f04955f0ec9e2dcc3e67c732"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b85f66f032be7576b415536acf99121444cf81b7ee257422fc516f4a6f27c041"
   end
 
   depends_on "cmake" => :build

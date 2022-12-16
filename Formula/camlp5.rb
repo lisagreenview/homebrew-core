@@ -1,27 +1,28 @@
 class Camlp5 < Formula
   desc "Preprocessor and pretty-printer for OCaml"
   homepage "https://camlp5.github.io/"
-  url "https://github.com/camlp5/camlp5/archive/rel8.00.tar.gz"
-  sha256 "906d5325798cd0985a634e9b6b5c76c6810f3f3b8e98b80a7c30b899082c2332"
+  url "https://github.com/camlp5/camlp5/archive/refs/tags/rel8.00.04.tar.gz"
+  sha256 "bddbcb5c3c2d410c9a61c4dfb6e46e3bbe984d25ac68221a7a65c82a29956b1d"
   license "BSD-3-Clause"
-  revision 1
   head "https://github.com/camlp5/camlp5.git", branch: "master"
 
   livecheck do
-    url :homepage
-    regex(%r{The current distributed version is <b>v?(\d+(?:\.\d+)+)</b>}i)
+    url :stable
+    regex(/^rel[._-]?v?(\d+(?:\.\d+)+)$/i)
   end
 
   bottle do
-    sha256 arm64_monterey: "4e9d1250091a2c965ef8870806c20c8aeec04ecd14c15f98d3d71103271b8f20"
-    sha256 arm64_big_sur:  "549ee3a8bfbc3b3d6f466087562d15fd1e1b1b092786c488ae3109c19b1ca50d"
-    sha256 monterey:       "8c3a3a59d9cf228c480b49ff3c0d4ff77f5be92e301d2017f1462e86d16e6ae4"
-    sha256 big_sur:        "a01dea02114f9eb35e8d151ea3b61c34c7fcf5c2db09583cc3480a010211e7b3"
-    sha256 catalina:       "14d9affdc0d1aaeef2a2e122523acba47d3b271f7002c66e407e02387f48b1fe"
-    sha256 mojave:         "6b753cfd90a18e4d813cfc9ce3d3345547a0424527c15d51304621c9f6689b14"
-    sha256 x86_64_linux:   "bf2ef6220fef116a8deb1cc76be1172c98b764a36980317aa81fe44eb2cc4354"
+    sha256 arm64_ventura:  "899fe2710188efbca347817a752d5ddb8ce8288434cf2d5911611be932bcc9f3"
+    sha256 arm64_monterey: "63f83e1410d36a10a0f7878487126dcb8d1637d99c97584207d8e44dce84e10e"
+    sha256 arm64_big_sur:  "c7ca80e8ca739c8648a52da3ee4af318fe5e58de5fc8fdd7c7e08d822f44a512"
+    sha256 ventura:        "169409404579083889e4c5703bd717f19c7931b502e5b4f99e89e8d47d5af12b"
+    sha256 monterey:       "0576eff6922d5a79b3fdf401259876de4fa628bc2f14190214e47b6dc5210c47"
+    sha256 big_sur:        "2dc7634e71780ddb7bd0e6409086fd66073e3044f781dc0614daee7f31922bbb"
+    sha256 x86_64_linux:   "f749e0f60738786a289d2f5df57f6d4a82f27679353b059d9f6adf30c7b325ea"
   end
 
+  depends_on "ocaml-findlib" => :build
+  depends_on "camlp-streams"
   depends_on "ocaml"
 
   def install

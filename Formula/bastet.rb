@@ -4,19 +4,17 @@ class Bastet < Formula
   url "https://github.com/fph/bastet/archive/0.43.2.tar.gz"
   sha256 "f219510afc1d83e4651fbffd5921b1e0b926d5311da4f8fa7df103dc7f2c403f"
   license "GPL-3.0-or-later"
+  revision 3
 
   bottle do
-    rebuild 1
-    sha256 arm64_monterey: "9847fe14d15e54e4e38438ed8282abbc922de3a3ccc7ad3648b6f1be61707a44"
-    sha256 arm64_big_sur:  "048b7752909e1c445b8367ee87002df7511d5d1520fa0f2c39103f60a7c7c3d8"
-    sha256 monterey:       "4efdae4d19ba49760a781bc930d97b7ad6559c8a8ea987cf628fc48ea6dcd625"
-    sha256 big_sur:        "fe79a047ab3449c63ca5890adbfc2c9b703bf6069ebe851cc4af1db8546b3f2b"
-    sha256 catalina:       "0dfeabb0071431e426ac18b366ff5d065067075e7d3f4572e55a281e6702e215"
-    sha256 mojave:         "d1315f05616c060c8b5e83a9ae494f2ffecd2f78d53ef554192bb0e12ef451ef"
-    sha256 high_sierra:    "188658452934d4ef5d48d6837fb0c6bf3e3875488e0c1da8dcf62ca37c1ee998"
-    sha256 sierra:         "8133c13d1b98d96eacf5d420d30378fbfcd9cbe898b0f13b188112618f4338f5"
-    sha256 el_capitan:     "e3745b716c09ce7f3834f4fc30163fa132f93feeec4c301dc9d46b0bc9ca564f"
-    sha256 x86_64_linux:   "02918b45d68fad9e1ee1e3e4f520107398e2f7df1501dce5f3a7e0052ebde359"
+    sha256 arm64_ventura:  "007b3c5ce889f72efc83901d464e7b1d26d85889d33741f19cedb80ef420af8e"
+    sha256 arm64_monterey: "847549943397d6599052de7fddb1028fa521e86c778bb32ecc876b597d352c2e"
+    sha256 arm64_big_sur:  "f4e46f9ceeb65880d581bf0db249e4b781c37abadbd3d3199ff66aafde2f28d4"
+    sha256 ventura:        "af825b6aa5661f3212515a939bdf32248e431e5180d9d1a508f82e52d5d7fdcf"
+    sha256 monterey:       "c003bbb534a90d60b8a48abb3fc4fc418d5efe51f334063e5082b090dfc589cf"
+    sha256 big_sur:        "1309388b45599252aff6a86e11c634ce1eaf432ba95048af329c9c31103362ef"
+    sha256 catalina:       "afea0c4b2b48a465bad4dcbca28f5019f457968d45d6de5234e3c0a7b6965db0"
+    sha256 x86_64_linux:   "90a34c5ad79a5990922ad05c811c45caabd70e67dabe9f4b581c5de40d5c6699"
   end
 
   depends_on "boost"

@@ -1,43 +1,57 @@
 class Zstd < Formula
   desc "Zstandard is a real-time compression algorithm"
   homepage "https://facebook.github.io/zstd/"
-  url "https://github.com/facebook/zstd/archive/v1.5.0.tar.gz"
-  mirror "http://fresh-center.net/linux/misc/zstd-1.5.0.tar.gz"
-  mirror "http://fresh-center.net/linux/misc/legacy/zstd-1.5.0.tar.gz"
-  sha256 "0d9ade222c64e912d6957b11c923e214e2e010a18f39bec102f572e693ba2867"
+  url "https://github.com/facebook/zstd/archive/v1.5.2.tar.gz"
+  mirror "http://fresh-center.net/linux/misc/zstd-1.5.2.tar.gz"
+  mirror "http://fresh-center.net/linux/misc/legacy/zstd-1.5.2.tar.gz"
+  sha256 "f7de13462f7a82c29ab865820149e778cbfe01087b3a55b5332707abf9db4a6e"
   license "BSD-3-Clause"
   head "https://github.com/facebook/zstd.git", branch: "dev"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "ef556ff4a87c5e24a9c489759d713dfcdb1fed7cfed9f49d8f3564a764a695b6"
-    sha256 cellar: :any,                 arm64_big_sur:  "e8962c7923904213f312c86372b670b6b5a7ac7103ee63254ab3d1c349913246"
-    sha256 cellar: :any,                 monterey:       "f9320c7fb19940130ab8a46c84a964b0366d2dff72b71bf3af7737a9b72f8ada"
-    sha256 cellar: :any,                 big_sur:        "eae17621cfc664d6e527a6d6aa6a000343eced0f60c81b4e2dd9a9aed7b79c3f"
-    sha256 cellar: :any,                 catalina:       "571d031a8fe1b96f68c4c50c2e72532adbad273c565420cb0825cf4745f512bc"
-    sha256 cellar: :any,                 mojave:         "8089b1b5c398c95af5eaacea6033829dd8d255c9f32d6fa2f0c436821c902087"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0fcd15f865d47d9140af51b05c99a3bab12fdfa10f78b47e296eb82f53f685ba"
+    rebuild 3
+    sha256 cellar: :any,                 arm64_ventura:  "92f953ed8a8c77b9e282d7cb6a6288d77e6f40bb1b3eec78e2fbbae29c12b220"
+    sha256 cellar: :any,                 arm64_monterey: "844b957a277cd93f70f8de91bd4caa21579f9b9e2f55bd5daf0334eee8ef1196"
+    sha256 cellar: :any,                 arm64_big_sur:  "091743749cec2f0ae34482ae370aa5a563d6c7841c42fbc25e0d061863f5faa5"
+    sha256 cellar: :any,                 ventura:        "40b665d1ad7b73e24e15d2cc7e49629c7bda5a40e947a3e4106935100a189828"
+    sha256 cellar: :any,                 monterey:       "b0eabfa556c5aed039a5b22cd7e2e3dd52c7d2416c1141e4a8e9e825b9238fc3"
+    sha256 cellar: :any,                 big_sur:        "585bced60a658bfbda88d6a500fa26671871aa354f65cef767f17ea46209b4f2"
+    sha256 cellar: :any,                 catalina:       "bdd2d3349fbcaa7e299cb6184f43e7f2bf29bd5936396d4c7c3d132bd687cd15"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "006b5ab6a4616a8b6f59953cb9efb546d312e3ba231c303bb56749e7f66f56df"
   end
 
   depends_on "cmake" => :build
-
+  depends_on "lz4"
+  depends_on "xz"
   uses_from_macos "zlib"
 
   def install
-    cd "build/cmake" do
-      system "cmake", "-S", ".", "-B", "builddir",
-                      "-DZSTD_BUILD_CONTRIB=ON",
-                      "-DCMAKE_INSTALL_RPATH=#{rpath}",
-                      *std_cmake_args
-      system "cmake", "--build", "builddir"
-      system "cmake", "--install", "builddir"
-    end
+    # Legacy support is the default after
+    # https://github.com/facebook/zstd/commit/db104f6e839cbef94df4df8268b5fecb58471274
+    # Set it to `ON` to be explicit about the configuration.
+    system "cmake", "-S", "build/cmake", "-B", "builddir",
+                    "-DZSTD_PROGRAMS_LINK_SHARED=ON", # link `zstd` to `libzstd`
+                    "-DZSTD_BUILD_CONTRIB=ON",
+                    "-DCMAKE_INSTALL_RPATH=#{rpath}",
+                    "-DZSTD_LEGACY_SUPPORT=ON",
+                    "-DZSTD_ZLIB_SUPPORT=ON",
+                    "-DZSTD_LZMA_SUPPORT=ON",
+                    "-DZSTD_LZ4_SUPPORT=ON",
+                    *std_cmake_args
+    system "cmake", "--build", "builddir"
+    system "cmake", "--install", "builddir"
   end
 
   test do
-    assert_equal "hello\n",
-      pipe_output("#{bin}/zstd | #{bin}/zstd -d", "hello\n", 0)
-
-    assert_equal "hello\n",
-      pipe_output("#{bin}/pzstd | #{bin}/pzstd -d", "hello\n", 0)
+    [bin/"zstd", bin/"pzstd", "xz", "lz4", "gzip"].each do |prog|
+      data = "Hello, #{prog}"
+      assert_equal data, pipe_output("#{bin}/zstd -d", pipe_output(prog, data))
+      if prog.to_s.end_with?("zstd")
+        # `pzstd` can only decompress zstd-compressed data.
+        assert_equal data, pipe_output("#{bin}/pzstd -d", pipe_output(prog, data))
+      else
+        assert_equal data, pipe_output("#{prog} -d", pipe_output("#{bin}/zstd --format=#{prog}", data))
+      end
+    end
   end
 end

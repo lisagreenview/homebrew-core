@@ -1,19 +1,20 @@
 class Kondo < Formula
   desc "Save disk space by cleaning non-essential files from software projects"
   homepage "https://github.com/tbillington/kondo"
-  url "https://github.com/tbillington/kondo/archive/v0.4.tar.gz"
-  sha256 "f5044d744e3eb0db815c521537a34cfbead18bd7d5df0f6f5312a8c4f72f682e"
+  url "https://github.com/tbillington/kondo/archive/v0.5.tar.gz"
+  sha256 "d26646e1d098909b61f982945484883fb82f08df48ac8b2a9cc9bed8a45ff5cf"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "51fc93b291759d478b8120e55dfede120f442b8c453d9b1c8e1021631a2b7921"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b6fe4c87eeb87a4a2c4d9a642a6b5f5df8ebea6acf6a8df7d5deeb536c1be2f9"
-    sha256 cellar: :any_skip_relocation, monterey:       "cad70450fe1b6c5fe6938877409fca4ed0eadf6b5328572a5379a3b012d062c0"
-    sha256 cellar: :any_skip_relocation, big_sur:        "fbee7326b1a3528129a6b900b1582c2e7573e631ff0fc7497f967ec4ccd92481"
-    sha256 cellar: :any_skip_relocation, catalina:       "3bf874b00e0c442d3887e076389c3bca0d1f1d2830713d179d8377ae2a5eb5cb"
-    sha256 cellar: :any_skip_relocation, mojave:         "f4cb386aa743645639124f47729afcb5b9a545a97eb3ab6785aa0dfbc432a18f"
-    sha256 cellar: :any_skip_relocation, high_sierra:    "1636cef203700859a8bcf48b315325192fe6a3fa0a0fa05df89e23e28833f161"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "cd82521d1ee2a91aa7d388b4659dbef3023ed22690a914cf47b4dfdfcaab54c0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "bb5b73c4302c104b177064b47eeacd6f8b6e480bdc728d50bb2e249c1fb5704f"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "083e5733e8bf0483348cd113f467de63e5b726bb503abc5311dd9b1a8ead9ed1"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "2d031899ed01d3ab445a349fc575ea7b79e5ebdf2c3826968c849d1a4973c979"
+    sha256 cellar: :any_skip_relocation, ventura:        "bd17f036718265ccb30ac97d38e8b71d4297df882a3a2e2aece3979eb8e422de"
+    sha256 cellar: :any_skip_relocation, monterey:       "2d223967e5935a86b2ed54e6bf0f440833ab4eaf5226a4fb54cd92068a9a9526"
+    sha256 cellar: :any_skip_relocation, big_sur:        "60c02e25eb4f689ea69a97a56a17f76b004b777337fa19a40a58c5d5009cfd74"
+    sha256 cellar: :any_skip_relocation, catalina:       "a0cce91b3654074b496caf2bd6b0186483faeef17c7dc9148bbd49e44f8b18e7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "75a47669cba55361a9c4525833da264c073bd847e0cf61fb5bff409a5a2c9327"
   end
 
   depends_on "rust" => :build

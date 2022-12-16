@@ -1,29 +1,31 @@
 class Osm2pgsql < Formula
   desc "OpenStreetMap data to PostgreSQL converter"
   homepage "https://osm2pgsql.org"
-  url "https://github.com/openstreetmap/osm2pgsql/archive/1.5.1.tar.gz"
-  sha256 "4df0d332e5d77a9d363f2f06f199da0ac23a0dc7890b3472ea1b5123ac363f6e"
+  url "https://github.com/openstreetmap/osm2pgsql/archive/1.7.2.tar.gz"
+  sha256 "94c72ceb3c401c816499339f8765c62efbf40685a798dcdf9a4bf7dbedf6c7a5"
   license "GPL-2.0-only"
   head "https://github.com/openstreetmap/osm2pgsql.git", branch: "master"
 
   bottle do
-    rebuild 1
-    sha256 arm64_monterey: "3885a6a5ae3f0bbc1906d19048f0d352f52ca2ff54ab150c437d07b6c8775df0"
-    sha256 arm64_big_sur:  "38b8d470e385856ca0a5aeb452c0c5f7714495b9b50bd241a12a3dbf60f8f07c"
-    sha256 monterey:       "8ac78af9ff2d91016b576e3415c2c019ad58ee53f60ff1dee46e7416b346068d"
-    sha256 big_sur:        "e4d3b73be00cfafd57ef0ba98121a8ffe544aae106c3fe91dfe33195e69a2daa"
-    sha256 catalina:       "1d25fa90f24352efd87936ea0e25a33a55204949e3b360e8eecf5398d5765069"
-    sha256 mojave:         "031cfa9cdda3eb6e2273b0c682058e5d3acddfd197a32aa60967540a3244b6cc"
-    sha256 x86_64_linux:   "95bbcae74853dd3375a2984d6d7ca871e58bac5ebac029d844ac5bb0e6f55b56"
+    sha256 arm64_ventura:  "b69ab621eea80e4099cd8109ae7b2d3eae11875106a74f5134cc055010c7cd0c"
+    sha256 arm64_monterey: "e03099e841fef4d261659e909b4b8d0b77d81c9cd2cb443ab8fcd235ad568bc0"
+    sha256 arm64_big_sur:  "813f3040c488c35aeb3f08693eb1f1b15e88ce8aa933aac1345b49caca866f2f"
+    sha256 ventura:        "eaac6fb21eab1d50123aadfcf147702be5fdbbec712dd2cd3248d04926042186"
+    sha256 monterey:       "e80dd6f6e18e8faa9010c0cfe39fb44f12af9cff5c44d083f589d8de7f0222ac"
+    sha256 big_sur:        "2eea99b22a1cd595e35f2d2fbdd1aad2b9a3a8dc5901d83c12088110d6802e40"
+    sha256 catalina:       "1b8542d88aeec98a4c32b078acf808b32b822097dfe6d1b9e91066a7e223b5a7"
+    sha256 x86_64_linux:   "b47bee3ada1268932e201b4b65d8930a61eee664581a5178f5f2cca9d6a072d8"
   end
 
   depends_on "cmake" => :build
   depends_on "lua" => :build
   depends_on "boost"
   depends_on "geos"
-  depends_on "luajit-openresty"
-  depends_on "postgresql"
-  depends_on "proj@7"
+  depends_on "libpq"
+  depends_on "luajit"
+  depends_on "proj"
+
+  uses_from_macos "expat"
 
   def install
     # This is essentially a CMake disrespects superenv problem
@@ -32,13 +34,8 @@ class Osm2pgsql < Formula
     inreplace "cmake/FindLua.cmake", /set\(LUA_VERSIONS5( \d\.\d)+\)/,
                                      "set(LUA_VERSIONS5 #{lua_version})"
 
-    # Use Proj 6.0.0 compatibility headers
-    # https://github.com/openstreetmap/osm2pgsql/issues/922
-    # and https://github.com/osmcode/libosmium/issues/277
-    ENV.append_to_cflags "-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
-
     mkdir "build" do
-      system "cmake", "-DWITH_LUAJIT=ON", "..", *std_cmake_args
+      system "cmake", "-DWITH_LUAJIT=ON", "-DUSE_PROJ_LIB=6", "..", *std_cmake_args
       system "make", "install"
     end
   end

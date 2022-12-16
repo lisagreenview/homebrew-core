@@ -1,10 +1,10 @@
 class Postgrest < Formula
   desc "Serves a fully RESTful API from any existing PostgreSQL database"
   homepage "https://github.com/PostgREST/postgrest"
-  url "https://github.com/PostgREST/postgrest/archive/v8.0.0.tar.gz"
-  sha256 "4a930900b59866c7ba25372fd93d2fbab5cdb52fc5fea5e481713b03a2d5e923"
+  # TODO: Try to switch `ghc@9.2` to `ghc` when postgrest.cabal allows base>=4.17
+  url "https://github.com/PostgREST/postgrest/archive/v10.1.1.tar.gz"
+  sha256 "d8479065eddb6ddcd56835e5da4cb2359092b7934a1f56f4080f7d8cb0b24557"
   license "MIT"
-  revision 1
   head "https://github.com/PostgREST/postgrest.git", branch: "main"
 
   livecheck do
@@ -13,18 +13,19 @@ class Postgrest < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "bd989403d46a8f5fa86ad41e813fb48e06ec60d6b4052f6bc5a3168c22671ba6"
-    sha256 cellar: :any,                 arm64_big_sur:  "a505a99c6f164a72936e18584d9a172204be89694934adc2a4d168c33ae8f91a"
-    sha256 cellar: :any,                 monterey:       "c6d67ce89f433586f9828ebd36be1745161366c42750bfb896ddf939e3083d90"
-    sha256 cellar: :any,                 big_sur:        "9cbf169535605656b931ae0065af5a57c2ff511a8b50529e9ded33c560306c29"
-    sha256 cellar: :any,                 catalina:       "af90758e13856d719d8fc68f770cd59356081321a90e68c52dd8d897fdcc8f4b"
-    sha256 cellar: :any,                 mojave:         "e2a7fa323490cbd817ec9a74729de4a7692d64f2c59c4bb73e188c9235340400"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "02c47b193a23f58ccb2df1978aad6df9632428f9c7cccbcbc6fb6eae69b6df87"
+    sha256 cellar: :any,                 arm64_ventura:  "2c8799ebbba5b43da78c6732291e6e989d875710a0ec433db0873e08e3ac8b4b"
+    sha256 cellar: :any,                 arm64_monterey: "a6e3487057fd0995e25420d30f7350e98da5dda1904b9876175fbe8d7540eb46"
+    sha256 cellar: :any,                 arm64_big_sur:  "a7ce47936920a047e0b9dea9d4faee946527079acef62fc6fab4b9ba1f5d44b1"
+    sha256 cellar: :any,                 ventura:        "c51015920bf8d7738f61123f4f7b89d24ecf50c54ea6622b6b3787161419a6f5"
+    sha256 cellar: :any,                 monterey:       "bf1ea1297d58b652e6ecf15c78991fdeb5dbcd6732e7311281ef032bbc82e89b"
+    sha256 cellar: :any,                 big_sur:        "a078208e36a47e8a54516eb0847b715b86122004a3e23da7fed97c6aeb52063f"
+    sha256 cellar: :any,                 catalina:       "b08dd4bc5e914b85dbdb7ede3dc99696195bd67673ff7b22a9a40cf873b09376"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8673c5cf90a5dcf8a199bd5214cbd537f6bc542c8202cdc721b171d7ad02fffe"
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc" => :build
-  depends_on "postgresql"
+  depends_on "ghc@9.2" => :build
+  depends_on "libpq"
 
   def install
     system "cabal", "v2-update"

@@ -1,24 +1,28 @@
 class Help2man < Formula
   desc "Automatically generate simple man pages"
   homepage "https://www.gnu.org/software/help2man/"
-  url "https://ftp.gnu.org/gnu/help2man/help2man-1.48.5.tar.xz"
-  mirror "https://ftpmirror.gnu.org/help2man/help2man-1.48.5.tar.xz"
-  sha256 "6739e4caa42e6aed3399be4387ca79399640967334e91728863b8eaa922582be"
+  url "https://ftp.gnu.org/gnu/help2man/help2man-1.49.2.tar.xz"
+  mirror "https://ftpmirror.gnu.org/help2man/help2man-1.49.2.tar.xz"
+  sha256 "9e2e0e213a7e0a36244eed6204d902b6504602a578b6ecd15268b1454deadd36"
   license "GPL-3.0-or-later"
+  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "5f0773ffb77e0e13dce87ce7726fe3f29184f431c345840c7dc869a3b6cf276d"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5f0773ffb77e0e13dce87ce7726fe3f29184f431c345840c7dc869a3b6cf276d"
-    sha256 cellar: :any,                 monterey:       "49e2e969ec8ed1c4f7954d0236fd64719e102a128c42af685767bfc5f213ac07"
-    sha256 cellar: :any,                 big_sur:        "49eb6e847eeb7e51779289d351a337ef0c6cba97ac079806066747456036d8e6"
-    sha256 cellar: :any,                 catalina:       "4abfd6faab1e8286a08da1874e46ebf8a32812f84953740b08ddf2b17be6eb3c"
-    sha256 cellar: :any,                 mojave:         "8586eeac3d452b94b08a519bc01a4887e534832e7be01aa1c0c5bfefeda5b6a4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f1316c8afe193ef525f86ba791f23557ac403d68b14677e6e29ba536df59a0be"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "f5b0bf73ebf258cb4870683c6baf8a4a029d3c46c2996413a6602ef049baf6cd"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "f5b0bf73ebf258cb4870683c6baf8a4a029d3c46c2996413a6602ef049baf6cd"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f5b0bf73ebf258cb4870683c6baf8a4a029d3c46c2996413a6602ef049baf6cd"
+    sha256 cellar: :any,                 ventura:        "364fc43f7b2281c96d22494ed9f2eccec465a00cceb8e7e3169213aab6b51232"
+    sha256 cellar: :any,                 monterey:       "0481c92c77f5a3fd47271eb8a4ce4e69ac65cdd9725648fa395a2e0c5a72a30c"
+    sha256 cellar: :any,                 big_sur:        "9ad7fec41ef9f551d6fa6b0f15cc0bce69253daf0e2d1e2c0f25b14d5ca2c045"
+    sha256 cellar: :any,                 catalina:       "758ca628b5bd9e705848c5ec78b2c00d61cd1a5b4363751ccc06bf146b019c72"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "8e934fa20f035226d407cb5c429ee6ae91b95710a4fd2c4445b26438d56c3450"
   end
 
-  depends_on "gettext" if Hardware::CPU.intel?
+  uses_from_macos "perl", since: :mojave
 
-  uses_from_macos "perl"
+  on_intel do
+    depends_on "gettext"
+  end
 
   resource "Locale::gettext" do
     url "https://cpan.metacpan.org/authors/id/P/PV/PVANDRY/gettext-1.07.tar.gz"

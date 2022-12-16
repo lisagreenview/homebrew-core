@@ -1,12 +1,12 @@
 class AdwaitaIconTheme < Formula
   desc "Icons for the GNOME project"
   homepage "https://developer.gnome.org"
-  url "https://download.gnome.org/sources/adwaita-icon-theme/41/adwaita-icon-theme-41.0.tar.xz"
-  sha256 "ef5339d8c35fcad5d10481b70480803f0fa20b3d3cbc339238fcaceeaee01eba"
+  url "https://download.gnome.org/sources/adwaita-icon-theme/43/adwaita-icon-theme-43.tar.xz"
+  sha256 "2e3ac77d32a6aa5554155df37e8f0a0dd54fc5a65fd721e88d505f970da32ec6"
   license any_of: ["LGPL-3.0-or-later", "CC-BY-SA-3.0"]
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "b00bb687bcb075aba1ba256fbbab907cbb385c4ccc66c5b4045bb3d9b6b8f987"
+    sha256 cellar: :any_skip_relocation, all: "79f3f53c3f0d0bf11c7bec0f906fd2f87c3cec7009622f15b6dde5fa1a0557d5"
   end
 
   depends_on "gettext" => :build

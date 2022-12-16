@@ -2,9 +2,9 @@ class Vgmstream < Formula
   desc "Library for playing streamed audio formats from video games"
   homepage "https://vgmstream.org"
   url "https://github.com/vgmstream/vgmstream.git",
-      tag:      "r1667",
-      revision: "6b84f258e4238edd627e24ec8460a7040613d054"
-  version "r1667"
+      tag:      "r1800",
+      revision: "49af2cea7d6265a6e063f5d4e09e34df8f861998"
+  version "r1800"
   license "ISC"
   version_scheme 1
   head "https://github.com/vgmstream/vgmstream.git", branch: "master"
@@ -16,14 +16,18 @@ class Vgmstream < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "63fcd172e33b874c68b0fcab3a6109d573d0f737642f8f5cdeeafd45105467df"
-    sha256 cellar: :any,                 arm64_big_sur:  "334824f6ab927e82b2aabc815abf06596107e835e4fc7452cebed773cb9d17df"
-    sha256 cellar: :any,                 monterey:       "1f95eba46f07f4777ead25bce5bb2dae4e3a40911e154406e8b6f96c2382f943"
-    sha256 cellar: :any,                 big_sur:        "281369bd894a70133b48f0ec6446a9104e17d27bbb4c516ecdd1255ab0a549ad"
-    sha256 cellar: :any,                 catalina:       "da5772992533010c9fee28177f9edeeacf9f07091335ed4daaa4c17cc0b2db5f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0f8de79597d4d06620e582e7bc8208575eb49de9fec0aa86cb8ae67896706885"
+    sha256 cellar: :any,                 arm64_ventura:  "1b5843a752472e42d9328df4087de07923eb21aa537574742e434d2505026a97"
+    sha256 cellar: :any,                 arm64_monterey: "8e63e83518e1174e109141fa7b9f200b1efed1986d9fdd18ef10721b810db14c"
+    sha256 cellar: :any,                 arm64_big_sur:  "bb0ede7d7cdd10921fd8508ffbdbb1dc09b669c6d0b61e1c992a41d6d7330079"
+    sha256 cellar: :any,                 ventura:        "2c6a4d0b500ee3bf6f83b19f5142a7217a476d96675593474d1259e93aa00997"
+    sha256 cellar: :any,                 monterey:       "10a4c614a6ce5c77d695bc6f2bfc87ffaaab8d07d5eb03985cd3af58de2f6b4e"
+    sha256 cellar: :any,                 big_sur:        "763234332e1ea9ffe3e2da2e4ccf3127ac2817040e47134bbd654055d510fcc4"
+    sha256 cellar: :any,                 catalina:       "e14bdacae7a9672a0991b8decc17b2843f4d72b357b1e762b8ae0eaad24dd8cd"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1680a96900e3902ac9a4987e9f7aed3847ab42771cdd890f00a1941ca10a6fe5"
   end
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
   depends_on "cmake" => :build
   depends_on "ffmpeg"
   depends_on "jansson"
@@ -31,12 +35,14 @@ class Vgmstream < Formula
   depends_on "libvorbis"
   depends_on "mpg123"
 
+  fails_with gcc: "5" # ffmpeg is compiled with GCC
+
   def install
-    system "cmake", "-DBUILD_AUDACIOUS:BOOL=OFF", *std_cmake_args, "."
-    system "cmake", "--build", ".", "--config", "Release", "--target", "vgmstream_cli", "vgmstream123"
-    bin.install "cli/vgmstream-cli"
-    bin.install "cli/vgmstream123"
-    lib.install "src/libvgmstream.a"
+    ENV["LIBRARY_PATH"] = HOMEBREW_PREFIX/"lib"
+    system "cmake", "-S", ".", "-B", "build", "-DBUILD_AUDACIOUS:BOOL=OFF", *std_cmake_args
+    system "cmake", "--build", "build"
+    bin.install "build/cli/vgmstream-cli", "build/cli/vgmstream123"
+    lib.install "build/src/libvgmstream.a"
   end
 
   test do

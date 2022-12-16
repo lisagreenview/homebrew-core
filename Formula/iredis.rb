@@ -3,22 +3,24 @@ class Iredis < Formula
 
   desc "Terminal Client for Redis with AutoCompletion and Syntax Highlighting"
   homepage "https://iredis.io"
-  url "https://github.com/laixintao/iredis/archive/refs/tags/v1.9.4.tar.gz"
-  sha256 "628479debd444c671cba866e96877b266ce1581c632d78a243549906db1ef946"
+  url "https://files.pythonhosted.org/packages/8a/a6/80b049052a354b8b922f297634aaea2ca0f9dab866dae5397d39e91f3d9f/iredis-1.12.1.tar.gz"
+  sha256 "9cbc2ee3bc15e50aa0b62ca237d6db2b38e565d81de90b792a30658a9c115b54"
   license "BSD-3-Clause"
-  revision 1
-  head "https://github.com/laixintao/iredis.git"
+  head "https://github.com/laixintao/iredis.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "42c16776a00ab75e483cb165926fb7abc46fc776f7ec4ebef27c4145f656fd02"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5244f3000f4ae1070ef1ff2c4a573010c855dc2bebf49dbcb51c748f12f5e930"
-    sha256 cellar: :any_skip_relocation, monterey:       "d84ce0b1db3670cb8feda63357891a6ec7dc30ea72dddc994a8c92ea1222bd99"
-    sha256 cellar: :any_skip_relocation, big_sur:        "87232e4432a038363d2f82d46432413b552e36f1d102262b44e9313f4c047477"
-    sha256 cellar: :any_skip_relocation, catalina:       "69fdb1735e81cd4c42331482397549920c14c5551459366db23abc87eb31f664"
-    sha256 cellar: :any_skip_relocation, mojave:         "e16b775087fa092b6e03091b4bda5f52e47aaea4323dc1741650d141489f9863"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "2b50ddc33b6ef2fbc534a32680f24473171d575d7d2baa04705a405347762d94"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "59b371854d2f07984f58bceed6578473d1a2e29e3f187f9b15918aa40ebc98e0"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "69caee98a2fd8450ce9ff5131a00ff9a9bd0eb95197e325d60589233dea05292"
+    sha256 cellar: :any_skip_relocation, ventura:        "7dfd26065bcff326df9c7516e9612ece4362dc873cb60ca419400bf91a5bf03b"
+    sha256 cellar: :any_skip_relocation, monterey:       "540602e1e1b59f53d3f09fb095b63ab9f7e938a8d8c97e8c4541791be5b0c3fd"
+    sha256 cellar: :any_skip_relocation, big_sur:        "f488dc95a684fc40623256577d3faf2ed39af413df5b7d9cf91016b6a7e04b96"
+    sha256 cellar: :any_skip_relocation, catalina:       "f6f4d1bc7cf5a412607debbc964e926e71e5e34e9d550bddd9942afab3472b8f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a1f04bccb5bf4291e0cb074689c1e2a5a16f590e1395e3fc579b90226c30aa32"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
   depends_on "six"
 
   resource "click" do
@@ -32,13 +34,18 @@ class Iredis < Formula
   end
 
   resource "importlib-resources" do
-    url "https://files.pythonhosted.org/packages/ac/94/30b82b3a3a7c4f7fd7be1082047cc9a135a10c1bcb0158a2aec20d8fec57/importlib_resources-5.2.0.tar.gz"
-    sha256 "22a2c42d8c6a1d30aa8a0e1f57293725bfd5c013d562585e46aff469e0ff78b3"
+    url "https://files.pythonhosted.org/packages/06/72/6bf0df4fe7a139147f5d6b473f16d5aefb7bc5b719ba5dd33f230d35760f/importlib_resources-5.10.0.tar.gz"
+    sha256 "c01b1b94210d9849f286b86bb51bcea7cd56dde0600d8db721d7b81330711668"
   end
 
   resource "mistune" do
-    url "https://files.pythonhosted.org/packages/2d/a4/509f6e7783ddd35482feda27bc7f72e65b5e7dc910eca4ab2164daf9c577/mistune-0.8.4.tar.gz"
-    sha256 "59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"
+    url "https://files.pythonhosted.org/packages/cd/9b/0f98334812f548a5ee4399b76e33752a74fc7bb976f5efb34d962f03d585/mistune-2.0.4.tar.gz"
+    sha256 "9ee0a66053e2267aba772c71e06891fa8f1af6d4b01d5e84e267b4570d4d9808"
+  end
+
+  resource "packaging" do
+    url "https://files.pythonhosted.org/packages/df/9e/d1a7217f69310c1db8fdf8ab396229f55a699ce34a203691794c5d1cad0c/packaging-21.3.tar.gz"
+    sha256 "dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"
   end
 
   resource "pendulum" do
@@ -47,13 +54,18 @@ class Iredis < Formula
   end
 
   resource "prompt-toolkit" do
-    url "https://files.pythonhosted.org/packages/88/4b/2c0f9e2b52297bdeede91c8917c51575b125006da5d0485521fa2b1e0b75/prompt_toolkit-3.0.19.tar.gz"
-    sha256 "08360ee3a3148bdb5163621709ee322ec34fc4375099afa4bbf751e9b7b7fa4f"
+    url "https://files.pythonhosted.org/packages/c4/6e/6ff7938f47981305a801a4c5b8d8ed282b58a28c01c394d43c1fbcfc810b/prompt_toolkit-3.0.33.tar.gz"
+    sha256 "535c29c31216c77302877d5120aef6c94ff573748a5b5ca5b1b1f76f5e700c73"
   end
 
   resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/ba/6e/7a7c13c21d8a4a7f82ccbfe257a045890d4dbf18c023f985f565f97393e3/Pygments-2.9.0.tar.gz"
-    sha256 "a18f47b506a429f6f4b9df81bb02beab9ca21d0a5fee38ed15aef65f0545519f"
+    url "https://files.pythonhosted.org/packages/e0/ef/5905cd3642f2337d44143529c941cc3a02e5af16f0f65f81cbef7af452bb/Pygments-2.13.0.tar.gz"
+    sha256 "56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1"
+  end
+
+  resource "pyparsing" do
+    url "https://files.pythonhosted.org/packages/71/22/207523d16464c40a0310d2d4d8926daffa00ac1f5b1576170a32db749636/pyparsing-3.0.9.tar.gz"
+    sha256 "2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"
   end
 
   resource "python-dateutil" do
@@ -76,13 +88,19 @@ class Iredis < Formula
     sha256 "ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"
   end
 
-  resource "zipp" do
-    url "https://files.pythonhosted.org/packages/3a/9f/1d4b62cbe8d222539a84089eeab603d8e45ee1f897803a0ae0860400d6e7/zipp-3.5.0.tar.gz"
-    sha256 "f5812b1e007e48cff63449a5e9f4e7ebea716b4111f9c4f9a645f91d579bf0c4"
-  end
-
   def install
-    virtualenv_install_with_resources
+    venv = virtualenv_create(libexec, "python3.11")
+
+    # Switch build-system to poetry-core to avoid rust dependency on Linux.
+    # Remove when merged/released: https://github.com/sdispater/pytzdata/pull/13
+    resource("pytzdata").stage do
+      inreplace "pyproject.toml", 'requires = ["poetry>=1.0.0"]', 'requires = ["poetry-core>=1.0"]'
+      inreplace "pyproject.toml", 'build-backend = "poetry.masonry.api"', 'build-backend = "poetry.core.masonry.api"'
+      venv.pip_install_and_link Pathname.pwd
+    end
+
+    venv.pip_install resources.reject { |r| r.name == "pytzdata" }
+    venv.pip_install_and_link buildpath
   end
 
   test do

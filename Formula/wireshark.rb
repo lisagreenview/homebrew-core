@@ -1,9 +1,9 @@
 class Wireshark < Formula
   desc "Graphical network analyzer and capture tool"
   homepage "https://www.wireshark.org"
-  url "https://www.wireshark.org/download/src/all-versions/wireshark-3.6.0.tar.xz"
-  mirror "https://1.eu.dl.wireshark.org/src/all-versions/wireshark-3.6.0.tar.xz"
-  sha256 "9cc8f7fc5bb1d66fbdfdf95cde6e1c98633c303f9af9b33ae9f1fcf022fedf06"
+  url "https://www.wireshark.org/download/src/all-versions/wireshark-4.0.2.tar.xz"
+  mirror "https://1.eu.dl.wireshark.org/src/all-versions/wireshark-4.0.2.tar.xz"
+  sha256 "f35915699f2f9b28ddb211202d40ec8984e5834d3c911483144a4984ba44411d"
   license "GPL-2.0-or-later"
   head "https://gitlab.com/wireshark/wireshark.git", branch: "master"
 
@@ -13,10 +13,13 @@ class Wireshark < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "a8ee91edd0d8156acd5cd122178896764ebbfb542fbbb93d567db4e696707f2a"
-    sha256 big_sur:       "36a0d0bd585b7735864e29843b194e97bb5efbede5040234399e677b7eabab30"
-    sha256 catalina:      "05d7df5204e95d3e677282542807420b469b6fae285fe1beaf17814854782c04"
-    sha256 x86_64_linux:  "ad61fa693279ac5b1fc255442406007ab725b4c8c8256de35bbb6a03844511b9"
+    sha256 arm64_ventura:  "b77227776d9c22545b9293eea171a7bcba9a8f9571b6fff318bfc314270ad88a"
+    sha256 arm64_monterey: "8b7bc467337aa944d70363cfdcfcb0bb8d9adb015e4635857ae7a942dd60372d"
+    sha256 arm64_big_sur:  "ea51202bd8dff8f258e23e0da456c7caf81988c00051472bfb64b9d587a4f848"
+    sha256 ventura:        "a667c6328fc2c3a84d259abd6a0d973f509c136872f59e438ebb9e218df774bf"
+    sha256 monterey:       "e3d5cec2a0e7beda097a7e9bb4524f4e530f197e73bdc6fa43be130126f3f63b"
+    sha256 big_sur:        "42800280364ae61010b17327ba6303fa1e766fb9553514819ef8cc2004ce6cd9"
+    sha256 x86_64_linux:   "ae706550761a4977b6ecaee52523d2aac4c51ef11d2a61fd6ef5e0af79eeda69"
   end
 
   depends_on "cmake" => :build
@@ -32,6 +35,8 @@ class Wireshark < Formula
 
   uses_from_macos "bison" => :build
   uses_from_macos "flex" => :build
+  uses_from_macos "python" => :build
+  uses_from_macos "libpcap"
 
   def install
     args = std_cmake_args + %W[
@@ -42,7 +47,7 @@ class Wireshark < Formula
       -DENABLE_PORTAUDIO=OFF
       -DENABLE_LUA=ON
       -DLUA_INCLUDE_DIR=#{Formula["lua"].opt_include}/lua
-      -DLUA_LIBRARY=#{Formula["lua"].opt_lib}/liblua.dylib
+      -DLUA_LIBRARY=#{Formula["lua"].opt_lib/shared_library("liblua")}
       -DCARES_INCLUDE_DIR=#{Formula["c-ares"].opt_include}
       -DGCRYPT_INCLUDE_DIR=#{Formula["libgcrypt"].opt_include}
       -DGNUTLS_INCLUDE_DIR=#{Formula["gnutls"].opt_include}

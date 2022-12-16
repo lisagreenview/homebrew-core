@@ -1,8 +1,8 @@
 class DockerSlim < Formula
   desc "Minify and secure Docker images"
   homepage "https://dockersl.im"
-  url "https://github.com/docker-slim/docker-slim/archive/1.37.2.tar.gz"
-  sha256 "ef4a095698f195a9dfe28b4e8d553d459949a428f2eaad21d8017b4aec46019e"
+  url "https://github.com/docker-slim/docker-slim/archive/1.39.0.tar.gz"
+  sha256 "3574952b1d8ff340af3f9ed58d6a22f0f8d81ac043ea73b8d2e5eca80fedefce"
   license "Apache-2.0"
 
   livecheck do
@@ -11,12 +11,14 @@ class DockerSlim < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "fb84b0b0064e7c9e3df80b53b4ca5a081857cd1aeef0c05929b05808a7285b19"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "fb84b0b0064e7c9e3df80b53b4ca5a081857cd1aeef0c05929b05808a7285b19"
-    sha256 cellar: :any_skip_relocation, monterey:       "f3c33377dd18abe3f1819e623970d69c245d3731b568ec442c3ae734ff41d349"
-    sha256 cellar: :any_skip_relocation, big_sur:        "f3c33377dd18abe3f1819e623970d69c245d3731b568ec442c3ae734ff41d349"
-    sha256 cellar: :any_skip_relocation, catalina:       "f3c33377dd18abe3f1819e623970d69c245d3731b568ec442c3ae734ff41d349"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d212a80dc819345dc052fffa1c504968fc6d967a786b9d59a850c3f960000c7a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "c5530131e7cac9f143d716ac6ca15af79e0ddf10c5708a91dac293beb9e2e5ca"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "c5530131e7cac9f143d716ac6ca15af79e0ddf10c5708a91dac293beb9e2e5ca"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c5530131e7cac9f143d716ac6ca15af79e0ddf10c5708a91dac293beb9e2e5ca"
+    sha256 cellar: :any_skip_relocation, ventura:        "464cf7e58a1337d50116449112fe9965952b780917a6e71ac5e308aac3ed325e"
+    sha256 cellar: :any_skip_relocation, monterey:       "8a1091c924a24f9f650cd269eb0559b14b708b121fbcbdb8b18ebe3195792ff0"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8a1091c924a24f9f650cd269eb0559b14b708b121fbcbdb8b18ebe3195792ff0"
+    sha256 cellar: :any_skip_relocation, catalina:       "8a1091c924a24f9f650cd269eb0559b14b708b121fbcbdb8b18ebe3195792ff0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "be8390dd79bbf8b51bb493da16d9975e81cf0f55923e0db03dc90990aabb09f4"
   end
 
   depends_on "go" => :build

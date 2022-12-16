@@ -1,18 +1,20 @@
 class SSearch < Formula
   desc "Web search from the terminal"
   homepage "https://github.com/zquestz/s"
-  url "https://github.com/zquestz/s/archive/v0.6.1.tar.gz"
-  sha256 "8f5f3e9503edcf9eb4792379f93c1e08806b8b9699121a72745d1d63c91a0426"
+  url "https://github.com/zquestz/s/archive/v0.6.7.tar.gz"
+  sha256 "a175e53e2d9c3b990a963b86b285a258ca5533c78fc930cd01b82f4d9dccfec0"
   license "MIT"
   head "https://github.com/zquestz/s.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "fa5f506a14583c6975f47d32c06b29a82ff544876b379253641f5c8ab010cf36"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "51d3f2cff22cdb7d5a628d914539841de6d67facaccb521b0df2d2991986ba1a"
-    sha256 cellar: :any_skip_relocation, monterey:       "b46e4c7f53872481620da20234184f20f6294e049e777843f7e24581aa7f712f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "03c101309a9410d4a30e85f3abf0ecc7badd1f6ae002b80c44a1de6fc66d44d6"
-    sha256 cellar: :any_skip_relocation, catalina:       "5987f1d6d6f3a69108d58cb5012f4a17c619be496a9abe4749c0c481d96772a2"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b1523a33ed2d89dba192084da67bdd21b3c46c9082dbf2fe97cb82a5802e5af6"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "67759e1e650bba6dc8ccfdb8e1e0697f1c1d6910b40a99a89d320122e24d4ce6"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "965829bd245fca1aa157fafc92cc1fa1e30119787ada98e206a592480dfe54f8"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "b045c12f55145d21f9e8ff8d2c4fa4268e8da8ca47763d3dcb1bb2cdb5d1198d"
+    sha256 cellar: :any_skip_relocation, ventura:        "a34f71eb66e840d0ab3f3cde5c816f2de7c39cb29b3917ee47b0a4ed4055f730"
+    sha256 cellar: :any_skip_relocation, monterey:       "6d02733b5bed8e5fac42cbfb68bc7f62d05b54189b64309f3ee6780030f61194"
+    sha256 cellar: :any_skip_relocation, big_sur:        "701c54566cb83d362852e8b4ad1232ad753dec1ac9385822f0e260fe6c2306fd"
+    sha256 cellar: :any_skip_relocation, catalina:       "e800f781a6c125be3eec11e4a204a3cede538e5381f040f2f2f126fc869b1a43"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3ba3a78a32f8be0b79d44b695ee4b35dc0563ecbf29952035d28df0445c87763"
   end
 
   depends_on "go" => :build
@@ -20,14 +22,7 @@ class SSearch < Formula
   def install
     system "go", "build", *std_go_args(ldflags: "-s -w"), "-o", bin/"s"
 
-    output = Utils.safe_popen_read("#{bin}/s", "--completion", "bash")
-    (bash_completion/"s-completion.bash").write output
-
-    output = Utils.safe_popen_read("#{bin}/s", "--completion", "zsh")
-    (zsh_completion/"_s").write output
-
-    output = Utils.safe_popen_read("#{bin}/s", "--completion", "fish")
-    (fish_completion/"s.fish").write output
+    generate_completions_from_executable(bin/"s", "--completion", base_name: "s")
   end
 
   test do

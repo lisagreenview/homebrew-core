@@ -1,17 +1,18 @@
 class Zellij < Formula
   desc "Pluggable terminal workspace, with terminal multiplexer as the base feature"
   homepage "https://zellij.dev"
-  url "https://github.com/zellij-org/zellij/archive/v0.20.1.tar.gz"
-  sha256 "aa2cc622f924c1d41a8b1b616aae3d7b989e483bca1041061db43b6d0c6c9f52"
+  url "https://github.com/zellij-org/zellij/archive/v0.34.4.tar.gz"
+  sha256 "687e30a3e6916cdd7189ab04ff4b170bc5e09edd937637f0388b3f8432d0fc49"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "2dba9049b26129a614e5adf80f8d8dad7d0b101f0ff961649d56bea1c03bff20"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "c66fa96c834ff76f5a5c382935ca79df8db8c6e144d42bca0acecea52ab49c91"
-    sha256 cellar: :any_skip_relocation, monterey:       "c16070aa9b2359b771ba579c11a7b57a63f12899b2fc2205f5a782892856bded"
-    sha256 cellar: :any_skip_relocation, big_sur:        "58efeed4d6b91f7b1347fc353a3b9f7fed9af070656043e8fb1150f143bcd29c"
-    sha256 cellar: :any_skip_relocation, catalina:       "5d4714e75de430852096c421e8da1cb4be6b174036a8763e1a413d35d282af47"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "63e0827224a9bc21c213246dd2d4fa0cb003a1f2465c561ba3fd90b91cc26c76"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "f5441641d0d340f0bc3ad2a6fb1c64c13bade8e6a7586d4b9331cd53d0f26c74"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "b45bf371093febf1da924fe3a9d241733e3c128b5ebfc330787981ffe78d1d92"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "59267ce4d52a9dd39021048d39334aaf5919f6e94880b88a8227ccd9e698fea5"
+    sha256 cellar: :any_skip_relocation, ventura:        "65fd10a1538a817dc2a9133264026c7dbde53e7d98340b3ed5833df05f1952a5"
+    sha256 cellar: :any_skip_relocation, monterey:       "6dbd74c04d6c5161261f42105bfb13dd7512bcb815497b8029f35b8ed72c0eea"
+    sha256 cellar: :any_skip_relocation, big_sur:        "45e195e4b9db695160738bdaa6fc2ef565fd5c1bcf5fb87d852f1429a29cf005"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c66afab475ce488b82bfcd06116d6424ff98d97dd59d012832ee2b56ce83cea1"
   end
 
   depends_on "rust" => :build
@@ -19,16 +20,11 @@ class Zellij < Formula
   def install
     system "cargo", "install", *std_cargo_args
 
-    bash_output = Utils.safe_popen_read(bin/"zellij", "setup", "--generate-completion", "bash")
-    (bash_completion/"zellij").write bash_output
-    zsh_output = Utils.safe_popen_read(bin/"zellij", "setup", "--generate-completion", "zsh")
-    (zsh_completion/"_zellij").write zsh_output
-    fish_output = Utils.safe_popen_read(bin/"zellij", "setup", "--generate-completion", "fish")
-    (fish_completion/"zellij.fish").write fish_output
+    generate_completions_from_executable(bin/"zellij", "setup", "--generate-completion")
   end
 
   test do
-    assert_match(/keybinds:.*/, shell_output("#{bin}/zellij setup --dump-config"))
+    assert_match("keybinds", shell_output("#{bin}/zellij setup --dump-config"))
     assert_match("zellij #{version}", shell_output("#{bin}/zellij --version"))
   end
 end

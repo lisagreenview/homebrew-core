@@ -1,38 +1,36 @@
 class Codequery < Formula
   desc "Code-understanding, code-browsing or code-search tool"
   homepage "https://github.com/ruben2020/codequery"
-  url "https://github.com/ruben2020/codequery/archive/v0.24.0.tar.gz"
-  sha256 "39afc909eae3b0b044cefbbb0e33d09e8198a3b157cf4175fceb5a22217fe801"
+  url "https://github.com/ruben2020/codequery/archive/refs/tags/v0.25.0.tar.gz"
+  sha256 "200bed981e89fe02770a7a76516714d6d6345021d6ae89e68341b6af39728407"
   license "MPL-2.0"
-  revision 1
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "fd2941c284a98300e9e5a1a97d4c548d3b421d56816ae19610de0d53b8d53d99"
-    sha256 cellar: :any,                 arm64_big_sur:  "b6911db7943e77b1da9e37997f578c3d66b8f2fbefee757f343dcc180b88d9bd"
-    sha256 cellar: :any,                 big_sur:        "1fe79b4632dd2e794bb09758ce9a776b7b751dddf4fd03ff47eeb0c79d16f729"
-    sha256 cellar: :any,                 catalina:       "feca768a985ac4578a99290c1070b8f1dfe0716017da89a1b6f01e9ae7685acd"
-    sha256 cellar: :any,                 mojave:         "c49d64f50a33ecc8de70d9431dab346d40de6f0fdc077b826d24b19db9cba99b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7be6092fc351e20b9d4223550a672ac80b03f6a31bcca70b607d7115156260b3"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "b9c8ec8d80cf9212ffcf7baa2d1cbe299e17ccafe08567d5fb020d37d76f40e8"
+    sha256 cellar: :any,                 arm64_monterey: "e81a2e4210a2ce35fc870bab1c41342735f0c6e9317d56ee9eab7a17ea32f7f5"
+    sha256 cellar: :any,                 arm64_big_sur:  "618adda8c69f88e2fb9cce010dd9c9e862eeae9a1117f9492f9ae6043e12086f"
+    sha256 cellar: :any,                 ventura:        "aaac676a83dbe38c487d537d3a2cd942f1d47179aa8d5e4a37088a675596237d"
+    sha256 cellar: :any,                 monterey:       "61459d0b4467e459b04450e207fb7a969fe9fb0005e56f669815573c6c892f61"
+    sha256 cellar: :any,                 big_sur:        "914b33a4baaebcc8aad026abe9c85d71830b10c17edab8b1b4fbe00ef8a88ff6"
+    sha256 cellar: :any,                 catalina:       "4910a7cb4de7100322ae686f0bdc4146424f46cbd978257d28102d2a362dd90d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b7dd62492b5cf3d9e4fb7626acdfd868ba583636964d8399ba39a5ecd6cb0950"
   end
 
   depends_on "cmake" => :build
+  depends_on "ninja" => :build
   depends_on "qt@5"
-
-  on_linux do
-    depends_on "gcc"
-  end
 
   fails_with gcc: "5"
 
   def install
     args = std_cmake_args
-    args << "-DBUILD_QT5=ON"
 
     share.install "test"
     mkdir "build" do
-      system "cmake", "..", "-G", "Unix Makefiles", *args
-      system "make"
-      system "make", "install"
+      system "cmake", "..", "-G", "Ninja", *args
+      system "ninja"
+      system "ninja", "install"
     end
   end
 

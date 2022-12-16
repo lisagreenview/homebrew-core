@@ -2,32 +2,33 @@ class Gitlint < Formula
   include Language::Python::Virtualenv
 
   desc "Linting for your git commit messages"
-  homepage "https://jorisroovers.github.io/gitlint"
-  url "https://files.pythonhosted.org/packages/9a/0c/bacbf0ea52b924ff7d6984b2756e544d0e276c56663bb37e0c08781d4ad3/gitlint-0.16.0.tar.gz"
-  sha256 "30ee2bdae611bbf66df6326b5da1afc14bf0be337e1d3021fafeb7f13b37f55b"
+  homepage "https://jorisroovers.com/gitlint/"
+  url "https://files.pythonhosted.org/packages/fe/11/971074a89e50f31e32b79b73a84b8aed5787ad5718bb3857477514304db7/gitlint-core-0.18.0.tar.gz"
+  sha256 "b032eb574f7399aec6a5246a78810bacb7ce9c9fd2d9e4375950549196cae681"
   license "MIT"
-  head "https://github.com/jorisroovers/gitlint.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "7f6931b626fbece9c095c2e5e0c209652372615253a6d35de78daf237e82bf68"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "5bcbf70697da339aa2a7c794377187c57c7618d32ef7c538b36d37480b5f6c42"
-    sha256 cellar: :any_skip_relocation, monterey:       "32225c3fa4b996482313fa7d51e7e40505d06b0fa0f8cd7e160b3fa418d84a8c"
-    sha256 cellar: :any_skip_relocation, big_sur:        "95e74a0cfd189c140ea05874f9a82e605992666cbff78b48f661189e83aec2f2"
-    sha256 cellar: :any_skip_relocation, catalina:       "a2305c81e08d6910cc1332f5ffdb40866ae9b166c0687025a9400739461567ed"
-    sha256 cellar: :any_skip_relocation, mojave:         "8a27c21879cfcd036c2acd9a1160b9467fdeff0121f3521150d962a29e1cc2a8"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f26e3ff395a558ebf95cd93f9f1001a18c4d06154b2809092f9280a9f8342345"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e76c35c0f5c1264f660de5f79a30e5609247685ca0d27a0929696009870c6218"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e4ab8cb2671afa9e4aaa8de6fda45198162567a7e8611086bce572908f4e702a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "526b454400bcc7440c23e3659728140d2b96372734d4c59784e59a7ff542c98b"
+    sha256 cellar: :any_skip_relocation, ventura:        "f92add1cb7cca06297104b86f6c734bc164b197b440d53d86ec880159f89c5b3"
+    sha256 cellar: :any_skip_relocation, monterey:       "2043b77407919887505d5ac40225596e536a709e290be4840e9da25587b82731"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a519f46cce1b93e2045ef2880012e7a811accbe1816671ebc1b102ade4142d4c"
+    sha256 cellar: :any_skip_relocation, catalina:       "515ae6455446a91ae666d6e078e1c30eeaccac57f90976c6f72b867df31762e3"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "395a1c0dc259937b455d9792749abae1235b65d1a48e10039cd2743c475b4920"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "six"
 
   resource "arrow" do
-    url "https://files.pythonhosted.org/packages/dc/bd/2565b8533bb8cf66e10a9e68a1d489ad839799b2050f0635039e614e3b1a/arrow-1.2.0.tar.gz"
-    sha256 "16fc29bbd9e425e3eb0fef3018297910a0f4568f21116fc31771e2760a50e074"
+    url "https://files.pythonhosted.org/packages/7f/c0/c601ea7811f422700ef809f167683899cdfddec5aa3f83597edf97349962/arrow-1.2.3.tar.gz"
+    sha256 "3934b30ca1b9f292376d9db15b19446088d12ec58629bc3f0da28fd55fb633a1"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/21/83/308a74ca1104fe1e3197d31693a7a2db67c2d4e668f20f43a2fca491f9f7/click-8.0.1.tar.gz"
-    sha256 "8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a"
+    url "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz"
+    sha256 "7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"
   end
 
   resource "python-dateutil" do
@@ -36,13 +37,8 @@ class Gitlint < Formula
   end
 
   resource "sh" do
-    url "https://files.pythonhosted.org/packages/80/39/ed280d183c322453e276a518605b2435f682342f2c3bcf63228404d36375/sh-1.14.2.tar.gz"
-    sha256 "9d7bd0334d494b2a4609fe521b2107438cdb21c0e469ffeeb191489883d6fe0d"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
-    sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
+    url "https://files.pythonhosted.org/packages/b7/09/89c28aaf2a49f226fef8587c90c6386bd2cc03a0295bc4ff7fc6ee43c01d/sh-1.14.3.tar.gz"
+    sha256 "e4045b6c732d9ce75d571c79f5ac2234edd9ae4f5fa9d59b09705082bdca18c7"
   end
 
   def install

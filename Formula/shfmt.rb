@@ -1,18 +1,19 @@
 class Shfmt < Formula
   desc "Autoformat shell script source code"
   homepage "https://github.com/mvdan/sh"
-  url "https://github.com/mvdan/sh/archive/v3.4.1.tar.gz"
-  sha256 "a9e7a09dd0b099b8699b54af0e5911c19412dc7cea206e32377d974427688be1"
+  url "https://github.com/mvdan/sh/archive/v3.6.0.tar.gz"
+  sha256 "4fe5a7b0aab5fba437696b68c5424e49ba9f793de2f534647e1d814108ebad23"
   license "BSD-3-Clause"
   head "https://github.com/mvdan/sh.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "0de39f63c01876ea44edaf5f1db58ca6bad15ba851de3bc1065b0b71b2f9ee22"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "f90de59d503c1c39372f8020bdd9433a15bd543a4e27e5937f74a12972c18e92"
-    sha256 cellar: :any_skip_relocation, monterey:       "eae6fc1c573d7624cc282b24580272e2d77397b90340b4e5f1129d44aadcbdbd"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a7fb4f0b937883ff6367db892986823efc894d67ea77514fd88a8d49d95c87d1"
-    sha256 cellar: :any_skip_relocation, catalina:       "41d8f6bf716a000fa3c5f36720d4c22e23951cba71b619716fe5e792eee7ab38"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c13c9a6d768d8fda58e741ff1148baa2d5ca1d9ae9d96bb2441a818f045285b8"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "7892f629d0c059bda5446d9a5c334ddaddc61ef7f5fbbb8c3dc9dea038ff4cda"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "e32357de6b64064d14ddec0dc909b252403f139e2da5473a48c60283315805ab"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1918c1c4328c275673c428356a01a7615405944d5599a246884022942148be4b"
+    sha256 cellar: :any_skip_relocation, ventura:        "2fd051b6ee6662769993d361a510a5b5e7e42c6d71e529c19d724fc70e58af64"
+    sha256 cellar: :any_skip_relocation, monterey:       "f46218b6f7a26e2d9d54a0e23f2092e387b2c701191c4febe09678086950c430"
+    sha256 cellar: :any_skip_relocation, big_sur:        "c602bf7d13a7d97a1c955072c7c6fe93735561788ebd21cd83b9b27dd864c8af"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c6a63b4e3c3daa166d0f95762c72f2e38fdf426500c82f2166e3af22cf490a11"
   end
 
   depends_on "go" => :build

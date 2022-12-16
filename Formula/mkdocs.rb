@@ -3,51 +3,49 @@ class Mkdocs < Formula
 
   desc "Project documentation with Markdown"
   homepage "https://www.mkdocs.org/"
-  url "https://files.pythonhosted.org/packages/0a/93/caaf7db71f730011e583d1977bef355b9a06c21b3967395ea2f3ce73ae5b/mkdocs-1.2.3.tar.gz"
-  sha256 "89f5a094764381cda656af4298727c9f53dc3e602983087e1fe96ea1df24f4c1"
+  url "https://files.pythonhosted.org/packages/ff/2c/932a6df2847c0ecf0875cd00bede939225734b2815fc866c78edb46d9e5d/mkdocs-1.4.2.tar.gz"
+  sha256 "8947af423a6d0facf41ea1195b8e1e8c85ad94ac95ae307fe11232e0424b11c5"
   license "BSD-2-Clause"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "0bcd9a003375aebeaa630f819619eb558c22bf6ad2747b8d666047f6fec896bd"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4ca3b27f84dc4b971b7e1bc1fedc9700bcb98f9ed150a815cd15cf1edbb9625a"
-    sha256 cellar: :any_skip_relocation, monterey:       "1c7c42d4743fd6412cd774cb8927d373e8d12af222f60d29f3fcb98635a5f93f"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3dff60ce3eb047811c3be499dce49c625382b5fa9e0cd49d68012c3b4694412b"
-    sha256 cellar: :any_skip_relocation, catalina:       "b82807f2f342e2620a6564cf19bf6b63013fc82bfae1de1c5e73c500dcd2107a"
-    sha256 cellar: :any_skip_relocation, mojave:         "16b50288230ca4e1c2e2b46f09c49414822835753458eb1dde125fa71be770b5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "77289d233c17b1c64951e6ccca3a78260d65401d7c63d0afe81152e4b2bdcd16"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "ae2506731afa8fc63dc68c3f403bc0aff73a7ac5484e3c64f603b540008d1606"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "66e651c54bb7e2442895d68bcd2fe02d0ee880f067092d7760f4c0dcef668508"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "1bf85d46fa68718d094cdcbd9f66994ab261a801df1d14699641758288af62dd"
+    sha256 cellar: :any_skip_relocation, ventura:        "646759a32bf6870ba667906fcee4eb0e4c2179974b59b4b0a27c37a430cb1574"
+    sha256 cellar: :any_skip_relocation, monterey:       "066c663596361b756804f57ff9a5a12419daec106b7c28e96bbb26fdd5034e95"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9dd5bfa164f98fc097bf4a0e511712cdc780fa53ae694f3eb83e2a8d2c103dfc"
+    sha256 cellar: :any_skip_relocation, catalina:       "8f54d85ad9bcc01e2e9de901919a65ff5432879ff82e0f12f633f378c2b38f33"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d701ef0d833e1e62bbdec850d0fd0d798841d99de479753200a60ce3f4a5ba4f"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
+  depends_on "pyyaml"
   depends_on "six"
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/f4/09/ad003f1e3428017d1c3da4ccc9547591703ffea548626f47ec74509c5824/click-8.0.3.tar.gz"
-    sha256 "410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b"
+    url "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz"
+    sha256 "7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"
   end
 
   resource "ghp-import" do
-    url "https://files.pythonhosted.org/packages/13/b8/8dd1ea116774415b785c7c2e4bf91c2c50b5eae577bcc2d2a095c2ce20fd/ghp-import-2.0.2.tar.gz"
-    sha256 "947b3771f11be850c852c64b561c600fdddf794bab363060854c1ee7ad05e071"
-  end
-
-  resource "importlib-metadata" do
-    url "https://files.pythonhosted.org/packages/f0/70/ca3dd67cdd368b957e73a8156f7e1a10339f9813e314cb8b4549526070da/importlib_metadata-4.8.1.tar.gz"
-    sha256 "f284b3e11256ad1e5d03ab86bb2ccd6f5339688ff17a4d797a0fe7df326f23b1"
+    url "https://files.pythonhosted.org/packages/d9/29/d40217cbe2f6b1359e00c6c307bb3fc876ba74068cbab3dde77f03ca0dc4/ghp-import-2.1.0.tar.gz"
+    sha256 "9c535c4c61193c2df8871222567d7fd7e5014d835f97dc7b7439069e2413d343"
   end
 
   resource "Jinja2" do
-    url "https://files.pythonhosted.org/packages/f8/86/7c0eb6e8b05385d1ce682abc0f994abd1668e148fb52603fa86e15d4c110/Jinja2-3.0.2.tar.gz"
-    sha256 "827a0e32839ab1600d4eb1c4c33ec5a8edfbc5cb42dafa13b81f182f97784b45"
+    url "https://files.pythonhosted.org/packages/7a/ff/75c28576a1d900e87eb6335b063fab47a8ef3c8b4d88524c4bf78f670cce/Jinja2-3.1.2.tar.gz"
+    sha256 "31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"
   end
 
   resource "Markdown" do
-    url "https://files.pythonhosted.org/packages/49/02/37bd82ae255bb4dfef97a4b32d95906187b7a7a74970761fca1360c4ba22/Markdown-3.3.4.tar.gz"
-    sha256 "31b5b491868dcc87d6c24b7e3d19a0d730d59d3e46f4eea6430a321bed387a49"
+    url "https://files.pythonhosted.org/packages/d6/58/79df20de6e67a83f0d0bbfe6c19bb82adf68cdf362885257eb01099f930a/Markdown-3.3.7.tar.gz"
+    sha256 "cbb516f16218e643d8e0a95b309f77eb118cb138d39a4f27851e6a63581db874"
   end
 
   resource "MarkupSafe" do
-    url "https://files.pythonhosted.org/packages/bf/10/ff66fea6d1788c458663a84d88787bae15d45daa16f6b3ef33322a51fc7e/MarkupSafe-2.0.1.tar.gz"
-    sha256 "594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"
+    url "https://files.pythonhosted.org/packages/1d/97/2288fe498044284f39ab8950703e88abbac2abbdf65524d576157af70556/MarkupSafe-2.1.1.tar.gz"
+    sha256 "7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"
   end
 
   resource "mergedeep" do
@@ -56,23 +54,18 @@ class Mkdocs < Formula
   end
 
   resource "packaging" do
-    url "https://files.pythonhosted.org/packages/df/86/aef78bab3afd461faecf9955a6501c4999933a48394e90f03cd512aad844/packaging-21.0.tar.gz"
-    sha256 "7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7"
+    url "https://files.pythonhosted.org/packages/df/9e/d1a7217f69310c1db8fdf8ab396229f55a699ce34a203691794c5d1cad0c/packaging-21.3.tar.gz"
+    sha256 "dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"
   end
 
   resource "pyparsing" do
-    url "https://files.pythonhosted.org/packages/c1/47/dfc9c342c9842bbe0036c7f763d2d6686bcf5eb1808ba3e170afdb282210/pyparsing-2.4.7.tar.gz"
-    sha256 "c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"
+    url "https://files.pythonhosted.org/packages/71/22/207523d16464c40a0310d2d4d8926daffa00ac1f5b1576170a32db749636/pyparsing-3.0.9.tar.gz"
+    sha256 "2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"
   end
 
   resource "python-dateutil" do
     url "https://files.pythonhosted.org/packages/4c/c4/13b4776ea2d76c115c1d1b84579f3764ee6d57204f6be27119f13a61d0a9/python-dateutil-2.8.2.tar.gz"
     sha256 "0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"
-  end
-
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
   end
 
   resource "pyyaml_env_tag" do
@@ -81,13 +74,8 @@ class Mkdocs < Formula
   end
 
   resource "watchdog" do
-    url "https://files.pythonhosted.org/packages/e8/a8/fc4edd7d768361b00ea850e5310211d157df6b5a1db6148dd434e787d898/watchdog-2.1.6.tar.gz"
-    sha256 "a36e75df6c767cbf46f61a91c70b3ba71811dfa0aca4a324d9407a06a8b7a2e7"
-  end
-
-  resource "zipp" do
-    url "https://files.pythonhosted.org/packages/02/bf/0d03dbdedb83afec081fefe86cae3a2447250ef1a81ac601a9a56e785401/zipp-3.6.0.tar.gz"
-    sha256 "71c644c5369f4a6e07636f0aa966270449561fcea2e3d6747b8d23efaa9d7832"
+    url "https://files.pythonhosted.org/packages/42/f7/da8e889f8626786eac9454e8d2718fc79359ed517be20cdd50c647167d39/watchdog-2.1.9.tar.gz"
+    sha256 "43ce20ebb36a51f21fa376f76d1d4692452b2527ccd601950d69ed36b9e21609"
   end
 
   def install

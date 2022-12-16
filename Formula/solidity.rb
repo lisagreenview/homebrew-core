@@ -1,8 +1,8 @@
 class Solidity < Formula
   desc "Contract-oriented programming language"
   homepage "https://soliditylang.org"
-  url "https://github.com/ethereum/solidity/releases/download/v0.8.10/solidity_0.8.10.tar.gz"
-  sha256 "3f157aa2bc8bcbd8975fe5e41c476b3d777432dfe7c64e9d59247ee225a89ee3"
+  url "https://github.com/ethereum/solidity/releases/download/v0.8.17/solidity_0.8.17.tar.gz"
+  sha256 "b0337ab0125be7e54461ab76b6e483f5e912d3f3e4b0c89bd00cfb0a3d6a5afd"
   license all_of: ["GPL-3.0-or-later", "MIT", "BSD-3-Clause", "Apache-2.0", "CC0-1.0"]
 
   livecheck do
@@ -11,21 +11,19 @@ class Solidity < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "d52228020e2d58c1698737f8d3051d29aca7bea59af0acd231a59cc2018b7f41"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "af37c87018dba48d0d665d1ad113ac8126c66a2ce5c4aa52aadb1609581df2da"
-    sha256 cellar: :any_skip_relocation, monterey:       "5e29f0c490124dc43f0d9db5f2119f0c2338d76631f971967614d4babe9b23d4"
-    sha256 cellar: :any_skip_relocation, big_sur:        "4226ba214336485fd23a90e2557db477b8e855c02bbe9e58f107b2e2ad1e1421"
-    sha256 cellar: :any_skip_relocation, catalina:       "e6cf6d239c4f0be695202527b99b7b30860ce67078cc799f9e1af1756268fdbf"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "27825ee32bc85b7a915378aec8cf470bb38718d0478b20b47898e9a5ef739fc9"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "d027e015f7f28edb42f9f59ee3e7fe4cdec90360bbb3d3811362b6d5f5c8880b"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a44f2d497a1db10c796fc7833c2d166e53a2d441d75f0f03c56955d4267e229e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "275809d3b40b6470ebc0778f88cdc8921de593881e296370194b14f13652e348"
+    sha256 cellar: :any_skip_relocation, ventura:        "67ccce445e18ae44a2dc75b336869e61f87c4c6b405819659996dfec54df9d59"
+    sha256 cellar: :any_skip_relocation, monterey:       "5ce812a479c2164315250e4e6f970d646d0f268e646aff02c913e8e1da1e8fc1"
+    sha256 cellar: :any_skip_relocation, big_sur:        "92625da745854d006d18644647f1e93bbef87e5659596836fca1566aceeb9a89"
+    sha256 cellar: :any_skip_relocation, catalina:       "be5c8e865737ee4cee363010e44362d6f7099d3cea5d9e395f081aac013aca48"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "699bef7d67e8209d40b9cedc849df54106fdb8d7cad03c04d3940067ed7879c2"
   end
 
   depends_on "cmake" => :build
   depends_on xcode: ["11.0", :build]
   depends_on "boost"
-
-  on_linux do
-    depends_on "gcc" # For C++17
-  end
 
   fails_with gcc: "5"
 

@@ -1,17 +1,19 @@
 class Smug < Formula
   desc "Automate your tmux workflow"
   homepage "https://github.com/ivaaaan/smug"
-  url "https://github.com/ivaaaan/smug/archive/refs/tags/v0.2.5.tar.gz"
-  sha256 "314711f616ea71613fe883fe579e7d3bc0051f540f27c7925a1ce6a0ece69378"
+  url "https://github.com/ivaaaan/smug/archive/refs/tags/v0.3.3.tar.gz"
+  sha256 "9d864d71edc31e47ddc18e32f70b579c5e6863e7a767d9ae3167d75467553474"
   license "MIT"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "3035675211a0c82ed566573df01fa2c23f5ccb44a77eb338bcb41e167ce12f8f"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ad559a52f54f9ed84601bbb6e563d1f415880880cd969e88b209351c2128fca3"
-    sha256 cellar: :any_skip_relocation, monterey:       "bd47ab8f577c219df5c1f39c42b98c105b02b36356519e44b2499f922314af21"
-    sha256 cellar: :any_skip_relocation, big_sur:        "77ffea790e36ac16ca2835dd17d58857e916bd58f104ee0701f7a7af4a376974"
-    sha256 cellar: :any_skip_relocation, catalina:       "22e4404ea1eeb196143642e5ab789a4101a9d7a66d63e3f3ae55004ccc15a214"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9c492188f01dab148da458e79f6d5d4f4089a2709791629bbd38722646365270"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "dc3016d43d79171ad8e05c23a0271257a987145782c1efd88c40bb0b8bbe8a72"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "7e3775ed32ea58015f2dd92c2c3bcb91018a27ea1c9c44e09daf5c2970206716"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0af8b169e09d23a1fc1c44c9e6c02a2fd9bb902b07b00637551bb7256cda7b5f"
+    sha256 cellar: :any_skip_relocation, ventura:        "170a42c8b5c0cb776be3979e0f03336cdc1534e254bebc72cd869740ed1a16c5"
+    sha256 cellar: :any_skip_relocation, monterey:       "059b9dc5449ecdbabd67977f1ce687ccc8e1044061dc361a6147af7a91b3485b"
+    sha256 cellar: :any_skip_relocation, big_sur:        "d3ff2185fd39b6314436d02a2f29832e142d494967435b3747a4b69c843d61a9"
+    sha256 cellar: :any_skip_relocation, catalina:       "e4010fa44ea654c03f767a1c36ffed817346e77cb449138714c73770800f0621"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "34f256c0bd39e632e707b96f3ae4a2720f30bec53bcbf13e9705e1f743a3317f"
   end
 
   depends_on "go" => :build

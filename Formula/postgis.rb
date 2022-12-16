@@ -1,8 +1,8 @@
 class Postgis < Formula
   desc "Adds support for geographic objects to PostgreSQL"
   homepage "https://postgis.net/"
-  url "https://download.osgeo.org/postgis/source/postgis-3.1.4.tar.gz"
-  sha256 "dc8e3fe8bc532e422f5d724c5a7c437f6555511716f6410d4d2db9762e1a3796"
+  url "https://download.osgeo.org/postgis/source/postgis-3.3.2.tar.gz"
+  sha256 "9a2a219da005a1730a39d1959a1c7cec619b1efb009b65be80ffc25bad299068"
   license "GPL-2.0-or-later"
   revision 1
 
@@ -12,14 +12,17 @@ class Postgis < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_big_sur: "514c752c2b48150b312e276f5955745180263c75b3f1a498c8f6e0a49a6154a3"
-    sha256 cellar: :any, big_sur:       "0531be5a6e8c0bfc00047149f45daeeb2562b8f556f9786b49f7605f91ab6c32"
-    sha256 cellar: :any, catalina:      "4bda3d7aa8a02bb24e4f13de6eb1b3eefcb7d1c57bdd622c3a5bf07f0e5350a7"
-    sha256 cellar: :any, mojave:        "577d3091a205f8ce726a6d1da06315cc770f88fc2a22945d29b9758e14d27bf8"
+    sha256 cellar: :any,                 arm64_ventura:  "e392847c4a6f953f0b8a463a5ab0e90867027f2979b02b9c73237d13565887fd"
+    sha256 cellar: :any,                 arm64_monterey: "878abb2fd55536b49567a32ee20a2cedfee0c848665e802b0bec16219199295f"
+    sha256 cellar: :any,                 arm64_big_sur:  "4fd2bc0ef5f2b012f42fa85d42ff275fdefd72a7e7eb4e9fce7e0601f765a5f1"
+    sha256 cellar: :any,                 ventura:        "2c0e3d3daf6ec112336bc161209f3558242f4d61bbeb1dc6159d5138ecde5660"
+    sha256 cellar: :any,                 monterey:       "e54e26eeeea6ca539902adf62462f4c761373e329a2d9afe88afcebfc55e5128"
+    sha256 cellar: :any,                 big_sur:        "f75a88d60aea77a0b9676759c20167fe9ae70f6d971dccb3582e97d9f8674233"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f1f1ae0e738b09b6220dbbe02dfee56a5325afe9259b15026046bdc00bb16709"
   end
 
   head do
-    url "https://git.osgeo.org/gitea/postgis/postgis.git"
+    url "https://git.osgeo.org/gitea/postgis/postgis.git", branch: "master"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
@@ -31,19 +34,27 @@ class Postgis < Formula
   depends_on "gdal" # for GeoJSON and raster handling
   depends_on "geos"
   depends_on "json-c" # for GeoJSON and raster handling
-  depends_on "pcre"
-  depends_on "postgresql"
-  depends_on "proj@7"
+  depends_on "pcre2"
+  depends_on "postgresql@14"
+  depends_on "proj"
   depends_on "protobuf-c" # for MVT (map vector tiles) support
   depends_on "sfcgal" # for advanced 2D/3D functions
+
+  fails_with gcc: "5"
+
+  def postgresql
+    Formula["postgresql@14"]
+  end
 
   def install
     ENV.deparallelize
 
+    ENV["PG_CONFIG"] = postgresql.opt_bin/"pg_config"
+
     args = [
-      "--with-projdir=#{Formula["proj@7"].opt_prefix}",
+      "--with-projdir=#{Formula["proj"].opt_prefix}",
       "--with-jsondir=#{Formula["json-c"].opt_prefix}",
-      "--with-pgconfig=#{Formula["postgresql"].opt_bin}/pg_config",
+      "--with-pgconfig=#{postgresql.opt_bin}/pg_config",
       "--with-protobufdir=#{Formula["protobuf-c"].opt_bin}",
       # Unfortunately, NLS support causes all kinds of headaches because
       # PostGIS gets all of its compiler flags from the PGXS makefiles. This
@@ -53,24 +64,37 @@ class Postgis < Formula
     ]
 
     system "./autogen.sh" if build.head?
+    # Fixes config/install-sh: No such file or directory
+    # This is caused by a misalignment between ./configure in postgres@14 and postgis
+    mv "build-aux", "config"
+    inreplace %w[configure utils/Makefile.in] do |s|
+      s.gsub! "build-aux", "config"
+    end
     system "./configure", *args
     system "make"
 
+    # Install to a staging directory to circumvent the hardcoded install paths
+    # set by the PGXS makefiles.
     mkdir "stage"
     system "make", "install", "DESTDIR=#{buildpath}/stage"
 
-    bin.install Dir["stage/**/bin/*"]
-    lib.install Dir["stage/**/lib/*"]
-    include.install Dir["stage/**/include/*"]
-    (doc/"postgresql/extension").install Dir["stage/**/share/doc/postgresql/extension/*"]
-    (share/"postgresql/extension").install Dir["stage/**/share/postgresql/extension/*"]
-    pkgshare.install Dir["stage/**/contrib/postgis-*/*"]
-    (share/"postgis_topology").install Dir["stage/**/contrib/postgis_topology-*/*"]
+    # Some files are stored in the stage directory with the cellar prefix of
+    # the version of postgresql used to build postgis.  Since we copy these
+    # files into the postgis keg and symlink them to HOMEBREW_PREFIX, postgis
+    # only needs to be rebuilt when there is a new major version of postgresql.
+    postgresql_prefix = postgresql.prefix.realpath
+    postgresql_stage_path = File.join("stage", postgresql_prefix)
+    bin.install (buildpath/postgresql_stage_path/"bin").children
+    doc.install (buildpath/postgresql_stage_path/"share/doc").children
+
+    stage_path = File.join("stage", HOMEBREW_PREFIX)
+    lib.install (buildpath/stage_path/"lib").children
+    share.install (buildpath/stage_path/"share").children
 
     # Extension scripts
     bin.install %w[
       utils/create_undef.pl
-      utils/postgis_proc_upgrade.pl
+      utils/create_upgrade.pl
       utils/postgis_restore.pl
       utils/profile_intersects.pl
       utils/test_estimation.pl
@@ -78,14 +102,13 @@ class Postgis < Formula
       utils/test_geography_joinestimation.pl
       utils/test_joinestimation.pl
     ]
-
-    man1.install Dir["doc/**/*.1"]
   end
 
   test do
-    pg_version = Formula["postgresql"].version.major
+    pg_version = postgresql.version.major
     expected = /'PostGIS built for PostgreSQL % cannot be loaded in PostgreSQL %',\s+#{pg_version}\.\d,/
-    assert_match expected, (share/"postgis/postgis.sql").read
+    postgis_version = Formula["postgis"].version.major_minor
+    assert_match expected, (share/postgresql.name/"contrib/postgis-#{postgis_version}/postgis.sql").read
 
     require "base64"
     (testpath/"brew.shp").write ::Base64.decode64 <<~EOS
@@ -122,5 +145,19 @@ class Postgis < Formula
     result = shell_output("#{bin}/shp2pgsql #{testpath}/brew.shp")
     assert_match "Point", result
     assert_match "AddGeometryColumn", result
+
+    pg_ctl = postgresql.opt_bin/"pg_ctl"
+    psql = postgresql.opt_bin/"psql"
+    port = free_port
+
+    system pg_ctl, "initdb", "-D", testpath/"test"
+    (testpath/"test/postgresql.conf").write <<~EOS, mode: "a+"
+
+      shared_preload_libraries = 'postgis-3'
+      port = #{port}
+    EOS
+    system pg_ctl, "start", "-D", testpath/"test", "-l", testpath/"log"
+    system psql, "-p", port.to_s, "-c", "CREATE EXTENSION \"postgis\";", "postgres"
+    system pg_ctl, "stop", "-D", testpath/"test"
   end
 end

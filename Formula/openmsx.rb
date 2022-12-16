@@ -13,15 +13,18 @@ class Openmsx < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "8973febf561305e42e379c90018c1f09d5ab18129c36f41fdd07ee1677d017ca"
-    sha256 cellar: :any, arm64_big_sur:  "1a4c53f573b29eaef8b6454622bd18e02b0369b8bc9c5e51493d0b2022b10b9b"
-    sha256 cellar: :any, monterey:       "776c25742abbda02e552f0401268c3ee623cfdf1cca5078fdcb95b9077898fbd"
-    sha256 cellar: :any, big_sur:        "7204df7abcba41b2a74ba2d6b969b610a56bf36e332a9f25c280bd74c88ddc87"
-    sha256 cellar: :any, catalina:       "1a5c7befdf1a6faa24d6a1043c6bc2ee722cb118b8bb788323f01434d15e94b3"
-    sha256 cellar: :any, mojave:         "57e29bb1e9e2ed95d628b7933c1929eb99da46f9bfc4885bc9b072a94afd6c0e"
+    rebuild 2
+    sha256 cellar: :any,                 arm64_ventura:  "5999e56087a8289b8fb18ed025525ddfaad855d8fa48fc57793efcb80e8358ee"
+    sha256 cellar: :any,                 arm64_monterey: "906faeef395d49a464d05b3dd09fc8cf45930812dc3ed406bc3ce2a30e4e81d5"
+    sha256 cellar: :any,                 arm64_big_sur:  "1d6d5e1f9cabb92201022499fa94fc0fe154a5c88ef956d4e822073fd46cace8"
+    sha256 cellar: :any,                 ventura:        "0b29189937b744d4d1a5da43dd36f21a9c501f631885d66908fd44ee655f177d"
+    sha256 cellar: :any,                 monterey:       "00a56f37ea35e7546d518a011131a5576dc45596eca0251781969400d7882ca3"
+    sha256 cellar: :any,                 big_sur:        "59436ec2d4257478c10c3c8d811ff0116f599b83ea77d9a0f9c2a6e1efdcb3d2"
+    sha256 cellar: :any,                 catalina:       "c6a9798845991625cede35b99fd1a21f0dc264e0b639b2fc7881d2559dfef615"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f8cd4e2d13c394406ad516d6a19d4613ef09b7f684ae43f44161e13f91740508"
   end
 
-  depends_on "python@3.9" => :build
+  depends_on "python@3.10" => :build
   depends_on "freetype"
   depends_on "glew"
   depends_on "libogg"
@@ -31,19 +34,23 @@ class Openmsx < Formula
   depends_on "sdl2_ttf"
   depends_on "theora"
 
+  uses_from_macos "tcl-tk"
   uses_from_macos "zlib"
 
   on_linux do
     depends_on "alsa-lib"
   end
 
+  fails_with gcc: "5"
+
   def install
     # Hardcode prefix
     inreplace "build/custom.mk", "/opt/openMSX", prefix
+    inreplace "build/probe.py", "platform == 'darwin'", "platform == 'linux'" if OS.linux?
     inreplace "build/probe.py", "/usr/local", HOMEBREW_PREFIX
 
     # Help finding Tcl (https://github.com/openMSX/openMSX/issues/1082)
-    ENV["TCL_CONFIG"] = "#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework" if OS.mac?
+    ENV["TCL_CONFIG"] = OS.mac? ? MacOS.sdk_path/"System/Library/Frameworks/Tcl.framework" : Formula["tcl-tk"].lib
 
     system "./configure"
     system "make"

@@ -7,12 +7,17 @@ class ClangFormat < Formula
   head "https://github.com/llvm/llvm-project.git", branch: "main"
 
   stable do
-    url "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/llvm-13.0.0.src.tar.xz"
-    sha256 "408d11708643ea826f519ff79761fcdfc12d641a2510229eec459e72f8163020"
+    url "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/llvm-15.0.6.src.tar.xz"
+    sha256 "0b32199401f27e2e0353846a8c5fbadd77beca2570654fb9ef7ac9b7f26967e3"
 
     resource "clang" do
-      url "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang-13.0.0.src.tar.xz"
-      sha256 "5d611cbb06cfb6626be46eb2f23d003b2b80f40182898daa54b1c4e8b5b9e17e"
+      url "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang-15.0.6.src.tar.xz"
+      sha256 "10119ae195f1b4f979fe42e67b781e175b0c0d4e982fd6a2f44c4aa7fc925233"
+    end
+
+    resource "cmake" do
+      url "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/cmake-15.0.6.src.tar.xz"
+      sha256 "7613aeeaba9b8b12b35224044bc349b5fa45525919625057fa54dc882dcb4c86"
     end
   end
 
@@ -23,20 +28,20 @@ class ClangFormat < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b3c53fc8d8d635d33e1c95c93d3145c8634f892c39d68057d6301ff2bc134cac"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "d6e1a6486b61841a48d09be26afcd1d63618e47201070f363835db32f3c2a35f"
-    sha256 cellar: :any_skip_relocation, monterey:       "3ba5e6a954227679fb2b958d6f102a01e3ba06b255c67468bb5813cf14f135a6"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7c9cf9dcf1d657527109a72a84245c576e46660be33672e8af2aab796a6259be"
-    sha256 cellar: :any_skip_relocation, catalina:       "7b894aa194d712708e0eb04ac4445098bf941d748fc1a7920763d1927c5a72a3"
-    sha256 cellar: :any_skip_relocation, mojave:         "ff867f295ac041dfafcee2ae960ef373d68295c11d1c9e911b5b4ac1828eb444"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f15d3cfcebe8159631ddfa84dec5d6389bfaf1220c2a26692bbc6cb4e7fa8b7e"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "fbf56abfb24a21c165be6354c24784fda0404eb0009acb24e7764f985cc46396"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "863c6e225f28a486e59d9581a15a138f12a79be7ec0e88bfbb7a13dce69caed2"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9dff09df90416010de10c0f2d5827d7088f752747b79c4b1dc2fdbfc8ec82bf2"
+    sha256 cellar: :any_skip_relocation, ventura:        "eaa6987f545e773b2af7030555198e441ce18ff1fc0be8728757cb167e271a4b"
+    sha256 cellar: :any_skip_relocation, monterey:       "f2057cfecd05af214a620f359634001fe78fb25b21ec2c19885cd57e38af9e6f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "047d4e2321824b31d4ec0208a85e114e579255c210f62e0415f618f1fbbe3362"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6a0d2f67c64a65e9411420b052c6f3cc234879ff62c8306c3090c19298abb4cc"
   end
 
   depends_on "cmake" => :build
-  depends_on "ninja" => :build
 
   uses_from_macos "libxml2"
   uses_from_macos "ncurses"
+  uses_from_macos "python", since: :catalina
   uses_from_macos "zlib"
 
   on_linux do
@@ -44,34 +49,43 @@ class ClangFormat < Formula
   end
 
   def install
-    if build.head?
+    llvmpath = if build.head?
       ln_s buildpath/"clang", buildpath/"llvm/tools/clang"
+
+      buildpath/"llvm"
     else
-      (buildpath/"tools/clang").install resource("clang")
+      (buildpath/"src").install buildpath.children
+      (buildpath/"src/tools/clang").install resource("clang")
+      (buildpath/"cmake").install resource("cmake")
+
+      buildpath/"src"
     end
 
-    llvmpath = build.head? ? buildpath/"llvm" : buildpath
+    system "cmake", "-S", llvmpath, "-B", "build",
+                    "-DLLVM_EXTERNAL_PROJECTS=clang",
+                    "-DLLVM_INCLUDE_BENCHMARKS=OFF",
+                    *std_cmake_args
+    system "cmake", "--build", "build", "--target", "clang-format"
 
-    mkdir llvmpath/"build" do
-      args = std_cmake_args
-      args << "-DLLVM_EXTERNAL_PROJECTS=\"clang\""
-      args << ".."
-      system "cmake", "-G", "Ninja", *args
-      system "ninja", "clang-format"
-    end
-
-    bin.install llvmpath/"build/bin/clang-format"
+    bin.install "build/bin/clang-format"
     bin.install llvmpath/"tools/clang/tools/clang-format/git-clang-format"
-    (share/"clang").install Dir[llvmpath/"tools/clang/tools/clang-format/clang-format*"]
+    (share/"clang").install llvmpath.glob("tools/clang/tools/clang-format/clang-format*")
   end
 
   test do
+    system "git", "init"
+    system "git", "commit", "--allow-empty", "-m", "initial commit", "--quiet"
+
     # NB: below C code is messily formatted on purpose.
     (testpath/"test.c").write <<~EOS
       int         main(char *args) { \n   \t printf("hello"); }
     EOS
+    system "git", "add", "test.c"
 
     assert_equal "int main(char *args) { printf(\"hello\"); }\n",
         shell_output("#{bin}/clang-format -style=Google test.c")
+
+    ENV.prepend_path "PATH", bin
+    assert_match "test.c", shell_output("git clang-format", 1)
   end
 end

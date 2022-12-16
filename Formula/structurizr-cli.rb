@@ -1,17 +1,12 @@
 class StructurizrCli < Formula
   desc "Command-line utility for Structurizr"
   homepage "https://structurizr.com"
-  url "https://github.com/structurizr/cli/releases/download/v1.15.0/structurizr-cli-1.15.0.zip"
-  sha256 "f593f1dc36c1d851522ed269041e47a119885ebe4001825ba979b0ef04b9a7f3"
+  url "https://github.com/structurizr/cli/releases/download/v1.20.1/structurizr-cli-1.20.1.zip"
+  sha256 "6ba9133243e1780200042c030760b56ca89ca802673a0618726419522c82be8b"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_big_sur: "eac8def454971dc2895f53190738e9a374f2ef60cee4b77bd77866118292d2d6"
-    sha256 cellar: :any_skip_relocation, big_sur:       "eac8def454971dc2895f53190738e9a374f2ef60cee4b77bd77866118292d2d6"
-    sha256 cellar: :any_skip_relocation, catalina:      "eac8def454971dc2895f53190738e9a374f2ef60cee4b77bd77866118292d2d6"
-    sha256 cellar: :any_skip_relocation, mojave:        "eac8def454971dc2895f53190738e9a374f2ef60cee4b77bd77866118292d2d6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "cd865a19734d5c5665b5aa1dd568f9da6415e163b138021a5b2e1e8bad795843"
-    sha256 cellar: :any_skip_relocation, all:           "7a7b9c7839abd43d50d85385dd979600fcab910da2527b29ca1c54e38b44dc16"
+    sha256 cellar: :any_skip_relocation, all: "0610b6c37e4931615f7410ddf32f0c8e999728604443d08419f24d755cc4fadf"
   end
 
   depends_on "openjdk"
@@ -23,12 +18,9 @@ class StructurizrCli < Formula
   end
 
   test do
-    expected_output = <<~EOS.strip
-      Structurizr CLI v#{version}
-      Structurizr DSL v#{version}
-      Usage: structurizr push|pull|lock|unlock|export|validate|list [options]
-    EOS
     result = pipe_output("#{bin}/structurizr-cli").strip
-    assert_equal result, expected_output
+    # not checking `Structurizr DSL` version as it is different binary
+    assert_match "Structurizr CLI v#{version}", result
+    assert_match "Usage: structurizr push|pull|lock|unlock|export|validate|list [options]", result
   end
 end

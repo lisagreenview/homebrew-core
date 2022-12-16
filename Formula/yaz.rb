@@ -2,16 +2,11 @@ class Yaz < Formula
   desc "Toolkit for Z39.50/SRW/SRU clients/servers"
   homepage "https://www.indexdata.com/resources/software/yaz/"
   license "BSD-3-Clause"
+  revision 3
 
   stable do
-    url "https://ftp.indexdata.com/pub/yaz/yaz-5.31.0.tar.gz"
-    sha256 "864d4476d1578ac132782b3d4e2eb96391bd88f7ae3040ddcb1556aba6fe0d15"
-
-    # Fix -flat_namespace being used on Big Sur and later.
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-    end
+    url "https://ftp.indexdata.com/pub/yaz/yaz-5.32.0.tar.gz"
+    sha256 "04d08c799d5ee56a2670e6ac0b42398d2ff956bd9bf144bfe9c4c30e557140e0"
   end
 
   livecheck do
@@ -20,33 +15,58 @@ class Yaz < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2b5ea1cae0aa4f18fcf09bc1a79df9cd185d94f6f2029315df6f9e6a1bead3ba"
-    sha256 cellar: :any,                 arm64_big_sur:  "88e9c78b500a5bf61ef7996e873a08508725edeb3d4e2ff364c4c18b9f55fb16"
-    sha256 cellar: :any,                 monterey:       "f3884f5e99387f5dfbb9ae482a1e388fb7ccffc35dd7a42460dbace5bfcfd978"
-    sha256 cellar: :any,                 big_sur:        "968de6c53096f9f0accf06488de7e4ab76428a33eb1bcd27866ae34376b82996"
-    sha256 cellar: :any,                 catalina:       "5a2ead8e67e33724130ae46cfcdd880488f99715816ef803f5b30b64cb3cf898"
-    sha256 cellar: :any,                 mojave:         "2e9e5037cc90d375556fd203e8316e81b0df113a48509bf25df6f581c2dc2f9d"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "1df089100f75e362967e449c15abef1b9ce18f6b38421975614ee19b270609db"
+    sha256 cellar: :any,                 arm64_ventura:  "fda2a2d7d7e478e581e24c51a9ddfb0e5640c6af5c4ee18a0cfb47a40dd35883"
+    sha256 cellar: :any,                 arm64_monterey: "e557c8be8f4c335fac3cfa8f37d984bbd63c5716d98145c0d83ca0423fda4525"
+    sha256 cellar: :any,                 arm64_big_sur:  "2cdab667383b932b13aaaf8e9516b104f09afef4b45b1ca16888f9da54612afe"
+    sha256 cellar: :any,                 ventura:        "5b8c7e6fb876ba038cc8157635d1cf8b613c36b64042cc06e41975e439ef61f8"
+    sha256 cellar: :any,                 monterey:       "9e7b9b9bd1292324bd8fb4e28cd0e4010c29972e508626a0110adbe3908ac8ae"
+    sha256 cellar: :any,                 big_sur:        "ba154d92aa07f094933650506c59094cce717db404fe394afc35b8be6e852d73"
+    sha256 cellar: :any,                 catalina:       "c02b3f2c2b8a1f874d9a6d3269e4c35ff37fd2cc2c7aefc76c89e68015d20ba5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "a19506f2dc9e63a3ad1f6e0493c1304b912c1d7e18374ea4662de91abfaaf33d"
   end
 
   head do
-    url "https://github.com/indexdata/yaz.git"
+    url "https://github.com/indexdata/yaz.git", branch: "master"
+
     depends_on "autoconf" => :build
     depends_on "automake" => :build
+    depends_on "docbook-xsl" => :build
     depends_on "libtool" => :build
+
+    uses_from_macos "bison" => :build
+    uses_from_macos "tcl-tk" => :build
   end
 
   depends_on "pkg-config" => :build
+  depends_on "gnutls"
   depends_on "icu4c"
 
   uses_from_macos "libxml2"
+  uses_from_macos "libxslt"
 
   def install
-    system "./buildconf.sh" if build.head?
-    system "./configure", "--disable-dependency-tracking",
-                          "--prefix=#{prefix}",
-                          "--with-xml2"
+    if build.head?
+      ENV["XML_CATALOG_FILES"] = etc/"xml/catalog"
+      system "./buildconf.sh"
+    end
+    system "./configure", *std_configure_args,
+                          "--with-gnutls",
+                          "--with-xml2",
+                          "--with-xslt"
     system "make", "install"
+
+    # Replace dependencies' cellar paths, which can break build for dependents
+    # (like `metaproxy` and `zebra`) after a dependency is version/revision bumped
+    inreplace bin/"yaz-config" do |s|
+      s.gsub! Formula["gnutls"].prefix.realpath, Formula["gnutls"].opt_prefix
+      s.gsub! Formula["icu4c"].prefix.realpath, Formula["icu4c"].opt_prefix
+    end
+    unless OS.mac?
+      inreplace [bin/"yaz-config", lib/"pkgconfig/yaz.pc"] do |s|
+        s.gsub! Formula["libxml2"].prefix.realpath, Formula["libxml2"].opt_prefix
+        s.gsub! Formula["libxslt"].prefix.realpath, Formula["libxslt"].opt_prefix
+      end
+    end
   end
 
   test do

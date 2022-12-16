@@ -1,18 +1,18 @@
 class Libspng < Formula
   desc "C library for reading and writing PNG format files"
   homepage "https://libspng.org/"
-  url "https://github.com/randy408/libspng/archive/v0.7.0.tar.gz"
-  sha256 "969fb8beda61a2f5089b6acc9f9547acb4acc45000b84f5dcf17a1504f782c55"
+  url "https://github.com/randy408/libspng/archive/v0.7.3.tar.gz"
+  sha256 "a50cadbe808ffda1a7fab17d145f52a23b163f34b3eb3696c7ecb5a52340fc1d"
   license "BSD-2-Clause"
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "39382406a73e80894d41a444e05b9b91887f57fce69ee25e2f8ff1bda7999ffc"
-    sha256 cellar: :any, arm64_big_sur:  "191f00d597872763bdd69aee6b28f01d07e0cdd4216d7841589351cd79b4e33a"
-    sha256 cellar: :any, monterey:       "01ddffe0776ff5f8ca781cf1f596726d0ff97f43edd7048e351dc3eabe711f95"
-    sha256 cellar: :any, big_sur:        "20343c6622470a53ed19ee893f48e1a1a9c529426204b5b1869e590ce83767c3"
-    sha256 cellar: :any, catalina:       "ddbcbef115498ac21c7ac10006c8d7de824103413754493edf051ab8c13492d1"
-    sha256 cellar: :any, mojave:         "f319bda14642b057ee35abc95ed58bc8529c0028761f8989bdcefb0adf7488b0"
-    sha256               x86_64_linux:   "5f3451f468d58685c26c80f33980d7195f0411d3f4bab347704ca02bf42390b2"
+    sha256 cellar: :any,                 arm64_ventura:  "deb3a3d4552e7c993cb6f91645f52488ba1e7c310c60f07544e16b2918ff7575"
+    sha256 cellar: :any,                 arm64_monterey: "84b61c16e0cf8ec194780d6616eb3670c26369d0b79f4670c63a5583b646c223"
+    sha256 cellar: :any,                 arm64_big_sur:  "a152fb7f0a64b0ddac056e29578c6cebb64dae60cba7509ed4f82f3c59ac1591"
+    sha256 cellar: :any,                 ventura:        "d8784bef29e67699a913680022e5a48d6f499bf19564228383efdfbb9a518c8a"
+    sha256 cellar: :any,                 monterey:       "c3190740fd003e35cbeb8b71c0cae74bbc49478a5581781289bcd6a3966afaee"
+    sha256 cellar: :any,                 big_sur:        "fa2c6820fcdfe82921c55d077c696210bfcf7185e84a384fd8a14779117e212f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e8590ea4e1f4679adf589ceef9ad5a39b32aa24678d75cd6194d8b1114ef2747"
   end
 
   depends_on "meson" => :build

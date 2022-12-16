@@ -1,8 +1,8 @@
 class Dnsperf < Formula
   desc "Measure DNS performance by simulating network conditions"
   homepage "https://www.dns-oarc.net/tools/dnsperf"
-  url "https://www.dns-oarc.net/files/dnsperf/dnsperf-2.8.0.tar.gz"
-  sha256 "d50b9e05d9688a7b5906447cdca87bf1d8e100b5288e0081db6c3cdd0fea19b3"
+  url "https://www.dns-oarc.net/files/dnsperf/dnsperf-2.10.0.tar.gz"
+  sha256 "c4255f02b180299e5506cb5b130706a3ff8974426e4ed7a83852f3d8d11113fb"
   license "Apache-2.0"
 
   livecheck do
@@ -11,12 +11,14 @@ class Dnsperf < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "f06383bf7ab68f519f5b7037e31dedad98c77857cf475ef800e842321627e689"
-    sha256 cellar: :any,                 arm64_big_sur:  "740913f29f416d20fe462a5b609358c9331de5a2a79f0555536f5a25a515eb22"
-    sha256 cellar: :any,                 monterey:       "4144d2024ed40fcd9b6e8684edd476c1a5a3b6077a600cb929043c067eaa8dd4"
-    sha256 cellar: :any,                 big_sur:        "fc969607e2baacfcf5f14cc7f7338b25c147a76d01718b2055efe6b9b2df2d69"
-    sha256 cellar: :any,                 catalina:       "01eb44eafb115cc6d3c688d79014a972c4b3bf9b4121349de6f9d71b458bc04b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7dfc2db092504211f547c184efbbaf3625175f9f6bd984528848f879f539fa0b"
+    sha256 cellar: :any,                 arm64_ventura:  "157728f76b94569abca2c15c768e3baed0603f1c441e03bb2ff0ecd5ecce2593"
+    sha256 cellar: :any,                 arm64_monterey: "9b25b2a09255afc3891d0d17ec7ce9e65a1c8b229ac23728e3cc3d0a1fd76374"
+    sha256 cellar: :any,                 arm64_big_sur:  "ae5d6c446dbc5bab45e7e81d7dcbab642cca5b0ab928dc3b13d6a34523969014"
+    sha256 cellar: :any,                 ventura:        "0385697bf5cb6b4e87dfa0b5121f90961abee68667aadf91a92ea2b9fe4e4813"
+    sha256 cellar: :any,                 monterey:       "ac699fd318bf69be10d573acbb5c79d25af63e6fd7d7c8394ea96485ffd08697"
+    sha256 cellar: :any,                 big_sur:        "8a2720f49a11a0ab53e1316a7814540f8fcba643045a3a883563e36c612a4888"
+    sha256 cellar: :any,                 catalina:       "113d8551f583d7524ae265f03b8f0d1fb4294a4afac7bb22c18f1661349065d0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3cd1889eb7c180f4e1cb35608d89905168bb98d91f4371d99cf0c4957adc944e"
   end
 
   depends_on "pkg-config" => :build

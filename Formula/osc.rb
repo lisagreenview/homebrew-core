@@ -3,37 +3,41 @@ class Osc < Formula
 
   desc "Command-line interface to work with an Open Build Service"
   homepage "https://openbuildservice.org"
-  url "https://github.com/openSUSE/osc/archive/0.174.0.tar.gz"
-  sha256 "9be35b347fa07ac1235aa364b0e1229c00d5e98e202923d7a8a796e3ca2756ad"
+  url "https://github.com/openSUSE/osc/archive/0.182.0.tar.gz"
+  sha256 "aafbc66f114ffcabd1c25c7f3754895a5c26608c4d8193de02382221e68403c7"
   license "GPL-2.0-or-later"
-  revision 1
   head "https://github.com/openSUSE/osc.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "599f8515898fc6b2592434cfe8920bc6a05becbc1715c820b2cde12386bb5ba6"
-    sha256 cellar: :any,                 arm64_big_sur:  "537ad65c12cb4a633f5f52dada6121947c90750983e289165ed8e2b1fc0ca3d9"
-    sha256 cellar: :any,                 monterey:       "ffdaf4c3e9c80206c4bc722e7d4d9f28ca77dfe84d7d8d29d2624a56ffeba13a"
-    sha256 cellar: :any,                 big_sur:        "da58b8627f227b386b87ac8b558fb79a1d7b90c1ed60674639187928ab00197a"
-    sha256 cellar: :any,                 catalina:       "adb60d9fc75fe8696bde10876cd878ea8ce7b75a6b13401dc7d8c3f3dcbb77ef"
-    sha256 cellar: :any,                 mojave:         "d2bc5039ffcecc4163a88a606790bfa743a77433c86613dfa23421db39aad095"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2279bf292ee277d8a3f5d410113f8797d4915fa2b9f27fdf7e20c53274a3e550"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "93144cf2161710eeee9aa2b5cf676c50e318e59231514e457144c96eb41d87d0"
+    sha256 cellar: :any,                 arm64_monterey: "a83119ef9487123848841600f40ca303748c6a43362e078b874b44bbb15f3c51"
+    sha256 cellar: :any,                 arm64_big_sur:  "af95c49efddcd1b3ba387e91217142cf4c768bc643ada25367aa688d22c096dd"
+    sha256 cellar: :any,                 ventura:        "d1749b2dc0164cdfcf5b3cb87145ad9a9c1015fa87565363104c3f9db1e4428a"
+    sha256 cellar: :any,                 monterey:       "51d26b7ba92aca0563e9a89650b5e76796dc5fbec1bcbedd726d32f02ca65b14"
+    sha256 cellar: :any,                 big_sur:        "28074a56f1b8dc3d81031cbec687e95be2ca122efd7d749de4f5c179f3868a64"
+    sha256 cellar: :any,                 catalina:       "b95acc4edb4e58a810dd7767acb69ad7f97b622aed911a682b8b9728ea6313f7"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "2d5d40cb379b04526e1b974bf1c727a5b74f8bdacc9e568950f249e075fcece4"
   end
 
   depends_on "swig" => :build
   depends_on "openssl@1.1"
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   uses_from_macos "curl"
 
   resource "chardet" do
-    url "https://files.pythonhosted.org/packages/ee/2d/9cdc2b527e127b4c9db64b86647d567985940ac3698eeabc7ffaccb4ea61/chardet-4.0.0.tar.gz"
-    sha256 "0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"
+    url "https://files.pythonhosted.org/packages/31/a2/12c090713b3d0e141f367236d3a8bdc3e5fca0d83ff3647af4892c16c205/chardet-5.0.0.tar.gz"
+    sha256 "0368df2bfd78b5fc20572bb4e9bb7fb53e2c094f60ae9993339e8671d0afb8aa"
   end
 
   resource "M2Crypto" do
     url "https://files.pythonhosted.org/packages/2c/52/c35ec79dd97a8ecf6b2bbd651df528abb47705def774a4a15b99977274e8/M2Crypto-0.38.0.tar.gz"
     sha256 "99f2260a30901c949a8dc6d5f82cd5312ffb8abc92e76633baf231bbbcb2decb"
   end
+
+  # upstream issue tracker, https://github.com/openSUSE/osc/issues/1101
+  patch :DATA
 
   def install
     openssl = Formula["openssl@1.1"]
@@ -48,3 +52,25 @@ class Osc < Formula
     system bin/"osc", "--version"
   end
 end
+
+__END__
+diff --git a/osc/util/git_version.py b/osc/util/git_version.py
+index 69022cf..67a12e4 100644
+--- a/osc/util/git_version.py
++++ b/osc/util/git_version.py
+@@ -3,6 +3,7 @@ import subprocess
+
+
+ def get_git_archive_version():
++    return None
+     """
+     Return version that is set by git during `git archive`.
+     The returned format is equal to what `git describe --tags` returns.
+@@ -18,6 +19,7 @@ def get_git_archive_version():
+
+
+ def get_git_version():
++    return None
+     """
+     Determine version from git repo by calling `git describe --tags`.
+     """

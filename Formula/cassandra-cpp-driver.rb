@@ -1,24 +1,26 @@
 class CassandraCppDriver < Formula
   desc "DataStax C/C++ Driver for Apache Cassandra"
   homepage "https://docs.datastax.com/en/developer/cpp-driver/latest"
-  url "https://github.com/datastax/cpp-driver/archive/2.16.1.tar.gz"
-  sha256 "168d6fe9f3cf61be82cf5817024b92a186d7f944f0d390ed546f521bdabfc32e"
+  url "https://github.com/datastax/cpp-driver/archive/2.16.2.tar.gz"
+  sha256 "de60751bd575b5364c2c5a17a24a40f3058264ea2ee6fef19de126ae550febc9"
   license "Apache-2.0"
   head "https://github.com/datastax/cpp-driver.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "14dbf3d7ab5519eb930e68750633b7478540f2e7b174284bfc758875665588d4"
-    sha256 cellar: :any,                 arm64_big_sur:  "c3127af73fe5c279aa1fce70d690770b00bc6754a74b9163fde9c897122517da"
-    sha256 cellar: :any,                 monterey:       "62325f0a72185c0bc298c4bdb72e165df2e2abd1c1116978bc93fa63ad9b7253"
-    sha256 cellar: :any,                 big_sur:        "a27012349a4335a6e68c87d043883b366e81b592ef0b5465281298b1c7d8aba9"
-    sha256 cellar: :any,                 catalina:       "19a4f1d92582723258c06b8e9f49783520d05ab4966de3a0ce29089d9e1bac59"
-    sha256 cellar: :any,                 mojave:         "9832a774e184a7bb13e060983cbab2ddbe63af9bbc2b36394eb74a855e6fbcde"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d368d0340f8d563c9773055722ab2410f25c4c2ca46583bf087388c8d465734a"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "1f94b7c0d0411f6c14267d82f7161a885fb740854ad919e738e3de2fe79f6837"
+    sha256 cellar: :any,                 arm64_monterey: "9bc308348bd4255276447d174fc29a2c542213bf169408363896dfc49956ca35"
+    sha256 cellar: :any,                 arm64_big_sur:  "cac923a6c616a2e1bc661803649147b908087590f92a1481715c41b03bd326c0"
+    sha256 cellar: :any,                 ventura:        "a9a4ab72c7ced27cf60d95b402659425e946dad16bd3eaa35f66ac8b1eedf929"
+    sha256 cellar: :any,                 monterey:       "d2b5345fb271d6828ee7dd30066e9052130ccce62290d08e679e2d0d461ee778"
+    sha256 cellar: :any,                 big_sur:        "55ff95e3125b9b9fb85e77b3a41f11b76f3717cc9d8ed444e86d12bd50c52e6c"
+    sha256 cellar: :any,                 catalina:       "388592bafbc1a2d775cea095a5fc7bbb81996542eac910ae00621af12803ed9e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "90e70a2b4e18cf01957a124f1f5143102d03a8a20d9ad650f48a5241278aa14d"
   end
 
   depends_on "cmake" => :build
   depends_on "libuv"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   uses_from_macos "zlib"
 
@@ -27,11 +29,10 @@ class CassandraCppDriver < Formula
   end
 
   def install
-    mkdir "build" do
-      system "cmake", "..", *std_cmake_args, "-DLIBUV_ROOT_DIR=#{Formula["libuv"].opt_prefix}"
-      system "make"
-      system "make", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args,
+                    "-DLIBUV_ROOT_DIR=#{Formula["libuv"].opt_prefix}"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

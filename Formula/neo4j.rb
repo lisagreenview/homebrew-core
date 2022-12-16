@@ -1,8 +1,8 @@
 class Neo4j < Formula
   desc "Robust (fully ACID) transactional property graph database"
   homepage "https://neo4j.com/"
-  url "https://neo4j.com/artifact.php?name=neo4j-community-4.3.7-unix.tar.gz"
-  sha256 "4197834643122f3b7255bb0a1f7276b9f7e27ac060994915977f1bea4aa88a28"
+  url "https://neo4j.com/artifact.php?name=neo4j-community-5.3.0-unix.tar.gz"
+  sha256 "b20a3f253c42faccd1d2c37f9cc8bf6d557f0e645dced39e163da5ae12bb8d0a"
   license "GPL-3.0-or-later"
 
   livecheck do
@@ -12,14 +12,14 @@ class Neo4j < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "ce813cf1c442e7ad6724c3327a4e4a6d1d9cb288bfd15332673968f379a752a8"
+    sha256 cellar: :any_skip_relocation, all: "c5229246faf8a18d1895374e25219a2c76fb1c51fe13eff0feff571f2e85469c"
   end
 
-  depends_on "openjdk@11"
+  depends_on "openjdk"
 
   def install
     env = {
-      JAVA_HOME:  Formula["openjdk@11"].opt_prefix,
+      JAVA_HOME:  Formula["openjdk"].opt_prefix,
       NEO4J_HOME: libexec,
     }
     # Remove windows files
@@ -60,6 +60,6 @@ class Neo4j < Formula
     ENV["NEO4J_LOG"] = testpath/"libexec/data/log/neo4j.log"
     ENV["NEO4J_PIDFILE"] = testpath/"libexec/data/neo4j-service.pid"
     mkpath testpath/"libexec/data/log"
-    assert_match(/Neo4j .*is not running/i, shell_output("#{bin}/neo4j status", 3))
+    assert_match(/Neo4j .*is not running/i, shell_output("#{bin}/neo4j status 2>&1", 3))
   end
 end

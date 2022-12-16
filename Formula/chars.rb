@@ -1,20 +1,21 @@
 class Chars < Formula
   desc "Command-line tool to display information about unicode characters"
   homepage "https://github.com/antifuchs/chars/"
-  url "https://github.com/antifuchs/chars/archive/v0.5.0.tar.gz"
-  sha256 "5e2807b32bd75862d8b155fa774db26b649529b62da26a74e817bec5a26e1d7c"
+  url "https://github.com/antifuchs/chars/archive/v0.6.0.tar.gz"
+  sha256 "34537fd7b8b5fdc79a35284236443b07c54dded81d558c5bb774a2a354b498c7"
   license "MIT"
   head "https://github.com/antifuchs/chars.git", branch: "master"
 
   bottle do
     rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "02586356b7cee242264fc0182f5c7483f19c37bf8da4c38915069f29c68b4b04"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ae5975ad693a89f4d3c82809ba33f27d9387f7da07afaade8488d4d01e6460a6"
-    sha256 cellar: :any_skip_relocation, monterey:       "a9a38f825fa7d6a59ba3cf38e659e5d99b56f69c8199c6a29942bc6c1e37243e"
-    sha256 cellar: :any_skip_relocation, big_sur:        "7bf84510e842b1887ff71b0bb040954208fc3e190c6c184f7ee9d8fd3053cb8a"
-    sha256 cellar: :any_skip_relocation, catalina:       "66d0f3de7a9eede7244c30cf630a6491db948abffed597c5754a9a23cdcd5931"
-    sha256 cellar: :any_skip_relocation, mojave:         "9cee1f2bff403ab54515841d52575702ae2cd080a21bca940a0b99dafe0e20c1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "878af4769fdef2626bf346316ffe28ebf3fb42deeda26c6f720eea5f11847fd3"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "e86820c61f169941a6a3dae1cfcb6c1482cf8d3c085ce6efbf667bdbe1cfe894"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "213905dc7e59d0347209f84242f9fbdc7dd1adea7f890c9668472b3b5389ec74"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "46c98e22e7a51a614c1dc0d91843e864571c06a89b9776097f2d69dbc863d041"
+    sha256 cellar: :any_skip_relocation, ventura:        "0bf1197ee210cd14d89561b1e5bdc28947774cceba426eb04fdcf9984d30893d"
+    sha256 cellar: :any_skip_relocation, monterey:       "f6a1f04b6483546d3290e6205425b9848f12f6649245138a81855ea64f45ecb5"
+    sha256 cellar: :any_skip_relocation, big_sur:        "8f269cd28454df1e15bb292be55d98c2416c82bef436bd0328b74db74abc4058"
+    sha256 cellar: :any_skip_relocation, catalina:       "da663c9240e79d35e7a6a1cd40a114f37eef27e533126bca685af48b75fa11ed"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f2612efe435bbd11443b34bc4a3dffecbc9036884ce64e9c6fd5ad32e65c767e"
   end
 
   depends_on "rust" => :build

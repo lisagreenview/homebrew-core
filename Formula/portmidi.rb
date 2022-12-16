@@ -1,79 +1,40 @@
 class Portmidi < Formula
   desc "Cross-platform library for real-time MIDI I/O"
-  homepage "https://sourceforge.net/projects/portmedia/"
-  url "https://downloads.sourceforge.net/project/portmedia/portmidi/217/portmidi-src-217.zip"
-  sha256 "08e9a892bd80bdb1115213fb72dc29a7bf2ff108b378180586aa65f3cfd42e0f"
+  homepage "https://github.com/PortMidi/portmidi"
+  url "https://github.com/PortMidi/portmidi/archive/refs/tags/v2.0.4.tar.gz"
+  sha256 "64893e823ae146cabd3ad7f9a9a9c5332746abe7847c557b99b2577afa8a607c"
   license "MIT"
-  revision 2
-
-  livecheck do
-    url :stable
-    regex(%r{url=.*?/portmidi-src[._-]v?(\d+(?:\.\d+)*)\.}i)
-  end
+  version_scheme 1
 
   bottle do
-    rebuild 2
-    sha256 cellar: :any,                 arm64_monterey: "22d94369f7d0908f12fb4152ff61c4fda25ec13a2d27a2a7a877f578091b66d7"
-    sha256 cellar: :any,                 arm64_big_sur:  "3b88c9a63729019e630cd581fd6f54141cba80e6c0c2f57c369e67cd1b2e524b"
-    sha256 cellar: :any,                 monterey:       "475293c8e6adf7796aaa7c0a5d8ed2be72b772db607ed2e51e33efef3ea4463d"
-    sha256 cellar: :any,                 big_sur:        "b1f389b0e897e7fe5864bab75a9568bb4f08ede002f96f737f53248b88d49b43"
-    sha256 cellar: :any,                 catalina:       "d36a5abe7624c563740d43403605a26d4c697ea4ed917f0263bc2869f1f9a766"
-    sha256 cellar: :any,                 mojave:         "79c16a1e0a063781b5d89162d9c04e9bc6ff01a46a61479ea196d6749f0d0aff"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6020495625938e80fe6242050f0aec05cf0061ebc77b009fb0806c3239952471"
+    sha256 cellar: :any,                 arm64_ventura:  "4d1eacabbed9b9cc21f5891126b95474c410072736d1e0f0c69c85a1d05ee863"
+    sha256 cellar: :any,                 arm64_monterey: "e72738db9423088d59d65c5d41a41c17a6a929c286122c53dc8377ba48bae523"
+    sha256 cellar: :any,                 arm64_big_sur:  "6ef793d31a216d3ab6326ca7342c8a18b7e9e1432386421cf9a3a6a675bf4e02"
+    sha256 cellar: :any,                 ventura:        "fd8e93c75f7a823b4e592dfa7f951e6a4f2c2536c8262ae443e1de073d19c9e5"
+    sha256 cellar: :any,                 monterey:       "62fbb028d9eeb83d047559f0f7f6a7c23d586340f8314135cc369ca08e276a7c"
+    sha256 cellar: :any,                 big_sur:        "b69592ca4c66139bf269b33d45caede69a883f2e99bc8e6cca6d8db91c71df49"
+    sha256 cellar: :any,                 catalina:       "2b9d9436b11340384d5f447d05e765d48dbd9a3e38edff58d49193d1a4ba097f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3cb867e2067ab2610c4970281f93a7c21109f1cacd699cf66d965c4a87fe6a50"
   end
 
   depends_on "cmake" => :build
 
   on_linux do
     depends_on "alsa-lib"
-
-    # Fix hardcoded "/usr/local" paths to install libraries and headers
-    patch do
-      url "https://sources.debian.org/data/main/p/portmidi/1:217-6/debian/patches/00_cmake.diff"
-      sha256 "9a73c4453e784f97927d4412a916814b6f2ed864bd5f49d383c6650b8590fd26"
-    end
-
-    # Fix build error: midithru.c:(.text+0x374): undefined reference to `Pt_Start'
-    patch do
-      url "https://sources.debian.org/data/main/p/portmidi/1:217-6/debian/patches/20-movetest.diff"
-      sha256 "938560fc3a6910f9451b11136ab295b68d8b0e0539a3cd0f02550d209bb39202"
-    end
-
-    # Install porttime libraries
-    patch do
-      url "https://sources.debian.org/data/main/p/portmidi/1:217-6/debian/patches/30-porttime_cmake.diff"
-      sha256 "e6d26bfd2018e90d68c86cf5c7275480111873487d202bed7b1717a38dfa0fe2"
-    end
-  end
-
-  # Do not build pmjni.
-  patch do
-    url "https://sources.debian.org/data/main/p/portmidi/1:217-6/debian/patches/13-disablejni.patch"
-    sha256 "c11ce1e8fe620d5eb850a9f1ca56506f708e37d4390f1e7edb165544f717749e"
   end
 
   def install
-    # need to create include/lib directories since make won't create them itself
-    include.mkpath
-    lib.mkpath
-
-    if OS.mac?
-      ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version <= :sierra
-
-      inreplace "pm_mac/Makefile.osx", "PF=/usr/local", "PF=#{prefix}"
-
-      # Fix outdated SYSROOT to avoid:
-      # No rule to make target `/Developer/SDKs/MacOSX10.5.sdk/...'
-      inreplace "pm_common/CMakeLists.txt",
-                "set(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.5.sdk CACHE",
-                "set(CMAKE_OSX_SYSROOT /#{MacOS.sdk_path} CACHE"
-
-      system "make", "-f", "pm_mac/Makefile.osx"
-      system "make", "-f", "pm_mac/Makefile.osx", "install"
-    else
-      system "cmake", ".", *std_cmake_args, "-DCMAKE_CACHEFILE_DIR=#{buildpath}/build"
-      system "make", "install"
+    if OS.mac? && MacOS.version <= :sierra
+      # Fix "fatal error: 'os/availability.h' file not found" on 10.11 and
+      # "error: expected function body after function declarator" on 10.12
+      # Requires the CLT to be the active developer directory if Xcode is
+      # installed
+      ENV["SDKROOT"] = MacOS.sdk_path
     end
+
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

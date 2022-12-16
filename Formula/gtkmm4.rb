@@ -1,8 +1,8 @@
 class Gtkmm4 < Formula
   desc "C++ interfaces for GTK+ and GNOME"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/gtkmm/4.2/gtkmm-4.2.0.tar.xz"
-  sha256 "480c4c38f2e7ffcf58f56bb4b4d612f3f0cac9fd5908fd2cd8249fe10592a98b"
+  url "https://download.gnome.org/sources/gtkmm/4.8/gtkmm-4.8.0.tar.xz"
+  sha256 "c82786d46e2b07346b6397ca7f1929d952f4922fa5c9db3dee08498b9a136cf5"
   license "LGPL-2.1-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Gtkmm4 < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "8678fd72c6111120f7b5ea4bdf0a55940a34aa52aec23e724b7d0ad2719095ee"
-    sha256 cellar: :any, arm64_big_sur:  "88cc51b5d7ff82f704b0fd4a1b53d6932ee5aeb3d5319c70226080a502ad7bf9"
-    sha256 cellar: :any, monterey:       "fb4d1543767a9513992776d3bcb15d74faa121edafc16616ec166395e60fa980"
-    sha256 cellar: :any, big_sur:        "ac0d436909b6be289508ff5aac82d6ab59c36f144145b7259b77234e2b544116"
-    sha256 cellar: :any, catalina:       "6a67aa2c9ae11a5dea8c142f221a0b6fdaece0f6ceecfd9747aeda99782cea21"
-    sha256 cellar: :any, mojave:         "5f21219575cf773cb21686b592cdf8e05617567490111a7919b87dc5d165fb63"
+    sha256 cellar: :any, arm64_ventura:  "528dbb1dbb63538c5e603848ca21924a6788e051b1db9aa6c277472ca412e63e"
+    sha256 cellar: :any, arm64_monterey: "dec88e65848253c7a4d434a2d2f8f203bd41815ca6b03caa19c40b38c9210a7c"
+    sha256 cellar: :any, arm64_big_sur:  "9b85467c73912e156db432c26f8d65d20eb34d557849549e300ca7da48f47b61"
+    sha256 cellar: :any, ventura:        "4c745cb4d3b88143b1629a60c01729847dd3924f5c2ac83182fabcd97dfa94e6"
+    sha256 cellar: :any, monterey:       "c9149bef97843c81b6f2345eecae097c88232164acfea98a09f63a7d4f283b29"
+    sha256 cellar: :any, big_sur:        "2c7247708b823ce00462cf419513ba5cee394951f7a6db411a0654011bb68751"
+    sha256 cellar: :any, catalina:       "8a1da65e7de51882a9815e05b20afc3a00c81e9dfff4a10d3c74f587ccc574bb"
+    sha256               x86_64_linux:   "bbb9b2f21354e474597d8c4ac91af3ac1a86396b5e5d43a3259487f6aae9fe28"
   end
 
   depends_on "meson" => :build
@@ -25,6 +27,8 @@ class Gtkmm4 < Formula
   depends_on "cairomm"
   depends_on "gtk4"
   depends_on "pangomm"
+
+  fails_with gcc: "5"
 
   def install
     ENV.cxx11

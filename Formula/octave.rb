@@ -1,16 +1,19 @@
 class Octave < Formula
   desc "High-level interpreted language for numerical computing"
   homepage "https://www.gnu.org/software/octave/index.html"
-  url "https://ftp.gnu.org/gnu/octave/octave-6.4.0.tar.xz"
-  mirror "https://ftpmirror.gnu.org/octave/octave-6.4.0.tar.xz"
-  sha256 "6c1555f5aff0e655b88cad8e8bc2b740ec3a6f3f61898e4997359c2af55e5d20"
+  url "https://ftp.gnu.org/gnu/octave/octave-7.3.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/octave/octave-7.3.0.tar.xz"
+  sha256 "a508ee6aebccfa68967c9e7e0a08793c4ca8e4ddace723aabdb8f71ad34d57f1"
   license "GPL-3.0-or-later"
 
   bottle do
-    sha256 arm64_big_sur: "25dbd28b63a21bbe176111bea2b9234ff1b2f2c4fd2896d54357477ee15e06ed"
-    sha256 big_sur:       "58dd78d16e7a65a6377234623c8f99e19fcecdbf1e076564ebfbe7684831c316"
-    sha256 catalina:      "010b5a81eaa0f915eb4e83b84b43b86613436095cabe6361b7d76fb37b6cff68"
-    sha256 x86_64_linux:  "61a160547f61806c5c7458c7b5cd1e421fa6661c94c0e345e072d1acca10c9ae"
+    sha256 arm64_ventura:  "4cea8dcaac698ec5fc2e67c7aac70c057b229160984e5ee119967486e2b735ad"
+    sha256 arm64_monterey: "1ded732d4ae215ae8bb4f29d71380dafddd35fc95ac95510caf57fe4f17184ee"
+    sha256 arm64_big_sur:  "55ad0b58f4cc4420c2dd216e1505fd750bedc1bdebee5449656311ee4f373ef6"
+    sha256 ventura:        "61d3a8c93bf9a55e1420ab232d360b27cbb6c91f324cb73d7ef0e204b64736b2"
+    sha256 monterey:       "0b1e554cd8120526b224275a60ed9adfb007bef3340a91d2f92d849977f5f7dc"
+    sha256 big_sur:        "d6478685eeab67e5193bc695d3651eaffbd4cea0c7705fddf896b9723331f122"
+    sha256 x86_64_linux:   "d265f4e8b03f96649ba8bb9e96b77468000dfa9b0eb6435fe99e20b513cf7f6c"
   end
 
   head do
@@ -92,7 +95,6 @@ class Octave < Formula
     args = ["--prefix=#{prefix}",
             "--disable-dependency-tracking",
             "--disable-silent-rules",
-            "--enable-link-all-dependencies",
             "--enable-shared",
             "--disable-static",
             "--with-hdf5-includedir=#{Formula["hdf5"].opt_include}",
@@ -138,5 +140,22 @@ class Octave < Formula
     system bin/"octave", "--eval", "(22/7 - pi)/pi"
     # This is supposed to crash octave if there is a problem with BLAS
     system bin/"octave", "--eval", "single ([1+i 2+i 3+i]) * single ([ 4+i ; 5+i ; 6+i])"
+    # Test basic compilation
+    (testpath/"oct_demo.cc").write <<~EOS
+      #include <octave/oct.h>
+      DEFUN_DLD (oct_demo, args, /*nargout*/, "doc str")
+      { return ovl (42); }
+    EOS
+    system bin/"octave", "--eval", <<~EOS
+      mkoctfile ('-v', '-std=c++11', '-L#{lib}/octave/#{version}', 'oct_demo.cc');
+      assert(oct_demo, 42)
+    EOS
+    # Test FLIBS environment variable
+    system bin/"octave", "--eval", <<~EOS
+      args = strsplit (mkoctfile ('-p', 'FLIBS'));
+      args = args(~cellfun('isempty', args));
+      mkoctfile ('-v', '-std=c++11', '-L#{lib}/octave/#{version}', args{:}, 'oct_demo.cc');
+      assert(oct_demo, 42)
+    EOS
   end
 end

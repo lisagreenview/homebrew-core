@@ -1,26 +1,23 @@
 class Proj < Formula
   desc "Cartographic Projections Library"
   homepage "https://proj.org/"
-  url "https://github.com/OSGeo/PROJ/releases/download/8.2.0/proj-8.2.0.tar.gz"
-  sha256 "de93df9a4aa88d09459ead791f2dbc874b897bf67a5bbb3e4b68de7b1bdef13c"
+  url "https://github.com/OSGeo/PROJ/releases/download/9.1.1/proj-9.1.1.tar.gz"
+  sha256 "003cd4010e52bb5eb8f7de1c143753aa830c8902b6ed01209f294846e40e6d39"
   license "MIT"
+  head "https://github.com/OSGeo/proj.git", branch: "master"
 
   bottle do
-    sha256 arm64_monterey: "49b63a1a1b2af8b28663788278b9ccfd4c5b85333f6fbcda4435114cc81b75f0"
-    sha256 arm64_big_sur:  "58ecbb4a293eefeddec447b1905b1b6afc0e75287032310390a14fb62b7f9e8f"
-    sha256 monterey:       "c5d228523ab9c1a755e8b50f75d97f44c1ea6b91d95de2bfe91d94ec26130e86"
-    sha256 big_sur:        "4545e76654386d639320ba48ec998ce531911c60a32a8a59d5c0d3709cc1b61e"
-    sha256 catalina:       "3285536e477a5a07a1f553947e47cfd535e6f425a01c1940006e98eacd8d186c"
-    sha256 x86_64_linux:   "a6edf32a6649083586286a4dd07ca9363d744035b8f233d86147cfd97517f2bd"
+    sha256 arm64_ventura:  "87626c646b17ae0d9bf7d0f4b5ce2085653b2ea250ddd971ffa2967191c49318"
+    sha256 arm64_monterey: "3850d1fd423d04f540a977bbefda4ef56b542ec721885922554887cd21065c45"
+    sha256 arm64_big_sur:  "f78ad291c6f4caeeb490b0ad9f8e779ec300e4c582bc79e9ab8d3af0298fe010"
+    sha256 ventura:        "1a9736c2539545a7290f8a2420ddab1a20821b2ebddc166b83c78fbbab8bb2f6"
+    sha256 monterey:       "6755cb73b8ea5fe6697716631f4d98e498006a76b0cab8aa61e51feed77057f8"
+    sha256 big_sur:        "37c9291e10346ca821b43bea0638448e4425426f6989d01e0f649070b8adc495"
+    sha256 x86_64_linux:   "aeae0765e8b34e863528dbd651a33406be2cd0066dd15a22e50c571df35e440c"
   end
 
-  head do
-    url "https://github.com/OSGeo/proj.git"
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
-  end
-
+  depends_on "cmake" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "libtiff"
 
@@ -32,17 +29,21 @@ class Proj < Formula
   skip_clean :la
 
   # The datum grid files are required to support datum shifting
-  resource "datumgrid" do
-    url "https://download.osgeo.org/proj/proj-datumgrid-1.8.zip"
-    sha256 "b9838ae7e5f27ee732fb0bfed618f85b36e8bb56d7afb287d506338e9f33861e"
+  resource "proj-data" do
+    url "https://download.osgeo.org/proj/proj-data-1.11.tar.gz"
+    sha256 "a67b7ce4622c30be6bce3a43461e8d848da153c3b171beebbbea28f64d4ef363"
   end
 
   def install
-    (buildpath/"nad").install resource("datumgrid")
-    system "./autogen.sh" if build.head?
-    system "./configure", "--disable-dependency-tracking",
-                          "--prefix=#{prefix}"
-    system "make", "install"
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args, "-DCMAKE_INSTALL_RPATH=#{rpath}"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
+    system "cmake", "-S", ".", "-B", "static", *std_cmake_args, "-DBUILD_SHARED_LIBS=OFF"
+    system "cmake", "--build", "static"
+    lib.install Dir["static/lib/*.a"]
+    resource("proj-data").stage do
+      cp_r Dir["*"], pkgshare
+    end
   end
 
   test do

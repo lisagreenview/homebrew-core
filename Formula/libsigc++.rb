@@ -1,28 +1,27 @@
 class Libsigcxx < Formula
   desc "Callback framework for C++"
   homepage "https://libsigcplusplus.github.io/libsigcplusplus/"
-  url "https://download.gnome.org/sources/libsigc++/3.0/libsigc++-3.0.7.tar.xz"
-  sha256 "bfbe91c0d094ea6bbc6cbd3909b7d98c6561eea8b6d9c0c25add906a6e83d733"
+  url "https://download.gnome.org/sources/libsigc++/3.2/libsigc++-3.2.0.tar.xz"
+  sha256 "8cdcb986e3f0a7c5b4474aa3c833d676e62469509f4899110ddf118f04082651"
   license "LGPL-3.0-or-later"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "a7a9ae8e63d6d8512caef0cc85de5e6ec6a3c109dcb23fbbc6f7e4a7d20f7d95"
-    sha256 cellar: :any,                 arm64_big_sur:  "8cec1498075efde0b642bc9fb942f3311fa06cba220abe9d362ee3a7d5e9e4b6"
-    sha256 cellar: :any,                 monterey:       "c823c0dfdfad8b71692062ee9e473a0e0a0893bd0071d90ed07987a0dceea79c"
-    sha256 cellar: :any,                 big_sur:        "a6cbe2301ae3a6453a595f8ef6af01178b2abac4509ab56056636d9d52ebee07"
-    sha256 cellar: :any,                 catalina:       "11a842cc1940fe07eac5f4c28de62348c9a4c2aa3ae7d024a44e0f16f83409f0"
-    sha256 cellar: :any,                 mojave:         "5329e6dd054b51c9dcae16be93635dab3af249f671717d4894b1866a5b5efdf4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3dfe2ea60d780948d5c7ca21d2750b41c2fc308f9279bc3eed852a7f096d8d57"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "86b758f24d784bac1a64350a46e9e597b6554c42408dcb3cf601e4aa76723be4"
+    sha256 cellar: :any,                 arm64_monterey: "9391b249e2f7384c4720662739ef3de8f888c37c867be2ddb5bff7a1b2322399"
+    sha256 cellar: :any,                 arm64_big_sur:  "072c1e58af5c3200b2c48909f5c8beed75ae5a55d0b17b64c05ad834cb96ab9b"
+    sha256 cellar: :any,                 ventura:        "846b78f3cbf81e6473bd86c851a1ec10a5db493ca7a7d164da9c74f274fa2b0f"
+    sha256 cellar: :any,                 monterey:       "7425858f43533a26ba8fe48ec525e1f43b9f0e52b2b2aed07cd24bd9f5282c12"
+    sha256 cellar: :any,                 big_sur:        "18be15b790eb9c68fa9afd2348f2080db311fc48aa1ad89b7f230f4518fc09a1"
+    sha256 cellar: :any,                 catalina:       "ba6e2306ae68fb9f730d041caa8df52a13425d94ab3d905fa92b8b202cbedac4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f8cb554d8379a903baaf09a762afe79f86829ef9de076d53194b676a2acff291"
   end
 
   depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on macos: :high_sierra # needs C++17
 
-  on_linux do
-    depends_on "m4" => :build
-    depends_on "gcc"
-  end
+  uses_from_macos "m4" => :build
 
   fails_with gcc: "5"
 

@@ -3,23 +3,26 @@ class Awscurl < Formula
 
   desc "Curl like simplicity to access AWS resources"
   homepage "https://github.com/okigan/awscurl"
-  url "https://files.pythonhosted.org/packages/9c/82/33679049696e05fc85596ff93f19fa0b9f73200de62d5ab0bfd4eed9aa9f/awscurl-0.24.tar.gz"
-  sha256 "6a8eab18238f41297b9f568fead3161e898fb0f68f2b1bb3ed5ece358a929206"
+  url "https://files.pythonhosted.org/packages/6e/95/74209c24ac099c109109229bee14886c210edefb3f6bd73096e3a2277a93/awscurl-0.26.tar.gz"
+  sha256 "5cb14aa948160e8fda1e1285ab4824ee0f54b0af87f9bd169ee49fab0c09cb6c"
   license "MIT"
   revision 1
   head "https://github.com/okigan/awscurl.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "f13f65e5c449e9b4ed760b262914baa5819623357b7d0131569bb3108f1113d6"
-    sha256 cellar: :any,                 arm64_big_sur:  "5b4786b55be116cfa551e77bc3d06752f3e2d3cf9d30a4acf979f864e733f131"
-    sha256 cellar: :any,                 monterey:       "e4ebebdc1423851f2e729afda151d05097f09fa28a6f5bc455634b14ef233a7c"
-    sha256 cellar: :any,                 big_sur:        "63474937363760c00fcdf13adfd424536b23457d2173a3ee9d3ab59d0f765009"
-    sha256 cellar: :any,                 catalina:       "9f2fa777da553e8016a94009beeae8e38282c3514d716d289953aa2bb54d9673"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fce31b14f641d984c8cc28864849404615bac86ea7a0bd50381dc07c09abd7f7"
+    rebuild 2
+    sha256 cellar: :any,                 arm64_ventura:  "5358c8ddda4e4134640b53c58df145cf01f786efd2a1813dfd02bbebeea006a0"
+    sha256 cellar: :any,                 arm64_monterey: "c7915264e8ea0553714c8a95a5a1b75bc4f3af5bfec2d0f5c124a7ea85aa6213"
+    sha256 cellar: :any,                 arm64_big_sur:  "5402933d60a39f87ce4a47731282adf12fddab30a6ed93ccdd57dc867617e35e"
+    sha256 cellar: :any,                 ventura:        "c16f3a9dbd8b5bc78b6a9db33a531a8e0f5afefcab7304c2d8948d3824a7c92c"
+    sha256 cellar: :any,                 monterey:       "7c5a70efd6149129edb6dc77e996145de158f6daa10fcdaa964fdadaef190208"
+    sha256 cellar: :any,                 big_sur:        "e6ef3ffe330576f4ca845aa60ac433d8995194d672ea444d1b5568d4ebb5fb05"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "0843401423ae91bf6ab680449c16429305c10db54a77b4fe9535be4dcd1474c5"
   end
 
   depends_on "rust" => :build
-  depends_on "python@3.9"
+  depends_on "python@3.11"
+  depends_on "six"
 
   uses_from_macos "libffi"
 
@@ -28,63 +31,63 @@ class Awscurl < Formula
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/6d/78/f8db8d57f520a54f0b8a438319c342c61c22759d8f9a1cd2e2180b5e5ea9/certifi-2021.5.30.tar.gz"
-    sha256 "2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee"
+    url "https://files.pythonhosted.org/packages/37/f7/2b1b0ec44fdc30a3d31dfebe52226be9ddc40cd6c0f34ffc8923ba423b69/certifi-2022.12.7.tar.gz"
+    sha256 "35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/2e/92/87bb61538d7e60da8a7ec247dc048f7671afe17016cd0008b3b710012804/cffi-1.14.6.tar.gz"
-    sha256 "c9a875ce9d7fe32887784274dd533c57909b7b1dcadcc128a2ac21331a9765dd"
+    url "https://files.pythonhosted.org/packages/2b/a8/050ab4f0c3d4c1b8aaa805f70e26e84d0e27004907c5b8ecc1d31815f92a/cffi-1.15.1.tar.gz"
+    sha256 "d400bfb9a37b1351253cb402671cea7e89bdecc294e8016a707f6d1d8ac934f9"
   end
 
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/e7/4e/2af0238001648ded297fb54ceb425ca26faa15b341b4fac5371d3938666e/charset-normalizer-2.0.4.tar.gz"
-    sha256 "f23667ebe1084be45f6ae0538e4a5a865206544097e4e8bbcacf42cd02a348f3"
+    url "https://files.pythonhosted.org/packages/a1/34/44964211e5410b051e4b8d2869c470ae8a68ae274953b1c7de6d98bbcf94/charset-normalizer-2.1.1.tar.gz"
+    sha256 "5a3d016c7c547f69d6f81fb0db9449ce888b418b5b9952cc5e6e66843e9dd845"
   end
 
   resource "ConfigArgParse" do
-    url "https://files.pythonhosted.org/packages/d9/ad/d82750ad3a9e3419425eeeef7fbb5c8381dc8ec64a9894ddc3854837b10f/ConfigArgParse-1.5.1.tar.gz"
-    sha256 "371f46577e76ec71a183b88378f36dd09f4b946f60fe60712f411b020f26b812"
+    url "https://files.pythonhosted.org/packages/16/05/385451bc8d20a3aa1d8934b32bd65847c100849ebba397dbf6c74566b237/ConfigArgParse-1.5.3.tar.gz"
+    sha256 "1b0b3cbf664ab59dada57123c81eff3d9737e0d11d8cf79e3d6eb10823f1739f"
   end
 
   resource "configparser" do
-    url "https://files.pythonhosted.org/packages/c9/9c/c1ac39b3c72a70e93479cb4b7f1123f693293c5e4c40fdb3e1242f740665/configparser-5.0.2.tar.gz"
-    sha256 "85d5de102cfe6d14a5172676f09d19c465ce63d6019cf0a4ef13385fc535e828"
+    url "https://files.pythonhosted.org/packages/4b/c0/3a47084aca7a940ed1334f89ed2e67bcb42168c4f40c486e267fe71e7aa0/configparser-5.3.0.tar.gz"
+    sha256 "8be267824b541c09b08db124917f48ab525a6c3e837011f3130781a224c57090"
   end
 
   resource "cryptography" do
-    url "https://files.pythonhosted.org/packages/9b/77/461087a514d2e8ece1c975d8216bc03f7048e6090c5166bc34115afdaa53/cryptography-3.4.7.tar.gz"
-    sha256 "3d10de8116d25649631977cb37da6cbdd2d6fa0e0281d014a5b7d337255ca713"
+    url "https://files.pythonhosted.org/packages/e3/3f/41186b1f2fd86a542d399175f6b8e43f82cd4dfa51235a0b030a042b811a/cryptography-38.0.4.tar.gz"
+    sha256 "175c1a818b87c9ac80bb7377f5520b7f31b3ef2a0004e2420319beadedb67290"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/cb/38/4c4d00ddfa48abe616d7e572e02a04273603db446975ab46bbcd36552005/idna-3.2.tar.gz"
-    sha256 "467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3"
+    url "https://files.pythonhosted.org/packages/8b/e1/43beb3d38dba6cb420cefa297822eac205a277ab43e5ba5d5c46faf96438/idna-3.4.tar.gz"
+    sha256 "814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"
   end
 
   resource "pycparser" do
-    url "https://files.pythonhosted.org/packages/0f/86/e19659527668d70be91d0369aeaa055b4eb396b0f387a4f92293a20035bd/pycparser-2.20.tar.gz"
-    sha256 "2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"
+    url "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz"
+    sha256 "e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"
   end
 
   resource "pyOpenSSL" do
-    url "https://files.pythonhosted.org/packages/98/cd/cbc9c152daba9b5de6094a185c66f1c6eb91c507f378bb7cad83d623ea88/pyOpenSSL-20.0.1.tar.gz"
-    sha256 "4c231c759543ba02560fcd2480c48dcec4dae34c9da7d3747c508227e0624b51"
+    url "https://files.pythonhosted.org/packages/e7/2f/c6d89edac75482f11e231b644e365d31d5479b7b727734e6a8f3d00decd5/pyOpenSSL-22.1.0.tar.gz"
+    sha256 "7a83b7b272dd595222d672f5ce29aa030f1fb837630ef229f62e72e395ce8968"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
-  end
-
-  resource "six" do
-    url "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz"
-    sha256 "1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"
+    url "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz"
+    sha256 "7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/4f/5a/597ef5911cb8919efe4d86206aa8b2658616d676a7088f0825ca08bd7cb8/urllib3-1.26.6.tar.gz"
-    sha256 "f57b4c16c62fa2760b7e3d97c35b255512fb6b59a259730f36ba32ce9f8e342f"
+    url "https://files.pythonhosted.org/packages/c2/51/32da03cf19d17d46cce5c731967bf58de9bd71db3a379932f53b094deda4/urllib3-1.26.13.tar.gz"
+    sha256 "c083dd0dce68dbfbe1129d5271cb90f9447dea7d52097c6e0126120c521ddea8"
+  end
+
+  resource "urllib3-secure-extra" do
+    url "https://files.pythonhosted.org/packages/c9/67/76b7c055ea787729bb9f839a84689ea2f88e217519d59ae547824431ec95/urllib3-secure-extra-0.1.0.tar.gz"
+    sha256 "ee9409cbfeb4b8609047be4c32fb4317870c602767e53fd8a41005ebe6a41dff"
   end
 
   def install

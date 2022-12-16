@@ -1,8 +1,8 @@
 class Gtksourceview4 < Formula
   desc "Text view with syntax, undo/redo, and text marks"
   homepage "https://projects.gnome.org/gtksourceview/"
-  url "https://download.gnome.org/sources/gtksourceview/4.8/gtksourceview-4.8.2.tar.xz"
-  sha256 "842de7e5cb52000fd810e4be39cd9fe29ffa87477f15da85c18f7b82d45637cc"
+  url "https://download.gnome.org/sources/gtksourceview/4.8/gtksourceview-4.8.4.tar.xz"
+  sha256 "7ec9d18fb283d1f84a3a3eff3b7a72b09a10c9c006597b3fbabbb5958420a87d"
   license "LGPL-2.1-or-later"
 
   livecheck do
@@ -11,12 +11,14 @@ class Gtksourceview4 < Formula
   end
 
   bottle do
-    sha256 arm64_big_sur: "dbac09cb14c7566766fdeaf867d322e932142816efa5fc1f01a2a7d5792928ee"
-    sha256 monterey:      "ec1d0e3f6c5f9b2a83da4a9ec3016225bb4ffedb0619c262697b352d957bee7c"
-    sha256 big_sur:       "b714a2eaa1ad26b3aaf2b5169b85cd80ad890256886db2a3955d1d815dc9e7c3"
-    sha256 catalina:      "c48c3be2dc1bd3da0caf35b01a8238f53cc3c0d003f6ec4f845591f206041310"
-    sha256 mojave:        "73140e09740766172fba3e3184abe9a8be1358061b4ac2714995f183788e2e9b"
-    sha256 x86_64_linux:  "c28a65e0177c6ff90db9358eeb67a5f0daa24d109c905929926f56f726cf9891"
+    sha256 arm64_ventura:  "3903d6c034674930d5d6bf536e91114ae09f7614b24fce1c510ae4b15e94e1b3"
+    sha256 arm64_monterey: "11505701bfe67d0eeeffaf5b263ebed353da572e07b149a5bfd4f0b080d6fcfd"
+    sha256 arm64_big_sur:  "9499176d44c00d31e8c09cefb3e8520ae3010d6c14b058a55c91a0299edc89b3"
+    sha256 ventura:        "c2bab12f7f63c4030a16612377f05f8a126d185616ff0b0467e7d086b4b94787"
+    sha256 monterey:       "9c81022374dc1c1b014b4b77295b2a7bd8c7c481997a9fa2d8f70f418a357de5"
+    sha256 big_sur:        "6aa779236bd2122276579b2f3c16d7f4baef8b5a576f52afd0cd9f801c0b5eb4"
+    sha256 catalina:       "3610af7c1030e44f504272fadddeea19dd84abbd9e0f27a3fd36b2c633b0510f"
+    sha256 x86_64_linux:   "23926b28dc6ec1f7588b82cccbe70db56ca535def8b080271922358b45f291f4"
   end
 
   depends_on "gobject-introspection" => :build
@@ -100,11 +102,10 @@ class Gtksourceview4 < Formula
       -lpango-1.0
       -lpangocairo-1.0
     ]
-    on_macos do
+    if OS.mac?
       flags << "-lintl"
       flags << "-lgtksourceview-4.0"
-    end
-    on_linux do
+    else
       flags << "-lgtksourceview-4"
     end
     system ENV.cc, "test.c", "-o", "test", *flags

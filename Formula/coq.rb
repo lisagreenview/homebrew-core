@@ -1,8 +1,8 @@
 class Coq < Formula
   desc "Proof assistant for higher-order logic"
   homepage "https://coq.inria.fr/"
-  url "https://github.com/coq/coq/archive/V8.14.1.tar.gz"
-  sha256 "3cbfc1e1a72b16d4744f5b64ede59586071e31d9c11c811a0372060727bfd9c3"
+  url "https://github.com/coq/coq/archive/V8.16.1.tar.gz"
+  sha256 "583471c8ed4f227cb374ee8a13a769c46579313d407db67a82d202ee48300e4b"
   license "LGPL-2.1-only"
   head "https://github.com/coq/coq.git", branch: "master"
 
@@ -12,16 +12,19 @@ class Coq < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "d7f23fbb682540128e971f470d84655daae035fecf0275dc99b718a22df7a4c0"
-    sha256 arm64_big_sur:  "907068472a08346d4d8b6f88192d110d91a9f36c6ef4fae993cf38c1aa09fe5e"
-    sha256 monterey:       "c0443d41431b5f165a499410a5907ddd66158836e25cea0471a22f3311d8540e"
-    sha256 big_sur:        "cf833fba7b8fca257432c406feaba3c0b1074c28d9db67b5a47f7d79d8af61ce"
-    sha256 catalina:       "7c7d340763b9efc93c7e4e6564bf10ac06456a9d6b910fa1c337736c68c713e8"
-    sha256 x86_64_linux:   "7b86c2275b467edef96d619c0964f955c5c07ae78300609b3b8c061cd952909e"
+    sha256 arm64_ventura:  "a0058990f3f38468311a6b8d21dc9190e0c85e0a3d6b0566f2fa999bf269e255"
+    sha256 arm64_monterey: "3bc7aa1ac3c19daaf0067b05ef7f3e657220de11ff58d4df10aa98f1a0dabd7e"
+    sha256 arm64_big_sur:  "69601869940c2f3e0fcfb39de3414cbfb741913988ab35e44db9725245e10af7"
+    sha256 ventura:        "54bb8ebd69af1d5f2e947ac44b34153e40e9fa9ba3e17d42f4d865605d4d465d"
+    sha256 monterey:       "346ea8b3daf2398ba4fad2ffb7f814bdb94ede607f8831ef54874dae9079abaf"
+    sha256 big_sur:        "d2736451cb3e1233209f850fb3a33fafadcb081af9fffbf10bb09c2fd43fd2a7"
+    sha256 catalina:       "e31207f3bda0fedf8b15e0cff39d450628784dc55e1acd388c8cb7ec33b41e62"
+    sha256 x86_64_linux:   "963c072eae7fc4345f890594442f0a6537e272a3ef8f63e11c287b7216b0f98a"
   end
 
   depends_on "dune" => :build
   depends_on "ocaml-findlib" => :build
+  depends_on "gmp"
   depends_on "ocaml"
   depends_on "ocaml-zarith"
 
@@ -29,9 +32,11 @@ class Coq < Formula
   uses_from_macos "unzip" => :build
 
   def install
+    ENV.prepend_path "OCAMLPATH", Formula["ocaml-zarith"].opt_lib/"ocaml"
+    ENV.prepend_path "OCAMLPATH", Formula["ocaml-findlib"].opt_lib/"ocaml"
     system "./configure", "-prefix", prefix,
                           "-mandir", man,
-                          "-coqdocdir", "#{pkgshare}/latex",
+                          "-docdir", pkgshare/"latex",
                           "-coqide", "no",
                           "-with-doc", "no"
     system "make", "world"
@@ -64,6 +69,6 @@ class Coq < Formula
       intros; lia.
       Qed.
     EOS
-    system("#{bin}/coqc", "#{testpath}/testing.v")
+    system bin/"coqc", testpath/"testing.v"
   end
 end

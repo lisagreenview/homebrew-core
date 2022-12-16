@@ -1,18 +1,26 @@
 class Uuu < Formula
   desc "Universal Update Utility, mfgtools 3.0. NXP I.MX Chip image deploy tools"
   homepage "https://github.com/NXPmicro/mfgtools"
-  url "https://github.com/NXPmicro/mfgtools/releases/download/uuu_1.4.165/uuu_source-1.4.165.tar.gz"
-  sha256 "3b683f4c73eac4f6c7b918b7ad7a101276866b11b631355153962b4fd54ad19e"
+  url "https://github.com/NXPmicro/mfgtools/releases/download/uuu_1.4.243/uuu_source-1.4.243.tar.gz"
+  sha256 "9fcfe317c379be1e274aae34c19e1fd57188107f8fd0cdd379fe4473aacc92b1"
   license "BSD-3-Clause"
   head "https://github.com/NXPmicro/mfgtools.git", branch: "master"
 
+  livecheck do
+    url :stable
+    regex(%r{href=["']?[^"' >]*?/tag/(?:uuu[._-])?v?(\d+(?:\.\d+)+)["' >]}i)
+    strategy :github_latest
+  end
+
   bottle do
-    sha256 arm64_monterey: "56a412dd091e6e8f16eece2399fe09a6bb60f17f27b3cc9e7ba3a2fa831a1f32"
-    sha256 arm64_big_sur:  "3155b7adc7452904671c7da18cbaa59766dfdd567e85a2b242c24cd8dfede40a"
-    sha256 monterey:       "e05933d505e1ff45f462b6a45621166895816388efc4fed9a18a4b99f1d49081"
-    sha256 big_sur:        "90095bd9997651cf9ae3a7b50fd4766968913f2652f2ce47a272ce84e3ce4277"
-    sha256 catalina:       "a66ab4d8c2f44e2ed70106f45765591192b74726f6a1bb2e9e2475c3b9741a2d"
-    sha256 x86_64_linux:   "174d6f56a091fc444337cf21fe0b69595ee87d6bf7da58da597f045bb053de3e"
+    sha256 arm64_ventura:  "2b3fc45dec8c1704cca73c7fa759112c730c260683b04859c557777066403a1e"
+    sha256 arm64_monterey: "6d98d5f7415a9a48212b6ceb9fca916ef5f389674af1226ea33deeed4fbf55db"
+    sha256 arm64_big_sur:  "fcc082a046e5434ffbb0194ca0246b1a6eb331679ca00a3e67f934575f022089"
+    sha256 ventura:        "d31106face607547c7b81758ffe3040066e6f2fc1572f69fab4fb3df1d8d3269"
+    sha256 monterey:       "6f282587da598660d96aad433ebc9537910ba5da6f768eacc96fe9ccd00db636"
+    sha256 big_sur:        "2e71e4dc3c51ae85422dafb07c465b81936cd1a3608dd2a6f0e8d336f666f9f8"
+    sha256 catalina:       "15485ecb8c573a08aa2de01a69b2c32c90607d71cf6efc506057771f56616246"
+    sha256 x86_64_linux:   "d7d8dc25a86d910314416c59d985d6a6e3aa8028c0875be9868edf2cb6528a15"
   end
 
   depends_on "cmake" => :build
@@ -20,7 +28,7 @@ class Uuu < Formula
 
   depends_on "libusb"
   depends_on "libzip"
-  depends_on "openssl@1.1"
+  depends_on "openssl@3"
 
   def install
     system "cmake", "-S", ".", "-B", "build", *std_cmake_args

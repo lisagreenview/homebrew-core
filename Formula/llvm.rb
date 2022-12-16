@@ -1,26 +1,27 @@
 class Llvm < Formula
   desc "Next-gen compiler infrastructure"
   homepage "https://llvm.org/"
-  url "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/llvm-project-13.0.0.src.tar.xz"
-  sha256 "6075ad30f1ac0e15f07c1bf062c1e1268c241d674f11bd32cdf0e040c71f2bf3"
+  # NOTE: `ccls` will need rebuilding on every version bump.
+  url "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/llvm-project-15.0.6.src.tar.xz"
+  sha256 "9d53ad04dc60cb7b30e810faf64c5ab8157dadef46c8766f67f286238256ff92"
   # The LLVM Project is under the Apache License v2.0 with LLVM Exceptions
   license "Apache-2.0" => { with: "LLVM-exception" }
-  revision 1
   head "https://github.com/llvm/llvm-project.git", branch: "main"
 
   livecheck do
-    url :homepage
-    regex(/LLVM (\d+\.\d+\.\d+)/i)
+    url :stable
+    regex(/^llvmorg[._-]v?(\d+(?:\.\d+)+)$/i)
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "124b04767b224f74be9df06181f1e20122b39108e6926e621a7a64702c9b2796"
-    sha256 cellar: :any,                 arm64_big_sur:  "1213e5b2e63bc8d8440320cccd316a04b9824eba563534e4b5cfca000c5acf29"
-    sha256 cellar: :any,                 monterey:       "2d2f5c57e8cb8040031b26a81eb7355068b590a17a46034ca7ac339463eca14a"
-    sha256 cellar: :any,                 big_sur:        "dc0ac71f6ce7183b0fa4745fd94e08c55770dd1ee6d38d63f0c503d644937bb6"
-    sha256 cellar: :any,                 catalina:       "dbcd8e6f48bf03b4730b92f4fe6351af97addc2db3eefde3ba85402b120368f5"
-    sha256 cellar: :any,                 mojave:         "d2e8294ee877ecb1cf6b3d36f1f8bbc5f7749306b3b25ef988886600e931b7b4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "5e113ff32922d209fb85a0a6ba11931a2996146b7f71d7ac22caf1521f72349a"
+    sha256 cellar: :any,                 arm64_ventura:  "fbed58ad17a3e47145e419b2f658b6ec0686dc5b5fd546e2eeb7c715ae29e433"
+    sha256 cellar: :any,                 arm64_monterey: "8f80aaae06587c12082b37b06282f5b21efcdf85dc0ee50251c2906e7f64026c"
+    sha256 cellar: :any,                 arm64_big_sur:  "a4270295488c6f9ef52b0950a8bc387f896fa72fd8c792792cf0d8cb45166dfc"
+    sha256 cellar: :any,                 ventura:        "a90f10d5bc0a718b8ebda21c80455c88809e249264c9451a3705d81bd7aba50e"
+    sha256 cellar: :any,                 monterey:       "c84ccc990ed8b2290f1983cb035003a9a746b48bbf14edb4ec21d80dfb3ec268"
+    sha256 cellar: :any,                 big_sur:        "3794aa6a3bb902c2380a41c09da9450df8ffcc7f0ef324a85058e714e6311722"
+    sha256 cellar: :any,                 catalina:       "b7a6fedf60af550014f461b991631b5d4313620a8bfd080d51820e4f6cd1654b"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "77a14722b153935a8bf2feb3823602947cb2e074d95831cf00be97e3ba44ca39"
   end
 
   # Clang cannot find system headers if Xcode CLT is not installed
@@ -33,26 +34,35 @@ class Llvm < Formula
   # See: Homebrew/homebrew-core/issues/35513
   depends_on "cmake" => :build
   depends_on "swig" => :build
-  depends_on "python@3.9"
+  depends_on "python@3.11"
+  depends_on "six"
+  depends_on "z3"
+  depends_on "zstd"
 
   uses_from_macos "libedit"
   uses_from_macos "libffi", since: :catalina
-  uses_from_macos "libxml2"
   uses_from_macos "ncurses"
   uses_from_macos "zlib"
 
   on_linux do
-    depends_on "glibc" if Formula["glibc"].any_version_installed?
     depends_on "pkg-config" => :build
     depends_on "binutils" # needed for gold
     depends_on "elfutils" # openmp requires <gelf.h>
-    depends_on "gcc"
   end
 
   # Fails at building LLDB
   fails_with gcc: "5"
 
+  def python3
+    "python3.11"
+  end
+
   def install
+    # The clang bindings need a little help finding our libclang.
+    inreplace "clang/bindings/python/clang/cindex.py",
+              /^(\s*library_path\s*=\s*)None$/,
+              "\\1'#{lib}'"
+
     projects = %w[
       clang
       clang-tools-extra
@@ -73,8 +83,10 @@ class Llvm < Formula
       projects << "openmp"
     end
 
-    py_ver = Language::Python.major_minor_version("python3")
-    site_packages = Language::Python.site_packages("python3").delete_prefix("lib/")
+    python_versions = Formula.names
+                             .select { |name| name.start_with? "python@" }
+                             .map { |py| py.delete_prefix("python@") }
+    site_packages = Language::Python.site_packages(python3).delete_prefix("lib/")
 
     # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
@@ -101,17 +113,20 @@ class Llvm < Formula
       -DLLVM_INCLUDE_DOCS=OFF
       -DLLVM_INCLUDE_TESTS=OFF
       -DLLVM_INSTALL_UTILS=ON
-      -DLLVM_ENABLE_Z3_SOLVER=OFF
+      -DLLVM_ENABLE_Z3_SOLVER=ON
       -DLLVM_OPTIMIZED_TABLEGEN=ON
       -DLLVM_TARGETS_TO_BUILD=all
       -DLLDB_USE_SYSTEM_DEBUGSERVER=ON
       -DLLDB_ENABLE_PYTHON=ON
       -DLLDB_ENABLE_LUA=OFF
       -DLLDB_ENABLE_LZMA=ON
+      -DLLDB_USE_SYSTEM_SIX=ON
       -DLLDB_PYTHON_RELATIVE_PATH=libexec/#{site_packages}
+      -DLLDB_PYTHON_EXE_RELATIVE_PATH=#{which(python3).relative_path_from(prefix)}
       -DLIBOMP_INSTALL_ALIASES=OFF
-      -DCLANG_PYTHON_BINDINGS_VERSIONS=#{py_ver}
-      -DLLVM_CREATE_XCODE_TOOLCHAIN=#{MacOS::Xcode.installed? ? "ON" : "OFF"}
+      -DCLANG_PYTHON_BINDINGS_VERSIONS=#{python_versions.join(";")}
+      -DLLVM_CREATE_XCODE_TOOLCHAIN=OFF
+      -DCLANG_FORCE_MATCHING_LIBCLANG_SOVERSION=OFF
       -DPACKAGE_VENDOR=#{tap.user}
       -DBUG_REPORT_URL=#{tap.issues_url}
       -DCLANG_VENDOR_UTI=org.#{tap.user.downcase}.clang
@@ -126,30 +141,38 @@ class Llvm < Formula
       args << "-DFFI_LIBRARY_DIR=#{Formula["libffi"].opt_lib}"
     end
 
-    # gcc-5 fails at building compiler-rt. Enable PGO
-    # build on Linux when we switch to Ubuntu 18.04.
-    pgo_build = false
+    runtimes_cmake_args = []
+    builtins_cmake_args = []
+
     if OS.mac?
       args << "-DLLVM_BUILD_LLVM_C_DYLIB=ON"
       args << "-DLLVM_ENABLE_LIBCXX=ON"
-      args << "-DRUNTIMES_CMAKE_ARGS=-DCMAKE_INSTALL_RPATH=#{rpath}"
+      args << "-DLIBCXX_INSTALL_LIBRARY_DIR=#{lib}/c++"
+      args << "-DLIBCXXABI_INSTALL_LIBRARY_DIR=#{lib}/c++"
       args << "-DDEFAULT_SYSROOT=#{macos_sdk}" if macos_sdk
+      runtimes_cmake_args << "-DCMAKE_INSTALL_RPATH=#{loader_path}"
 
-      # Skip the PGO build on HEAD installs or non-bottle source builds
-      pgo_build = build.stable? && build.bottle?
-    end
+      # Prevent CMake from defaulting to `lld` when it's found next to `clang`.
+      # This can be removed after CMake 3.25. See:
+      # https://gitlab.kitware.com/cmake/cmake/-/merge_requests/7671
+      args << "-DLLVM_USE_LINKER=ld"
+      [args, runtimes_cmake_args, builtins_cmake_args].each do |arg_array|
+        arg_array << "-DCMAKE_LINKER=ld"
+      end
 
-    if OS.linux?
-      ENV.append "CXXFLAGS", "-fpermissive -Wno-free-nonheap-object"
-      ENV.append "CFLAGS", "-fpermissive -Wno-free-nonheap-object"
-
+      # Disable builds for OSes not supported by the CLT SDK.
+      clt_sdk_support_flags = %w[I WATCH TV].map { |os| "-DCOMPILER_RT_ENABLE_#{os}OS=OFF" }
+      builtins_cmake_args += clt_sdk_support_flags
+    else
+      # Disable `libxml2` which isn't very useful.
+      args << "-DLLVM_ENABLE_LIBXML2=OFF"
       args << "-DLLVM_ENABLE_LIBCXX=OFF"
       args << "-DCLANG_DEFAULT_CXX_STDLIB=libstdc++"
       # Enable llvm gold plugin for LTO
       args << "-DLLVM_BINUTILS_INCDIR=#{Formula["binutils"].opt_include}"
       # Parts of Polly fail to correctly build with PIC when being used for DSOs.
       args << "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
-      runtime_args = %w[
+      runtimes_cmake_args += %w[
         -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
@@ -166,12 +189,38 @@ class Llvm < Formula
         -DLIBCXXABI_USE_LLVM_UNWINDER=ON
 
         -DLIBUNWIND_USE_COMPILER_RT=ON
+        -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON
+        -DCOMPILER_RT_USE_LLVM_UNWINDER=ON
+
+        -DSANITIZER_CXX_ABI=libc++
+        -DSANITIZER_TEST_CXX=libc++
       ]
-      args << "-DRUNTIMES_CMAKE_ARGS=#{runtime_args.join(";")}"
 
       # Prevent compiler-rt from building i386 targets, as this is not portable.
-      args << "-DBUILTINS_CMAKE_ARGS=-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON"
+      builtins_cmake_args << "-DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON"
     end
+
+    # Skip the PGO build on HEAD installs or non-bottle source builds
+    # Catalina and earlier requires too many hacks to build with PGO.
+    # FIXME: The Linux build appears to have a parallelisation issue,
+    #        so avoid a painfully slow serial build until that's resolved.
+    pgo_build = build.stable? && build.bottle? && (MacOS.version > :catalina)
+    lto_build = pgo_build && OS.mac?
+
+    if ENV.cflags.present?
+      args << "-DCMAKE_C_FLAGS=#{ENV.cflags}" unless pgo_build
+      runtimes_cmake_args << "-DCMAKE_C_FLAGS=#{ENV.cflags}"
+      builtins_cmake_args << "-DCMAKE_C_FLAGS=#{ENV.cflags}"
+    end
+
+    if ENV.cxxflags.present?
+      args << "-DCMAKE_CXX_FLAGS=#{ENV.cxxflags}" unless pgo_build
+      runtimes_cmake_args << "-DCMAKE_CXX_FLAGS=#{ENV.cxxflags}"
+      builtins_cmake_args << "-DCMAKE_CXX_FLAGS=#{ENV.cxxflags}"
+    end
+
+    args << "-DRUNTIMES_CMAKE_ARGS=#{runtimes_cmake_args.join(";")}" if runtimes_cmake_args.present?
+    args << "-DBUILTINS_CMAKE_ARGS=#{builtins_cmake_args.join(";")}" if builtins_cmake_args.present?
 
     llvmpath = buildpath/"llvm"
     if pgo_build
@@ -182,25 +231,45 @@ class Llvm < Formula
       # https://llvm.org/docs/HowToBuildWithPGO.html#building-clang-with-pgo
       # https://github.com/llvm/llvm-project/blob/33ba8bd2/llvm/utils/collect_and_build_with_pgo.py
       # https://github.com/facebookincubator/BOLT/blob/01f471e7/docs/OptimizingClang.md
+
+      # We build the basic parts of a toolchain to profile.
+      # The extra targets on macOS are part of a default Compiler-RT build.
       extra_args = [
-        "-DLLVM_TARGETS_TO_BUILD=Native",
-        "-DLLVM_ENABLE_PROJECTS=clang;compiler-rt;lld",
+        "-DLLVM_TARGETS_TO_BUILD=Native#{";AArch64;ARM;X86" if OS.mac?}",
+        "-DLLVM_ENABLE_PROJECTS=clang;lld",
+        "-DLLVM_ENABLE_RUNTIMES=compiler-rt",
       ]
+
+      # Our stage1 compiler includes the minimum necessary to bootstrap.
+      # `llvm-profdata` is needed for profile data pre-processing, and
+      # `compiler-rt` to consumer profile data.
+      stage1_targets = ["clang", "llvm-profdata", "compiler-rt"]
+      stage1_targets += if OS.mac?
+        extra_args << "-DLLVM_ENABLE_LIBCXX=ON"
+        # Prevent CMake from defaulting to `lld` when it's found next to `clang`.
+        # This can be removed after CMake 3.25. See:
+        # https://gitlab.kitware.com/cmake/cmake/-/merge_requests/7671
+        extra_args << "-DLLVM_USE_LINKER=ld"
+        extra_args << "-DCMAKE_LINKER=ld"
+        extra_args += clt_sdk_support_flags
+
+        args << "-DLLVM_ENABLE_LTO=Thin" if lto_build
+        # LTO creates object files not recognised by Apple libtool.
+        args << "-DCMAKE_LIBTOOL=#{llvmpath}/stage1/bin/llvm-libtool-darwin"
+
+        # These are needed to enable LTO.
+        ["llvm-libtool-darwin", "LTO"]
+      else
+        # Make sure CMake doesn't try to pass C++-only flags to C compiler.
+        extra_args << "-DCMAKE_C_COMPILER=#{ENV.cc}"
+        extra_args << "-DCMAKE_CXX_COMPILER=#{ENV.cxx}"
+
+        # We use this as the linker on Linux to control RPATH.
+        ["lld"]
+      end
+
       cflags = ENV.cflags&.split || []
       cxxflags = ENV.cxxflags&.split || []
-
-      # The later stage builds avoid the shims, and the build
-      # will target Penryn unless otherwise specified
-      if Hardware::CPU.intel?
-        cflags << "-march=#{Hardware.oldest_cpu}"
-        cxxflags << "-march=#{Hardware.oldest_cpu}"
-      end
-
-      if OS.mac?
-        extra_args << "-DLLVM_ENABLE_LIBCXX=ON"
-        extra_args << "-DDEFAULT_SYSROOT=#{macos_sdk}" if macos_sdk
-      end
-
       extra_args << "-DCMAKE_C_FLAGS=#{cflags.join(" ")}" unless cflags.empty?
       extra_args << "-DCMAKE_CXX_FLAGS=#{cxxflags.join(" ")}" unless cxxflags.empty?
 
@@ -209,25 +278,43 @@ class Llvm < Formula
       # to avoid incompatibilities from generating profile data with a newer Clang than
       # the one we consume the data with.
       mkdir llvmpath/"stage1" do
-        system "cmake", "-G", "Unix Makefiles", "..",
-                        *extra_args, *std_cmake_args
-        system "cmake", "--build", ".", "--target", "clang", "llvm-profdata", "profile"
+        system "cmake", "-G", "Unix Makefiles", "..", *extra_args, *std_cmake_args
+        system "cmake", "--build", ".", "--target", *stage1_targets
       end
 
-      # Our just-built Clang needs a little help finding C++ headers,
-      # since we did not build libc++, and the atomic and type_traits
-      # headers are not in the SDK on macOS versions before Big Sur.
-      if OS.mac? && (MacOS.version <= :catalina && macos_sdk)
-        toolchain_path = if MacOS::CLT.installed?
-          MacOS::CLT::PKG_PATH
-        else
-          MacOS::Xcode.toolchain_path
+      # Barring the stage where we generate the profile data, there is no benefit to
+      # rebuilding these.
+      extra_args << "-DCLANG_TABLEGEN=#{llvmpath}/stage1/bin/clang-tblgen"
+      extra_args << "-DLLVM_TABLEGEN=#{llvmpath}/stage1/bin/llvm-tblgen"
+
+      if OS.linux?
+        # Make sure brewed glibc will be used if it is installed.
+        linux_library_paths = [
+          Formula["glibc"].opt_lib,
+          HOMEBREW_PREFIX/"lib",
+        ]
+        linux_linker_flags = linux_library_paths.map { |path| "-L#{path} -Wl,-rpath,#{path}" }
+        # Add opt_libs for dependencies to RPATH.
+        linux_linker_flags += deps.map(&:to_formula).map { |dep| "-Wl,-rpath,#{dep.opt_lib}" }
+
+        [args, extra_args].each do |arg_array|
+          # Add the linker paths to the arguments passed to the temporary compilers and installed toolchain.
+          arg_array << "-DCMAKE_EXE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+          arg_array << "-DCMAKE_MODULE_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+          arg_array << "-DCMAKE_SHARED_LINKER_FLAGS=#{linux_linker_flags.join(" ")}"
+
+          # Use stage1 lld instead of ld shim so that we can control RPATH.
+          arg_array << "-DLLVM_USE_LINKER=lld"
         end
 
-        cxxflags << "-isystem#{toolchain_path}/usr/include/c++/v1"
-        cxxflags << "-isystem#{toolchain_path}/usr/include"
-        cxxflags << "-isystem#{macos_sdk}/usr/include"
+        # We also need to make sure we can find headers for other formulae on Linux.
+        linux_include_paths = [
+          HOMEBREW_PREFIX/"include",
+        ]
+        linux_include_paths.each { |path| cxxflags << "-isystem#{path}" }
 
+        # Unset CMAKE_C_COMPILER and CMAKE_CXX_COMPILER so we can set them below.
+        extra_args.reject! { |s| s[/CMAKE_C(XX)?_COMPILER/] }
         extra_args.reject! { |s| s["CMAKE_CXX_FLAGS"] }
         extra_args << "-DCMAKE_CXX_FLAGS=#{cxxflags.join(" ")}"
       end
@@ -240,7 +327,7 @@ class Llvm < Formula
         # LLVM Profile Warning: Unable to track new values: Running out of static counters.
         instrumented_cflags = cflags + ["-Xclang -mllvm -Xclang -vp-counters-per-site=6"]
         instrumented_cxxflags = cxxflags + ["-Xclang -mllvm -Xclang -vp-counters-per-site=6"]
-        instrumented_extra_args = extra_args.reject { |s| s["CMAKE_C_FLAGS"] || s["CMAKE_CXX_FLAGS"] }
+        instrumented_extra_args = extra_args.reject { |s| s[/CMAKE_C(XX)?_FLAGS/] }
 
         system "cmake", "-G", "Unix Makefiles", "..",
                         "-DCMAKE_C_COMPILER=#{llvmpath}/stage1/bin/clang",
@@ -250,13 +337,13 @@ class Llvm < Formula
                         "-DCMAKE_C_FLAGS=#{instrumented_cflags.join(" ")}",
                         "-DCMAKE_CXX_FLAGS=#{instrumented_cxxflags.join(" ")}",
                         *instrumented_extra_args, *std_cmake_args
-        system "cmake", "--build", ".", "--target", "clang", "lld"
+        system "cmake", "--build", ".", "--target", "clang", "lld", "runtimes"
 
         # We run some `check-*` targets to increase profiling
         # coverage. These do not need to succeed.
         begin
           system "cmake", "--build", ".", "--target", "check-clang", "check-llvm", "--", "--keep-going"
-        rescue RuntimeError
+        rescue BuildError
           nil
         end
       end
@@ -266,31 +353,34 @@ class Llvm < Formula
         system "cmake", "-G", "Unix Makefiles", "..",
                         "-DCMAKE_C_COMPILER=#{llvmpath}/stage2/bin/clang",
                         "-DCMAKE_CXX_COMPILER=#{llvmpath}/stage2/bin/clang++",
-                        *extra_args, *std_cmake_args
+                        "-DLLVM_BUILD_RUNTIMES=OFF",
+                        *extra_args.reject { |s| s["TABLEGEN"] },
+                        *std_cmake_args
 
         # This build is for profiling, so it is safe to ignore errors.
         begin
           system "cmake", "--build", ".", "--", "--keep-going"
-        rescue RuntimeError
+        rescue BuildError
           nil
         end
       end
 
       # Merge the generated profile data
       profpath = llvmpath/"stage2/profiles"
-      system llvmpath/"stage1/bin/llvm-profdata",
-             "merge",
-             "-output=#{profpath}/pgo_profile.prof",
-             *Dir[profpath/"*.profraw"]
+      pgo_profile = profpath/"pgo_profile.prof"
+      system llvmpath/"stage1/bin/llvm-profdata", "merge", "-output=#{pgo_profile}", *profpath.glob("*.profraw")
 
       # Make sure to build with our profiled compiler and use the profile data
       args << "-DCMAKE_C_COMPILER=#{llvmpath}/stage1/bin/clang"
       args << "-DCMAKE_CXX_COMPILER=#{llvmpath}/stage1/bin/clang++"
-      args << "-DLLVM_PROFDATA_FILE=#{profpath}/pgo_profile.prof"
+      args << "-DLLVM_PROFDATA_FILE=#{pgo_profile}"
+      # `llvm-tblgen` is an install target, so let's build that.
+      args << "-DCLANG_TABLEGEN=#{llvmpath}/stage1/bin/clang-tblgen"
 
       # Silence some warnings
       cflags << "-Wno-backend-plugin"
       cxxflags << "-Wno-backend-plugin"
+
       args << "-DCMAKE_C_FLAGS=#{cflags.join(" ")}"
       args << "-DCMAKE_CXX_FLAGS=#{cxxflags.join(" ")}"
     end
@@ -298,40 +388,95 @@ class Llvm < Formula
     # Now, we can build.
     mkdir llvmpath/"build" do
       system "cmake", "-G", "Unix Makefiles", "..", *(std_cmake_args + args)
+      # Linux fails with:
+      # No rule to make target '#{buildpath}/llvm/build/lib/libunwind.so'
+      ENV.deparallelize if OS.linux?
       system "cmake", "--build", "."
       system "cmake", "--build", ".", "--target", "install"
-      system "cmake", "--build", ".", "--target", "install-xcode-toolchain" if MacOS::Xcode.installed?
     end
 
-    if OS.mac? && !build.head?
+    if OS.mac?
+      # Get the version from `llvm-config` to get the correct HEAD version too.
+      llvm_version = Version.new(Utils.safe_popen_read(bin/"llvm-config", "--version").strip)
+      soversion = llvm_version.major.to_s
+      soversion << "git" if build.head?
+
       # Install versioned symlink, or else `llvm-config` doesn't work properly
-      lib.install_symlink "libLLVM.dylib" => "libLLVM-#{version.major}.dylib"
+      lib.install_symlink "libLLVM.dylib" => "libLLVM-#{soversion}.dylib"
+
+      # Install Xcode toolchain. See:
+      # https://github.com/llvm/llvm-project/blob/main/llvm/tools/xcode-toolchain/CMakeLists.txt
+      # We do this manually in order to avoid:
+      #   1. installing duplicates of files in the prefix
+      #   2. requiring an existing Xcode installation
+      xctoolchain = prefix/"Toolchains/LLVM#{llvm_version}.xctoolchain"
+
+      system "/usr/libexec/PlistBuddy", "-c", "Add:CFBundleIdentifier string org.llvm.#{llvm_version}", "Info.plist"
+      system "/usr/libexec/PlistBuddy", "-c", "Add:CompatibilityVersion integer 2", "Info.plist"
+      xctoolchain.install "Info.plist"
+      (xctoolchain/"usr").install_symlink [bin, include, lib, libexec, share]
     end
 
     # Install LLVM Python bindings
     # Clang Python bindings are installed by CMake
     (lib/site_packages).install llvmpath/"bindings/python/llvm"
 
+    # Create symlinks so that the Python bindings can be used with alternative Python versions
+    python_versions.each do |py_ver|
+      next if py_ver == Language::Python.major_minor_version(python3).to_s
+
+      (lib/"python#{py_ver}/site-packages").install_symlink (lib/site_packages).children
+    end
+
     # Install Vim plugins
     %w[ftdetect ftplugin indent syntax].each do |dir|
-      (share/"vim/vimfiles"/dir).install Dir["*/utils/vim/#{dir}/*.vim"]
+      (share/"vim/vimfiles"/dir).install Pathname.glob("*/utils/vim/#{dir}/*.vim")
     end
 
     # Install Emacs modes
-    elisp.install Dir[llvmpath/"utils/emacs/*.el"] + Dir[share/"clang/*.el"]
+    elisp.install llvmpath.glob("utils/emacs/*.el") + share.glob("clang/*.el")
+
+    return unless lto_build
+
+    # Convert LTO-generated bitcode in our static archives to MachO. Adapted from Fedora:
+    # https://src.fedoraproject.org/rpms/redhat-rpm-config/blob/rawhide/f/brp-llvm-compile-lto-elf
+    lib.glob("*.a").each do |static_archive|
+      mktemp do
+        system bin/"llvm-ar", "x", static_archive
+        rebuilt_files = []
+
+        Pathname.glob("*.o").each do |bc_file|
+          file_type = Utils.safe_popen_read("file", bc_file)
+          next unless file_type.match?("LLVM bitcode")
+
+          rebuilt_files << bc_file
+          system bin/"clang", "-fno-lto", "-Wno-unused-command-line-argument",
+                              "-x", "ir", bc_file, "-c", "-o", bc_file
+        end
+
+        system bin/"llvm-ar", "r", static_archive, *rebuilt_files if rebuilt_files.present?
+      end
+    end
   end
 
   def caveats
-    <<~EOS
-      To use the bundled libc++ please add the following LDFLAGS:
-        LDFLAGS="-L#{opt_lib} -Wl,-rpath,#{opt_lib}"
-    EOS
+    on_macos do
+      <<~EOS
+        To use the bundled libc++ please add the following LDFLAGS:
+          LDFLAGS="-L#{opt_lib}/c++ -Wl,-rpath,#{opt_lib}/c++"
+      EOS
+    end
   end
 
   test do
+    llvm_version = Version.new(Utils.safe_popen_read(bin/"llvm-config", "--version").strip)
+    soversion = llvm_version.major.to_s
+    soversion << "git" if head?
+
+    assert_equal version, llvm_version unless head?
     assert_equal prefix.to_s, shell_output("#{bin}/llvm-config --prefix").chomp
-    assert_equal "-lLLVM-#{version.major}", shell_output("#{bin}/llvm-config --libs").chomp
-    assert_equal (lib/shared_library("libLLVM-#{version.major}")).to_s,
+    assert_equal "-lLLVM-#{soversion}", shell_output("#{bin}/llvm-config --libs").chomp
+    assert_equal (lib/shared_library("libLLVM-#{soversion}")).to_s,
                  shell_output("#{bin}/llvm-config --libfiles").chomp
 
     (testpath/"omptest.c").write <<~EOS
@@ -347,10 +492,8 @@ class Llvm < Formula
       }
     EOS
 
-    clean_version = version.to_s[/(\d+\.?)+/]
-
     system "#{bin}/clang", "-L#{lib}", "-fopenmp", "-nobuiltininc",
-                           "-I#{lib}/clang/#{clean_version}/include",
+                           "-I#{lib}/clang/#{llvm_version.major_minor_patch}/include",
                            "omptest.c", "-o", "omptest"
     testresult = shell_output("./omptest")
 
@@ -422,12 +565,13 @@ class Llvm < Formula
 
     # link against installed libc++
     # related to https://github.com/Homebrew/legacy-homebrew/issues/47149
+    cxx_libdir = OS.mac? ? opt_lib/"c++" : opt_lib
     system "#{bin}/clang++", "-v",
            "-isystem", "#{opt_include}/c++/v1",
            "-std=c++11", "-stdlib=libc++", "test.cpp", "-o", "testlibc++",
-           "-rtlib=compiler-rt", "-L#{opt_lib}", "-Wl,-rpath,#{opt_lib}"
+           "-rtlib=compiler-rt", "-L#{cxx_libdir}", "-Wl,-rpath,#{cxx_libdir}"
     assert_includes (testpath/"testlibc++").dynamically_linked_libraries,
-                    (opt_lib/shared_library("libc++", "1")).to_s
+                    (cxx_libdir/shared_library("libc++", "1")).to_s
     (testpath/"testlibc++").dynamically_linked_libraries.each do |lib|
       refute_match(/libstdc\+\+/, lib)
       refute_match(/libgcc/, lib)
@@ -435,7 +579,7 @@ class Llvm < Formula
     end
     assert_equal "Hello World!", shell_output("./testlibc++").chomp
 
-    on_linux do
+    if OS.linux?
       # Link installed libc++, libc++abi, and libunwind archives both into
       # a position independent executable (PIE), as well as into a fully
       # position independent (PIC) DSO for things like plugins that export
@@ -448,9 +592,9 @@ class Llvm < Formula
       # linking statically.
 
       system "#{bin}/clang++", "-v", "-o", "test_pie_runtimes",
-             "-pie", "-fPIC", "test.cpp", "-L#{opt_lib}",
-             "-stdlib=libc++", "-rtlib=compiler-rt",
-             "-static-libstdc++", "-lpthread", "-ldl"
+                   "-pie", "-fPIC", "test.cpp", "-L#{opt_lib}",
+                   "-stdlib=libc++", "-rtlib=compiler-rt",
+                   "-static-libstdc++", "-lpthread", "-ldl"
       assert_equal "Hello World!", shell_output("./test_pie_runtimes").chomp
       (testpath/"test_pie_runtimes").dynamically_linked_libraries.each do |lib|
         refute_match(/lib(std)?c\+\+/, lib)
@@ -490,11 +634,19 @@ class Llvm < Formula
 
     # Testing mlir
     (testpath/"test.mlir").write <<~EOS
-      func @bad_branch() {
-        br ^missing  // expected-error {{reference to an undefined block}}
-      }
+      func.func @main() {return}
+
+      // -----
+
+      // expected-note @+1 {{see existing symbol definition here}}
+      func.func @foo() { return }
+
+      // ----
+
+      // expected-error @+1 {{redefinition of symbol named 'foo'}}
+      func.func @foo() { return }
     EOS
-    system "#{bin}/mlir-opt", "--verify-diagnostics", "test.mlir"
+    system "#{bin}/mlir-opt", "--split-input-file", "--verify-diagnostics", "test.mlir"
 
     (testpath/"scanbuildtest.cpp").write <<~EOS
       #include <iostream>
@@ -506,8 +658,8 @@ class Llvm < Formula
         return 0;
       }
     EOS
-    assert_includes shell_output("#{bin}/scan-build clang++ scanbuildtest.cpp 2>&1"),
-      "warning: Use of memory after it is freed"
+    assert_includes shell_output("#{bin}/scan-build make scanbuildtest 2>&1"),
+                    "warning: Use of memory after it is freed"
 
     (testpath/"clangformattest.c").write <<~EOS
       int    main() {
@@ -515,6 +667,29 @@ class Llvm < Formula
     EOS
     assert_equal "int main() { printf(\"Hello world!\"); }\n",
       shell_output("#{bin}/clang-format -style=google clangformattest.c")
+
+    # Test static analyzer
+    (testpath/"unreachable.c").write <<~EOS
+      unsigned int func(unsigned int a) {
+        unsigned int *z = 0;
+        if ((a & 1) && ((a & 1) ^1))
+          return *z; // unreachable
+        return 0;
+      }
+    EOS
+    system bin/"clang", "--analyze", "-Xanalyzer", "-analyzer-constraints=z3", "unreachable.c"
+
+    # This will fail if the clang bindings cannot find `libclang`.
+    with_env(PYTHONPATH: prefix/Language::Python.site_packages(python3)) do
+      system python3, "-c", <<~EOS
+        from clang import cindex
+        cindex.Config().get_cindex_library()
+      EOS
+    end
+
+    # Check that lldb can use Python
+    lldb_script_interpreter_info = JSON.parse(shell_output("#{bin}/lldb --print-script-interpreter-info"))
+    assert_equal "python", lldb_script_interpreter_info["language"]
 
     # Ensure LLVM did not regress output of `llvm-config --system-libs` which for a time
     # was known to output incorrect linker flags; e.g., `-llibxml2.tbd` instead of `-lxml2`.

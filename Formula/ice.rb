@@ -1,8 +1,8 @@
 class Ice < Formula
   desc "Comprehensive RPC framework"
   homepage "https://zeroc.com"
-  url "https://github.com/zeroc-ice/ice/archive/v3.7.6.tar.gz"
-  sha256 "75b18697c0c74f363bd0b85943f15638736e859c26778337cbfe72d31f5cfb47"
+  url "https://github.com/zeroc-ice/ice/archive/v3.7.8.tar.gz"
+  sha256 "f2ab6b151ab0418fab30bafc2524d9ba4c767a1014f102df88d735fc775f9824"
   license "GPL-2.0-only"
 
   livecheck do
@@ -11,16 +11,28 @@ class Ice < Formula
   end
 
   bottle do
-    sha256 cellar: :any, arm64_monterey: "4f4c56b0eeac619b1f7f90f3689fa92c2114e4cf3a1718e7a6367fc5d1220885"
-    sha256 cellar: :any, arm64_big_sur:  "aba8e77b6144ab02730670f94205ea2de3efd4581b6e1f167ae1ae48bd5405ae"
-    sha256 cellar: :any, monterey:       "9f3c03bea4c11cd4872abb3a3bd8adc413e34c6a34d6055a85274e1e68e1fc52"
-    sha256 cellar: :any, big_sur:        "0c63ce1c5ea37d98b1cd64411e5c6d9e445330c44ab6cb864bd1995b1d5fb91f"
-    sha256 cellar: :any, catalina:       "107f893606aa135531ca17cbb0328f1e664040d36c5373e83a856ba525ba3647"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "49d742e66f44d924bc3b625847a4845f6edeab5ea687e257d4cb235044650401"
+    sha256 cellar: :any,                 arm64_monterey: "6650cecd9095c96c494edf121678aa8e89566f8d0bdfe4d5540c7222b951179e"
+    sha256 cellar: :any,                 arm64_big_sur:  "8afe5f234ae949865fddca70ab16e15e33319f286075089f752f6b146abeba5f"
+    sha256 cellar: :any,                 ventura:        "7c81d01ea748e908519004fdfa3c3bc7b52ddd75c9c911a8f9eb76d9c2377baf"
+    sha256 cellar: :any,                 monterey:       "aa346abe07a352e4ea23803bc9c7bf73a95e6f2efa026d5ca47ea8d109f6dfae"
+    sha256 cellar: :any,                 big_sur:        "1e078df1a92a1cd953d2d6ec66363ea8ca52e731c73bd650bc4156eee6f45d9f"
+    sha256 cellar: :any,                 catalina:       "80efcfad8576c1357f1932dce4b5d46910839018fba3f006e433cb29f228ca23"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f73974710d6af39e7bca7ada86590b5be72aa9304bc4ee6af062fdf6e20203d4"
   end
 
   depends_on "lmdb"
-  depends_on macos: :catalina
   depends_on "mcpp"
+
+  uses_from_macos "bzip2"
+  uses_from_macos "expat"
+  uses_from_macos "libedit"
+  uses_from_macos "libxcrypt"
+
+  on_linux do
+    depends_on "openssl@3"
+  end
 
   def install
     args = [
@@ -34,9 +46,14 @@ class Ice < Formula
       "SKIP=slice2confluence",
       "LANGUAGES=cpp objective-c",
     ]
-    inreplace "cpp/include/Ice/Object.h", /^#.+"-Wdeprecated-copy-dtor"+/, "" # fails with Xcode < 12.5
+
+    # Fails with Xcode < 12.5
+    inreplace "cpp/include/Ice/Object.h", /^#.+"-Wdeprecated-copy-dtor"+/, "" if MacOS.version <= :catalina
+
     system "make", "install", *args
 
+    # We install these binaries to libexec because they conflict with those
+    # installed along with the ice packages from PyPI, RubyGems and npm.
     (libexec/"bin").mkpath
     %w[slice2py slice2rb slice2js].each do |r|
       mv bin/r, libexec/"bin"
@@ -54,7 +71,7 @@ class Ice < Formula
   end
 
   test do
-    (testpath / "Hello.ice").write <<~EOS
+    (testpath/"Hello.ice").write <<~EOS
       module Test
       {
           interface Hello
@@ -63,7 +80,10 @@ class Ice < Formula
           }
       }
     EOS
-    (testpath / "Test.cpp").write <<~EOS
+
+    port = free_port
+
+    (testpath/"Test.cpp").write <<~EOS
       #include <Ice/Ice.h>
       #include <Hello.h>
 
@@ -76,16 +96,17 @@ class Ice < Formula
       int main(int argc, char* argv[])
       {
         Ice::CommunicatorHolder ich(argc, argv);
-        auto adapter = ich->createObjectAdapterWithEndpoints("Hello", "default -h localhost -p 10000");
+        auto adapter = ich->createObjectAdapterWithEndpoints("Hello", "default -h 127.0.0.1 -p #{port}");
         adapter->add(std::make_shared<HelloI>(), Ice::stringToIdentity("hello"));
         adapter->activate();
         return 0;
       }
     EOS
-    system "#{bin}/slice2cpp", "Hello.ice"
+
+    system bin/"slice2cpp", "Hello.ice"
     system ENV.cxx, "-DICE_CPP11_MAPPING", "-std=c++11", "-c", "-I#{include}", "-I.", "Hello.cpp"
     system ENV.cxx, "-DICE_CPP11_MAPPING", "-std=c++11", "-c", "-I#{include}", "-I.", "Test.cpp"
-    system ENV.cxx, "-L#{lib}", "-o", "test", "Test.o", "Hello.o", "-lIce++11"
+    system ENV.cxx, "-L#{lib}", "-o", "test", "Test.o", "Hello.o", "-lIce++11", "-pthread"
     system "./test"
   end
 end

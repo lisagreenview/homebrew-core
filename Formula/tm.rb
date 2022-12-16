@@ -1,18 +1,20 @@
 class Tm < Formula
   desc "TriggerMesh CLI to work with knative objects"
   homepage "https://triggermesh.com"
-  url "https://github.com/triggermesh/tm/archive/v1.11.0.tar.gz"
-  sha256 "edb1e7e7d86650a549d64abf435c60468a5e06ea99c4a4f66f7c25cc5c5d06cb"
+  url "https://github.com/triggermesh/tm/archive/v1.21.0.tar.gz"
+  sha256 "865d62d11ac28536ed630562088ca8537ceb5c54fcbc413788171f98ab301df2"
   license "Apache-2.0"
   head "https://github.com/triggermesh/tm.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "f068e3ff4f31d0e0eb48021d9a7880f3072b409dab1c6705bba0654d7aa0a1f1"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "91849b4ac672df1bc3029e0e430790e753b703485b72372ec312fe66f8200c8c"
-    sha256 cellar: :any_skip_relocation, monterey:       "36b6ab8c2117dae71a935545a209288f74d24c3457e51814320f29245e1f51be"
-    sha256 cellar: :any_skip_relocation, big_sur:        "ef6ed69cf2940d564a2276426b6c404a4df9961bf694c35db5fa685060e63a50"
-    sha256 cellar: :any_skip_relocation, catalina:       "29f11fd2c1825fc0d4572a541292da44d0f619b6892f4b3979d6b3b9c5aba647"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "13436b51d87221b2763b63635273a72b373d08544069d978eb384ed644934b46"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "a457f9d2f739486050e6f0e952f881c804cd15eba2007375523bf5cb85e92f25"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a55ee1208229d3940370f20a88131eadeb396084a07720000c3484fa5b82d56a"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "a63d19c633b0be034cc7bb8454f140c18273399890c25048f20fe3227c2b7217"
+    sha256 cellar: :any_skip_relocation, ventura:        "6c14190586c9aab45552232a455c4c9f0483ce3b14e3928216eed82e9b0f411a"
+    sha256 cellar: :any_skip_relocation, monterey:       "71035b89d26e7a8f1e03bde9cd7f9c1b3abb288703ee5719059be45e899d0401"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b38ad58b65ceb623a5c816f1c20c46dcfb9e941f3c80a2353a1845ab356b2e10"
+    sha256 cellar: :any_skip_relocation, catalina:       "1d325bf50624c61747e81862667df2f74abfb03889c5dd1ad6f008136ba03c4f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "58105d9cd50de7d0aa4e130051b6819670acbb2c53702ed9c783d90f92b610ff"
   end
 
   depends_on "go" => :build

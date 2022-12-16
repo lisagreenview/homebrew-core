@@ -1,18 +1,21 @@
 class LibjsonRpcCpp < Formula
   desc "C++ framework for json-rpc"
   homepage "https://github.com/cinemast/libjson-rpc-cpp"
-  url "https://github.com/cinemast/libjson-rpc-cpp/archive/v1.4.0.tar.gz"
-  sha256 "8fef7628eadbc0271c685310082ef4c47f1577c3df2e4c8bd582613d1bd10599"
+  url "https://github.com/cinemast/libjson-rpc-cpp/archive/v1.4.1.tar.gz"
+  sha256 "7a057e50d6203e4ea0a10ba5e4dbf344c48b177e5a3bf82e850eb3a783c11eb5"
   license "MIT"
-  head "https://github.com/cinemast/libjson-rpc-cpp.git"
+  revision 2
+  head "https://github.com/cinemast/libjson-rpc-cpp.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "2d5595ba06ed6242ea57d93dffc02fbdd17acf0a59ef9c49a3fd5b248e0fd6cc"
-    sha256 cellar: :any,                 arm64_big_sur:  "8f6b4c50f9a8ba7f677f13ee5c3b8edbe18595c738093483ca77ae081949e7d9"
-    sha256 cellar: :any,                 monterey:       "b55de462ab58927008ac9aab8dfd734f17fe3d2ae8c784cabcc8516f9c459e27"
-    sha256 cellar: :any,                 big_sur:        "2665a82edb0caedbfdc16db5c9737bf9ce7d010312e4ef6959cac058ee880030"
-    sha256 cellar: :any,                 catalina:       "168b837f3b9eb9000703524bb3b61a04db09707de52d5bb6891e3a03f558da19"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "388a0dfab5687e1031a4cf317aaae62c5e2673a58197da76547ac8b6e15cb1fc"
+    sha256 cellar: :any,                 arm64_ventura:  "c8bcae7683868e7ec575bcffd0040b2a349e38edb08351fea9338f7ee91fe7dc"
+    sha256 cellar: :any,                 arm64_monterey: "9cb86e8039e8e571b73ed1638c793f9b28592f892db42ce7279fbea76b729cc2"
+    sha256 cellar: :any,                 arm64_big_sur:  "0328e51375b19212c2a10d4d350f6a4cd70a4e971fdfc692917f49de8fed4ad2"
+    sha256 cellar: :any,                 ventura:        "ee599c61bbb42880d8312eadddf3ac23d2d4a0bd6b3db320c054b13e4158e7b4"
+    sha256 cellar: :any,                 monterey:       "8a4a0c85641f6bb3cb1f0a94f8848bfd91c96974afd90f37005e58b718677551"
+    sha256 cellar: :any,                 big_sur:        "ee8fe30830a557f91d0802ca338fa0d0953965ce09c6c3a61cceb05c053ec727"
+    sha256 cellar: :any,                 catalina:       "a7df384528a1aa939fc7292e6baf3229ce1fd4bde42def2bdd4ae7692f3792f4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "c56cf094d5bc4ad8e7d3638d17d4e5c6120b8039f2889d89d5bf54286bed2910"
   end
 
   depends_on "cmake" => :build

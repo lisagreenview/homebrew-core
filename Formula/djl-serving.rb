@@ -1,12 +1,19 @@
 class DjlServing < Formula
   desc "This module contains an universal model serving implementation"
   homepage "https://github.com/deepjavalibrary/djl-serving"
-  url "https://publish.djl.ai/djl-serving/serving-0.14.0.tar"
-  sha256 "9215201c92273e9843a6ecc0b086d8032bb598220bcb06d5f07ff7bfb90df6f1"
+  url "https://publish.djl.ai/djl-serving/serving-0.20.0.tar"
+  sha256 "d9dec82d0087a5c7c3daf941834ac51ad1fb8b8f1a8d444daf372ce33c18ea1d"
   license "Apache-2.0"
 
+  # `djl-serving` versions aren't considered released until a corresponding
+  # release is created in the main `deepjavalibrary/djl` repository.
+  livecheck do
+    url "https://github.com/deepjavalibrary/djl"
+    strategy :github_latest
+  end
+
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "f40d2a66de5b7c4669185c65d51f6bea6fdb61d5c097d1a1a7be4fb03033e26e"
+    sha256 cellar: :any_skip_relocation, all: "94aaecfa8f346f98dec8cfadc7e9381b4eebaae1570c4faa4efe818dc37e8c2e"
   end
 
   depends_on "openjdk"
@@ -39,6 +46,6 @@ class DjlServing < Formula
     end
     sleep 30
     cmd = "http://127.0.0.1:#{port}/ping"
-    assert_match "{\n  \"status\": \"Healthy\"\n}\n", shell_output("curl #{cmd}")
+    assert_match "{}\n", shell_output("curl --fail #{cmd}")
   end
 end

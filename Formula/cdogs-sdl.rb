@@ -1,8 +1,8 @@
 class CdogsSdl < Formula
   desc "Classic overhead run-and-gun game"
   homepage "https://cxong.github.io/cdogs-sdl/"
-  url "https://github.com/cxong/cdogs-sdl/archive/1.1.1.tar.gz"
-  sha256 "a1a18efbd128249ac607f7bf04e09e4625d35509209be7e256461f2fabddd98e"
+  url "https://github.com/cxong/cdogs-sdl/archive/1.4.0.tar.gz"
+  sha256 "4030bd8f6168b8f7ee152d0edb1d7a4b75920b7b7fb19a2f7e834508af9631cd"
   license "GPL-2.0-or-later"
   head "https://github.com/cxong/cdogs-sdl.git", branch: "master"
 
@@ -12,19 +12,20 @@ class CdogsSdl < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "1eeb228fb876c92c3809c3b1c4c3818b8ecb4917aa779a807eaf5b8a41763811"
-    sha256 arm64_big_sur:  "9db72aa1904869a7bb28afc1c550ce26939efa6981f783dfbc5ff0ff60ae7920"
-    sha256 monterey:       "e48b864e67aed9b18433a983f4aef44b374b61276c1421e7763ebebab9dbf12e"
-    sha256 big_sur:        "47ac08b78f35ae9ec4ba966f16c824fa42163e1020eb3ec2d144ac9fca4e057c"
-    sha256 catalina:       "10d48265e4705b1bda33270ff02beed252093aef168e1ce85ecd3e95d145ef3b"
-    sha256 mojave:         "4973b9b193c93618a7e7cafd8223ecd9bda40c62e0ff0438497a829469e4557d"
-    sha256 x86_64_linux:   "dc3a2562c440f36b419192cce13c3ca42e3397777d414286e230793360b7d554"
+    sha256 arm64_ventura:  "347894832909e1de174086da8c32df59db2203ed437bac258d3ed0b63c5b29ac"
+    sha256 arm64_monterey: "37bd357a6fa43b4917c344d4104911c1bd0ff45175116ceb224c30dfe2d2f0ad"
+    sha256 arm64_big_sur:  "171b3f82cffc78b64de25e9adcaf71630ac4696068498967051f43e1fab9fe5c"
+    sha256 ventura:        "4975cf6406148f65989136965b5f9a4d06beab47f18bd3fee82ac5f97acb9487"
+    sha256 monterey:       "3b584cbb629bc343fd60705b893da5cc2a9cfac4db08569fb35655099e199c00"
+    sha256 big_sur:        "1cfe6f96b945dfcfeb91972ccf989b8cc8e6ca5d3af2040c3a97d4dd8c371800"
+    sha256 catalina:       "3612bb1d64909b39d46e8510dc83d6d4c7a0c92eb1238da2d785d9597f99b460"
+    sha256 x86_64_linux:   "2dbffcd25b20ca0f37da1a87dbc42a4509a1d9fefabe64344503e7c977dd6174"
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "protobuf" => :build
-  depends_on "python@3.9"
+  depends_on "python@3.10"
   depends_on "sdl2"
   depends_on "sdl2_image"
   depends_on "sdl2_mixer"

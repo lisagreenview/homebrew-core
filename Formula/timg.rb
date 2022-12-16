@@ -1,19 +1,20 @@
 class Timg < Formula
   desc "Terminal image and video viewer"
   homepage "https://timg.sh/"
-  url "https://github.com/hzeller/timg/archive/refs/tags/v1.4.2.tar.gz"
-  sha256 "7607efaffbed0b65b3c824956de421b155a4f14243e7a752b19454f88bf9d563"
+  url "https://github.com/hzeller/timg/archive/refs/tags/v1.4.5.tar.gz"
+  sha256 "3c96476ce4ba2af4b9f639c5b59ded77ce1a4511551a04555ded105f14398e01"
   license "GPL-2.0-only"
-  revision 1
   head "https://github.com/hzeller/timg.git", branch: "main"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "28d0c27b753c1a104b5120352c7939565a547919388ff2b0fa03a563efeb149f"
-    sha256 cellar: :any,                 arm64_big_sur:  "f3eb242ecbe5c59c5f3b29b5045f7666139327995dbcf6d24deec8d62b0092b3"
-    sha256 cellar: :any,                 monterey:       "a648d114be31886b6450ea88a1440d2c99dd856938421c345bd042183c5e3d9e"
-    sha256 cellar: :any,                 big_sur:        "e8c461f3728f413833bbb2d7fb6e1f25d1de01fccd1518df9ab0f310d3c3f155"
-    sha256 cellar: :any,                 catalina:       "6bcff3160692be766cb27955e90adca0daded1f7af9ab6768f45dab3ddb76c94"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7a083f6de16d632bd1a43351036f4da8dfdb74b742a3af4ecdc0e58351df2812"
+    sha256 cellar: :any,                 arm64_ventura:  "a2aa49e177be79d8150d6d58b5564915299707ae1adb47231c9b58ec8528a904"
+    sha256 cellar: :any,                 arm64_monterey: "ef795a7c82472824ae61684368e12b7a0eb58df7ce0c136aa2613f3e7c32e138"
+    sha256 cellar: :any,                 arm64_big_sur:  "f44efd3cbe12f48d032d503b2e0c345e197c02cd456f8aacad74948ffac5d2f8"
+    sha256 cellar: :any,                 ventura:        "7582f2ee424e6c4be9266cd07f78c714b9d4e87d1026a97ef804d7d2583fd24a"
+    sha256 cellar: :any,                 monterey:       "f6ea386ca6e7628af83126a6fd0ca086253f45bab54eee778db82205511e3822"
+    sha256 cellar: :any,                 big_sur:        "1bc9709aa7fe5ce23a8914cb145d0c86f5d72ae41778e966ac834300b894bde1"
+    sha256 cellar: :any,                 catalina:       "c980eec1ad0955196bb6d11450dbe6122b7ac6123a5c455f05e74786901b3cf0"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "4e6401589698af47c0bf9323cf49606e9ab074d9089da029803ca06239def967"
   end
 
   depends_on "cmake" => :build
@@ -25,15 +26,12 @@ class Timg < Formula
   depends_on "openslide"
   depends_on "webp"
 
-  on_linux do
-    depends_on "gcc"
-  end
-
   fails_with gcc: "5" # rubberband is built with GCC
 
   def install
-    system "cmake", ".", *std_cmake_args
-    system "make", "install"
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   test do

@@ -1,8 +1,8 @@
 class Openfst < Formula
   desc "Library for weighted finite-state transducers"
   homepage "https://www.openfst.org/twiki/bin/view/FST/WebHome"
-  url "https://openfst.org/twiki/pub/FST/FstDownload/openfst-1.8.1.tar.gz"
-  sha256 "24fb53b72bb687e3fa8ee96c72a31ff2920d99b980a0a8f61dda426fca6713f0"
+  url "https://openfst.org/twiki/pub/FST/FstDownload/openfst-1.8.2.tar.gz"
+  sha256 "de987bf3624721c5d5ba321af95751898e4f4bb41c8a36e2d64f0627656d8b42"
   license "Apache-2.0"
 
   livecheck do
@@ -11,26 +11,18 @@ class Openfst < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "6062e938b92156ce6bf247682bf18755918678333ef4abd079533a3459c950de"
-    sha256 cellar: :any,                 arm64_big_sur:  "6133234e79a10929c05657d79c9f47e8e646b36cf7f023ab9dd8b3151dec7f34"
-    sha256 cellar: :any,                 monterey:       "a99d0befd091c674cb054c07c0c3298ab670bf98f510d05493c9338bc56d69b1"
-    sha256 cellar: :any,                 big_sur:        "d5139b2d98c091cb1d3b5215392b9c84ee94e6d51e0a2a1dad6a4ff05b9dc2c9"
-    sha256 cellar: :any,                 catalina:       "7aea4b496aac30803d9cdb99f90e30ba0b44b240a822f7b9a25df963f845f57b"
-    sha256 cellar: :any,                 mojave:         "1e4d6b330797e513315266073af2647d08b1e5a123d11fc165ace77cd2de43e6"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "51f7089734a90d7fabd44553bb4fc87c3be0a5b3541182bc54129b2379bf2df5"
+    rebuild 1
+    sha256 cellar: :any,                 arm64_ventura:  "46eb8cddc071ee5bdf2df6cdb6f1891f2a0cffe8453cdc024970204866ea1918"
+    sha256 cellar: :any,                 arm64_monterey: "ec9cdf817cbee846c502f05800db8d5106d558cd16afa935df22877ef71f98a5"
+    sha256 cellar: :any,                 arm64_big_sur:  "277c268e760b1ea193494379b4e33e2c6d1ea0692be304f80363570dbf04aebf"
+    sha256 cellar: :any,                 ventura:        "912fef9ae0e31f4c23e994250baa4e1434bd8aa6ee0d5f57baa2c8f587ce4705"
+    sha256 cellar: :any,                 monterey:       "1f8a3f063ceef921bd4517956b4706897374f71b4a179bd118704688bd90e572"
+    sha256 cellar: :any,                 big_sur:        "5d66b6cee648a6b9e29bf32b341fa57b0605d331e3a4acebb1f03fc3aa0373b3"
+    sha256 cellar: :any,                 catalina:       "0cfbe1901bd76a5e5ec5fc5a30e9d902b91e70b7305dbc0ee3945ff5e23dde27"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f4eb7f68ee3bf2995d4ad13203bc4de0fc4b0c7b29a4e2ff5d884d73f969613b"
   end
 
-  on_linux do
-    depends_on "gcc" # for C++17
-  end
-
-  fails_with gcc: "5"
-
-  # Fix -flat_namespace being used on Big Sur and later.
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-big_sur.diff"
-    sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-  end
+  fails_with gcc: "5" # for C++17
 
   def install
     system "./configure", "--disable-dependency-tracking",

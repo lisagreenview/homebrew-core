@@ -1,20 +1,32 @@
 class Pgbouncer < Formula
   desc "Lightweight connection pooler for PostgreSQL"
   homepage "https://www.pgbouncer.org/"
-  url "https://www.pgbouncer.org/downloads/files/1.16.1/pgbouncer-1.16.1.tar.gz"
-  sha256 "087477e9e4766d032b04b7b006c0c8d64160a54141a7bfc2c6e5ae7ae11bf7fc"
+  url "https://www.pgbouncer.org/downloads/files/1.18.0/pgbouncer-1.18.0.tar.gz"
+  sha256 "9349c9e59f6f88156354f4f6af27cdb014a235b00ae184cbaa37688bd0df544c"
+  license "ISC"
 
   livecheck do
-    url "https://github.com/pgbouncer/pgbouncer"
+    url "https://www.pgbouncer.org/downloads/"
+    regex(/href=.*?pgbouncer[._-]v?(\d+(?:\.\d+)+)\.t/i)
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "6265ece64ed901a2646b09af720353630e645342a785ae9561c25d65fc11892f"
-    sha256 cellar: :any,                 arm64_big_sur:  "bc48b321d3f1f2e4b8a4c6c9665c55945d83ae3975287888460e5e6eb5d5b71f"
-    sha256 cellar: :any,                 monterey:       "acf061f094b6d05ca5e2224e114dd50f75dc921bfb43c21a69aa680b419c919c"
-    sha256 cellar: :any,                 big_sur:        "63ed65039f2fcd7884a7b163c92747837adb19c2f680a449e1a026d0934bec1a"
-    sha256 cellar: :any,                 catalina:       "b929b536892a66052c5da82d02c6fe56dbfd5df79317e0b8508fbca24ef781e7"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "b3cc2d2fa16d3a53f452eb38e82d78159a42ae5b205147e47f9f090653e18199"
+    sha256 cellar: :any,                 arm64_ventura:  "3fe9d8e3e59e1117eeab41e90b04e5e39e0e6115192abf1f526b91da8df028d4"
+    sha256 cellar: :any,                 arm64_monterey: "74f34bbf272664b4084317b8dc465c89ebd5586c8b18cb32b36124303e01bab5"
+    sha256 cellar: :any,                 arm64_big_sur:  "615addb44732127a561afaacf3f182d538c909eec359e8246e0c77ab4f9a84af"
+    sha256 cellar: :any,                 ventura:        "c2f1d02f00d9db6c3223c962812e508893bb91a817205f86e6907c4488ee29f8"
+    sha256 cellar: :any,                 monterey:       "4569805015dce13a90bda65225a1def60e430822d94e813176df6e00d9ae6ef8"
+    sha256 cellar: :any,                 big_sur:        "3a358136afda3ec3fbb98fdc6dcd36f94b12de4dde564cf41b6350c19da21558"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d0efe7f41310bb853ef0ceafbcfd74d3109076812b2843cf4d388b1ab366b379"
+  end
+
+  head do
+    url "https://github.com/pgbouncer/pgbouncer.git"
+
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "libtool" => :build
+    depends_on "pandoc" => :build
   end
 
   depends_on "pkg-config" => :build
@@ -22,8 +34,8 @@ class Pgbouncer < Formula
   depends_on "openssl@1.1"
 
   def install
-    system "./configure", "--disable-debug",
-                          "--prefix=#{prefix}"
+    system "./autogen.sh" if build.head?
+    system "./configure", *std_configure_args
     system "make", "install"
     bin.install "etc/mkauth.py"
     inreplace "etc/pgbouncer.ini" do |s|

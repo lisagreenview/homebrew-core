@@ -3,22 +3,23 @@ class LizardAnalyzer < Formula
 
   desc "Extensible Cyclomatic Complexity Analyzer"
   homepage "http://www.lizard.ws"
-  url "https://files.pythonhosted.org/packages/45/16/dbe57aa29fa48eb76ae0b4d25a041cf6e2e2323afda72497429c31a18211/lizard-1.17.9.tar.gz"
-  sha256 "76ee0e631d985bea1dd6521a03c6c2fa9dce5a2248b3d26c49890e9e085b7aed"
+  url "https://files.pythonhosted.org/packages/ef/70/bbb7c6b5d1b29acca0cd13582a7303fc528e6dbf40d0026861f9aa7f3ff0/lizard-1.17.10.tar.gz"
+  sha256 "62d78acd64724be28b5f4aa27a630dfa4b4afbd1596d1f25d5ad1c1a3a075adc"
   license "MIT"
-  revision 1
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "8519ce83f386caab0ffda28fa138646b490c914eca8a03ffd32af55f461f5acc"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "8519ce83f386caab0ffda28fa138646b490c914eca8a03ffd32af55f461f5acc"
-    sha256 cellar: :any_skip_relocation, monterey:       "46dbc9104c475ec2fc78e92e18c7198b30b76b10a670c586b060d02de5a334f5"
-    sha256 cellar: :any_skip_relocation, big_sur:        "46dbc9104c475ec2fc78e92e18c7198b30b76b10a670c586b060d02de5a334f5"
-    sha256 cellar: :any_skip_relocation, catalina:       "46dbc9104c475ec2fc78e92e18c7198b30b76b10a670c586b060d02de5a334f5"
-    sha256 cellar: :any_skip_relocation, mojave:         "46dbc9104c475ec2fc78e92e18c7198b30b76b10a670c586b060d02de5a334f5"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9f04c3501b9bf82469b4581a9ad11b9d6f1995e72e0034486fe6918251977299"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "39c001d8d352931dd67b8fd4a55fde66128da28134c84d652a7f0a5b59803bb6"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "39c001d8d352931dd67b8fd4a55fde66128da28134c84d652a7f0a5b59803bb6"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "39c001d8d352931dd67b8fd4a55fde66128da28134c84d652a7f0a5b59803bb6"
+    sha256 cellar: :any_skip_relocation, ventura:        "6a4198753f2f0d1ec45e36a3a10c4f93e7d25c08dfc19bdbaeaddec98f16027f"
+    sha256 cellar: :any_skip_relocation, monterey:       "6a4198753f2f0d1ec45e36a3a10c4f93e7d25c08dfc19bdbaeaddec98f16027f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "6a4198753f2f0d1ec45e36a3a10c4f93e7d25c08dfc19bdbaeaddec98f16027f"
+    sha256 cellar: :any_skip_relocation, catalina:       "6a4198753f2f0d1ec45e36a3a10c4f93e7d25c08dfc19bdbaeaddec98f16027f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "ade75fa3f82899c4daeb28b9901b582f43465065bb03d2c48719d691f6986211"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   def install
     virtualenv_install_with_resources

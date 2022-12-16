@@ -1,21 +1,27 @@
 class GrpcSwift < Formula
   desc "Swift language implementation of gRPC"
   homepage "https://github.com/grpc/grpc-swift"
-  url "https://github.com/grpc/grpc-swift/archive/1.5.0.tar.gz"
-  sha256 "f182b5f9b0e809b0a56f1b2089b1c9d6da78ace46871ceeebd28d751ac80a5db"
+  url "https://github.com/grpc/grpc-swift/archive/1.13.0.tar.gz"
+  sha256 "30e2ff74fa337a22c7f13602a5d3edaeec2d98514fca3d06a7a8df2642498a62"
   license "Apache-2.0"
   head "https://github.com/grpc/grpc-swift.git", branch: "main"
 
-  bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "3fec127f5e67589e99c1fb4aa146632512676bfc2de3fa82ddca739ac4cb5e40"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "442e5ec9bbab09b0d5486f9d241cd88369f79a188831e6e2450d885fd213231d"
-    sha256 cellar: :any_skip_relocation, monterey:       "b3ef832720781eec5ef6f5fe13f9a8bce3d048d533c4ebaff1361124a312e45a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "3e545a1d2751ad6b2dea6369b9da778364b879eb54796044423fb4a2c2d2b245"
-    sha256 cellar: :any_skip_relocation, catalina:       "7c6b804c466e2f8d5245e9efd2749c57ece2a4f1dc8f30c2fd88774eaa9dace8"
-    sha256                               x86_64_linux:   "24dd2bb28f194eae0629720b07ef4e8fd2f5ad31fd32ba854ab8cbcc63a3ac42"
+  livecheck do
+    url :stable
+    regex(/^v?(\d+(?:\.\d+)+)$/i)
   end
 
-  depends_on xcode: ["12.0", :build]
+  bottle do
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "3194a842e427b2b0d4106d7769274d0a031edfcbd9ca732fc6daa1b461d1e434"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5544a29d48bc7c14174ab2d61544b748a0dc0af6f8b593ffdc5fefc28777b246"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "ded73202e740779951c9a85b1b0fe08fa86993fdf83d5e1227f8854ec38322dd"
+    sha256 cellar: :any_skip_relocation, ventura:        "fdbbd52b537060e1b97eed4278b6cc741c01e3cdcb67e87c46609e84b8e4253d"
+    sha256 cellar: :any_skip_relocation, monterey:       "ad91b84f1b513946fa036633afa8cf5d5a0e9dfbdd74782a594dcc4b2dc3bbef"
+    sha256 cellar: :any_skip_relocation, big_sur:        "1735934fae9d2b4a731b4894c8250d5cf25b1dd2c7e38f31f846d229e99420db"
+    sha256                               x86_64_linux:   "70d773717d1ea3cf977f81fed48decc8aa1293fb44d1fd31ff36ec409f7b3ff6"
+  end
+
+  depends_on xcode: ["12.5", :build]
   depends_on "protobuf"
   depends_on "swift-protobuf"
 

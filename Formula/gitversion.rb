@@ -1,32 +1,42 @@
 class Gitversion < Formula
   desc "Easy semantic versioning for projects using Git"
   homepage "https://gitversion.net"
-  url "https://github.com/GitTools/GitVersion/archive/5.7.0.tar.gz"
-  sha256 "d2c101d3b6ed5a0ee1e764c749bd869a2ce8f6d5563a5e2938dc3c32ad1375c7"
+  # TODO: Switch `dotnet@6` to `dotnet` with v6 release
+  url "https://github.com/GitTools/GitVersion/archive/5.11.1.tar.gz"
+  sha256 "98ed28bfb22fadde72da412634f309d81030a76997ca998e1b34edc39beff489"
   license "MIT"
+  revision 1
 
   bottle do
-    sha256 cellar: :any,                 big_sur:      "da4483fe73a5085dd3a54034bdac7a17e12710c18ca53e90fe1386a188cb6946"
-    sha256 cellar: :any,                 catalina:     "106a5e3b8ac1e69809bbd4e86733bcab971f2f35fed40a2a7197f9b57d28a039"
-    sha256 cellar: :any,                 mojave:       "b5d5943589f696a3bbcdb61d0827374cd45e5903203a3e574f40bf2c19c16da1"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "029c5c10ede90c0f116a12fe47af0d2e9b0da43542b70117c5eae946756f24df"
+    sha256 cellar: :any,                 arm64_ventura:  "dab9486fded11ba18ab033fdca31afca9ff5aad0456ee48c40a65d87fc2dbadf"
+    sha256 cellar: :any,                 arm64_monterey: "7aced285a32f399f6c216af712c0745655152ec21ac016cd697c006d8e65c375"
+    sha256 cellar: :any,                 arm64_big_sur:  "8427313824f9cd563c5dd3271826484a28a0644694b59154e48157bda93b06b0"
+    sha256 cellar: :any,                 ventura:        "5402d2a6acb294d9bb2ccbd029a9ecd5a44f7d0348ddfaee001fc1fc79b77067"
+    sha256 cellar: :any,                 monterey:       "8d67d167194126c8e2d992e2eae39bb14acdb84f4a8bfd040949a603315a87ac"
+    sha256 cellar: :any,                 big_sur:        "b2b362d2d07235f1bbbbfcb51cc7d2d1b531cf0238de565145cab3bfccbdddde"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "fcb1a9e046e2542f7de19c4abdb49f21ca78e54c3c73480216c835826f880386"
   end
 
-  depends_on arch: :x86_64 # dotnet does not support ARM
-  depends_on "dotnet"
+  depends_on "dotnet@6"
 
   def install
+    dotnet = Formula["dotnet@6"]
     os = OS.mac? ? "osx" : OS.kernel_name.downcase
+    arch = Hardware::CPU.intel? ? "x64" : Hardware::CPU.arch.to_s
 
-    system "dotnet", "publish", "src/GitVersion.App/GitVersion.App.csproj",
-           "--configuration", "Release",
-           "--framework", "net#{Formula["dotnet"].version.major_minor}",
-           "--output", libexec,
-           "--runtime", "#{os}-x64",
-           "--self-contained", "false",
-           "/p:PublishSingleFile=true"
+    args = %W[
+      --configuration Release
+      --framework net#{dotnet.version.major_minor}
+      --output #{libexec}
+      --runtime #{os}-#{arch}
+      --no-self-contained
+      -p:PublishSingleFile=true
+      -p:Version=#{version}
+    ]
+    args << "-p:OsxArm64=true" if OS.mac? && Hardware::CPU.arm?
 
-    env = { DOTNET_ROOT: "${DOTNET_ROOT:-#{Formula["dotnet"].opt_libexec}}" }
+    system "dotnet", "publish", "src/GitVersion.App/GitVersion.App.csproj", *args
+    env = { DOTNET_ROOT: "${DOTNET_ROOT:-#{dotnet.opt_libexec}}" }
     (bin/"gitversion").write_env_script libexec/"gitversion", env
   end
 

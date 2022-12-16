@@ -1,7 +1,12 @@
 [
   "aom",
   "apache-arrow",
+  "blis",
   "fftw",
+  "highway",
   "libvpx",
-  "openblas"
+  "luajit",
+  "openblas",
+  "opencv",
+  "open-mpi"
 ]

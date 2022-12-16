@@ -1,8 +1,9 @@
 class Ehco < Formula
   desc "Network relay tool and a typo :)"
   homepage "https://github.com/Ehco1996/ehco"
-  url "https://github.com/Ehco1996/ehco/archive/refs/tags/v1.0.7.tar.gz"
-  sha256 "d6384cdb31befcf9a198dd1be6c0073e9fabb6823f2f92df63bb50fb14ec6ff1"
+  url "https://github.com/Ehco1996/ehco.git",
+      tag:      "v1.1.2",
+      revision: "3f649b356a33e317e4eaeeeca4590eedbd360892"
   license "GPL-3.0-only"
 
   livecheck do
@@ -11,37 +12,47 @@ class Ehco < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "58b3a1bcdc7f9aadc08965c587b3d6fa877075d62b639c90f94a0016a94ed657"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "bc4c8b91493e822d5068ae6d02068f5c5e7790d8d1b776b1fb1bea9a077c4fbb"
-    sha256 cellar: :any_skip_relocation, monterey:       "1cedf54dd057b2341cd5d553427dc7109ef6b07fd028d5739c6ddde38d8f999a"
-    sha256 cellar: :any_skip_relocation, big_sur:        "bbfc3978b9a69b1f381ad64231606dfaeef27f8d3d9e9b433ecc879828ea0280"
-    sha256 cellar: :any_skip_relocation, catalina:       "039a8b48a139e971b5c8587ed75fb4f44fd4b117f824157e2cc50f85ac08ef33"
-    sha256 cellar: :any_skip_relocation, mojave:         "a790f96ce6704e4cc4d0fcc3e962ae8d6d79711d8b72bb2eb788d37db9b73b8b"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "adc2421757412baad839943b30e3bd213b52f1171771881b211926506174b1e5"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "0ecd00961cfe17e5062878d61d3fa2553a659c43a2e1712f355a6ff706f2ed38"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "10eb331567404c720188b82e8d8e0f11471af79ce6798370eac2d1d3ab47f59e"
+    sha256 cellar: :any_skip_relocation, ventura:        "655e6f2667f39ddee1bd70c116782e98003bd5d5f19bb0c95f4b2efdced38833"
+    sha256 cellar: :any_skip_relocation, monterey:       "e240c690c54ed6a593b6a56414c5b0c134336487ab5c4f10cd39ecf139e2eac1"
+    sha256 cellar: :any_skip_relocation, big_sur:        "a82d6204833781c529f828e61833a5a62aaaa06bee39bc417f3749d7da429ac3"
+    sha256 cellar: :any_skip_relocation, catalina:       "a34305a19622c8cf08f7992bc34e0b47202fb35a7187e7c90b50055613457252"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "566974576744f5056e4a7d4f5d3b14b0b6a4af3f25a8751f5fa5c1cf901c6e83"
   end
 
-  depends_on "go" => :build
+  # quic-go needs to be updated to use go@1.19
+  # upstream issue, https://github.com/Ehco1996/ehco/issues/165
+  depends_on "go@1.18" => :build
+
+  uses_from_macos "netcat" => :test
 
   def install
-    system "go", "build", *std_go_args, "cmd/ehco/main.go"
+    ldflags = %W[
+      -s -w
+      -X github.com/Ehco1996/ehco/internal/constant.GitBranch=master
+      -X github.com/Ehco1996/ehco/internal/constant.GitRevision=#{Utils.git_short_head}
+      -X github.com/Ehco1996/ehco/internal/constant.BuildTime=#{time.iso8601}
+    ]
+
+    system "go", "build", *std_go_args(ldflags: ldflags), "cmd/ehco/main.go"
   end
 
   test do
-    version_info = shell_output("#{bin}/ehco -v")
-    assert_match "ehco version #{version}", version_info
+    version_info = shell_output("#{bin}/ehco -v 2>&1")
+    assert_match "Version=#{version}", version_info
 
     # run nc server
     nc_port = free_port
-    nc_pid = spawn "nc", "-l", nc_port.to_s
+    spawn "nc", "-l", nc_port.to_s
     sleep 1
 
     # run ehco server
     listen_port = free_port
-    ehco_pid = spawn bin/"ehco", "-l", "localhost:#{listen_port}", "-r", "localhost:#{nc_port}"
+    spawn bin/"ehco", "-l", "localhost:#{listen_port}", "-r", "localhost:#{nc_port}"
     sleep 1
 
     system "nc", "-z", "localhost", listen_port.to_s
-  ensure
-    Process.kill("HUP", ehco_pid)
-    Process.kill("HUP", nc_pid)
   end
 end

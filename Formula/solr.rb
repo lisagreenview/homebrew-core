@@ -1,16 +1,15 @@
 class Solr < Formula
   desc "Enterprise search platform from the Apache Lucene project"
   homepage "https://solr.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=lucene/solr/8.10.1/solr-8.10.1.tgz"
-  mirror "https://archive.apache.org/dist/lucene/solr/8.10.1/solr-8.10.1.tgz"
-  sha256 "42cd0efd48ef3eb75ca06135889b21045884e95f085f4535685f5dfc89a5858a"
+  url "https://dlcdn.apache.org/lucene/solr/8.11.2/solr-8.11.2.tgz"
+  mirror "https://archive.apache.org/dist/lucene/solr/8.11.2/solr-8.11.2.tgz"
+  sha256 "54d6ebd392942f0798a60d50a910e26794b2c344ee97c2d9b50e678a7066d3a6"
   license "Apache-2.0"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "05fa5d11df5c036aade9a389d1231e159074ab64b8276adf05c675ecd7ddb538"
+    sha256 cellar: :any_skip_relocation, all: "74b9246d38fc0c296b104f1c7cc9ec6a22e9552f32d70ef1fb14156973ae21dd"
   end
 
-  depends_on :macos # test failed on linux
   depends_on "openjdk"
 
   def install
@@ -53,7 +52,8 @@ class Solr < Formula
     # Impossible to start a second Solr node on the same port => exit code 1
     shell_output(bin/"solr start -p #{port}", 1)
     # Stop a Solr node => exit code 0
-    shell_output(bin/"solr stop -p #{port}")
+    # Exit code is 1 in a docker container, see https://github.com/apache/solr/pull/250
+    shell_output(bin/"solr stop -p #{port}", (OS.linux? && ENV["HOMEBREW_GITHUB_ACTIONS"]) ? 1 : 0)
     # No Solr node left to stop => exit code 1
     shell_output(bin/"solr stop -p #{port}", 1)
   end

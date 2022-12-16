@@ -1,23 +1,28 @@
 class Libimagequant < Formula
   desc "Palette quantization library extracted from pnquant2"
   homepage "https://pngquant.org/lib/"
-  url "https://github.com/ImageOptim/libimagequant/archive/2.16.0.tar.gz"
-  sha256 "360f88a4a85546405e6bec36d403cedfda43e7b8b5ec140216b727a05cd3a8ac"
+  url "https://github.com/ImageOptim/libimagequant/archive/4.0.4.tar.gz"
+  sha256 "d121bbfb380a54aca8ea9d973c2e63afcbc1db67db46ea6bc63eeba44d7937c8"
   license :cannot_represent
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "35423a63c3283e14bcaec06895fae8b8cb3a212b10b525801ebad7aa8fcc28d4"
-    sha256 cellar: :any,                 arm64_big_sur:  "065f7d7435bc68b1b7cd8fcdc4bb94729c57ed6460c64c06831a89d1fa3124b8"
-    sha256 cellar: :any,                 monterey:       "7d79b0423ff78598d9115c552263123a09c37f6383b61307c399ecb7bb904aa0"
-    sha256 cellar: :any,                 big_sur:        "c146b4b854f70a30e3826d982029521bdd0d7a9c989566a91be7b5c14725070a"
-    sha256 cellar: :any,                 catalina:       "65932be7e1b594d4ee80c8c6b36d78667fe8a3c9d0950e8ff0e408b750c25ac0"
-    sha256 cellar: :any,                 mojave:         "5796035b123ac2f417ead25f21c6e08357b87a48fa4f69dc3bcf6a2c3311fa92"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "6d7e048e1fb0ea7f4c19950a44f9592976bb4e42cce429af7788d2a124b61129"
+    sha256 cellar: :any,                 arm64_ventura:  "5c39366e84e66ab75bedea1c60fec6097f1e59c3193b3c3975125ce4181b21bb"
+    sha256 cellar: :any,                 arm64_monterey: "2cc9dc452441dcbda9a7148aa4a499df01da6ebd9ab8503fc6b904098a51ceb2"
+    sha256 cellar: :any,                 arm64_big_sur:  "52af38599a5b23e03e15a62585f371a68d719f74989f806aa2cec2be859ee9f8"
+    sha256 cellar: :any,                 ventura:        "37646fffeffe095863ad4c20225cba5a027f8b9b1e5e289bb611c08ac4c8d845"
+    sha256 cellar: :any,                 monterey:       "c1e3bd9e9a63213b48edbbff00d1a79aa195e868a8b6e531a48b887540804fde"
+    sha256 cellar: :any,                 big_sur:        "2b4ad2c624c2cdcccf6763fe598652e0a424e8a123f6ffac05366cc99d1ae731"
+    sha256 cellar: :any,                 catalina:       "20fbb37b6901a9ee68a6f528264418562e48bb9d116230d864daf854b5f7d112"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "f847c27c7e3799c35fa83376dff52bfa5033f0adc7e2304940b20b585ba75539"
   end
 
+  depends_on "cargo-c" => :build
+  depends_on "rust" => :build
+
   def install
-    system "./configure", "--prefix=#{prefix}"
-    system "make", "install"
+    cd "imagequant-sys" do
+      system "cargo", "cinstall", "--prefix", prefix
+    end
   end
 
   test do

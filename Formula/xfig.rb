@@ -4,7 +4,7 @@ class Xfig < Formula
   url "https://downloads.sourceforge.net/mcj/xfig-3.2.8b.tar.xz"
   sha256 "b2cc8181cfb356f6b75cc28771970447f69aba1d728a2dac0e0bcf1aea7acd3a"
   license "MIT"
-  revision 1
+  revision 4
 
   livecheck do
     url :stable
@@ -12,18 +12,19 @@ class Xfig < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "895af35392b744f5bb1e836834ce28456f923c2b69f4850967c001d3f999f602"
-    sha256 arm64_big_sur:  "8c3325a340d627863effb670513f067e9249e5d6a3f9f30744fd2e1034305c47"
-    sha256 monterey:       "9409bd9f70bcbbe48509267a31462a64b5c97ccbd305892fccc57efd81585456"
-    sha256 big_sur:        "88947e162b3798d1e715a87d3867250b94ab6372e3139b4cca3055ea901631fa"
-    sha256 catalina:       "6517059167e6ce939bf2a99699cc519070cbda539074eec680d741e277a54697"
-    sha256 mojave:         "3a27245c030faa4ed3648fb44b06d095eb88a4e6d38bf2bf4a50bc2d90f22ad3"
-    sha256 x86_64_linux:   "2131fe0421c31080c784ab17d4e770ab69b1e840ba44a05f11b8f827d6539887"
+    sha256 arm64_ventura:  "8574d41d8a47a3627db72b121b9243901b3e36c78f5e24d1a061b6b3e54c55d7"
+    sha256 arm64_monterey: "19e623d10ad5afe8b0dc2aeba0e4f034f04f0419f54aeadef69e0af4a17a4200"
+    sha256 arm64_big_sur:  "caaf9d6a60be127104f5ea789913c07b25ce44505e17136c2b3882a688da7416"
+    sha256 ventura:        "032f71865561c6e8a68bf9e99c13153fb68461419b67a104b905d04ae73b6ccd"
+    sha256 monterey:       "7ad534b38ffc6cfade2018b4e8f85b9d938ade756f048634b8b8dc28d4d3d491"
+    sha256 big_sur:        "023e9468783cfca2a0d534e082e40b394e7f04e4b375cba94223262bb2a1ae5f"
+    sha256 catalina:       "35cf4130db30aa7204f7246e1eaf95f1e311bb605179099ad865dee6e1ccdedb"
+    sha256 x86_64_linux:   "498a522412d4e00411d7f978e881956f9f990a79af2436b045b3900a7b35eec9"
   end
 
   depends_on "fig2dev"
   depends_on "ghostscript"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "libx11"
@@ -33,17 +34,10 @@ class Xfig < Formula
   depends_on "libxt"
 
   def install
-    args = %W[
-      --prefix=#{prefix}
-      --disable-dependency-tracking
-      --disable-silent-rules
-      --with-appdefaultdir=#{etc}/X11/app-defaults
-    ]
-
-    system "./configure", *args
-    # "LDFLAGS" argument can be deleted the next release after 3.2.8a. See discussion at
-    # https://sourceforge.net/p/mcj/discussion/general/thread/36ff8854e8/#fa9d.
-    system "make", "LDFLAGS=-ltiff -ljpeg -lpng", "install-strip"
+    system "./configure", "--with-appdefaultdir=#{etc}/X11/app-defaults",
+                          "--disable-silent-rules",
+                          *std_configure_args
+    system "make", "install-strip"
   end
 
   test do

@@ -1,8 +1,8 @@
 class AnycableGo < Formula
   desc "WebSocket server with action cable protocol"
   homepage "https://github.com/anycable/anycable-go"
-  url "https://github.com/anycable/anycable-go/archive/v1.1.4.tar.gz"
-  sha256 "a9a4afe32d7d8269dbb0f5f4aaaa4b63710e4193ccc757877f5be66a5854a4ea"
+  url "https://github.com/anycable/anycable-go/archive/v1.2.3.tar.gz"
+  sha256 "d845c77689ccdf8e42a3ebf09ff1afefe2c65a95186c8d17757eb3a2ae80c5b0"
   license "MIT"
   head "https://github.com/anycable/anycable-go.git", branch: "master"
 
@@ -12,12 +12,13 @@ class AnycableGo < Formula
   end
 
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "b726157cdfbd5ec8a52f64a79f31d56b17087102e0aef4e14a1c68ab102171e8"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "9ea4de387eaae1a0731e3e5df76455ddd027e76f5cd8d9d313b6329622821c6c"
-    sha256 cellar: :any_skip_relocation, monterey:       "107efe7cb0d3ed62a8295bb28602a4bd6e48fc8d42e37a84c3c128abb9a35d13"
-    sha256 cellar: :any_skip_relocation, big_sur:        "91d22bec92d9c266febeb88cb4729922444917d560d96aadd9b706091e3decf2"
-    sha256 cellar: :any_skip_relocation, catalina:       "6764ce391e0e78cd115890d09e59021de2a3aae9a71902eed4d730f68ecb2b8c"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "730c420e2b9805d6fe56873c6cd1c3bd8552a139783dabf56a685c736cb04a3a"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "be5a229ee19093fd75fb8fe3779f99c18e1b9b0db64d8b52b831675daf94dd32"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "a35d80477df5f90c5a7080b438e25d2b47fa216823455fca4f280e638582cd0b"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "384d112c33b7bc1da9be0384492022211e2e3041a31ce6da0b1b4d6721b29c97"
+    sha256 cellar: :any_skip_relocation, ventura:        "72b6f4b8ec75e6e4bb6a08649e583ea6e40b067d5adea1e767e3020130c5b514"
+    sha256 cellar: :any_skip_relocation, monterey:       "77dadba9b7594110792122ec93de0a1ca372850ff95bf6874cce2c3b363f4088"
+    sha256 cellar: :any_skip_relocation, big_sur:        "b0e6f4d3115ee2ff858de40ff305eaef6d84e7a6d8c34ab0131cb94d4695744a"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "355f96dca4b909ca37a313722953674ef30d25ef65fe69908203793b3291a92d"
   end
 
   depends_on "go" => :build
@@ -32,8 +33,7 @@ class AnycableGo < Formula
       "-X github.com/anycable/anycable-go/utils.version=#{version}"
     end
 
-    system "go", "build", "-mod=vendor", "-ldflags", ldflags.join(" "), *std_go_args,
-                          "-v", "github.com/anycable/anycable-go/cmd/anycable-go"
+    system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/anycable-go"
   end
 
   test do

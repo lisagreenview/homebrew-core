@@ -1,19 +1,20 @@
 class Fontforge < Formula
   desc "Command-line outline and bitmap font editor/converter"
   homepage "https://fontforge.github.io"
-  url "https://github.com/fontforge/fontforge/releases/download/20201107/fontforge-20201107.tar.xz"
-  sha256 "68bcba8f602819eddc29cd356ee13fafbad7a80d19b652d354c6791343476c78"
+  url "https://github.com/fontforge/fontforge/releases/download/20220308/fontforge-20220308.tar.xz"
+  sha256 "01e4017f7a0ccecf436c74b8e1f6b374fc04a5283c1d68967996782e15618e59"
   license "GPL-3.0-or-later"
+  revision 1
 
   bottle do
-    rebuild 1
-    sha256 arm64_monterey: "96975c5c015c165eb5910588c295ea62434063ff468b477ac3d11e77735609f7"
-    sha256 arm64_big_sur:  "240744fcd44612d9208c1f47e81d8f01b9d94108b50afe54170be14329a95a5a"
-    sha256 monterey:       "3deb4786174659e76b9988079f7ef56b42deb3952ea67b13e5fcbafb553b127d"
-    sha256 big_sur:        "20f92c9d7e6405ca51bdf9f9a2f0216b527bd78e38c2c3bedecbfab3eeb12747"
-    sha256 catalina:       "de48bd3b27ae91d21b8f7d8724cf2b9100683bf02db99794bcd9d9c4ca3483de"
-    sha256 mojave:         "fc6b9c92f02f1e01d8850bfb595dad4f18faf2c3ba079d7bf8084699ec006d53"
-    sha256 x86_64_linux:   "5377794ced753c4220bfa33f5064b3b041819fe264d09b785e8138703a7e0812"
+    rebuild 2
+    sha256 arm64_ventura:  "072fc4af1b9c6b1fbcf32dbee28b8eb62f06dfd7153a25bfa9c1fe7042264d5d"
+    sha256 arm64_monterey: "a7031eb564d235e82213d442196924b91c11476e4a647db9c45d51d0726b0954"
+    sha256 arm64_big_sur:  "beb4d356444abd866b702f45fe89f29968afe1ccf95813472fd9c5ad9fa335fd"
+    sha256 ventura:        "706492e1dbe79ec3f96f9d0230f07a4edb76961116be298536ab038a70b35c38"
+    sha256 monterey:       "06a77e255751a88fd8d7e0f48b6f19c5689aae22ad6570c0f6a9501f3ea2dcbe"
+    sha256 big_sur:        "c81153b469fb6a7e5d55caa349702c7c80230e6f4dcd18867e36cbec9fc4332b"
+    sha256 x86_64_linux:   "06fc685890e7c42b7150e1e20b314db18dac38270d7f8b9d5e54e9bdb0147769"
   end
 
   depends_on "cmake" => :build
@@ -25,32 +26,35 @@ class Fontforge < Formula
   depends_on "gettext"
   depends_on "giflib"
   depends_on "glib"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "libpng"
   depends_on "libspiro"
   depends_on "libtiff"
   depends_on "libtool"
   depends_on "libuninameslist"
   depends_on "pango"
-  depends_on "python@3.9"
+  depends_on "python@3.11"
   depends_on "readline"
+  depends_on "woff2"
 
   uses_from_macos "libxml2"
+
+  resource "homebrew-testdata" do
+    url "https://raw.githubusercontent.com/fontforge/fontforge/1346ce6e4c004c312589fdb67e31d4b2c32a1656/tests/fonts/Ambrosia.sfd"
+    sha256 "6a22acf6be4ab9e5c5a3373dc878030b4b8dc4652323395388abe43679ceba81"
+  end
 
   # Fix for rpath on ARM
   # https://github.com/fontforge/fontforge/issues/4658
   patch :DATA
 
   def install
-    mkdir "build" do
-      system "cmake", "..",
-                      "-GNinja",
-                      "-DENABLE_GUI=OFF",
-                      "-DENABLE_FONTFORGE_EXTRAS=ON",
-                      *std_cmake_args
-      system "ninja"
-      system "ninja", "install"
-    end
+    system "cmake", "-S", ".", "-B", "build", *std_cmake_args,
+                    "-GNinja",
+                    "-DENABLE_GUI=OFF",
+                    "-DENABLE_FONTFORGE_EXTRAS=ON"
+    system "cmake", "--build", "build"
+    system "cmake", "--install", "build"
   end
 
   def caveats
@@ -68,9 +72,19 @@ class Fontforge < Formula
   end
 
   test do
+    python = Formula["python@3.11"].opt_bin/"python3.11"
     system bin/"fontforge", "-version"
     system bin/"fontforge", "-lang=py", "-c", "import fontforge; fontforge.font()"
-    system Formula["python@3.9"].opt_bin/"python3", "-c", "import fontforge; fontforge.font()"
+    system python, "-c", "import fontforge; fontforge.font()"
+
+    resource("homebrew-testdata").stage do
+      ffscript = "fontforge.open('Ambrosia.sfd').generate('#{testpath}/Ambrosia.woff2')"
+      system bin/"fontforge", "-c", ffscript
+    end
+    assert_predicate testpath/"Ambrosia.woff2", :exist?
+
+    fileres = shell_output("/usr/bin/file #{testpath}/Ambrosia.woff2")
+    assert_match "Web Open Font Format (Version 2)", fileres
   end
 end
 

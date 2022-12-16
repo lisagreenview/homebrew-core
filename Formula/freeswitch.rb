@@ -2,10 +2,10 @@ class Freeswitch < Formula
   desc "Telephony platform to route various communication protocols"
   homepage "https://freeswitch.org"
   url "https://github.com/signalwire/freeswitch.git",
-      tag:      "v1.10.7",
-      revision: "883d2cb662bed0316e157bd3beb9853e96c60d02"
+      tag:      "v1.10.8",
+      revision: "35108661409083be680d0e74e6abd563e0a4c384"
   license "MPL-1.1"
-  head "https://github.com/signalwire/freeswitch.git"
+  head "https://github.com/signalwire/freeswitch.git", branch: "master"
 
   livecheck do
     url :stable
@@ -13,11 +13,13 @@ class Freeswitch < Formula
   end
 
   bottle do
-    sha256 arm64_monterey: "e126a823e6fbc7eccc6f6ad3bb3d188f52b366c2ea5005a336e5de69237dd018"
-    sha256 arm64_big_sur:  "9c6740da71f66b2cd9a11654ab4a6cd83b516ad6beeeca4185098f32862a6f34"
-    sha256 monterey:       "21b9427eb3d3477d3f9fbc82bc02abb7fd60efa1da1ae02682c234973ab4221f"
-    sha256 big_sur:        "e5cc98e621aaf831f4f539262a0babd3bbe09a0b2ae16dd3445ed5276a7c9cd6"
-    sha256 catalina:       "94122af9221e84a5fe6c119a0ff037e76a89965bd2da07cf6c1f38a9d885de06"
+    sha256 arm64_ventura:  "2bb979f0e691bf40412830016e85dd661f56fbaf2b5720bb31da32531f7c1e33"
+    sha256 arm64_monterey: "7b5f2f425115a319cbd21ef279e525dae40a8ac4d74ee68819e907e0b012ab2e"
+    sha256 arm64_big_sur:  "5198917bd65265839cc4bfd7afb7f8e60ba7eb74213b254f3ffa31b7168bf1f2"
+    sha256 ventura:        "fabe1f906acfdbb3b2844b7afd44b4dbbdbd81ee18a409e934b5d9676d27954a"
+    sha256 monterey:       "967fcad01bfa72c563b2b680d4c631c398568b9338f8e241c35cc4a28048b044"
+    sha256 big_sur:        "c85f6a73aab968eb2ed630f0c273153ce7ae16a94c2a27b4f740e34be1d6a426"
+    sha256 x86_64_linux:   "c9d3b99cac170fa6eb067c9fe78988dc215c70c89208c6cdbeb6c278484f279b"
   end
 
   depends_on "autoconf" => :build
@@ -26,8 +28,8 @@ class Freeswitch < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "yasm" => :build
-  depends_on "ffmpeg"
-  depends_on "jpeg"
+  depends_on "ffmpeg@4"
+  depends_on "jpeg-turbo"
   depends_on "ldns"
   depends_on "libpq"
   depends_on "libsndfile"
@@ -42,7 +44,9 @@ class Freeswitch < Formula
   depends_on "sqlite"
   depends_on "util-linux"
 
+  uses_from_macos "curl"
   uses_from_macos "libedit"
+  uses_from_macos "libxcrypt"
   uses_from_macos "zlib"
 
   # https://github.com/Homebrew/homebrew/issues/42865
@@ -78,26 +82,26 @@ class Freeswitch < Formula
   #-----------
   # sounds-en
   #-----------
-  sounds_en_version = "1.0.52" # from build/sounds_version.txt
+  sounds_en_version = "1.0.53" # from build/sounds_version.txt
   resource "sounds-en-us-callie-8000" do
     url "#{sounds_url_base}/freeswitch-sounds-en-us-callie-8000-#{sounds_en_version}.tar.gz"
     version sounds_en_version
-    sha256 "fbe51296ba5282864a8f0269a968de0783b88b2a75dad710ee076138382a5151"
+    sha256 "24a2baad88696169950c84cafc236124b2bfa63114c7c8ac7d330fd980c8db05"
   end
   resource "sounds-en-us-callie-16000" do
     url "#{sounds_url_base}/freeswitch-sounds-en-us-callie-16000-#{sounds_en_version}.tar.gz"
     version sounds_en_version
-    sha256 "bf3ac7be99939f57ed4fab7b76d1e47ba78d1573cc72aa0cfe656c559eb097bd"
+    sha256 "3540235ed8ed86a3ec97d98225940f4c6bc665f917da4b3f2e1ddf99fc41cdea"
   end
   resource "sounds-en-us-callie-32000" do
     url "#{sounds_url_base}/freeswitch-sounds-en-us-callie-32000-#{sounds_en_version}.tar.gz"
     version sounds_en_version
-    sha256 "9091553934f7ee453646058ff54837f55c5b38be11c987148c63a1cccc88b741"
+    sha256 "6f5a572f9c3ee1a035b9b72673ffd9db57a345ce0d4fb9f85167f63ac7ec386a"
   end
   resource "sounds-en-us-callie-48000" do
     url "#{sounds_url_base}/freeswitch-sounds-en-us-callie-48000-#{sounds_en_version}.tar.gz"
     version sounds_en_version
-    sha256 "9df388d855996a04f6014999d59d4191e22b579f2e8df542834451a25ea3e1cf"
+    sha256 "980591a853fbf763818eb77132ea7e3ed876f8c4701e85070d612e1ebba09ae9"
   end
 
   #------------------------ End sound file resources --------------------------
@@ -105,13 +109,13 @@ class Freeswitch < Formula
   # There's no tags for now https://github.com/freeswitch/spandsp/issues/13
   resource "spandsp" do
     url "https://github.com/freeswitch/spandsp.git",
-        revision: "284fe91dd068d0cf391139110fdc2811043972b9"
+        revision: "e59ca8fb8b1591e626e6a12fdc60a2ebe83435ed"
   end
 
   resource "libks" do
     url "https://github.com/signalwire/libks.git",
-        tag:      "v1.7.0",
-        revision: "db9bfa746b1fffcaf062bbe060c8cef70c227116"
+        tag:      "v1.8.0",
+        revision: "bccc2f394855500c8f6f488b441d6fb94343491b"
   end
 
   resource "signalwire-c" do
@@ -130,27 +134,40 @@ class Freeswitch < Formula
       system "make"
       ENV.deparallelize { system "make", "install" }
 
-      ENV.append_path "PKG_CONFIG_PATH", "#{libexec}/spandsp/lib/pkgconfig"
+      ENV.append_path "PKG_CONFIG_PATH", libexec/"spandsp/lib/pkgconfig"
     end
 
     resource("libks").stage do
-      system "cmake", ".", *std_cmake_args, "-DCMAKE_INSTALL_PREFIX=#{libexec}/libks"
-      system "make", "install"
+      system "cmake", ".", *std_cmake_args(install_prefix: libexec/"libks")
+      system "cmake", "--build", "."
+      system "cmake", "--install", "."
 
-      ENV.append_path "PKG_CONFIG_PATH", "#{libexec}/libks/lib/pkgconfig"
+      ENV.append_path "PKG_CONFIG_PATH", libexec/"libks/lib/pkgconfig"
       ENV.append "CFLAGS", "-I#{libexec}/libks/include"
+
+      # Add RPATH to libks.pc so libks.so can be found by freeswitch modules.
+      inreplace libexec/"libks/lib/pkgconfig/libks.pc",
+                "-L${libdir}",
+                "-Wl,-rpath,${libdir} -L${libdir}"
     end
 
     resource("signalwire-c").stage do
-      system "cmake", ".", *std_cmake_args, "-DCMAKE_INSTALL_PREFIX=#{libexec}/signalwire-c"
-      system "make", "install"
+      system "cmake", ".", *std_cmake_args(install_prefix: libexec/"signalwire-c")
+      system "cmake", "--build", "."
+      system "cmake", "--install", "."
 
-      ENV.append_path "PKG_CONFIG_PATH", "#{libexec}/signalwire-c/lib/pkgconfig"
+      ENV.append_path "PKG_CONFIG_PATH", libexec/"signalwire-c/lib/pkgconfig"
+
+      # Add RPATH to signalwire_client.pc so libsignalwire_client.so
+      # can be found by freeswitch modules.
+      inreplace libexec/"signalwire-c/lib/pkgconfig/signalwire_client.pc",
+                "-L${libdir}",
+                "-Wl,-rpath,${libdir} -L${libdir}"
     end
 
     system "./bootstrap.sh", "-j"
 
-    args = std_configure_args + %W[
+    args = %W[
       --enable-shared
       --enable-static
       --exec_prefix=#{prefix}
@@ -158,7 +175,8 @@ class Freeswitch < Formula
     # Fails on ARM: https://github.com/signalwire/freeswitch/issues/1450
     args << "--disable-libvpx" if Hardware::CPU.arm?
 
-    system "./configure", *args
+    ENV.append_to_cflags "-D_ANSI_SOURCE" if OS.linux?
+    system "./configure", *std_configure_args, *args
     system "make", "all"
     system "make", "install"
 

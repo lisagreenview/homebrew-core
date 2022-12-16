@@ -4,7 +4,7 @@ class SnapTelemetry < Formula
   url "https://github.com/intelsdi-x/snap/archive/2.0.0.tar.gz"
   sha256 "35f6ddcffcff27677309abb6eb4065b9fe029a266c3f7ff77103bf822ff315ab"
   license "Apache-2.0"
-  head "https://github.com/intelsdi-x/snap.git"
+  head "https://github.com/intelsdi-x/snap.git", branch: "master"
 
   bottle do
     sha256 cellar: :any_skip_relocation, arm64_big_sur: "094be117be921cca221b7e0021e7e7d48d496e83599ed52fbd81c64b3b389d5b"
@@ -18,7 +18,8 @@ class SnapTelemetry < Formula
   end
 
   # https://github.com/intelsdi-x/snap/commit/e3a6c8e39994b3980df0c7b069d5ede810622952
-  deprecate! date: "2018-12-20", because: :deprecated_upstream
+  # Deprecation added 2021-02-21 / deprecated since 2018-12-20
+  disable! date: "2022-06-08", because: :deprecated_upstream
 
   depends_on "glide" => :build
   depends_on "go" => :build

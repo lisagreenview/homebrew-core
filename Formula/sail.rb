@@ -3,61 +3,46 @@ class Sail < Formula
 
   desc "CLI toolkit to provision and deploy WordPress applications to DigitalOcean"
   homepage "https://sailed.io"
-  url "https://files.pythonhosted.org/packages/21/7d/c2349f658799f71a3cbd91c866f6ee8d6238749f57e8517efeea5413c822/sailed.io-0.10.1.tar.gz"
-  sha256 "e81ea993a31afd23b22d8db389261f4c79d0378eb87e627da1a8e87449107cff"
+  url "https://files.pythonhosted.org/packages/3a/6c/39b5e5e0ce557ddd98b6af0223b7a63afcc40b3646ee1a2511805dc45a08/sailed.io-0.10.6.tar.gz"
+  sha256 "158ed9f03bcbcefa080647da90bc64d0acdec26514a3635a2843233eea90efa0"
   license "GPL-3.0-only"
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "bd8db28b5e14da13a17c7aeaabf12f094b331317b4cdca5e80f80612864738ed"
-    sha256 cellar: :any,                 arm64_big_sur:  "f1722129a2905bebe6f2cd7e0f5b6dc252b324ee7b22d17d3d3c1172330c3166"
-    sha256 cellar: :any,                 monterey:       "5c9f29e96f2be4b18821814d632292c58b09635eb68805e35beea177f878a302"
-    sha256 cellar: :any,                 big_sur:        "2b84c8a9052e839c335b01b8bdefb55db4c31f4b78fd811e9d5304d01be88921"
-    sha256 cellar: :any,                 catalina:       "1c988796a270d1b9ee12e2f4e5f2027c71c073a408233fe922866956028bb36b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "9f2810619b2a3c70254d68896dbaa314aec83c570c86684517fedb019c3abdbf"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "f6e9a659f09618f2535f22cf44029baff8652bec0ed090b701f6257c30d33a96"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "5b33a2bfe41061d2fd8234d6ae4f3a217ec648fd6218d7b8494b59ae1dab1053"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "0c138bd71de3bd6eb49602bc765e743c282fa6bc18dac74ed8f4dadd5fcebcb2"
+    sha256 cellar: :any_skip_relocation, ventura:        "1d954ef1db8c2c445662048923c3394f1d25b9cd688fbdfc31eb5b61e2b516e9"
+    sha256 cellar: :any_skip_relocation, monterey:       "e9a94b7de2702591bf018ed4d53856d168f5e4dcb3877fcf7665090096493991"
+    sha256 cellar: :any_skip_relocation, big_sur:        "2e245cc16f8a40a9ee13bf6c8db4884d1398c0d940b242ab29575c170998ba0d"
+    sha256 cellar: :any_skip_relocation, catalina:       "ee2038dfa0d9e0803fa1e1a722ee6d0d3c3a7fd85e81f60e5f0526fc8e53a225"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "3ba356ef6932592097bd0abb07498952008e4cc81f85a313e694f639f32e98bf"
   end
 
-  depends_on "rust" => :build
+  depends_on "fabric"
+  depends_on "pyinvoke"
   depends_on "python@3.10"
+  depends_on "pyyaml"
   depends_on "six"
-
-  resource "bcrypt" do
-    url "https://files.pythonhosted.org/packages/d8/ba/21c475ead997ee21502d30f76fd93ad8d5858d19a3fad7cd153de698c4dd/bcrypt-3.2.0.tar.gz"
-    sha256 "5b93c1726e50a93a033c36e5ca7fdcd29a5c7395af50a6892f5d9e7c6cfbfb29"
-  end
 
   resource "certifi" do
     url "https://files.pythonhosted.org/packages/6c/ae/d26450834f0acc9e3d1f74508da6df1551ceab6c2ce0766a593362d6d57f/certifi-2021.10.8.tar.gz"
     sha256 "78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"
   end
 
-  resource "cffi" do
-    url "https://files.pythonhosted.org/packages/00/9e/92de7e1217ccc3d5f352ba21e52398372525765b2e0c4530e6eb2ba9282a/cffi-1.15.0.tar.gz"
-    sha256 "920f0d66a896c2d99f0adbb391f990a84091179542c205fa53ce5787aff87954"
-  end
-
   resource "charset-normalizer" do
-    url "https://files.pythonhosted.org/packages/9f/c5/334c019f92c26e59637bb42bd14a190428874b2b2de75a355da394cf16c1/charset-normalizer-2.0.7.tar.gz"
-    sha256 "e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"
+    url "https://files.pythonhosted.org/packages/56/31/7bcaf657fafb3c6db8c787a865434290b726653c912085fbd371e9b92e1c/charset-normalizer-2.0.12.tar.gz"
+    sha256 "2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/21/83/308a74ca1104fe1e3197d31693a7a2db67c2d4e668f20f43a2fca491f9f7/click-8.0.1.tar.gz"
-    sha256 "8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a"
-  end
-
-  resource "cryptography" do
-    url "https://files.pythonhosted.org/packages/10/91/90b8d4cd611ac2aa526290ae4b4285aa5ea57ee191c63c2f3d04170d7683/cryptography-35.0.0.tar.gz"
-    sha256 "9933f28f70d0517686bd7de36166dda42094eac49415459d9bdf5e7df3e0086d"
-  end
-
-  resource "fabric" do
-    url "https://files.pythonhosted.org/packages/32/61/9a26b8f3dcdb5cb17daff57c9a85be6d5963d50488f45319d64a413da762/fabric-2.6.0.tar.gz"
-    sha256 "47f184b070272796fd2f9f0436799e18f2ccba4ee8ee587796fca192acd46cd2"
+    url "https://files.pythonhosted.org/packages/42/e1/4cb2d3a2416bcd871ac93f12b5616f7755a6800bccae05e5a99d3673eb69/click-8.1.2.tar.gz"
+    sha256 "479707fe14d9ec9a0757618b7a100a0ae4c4e236fac5b7f80ca68028141a1a72"
   end
 
   resource "filelock" do
-    url "https://files.pythonhosted.org/packages/79/3f/aae4a951dc5bd2738901e053c057f4b317bf12199f09351f63a002442117/filelock-3.4.0.tar.gz"
-    sha256 "93d512b32a23baf4cac44ffd72ccf70732aeff7b8050fcaf6d3ec406d954baf4"
+    url "https://files.pythonhosted.org/packages/4d/cd/3b1244a19d61c4cf5bd65966eef97e6bc41e51fe84110916f26554d6ac8c/filelock-3.6.0.tar.gz"
+    sha256 "9cd540a9352e432c7246a48fe4e8712b10acb1df2ad1f30e8c070b82ae1fed85"
   end
 
   resource "idna" do
@@ -65,54 +50,29 @@ class Sail < Formula
     sha256 "9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
   end
 
-  resource "invoke" do
-    url "https://files.pythonhosted.org/packages/37/b3/0b88358ee07789688d17ec7074a656da68ced50a122183187be12928b535/invoke-1.6.0.tar.gz"
-    sha256 "374d1e2ecf78981da94bfaf95366216aaec27c2d6a7b7d5818d92da55aa258d3"
-  end
-
   resource "Jinja2" do
-    url "https://files.pythonhosted.org/packages/f8/86/7c0eb6e8b05385d1ce682abc0f994abd1668e148fb52603fa86e15d4c110/Jinja2-3.0.2.tar.gz"
-    sha256 "827a0e32839ab1600d4eb1c4c33ec5a8edfbc5cb42dafa13b81f182f97784b45"
+    url "https://files.pythonhosted.org/packages/89/e3/b36266381ae7a1310a653bb85f4f3658c462a69634fa9b2fef76252a50ed/Jinja2-3.1.1.tar.gz"
+    sha256 "640bed4bb501cbd17194b3cace1dc2126f5b619cf068a726b98192a0fde74ae9"
   end
 
   resource "jsonpickle" do
-    url "https://files.pythonhosted.org/packages/62/8a/84864798c5ef120e3a5b5cf08d8c231fa4499b53d465488563c4cb901f2f/jsonpickle-2.0.0.tar.gz"
-    sha256 "0be49cba80ea6f87a168aa8168d717d00c6ca07ba83df3cec32d3b30bfe6fb9a"
+    url "https://files.pythonhosted.org/packages/35/0e/fe3ce0869add0213a1b45eef746cafb79ca45255a60ec918630c159e3490/jsonpickle-2.1.0.tar.gz"
+    sha256 "84684cfc5338a534173c8dd69809e40f2865d0be1f8a2b7af8465e5b968dcfa9"
   end
 
   resource "MarkupSafe" do
-    url "https://files.pythonhosted.org/packages/bf/10/ff66fea6d1788c458663a84d88787bae15d45daa16f6b3ef33322a51fc7e/MarkupSafe-2.0.1.tar.gz"
-    sha256 "594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"
+    url "https://files.pythonhosted.org/packages/1d/97/2288fe498044284f39ab8950703e88abbac2abbdf65524d576157af70556/MarkupSafe-2.1.1.tar.gz"
+    sha256 "7f91197cc9e48f989d12e4e6fbc46495c446636dfc81b9ccf50bb0ec74b91d4b"
   end
 
   resource "packaging" do
-    url "https://files.pythonhosted.org/packages/df/86/aef78bab3afd461faecf9955a6501c4999933a48394e90f03cd512aad844/packaging-21.0.tar.gz"
-    sha256 "7dc96269f53a4ccec5c0670940a4281106dd0bb343f47b7471f779df49c2fbe7"
-  end
-
-  resource "paramiko" do
-    url "https://files.pythonhosted.org/packages/dd/67/6b3a5f3d730b15b5ff77d13e6f05f9189ae44d8a8bad4967d16694eaac8b/paramiko-2.8.0.tar.gz"
-    sha256 "e673b10ee0f1c80d46182d3af7751d033d9b573dd7054d2d0aa46be186c3c1d2"
-  end
-
-  resource "prettytable" do
-    url "https://files.pythonhosted.org/packages/00/8d/95441120aa870aa800f8b4c6cf650bf0739d7a41883fe81769ab593556c9/prettytable-2.2.0.tar.gz"
-    sha256 "bd81678c108e6c73d4f1e47cd4283de301faaa6ff6220bcd1d4022038c56b416"
-  end
-
-  resource "pycparser" do
-    url "https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz"
-    sha256 "e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"
-  end
-
-  resource "PyNaCl" do
-    url "https://files.pythonhosted.org/packages/cf/5a/25aeb636baeceab15c8e57e66b8aa930c011ec1c035f284170cacb05025e/PyNaCl-1.4.0.tar.gz"
-    sha256 "54e9a2c849c742006516ad56a88f5c74bf2ce92c9f67435187c3c5953b346505"
+    url "https://files.pythonhosted.org/packages/df/9e/d1a7217f69310c1db8fdf8ab396229f55a699ce34a203691794c5d1cad0c/packaging-21.3.tar.gz"
+    sha256 "dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"
   end
 
   resource "pyparsing" do
-    url "https://files.pythonhosted.org/packages/ab/61/1a1613e3dcca483a7aa9d446cb4614e6425eb853b90db131c305bd9674cb/pyparsing-3.0.6.tar.gz"
-    sha256 "d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"
+    url "https://files.pythonhosted.org/packages/d6/60/9bed18f43275b34198eb9720d4c1238c68b3755620d20df0afd89424d32b/pyparsing-3.0.7.tar.gz"
+    sha256 "18ee9022775d270c55187733956460083db60b37d0d0fb357445f3094eed3eea"
   end
 
   resource "python-digitalocean" do
@@ -120,14 +80,9 @@ class Sail < Formula
     sha256 "107854fde1aafa21774e8053cf253b04173613c94531f75d5a039ad770562b24"
   end
 
-  resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/a0/a4/d63f2d7597e1a4b55aa3b4d6c5b029991d3b824b5bd331af8d4ab1ed687d/PyYAML-5.4.1.tar.gz"
-    sha256 "607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"
-  end
-
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz"
-    sha256 "b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"
+    url "https://files.pythonhosted.org/packages/60/f3/26ff3767f099b73e0efa138a9998da67890793bfa475d8278f84a30fec77/requests-2.27.1.tar.gz"
+    sha256 "68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"
   end
 
   resource "requests-file" do
@@ -136,27 +91,32 @@ class Sail < Formula
   end
 
   resource "tldextract" do
-    url "https://files.pythonhosted.org/packages/6c/aa/ddf3d8f064887d5b4ae2c0ba7c688baa6cb48717db001abd340b72350069/tldextract-3.1.2.tar.gz"
-    sha256 "d2034c3558651f7d8fdadea83fb681050b2d662dc67a00d950326dc902029444"
+    url "https://files.pythonhosted.org/packages/c0/ef/61c7d422df129f340d25127d1f8744c6ae1eda2f3aed978fdc7abad03d02/tldextract-3.2.0.tar.gz"
+    sha256 "3d4b6a2105600b7d0290ea237bf30b6b0dc763e50fcbe40e849a019bd6dbcbff"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/80/be/3ee43b6c5757cabea19e75b8f46eaf05a2f5144107d7db48c7cf3a864f73/urllib3-1.26.7.tar.gz"
-    sha256 "4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"
-  end
-
-  resource "wcwidth" do
-    url "https://files.pythonhosted.org/packages/89/38/459b727c381504f361832b9e5ace19966de1a235d73cdbdea91c771a1155/wcwidth-0.2.5.tar.gz"
-    sha256 "c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"
+    url "https://files.pythonhosted.org/packages/1b/a5/4eab74853625505725cefdf168f48661b2cd04e7843ab836f3f63abf81da/urllib3-1.26.9.tar.gz"
+    sha256 "aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"
   end
 
   def install
-    virtualenv_install_with_resources
+    python3 = "python3.10"
+    venv = virtualenv_create(libexec, python3)
+    venv.pip_install resources
+
+    site_packages = Language::Python.site_packages(python3)
+    %w[fabric pyinvoke].each do |package_name|
+      package = Formula[package_name].opt_libexec
+      (libexec/site_packages/"homebrew-#{package_name}.pth").write package/site_packages
+    end
+
+    venv.pip_install_and_link buildpath
   end
 
   test do
     xy = Language::Python.major_minor_version "#{libexec}/bin/python"
-    unittest = "#{libexec}/bin/python -m unittest discover "\
+    unittest = "#{libexec}/bin/python -m unittest discover " \
                "#{libexec}/lib/python#{xy}/site-packages/sail/tests 2>&1"
 
     assert_match(version.to_s, shell_output("#{bin}/sail --version"))

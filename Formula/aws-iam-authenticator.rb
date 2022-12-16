@@ -2,19 +2,24 @@ class AwsIamAuthenticator < Formula
   desc "Use AWS IAM credentials to authenticate to Kubernetes"
   homepage "https://github.com/kubernetes-sigs/aws-iam-authenticator"
   url "https://github.com/kubernetes-sigs/aws-iam-authenticator.git",
-      tag:      "v0.5.3",
-      revision: "a0516fb9ace571024263424f1770e6d861e65d09"
+      tag:      "v0.5.12",
+      revision: "4762dbd89dd45df5083b40ca1c1806d589e8acae"
   license "Apache-2.0"
   head "https://github.com/kubernetes-sigs/aws-iam-authenticator.git", branch: "master"
 
+  livecheck do
+    url :stable
+    strategy :github_latest
+  end
+
   bottle do
-    sha256 cellar: :any_skip_relocation, arm64_monterey: "e82311b2f11745925a8ce73a05c24e38c8122063b6ce070a4610c8d54f5fda76"
-    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "30639bda3ecb72388aeabc0f3e6587f58bc9867dc6b3a9f3046e9d0ef659f122"
-    sha256 cellar: :any_skip_relocation, monterey:       "e3718d03e98702a4893b480a897779e7ae8ca52b39f879d02aa6fbf0a1220f8d"
-    sha256 cellar: :any_skip_relocation, big_sur:        "a161d4ea3ef00ab85c8f0cea198e0dafde39cd3a76359b75ea22521c35eac7d6"
-    sha256 cellar: :any_skip_relocation, catalina:       "192ace97a0c76ed0aceda060290db6abcde5af8ad7dfc30faaf5f4ed4ae92b6a"
-    sha256 cellar: :any_skip_relocation, mojave:         "c7f23ccd6bdd852a7c1928df437381204aa9da22a2f41eb3a5776864838f39db"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d6d0c278ef6d1d19a160035e5ff0039a16121be7107acce9bfa55ab59054c2f4"
+    sha256 cellar: :any_skip_relocation, arm64_ventura:  "fc0142003299d7ee358778cef5acbbd4cea98aeead23905b1589369e64992670"
+    sha256 cellar: :any_skip_relocation, arm64_monterey: "462fe85e9c206ef75e5517cbb0f5e671f57a907197778a13cc5ab0f1d4a6210e"
+    sha256 cellar: :any_skip_relocation, arm64_big_sur:  "4dae1c923ad4997c047ada5d2b651eec2206340552d699dbd9a88f35c94b5a08"
+    sha256 cellar: :any_skip_relocation, ventura:        "43c23444c326f0fc3fc9ead271a5c51560713945a2f1cc7d42816012c2786d99"
+    sha256 cellar: :any_skip_relocation, monterey:       "e9b9150d356779e1e81cdf0337e3bc224187b6226898eb6dffbf02722b68eb6f"
+    sha256 cellar: :any_skip_relocation, big_sur:        "9071bc77e68313dab8ae5331df4a0038833469ad58a0cfbfcebef01ac290f1e1"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "d3dc9148fd3c844467db49bca90776c0c7b14e19eb4cfe6166a7c4016da075bb"
   end
 
   depends_on "go" => :build
@@ -24,7 +29,7 @@ class AwsIamAuthenticator < Formula
                "-X sigs.k8s.io/aws-iam-authenticator/pkg.Version=#{version}",
                "-X sigs.k8s.io/aws-iam-authenticator/pkg.CommitID=#{Utils.git_head}",
                "-buildid=''"]
-    system "go", "build", *std_go_args(ldflags: ldflags.join(" ")), "./cmd/aws-iam-authenticator"
+    system "go", "build", *std_go_args(ldflags: ldflags), "./cmd/aws-iam-authenticator"
     prefix.install_metafiles
   end
 

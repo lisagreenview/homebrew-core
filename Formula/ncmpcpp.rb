@@ -4,19 +4,26 @@ class Ncmpcpp < Formula
   url "https://rybczak.net/ncmpcpp/stable/ncmpcpp-0.9.2.tar.bz2"
   sha256 "faabf6157c8cb1b24a059af276e162fa9f9a3b9cd3810c43b9128860c9383a1b"
   license "GPL-2.0-or-later"
-  revision 3
+  revision 8
+
+  livecheck do
+    url "https://rybczak.net/ncmpcpp/installation/"
+    regex(/href=.*?ncmpcpp[._-]v?(\d+(?:\.\d+)+)\.t/i)
+  end
 
   bottle do
-    sha256 cellar: :any,                 arm64_big_sur: "589a36dfb83da7b7093605e58cdf6a9ae6f58e8bc915fc84a937742b17aafad6"
-    sha256 cellar: :any,                 monterey:      "45398850343c1d9b60fba96b519b7726e48d68bbbed0fb3681362e48fe542ce5"
-    sha256 cellar: :any,                 big_sur:       "94f81334cde20719c43ff2e31cd89b89fe05b79e072f91e9ad5a9e8b104e7453"
-    sha256 cellar: :any,                 catalina:      "491b03399a3f52b0ae8bd5ffd4ccbe34bff8565f1a5898d60c0a6c04e1bc43db"
-    sha256 cellar: :any,                 mojave:        "228570b600da1e6001294be6761a84cf93f373a6d32aadbe38c7f239158835cd"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "566109600ff2e4cf3988ba0031501c0f917ee9b9dd2d69f30a100f3016fc3c98"
+    sha256 cellar: :any,                 arm64_ventura:  "76f18301d32737baac84267995a24de92092dc76c60327c479c7a0f6dd84139b"
+    sha256 cellar: :any,                 arm64_monterey: "cf2eca5f6cd5e691356f38ac0c5a8340b15e327d40ed716f0500baac4f7137b6"
+    sha256 cellar: :any,                 arm64_big_sur:  "eced36d7c545a790542a896f7513b76167cdc0e61f8cce67573fb73154968ee6"
+    sha256 cellar: :any,                 ventura:        "35b29ff5a268f63e9b72b2a390d736819539aa1536db14300413f39e4667f706"
+    sha256 cellar: :any,                 monterey:       "afd09c2d5c806b93818042ca072c60a27d07819168fe31169c90689937002460"
+    sha256 cellar: :any,                 big_sur:        "808b5a7a5a8a3b5af8e801e7c3220b56c034e14dc7d21469ffd071ba56d5d1c9"
+    sha256 cellar: :any,                 catalina:       "055ce811b2df28549105dad74e5813ca160a443593b5ae2d043255b53d22b26c"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "7aab89e6b1232657954e27f6e6623d7220d22c541bad3a6fcf05047a613b06c9"
   end
 
   head do
-    url "https://github.com/ncmpcpp/ncmpcpp.git"
+    url "https://github.com/ncmpcpp/ncmpcpp.git", branch: "master"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build

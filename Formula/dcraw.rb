@@ -4,6 +4,7 @@ class Dcraw < Formula
   url "https://www.dechifro.org/dcraw/archive/dcraw-9.28.0.tar.gz"
   mirror "https://mirrorservice.org/sites/distfiles.macports.org/dcraw/dcraw-9.28.0.tar.gz"
   sha256 "2890c3da2642cd44c5f3bfed2c9b2c1db83da5cec09cc17e0fa72e17541fb4b9"
+  revision 3
 
   livecheck do
     url "https://distfiles.macports.org/dcraw/"
@@ -11,25 +12,22 @@ class Dcraw < Formula
   end
 
   bottle do
-    sha256 cellar: :any,                 arm64_monterey: "54aef6cd7f83a16ad41f6094d2a1821bae08b307dcc2fcf40a83705c195f53d4"
-    sha256 cellar: :any,                 arm64_big_sur:  "743f571022d74442fa2d81309c916ff665114303a4e916d1b9a970c50ddb71e3"
-    sha256 cellar: :any,                 monterey:       "963aaef6e14ec562514c95e81f9dfd5ef3e94ffc27815f75d4b3819f394145c5"
-    sha256 cellar: :any,                 big_sur:        "fc0e1b6d2ac47be836929a68ee33d693bb2e455c4ecdd1dee7beafb3a5c123c6"
-    sha256 cellar: :any,                 catalina:       "df26056a9b3374154b499b4dbdee4a1417a58a15cffe22ac40f095747ee1f8a7"
-    sha256 cellar: :any,                 mojave:         "4673710b946c4fa3eb47d0b693b380e8abb636202ce86e0e13372a8539141bd8"
-    sha256 cellar: :any,                 high_sierra:    "21f31347e500f314a1f2e6fe03f0d6009b25fa5bd9f1f339b0fe77fc38050e81"
-    sha256 cellar: :any,                 sierra:         "dc99d6de1166a3f4fa66d23b798dad9a58e0fac24f72c02ab38ea32e74b30a9e"
-    sha256 cellar: :any,                 el_capitan:     "022f85e8da7b4cd8c68d7251d39bf3084ec28a15cb859d9cfe49bd439e312466"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:   "df4ae1286e4b5cadcc8db82146d0ef622eda6e8d5e494e00a1ad53961c3cf32f"
+    sha256 cellar: :any,                 arm64_ventura:  "5c293d628459ac1405a5d558d975f2e655e6a59626a4a634fd6496b094a7589c"
+    sha256 cellar: :any,                 arm64_monterey: "3335474ee80fb8359df924187d878380b76ee055ca0ade45f1b8872cf71b1614"
+    sha256 cellar: :any,                 arm64_big_sur:  "fcf8d42c26fe0f0c75b9247286ab8dc90cca127b4946dc5755cfd44d5afd66a5"
+    sha256 cellar: :any,                 ventura:        "2ece1b23d5c77ada535e6e4ae803b9d8060296838cfe92818c191b1e49dceba8"
+    sha256 cellar: :any,                 monterey:       "82b85b19458214ddae5f12e22a13e160b5a771d1111020d559a3b19bfed3798f"
+    sha256 cellar: :any,                 big_sur:        "baf800fb4217afc09f8fc06f3512780898018e72e8862be65f016ea1b89fb91d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:   "e450712cc23c8501e21e7ff438480b0debcb27703a6ba4dcea9e6b00a2ec6fac"
   end
 
   depends_on "jasper"
-  depends_on "jpeg"
+  depends_on "jpeg-turbo"
   depends_on "little-cms2"
 
   def install
-    ENV.append_to_cflags "-I#{HOMEBREW_PREFIX}/include -L#{HOMEBREW_PREFIX}/lib"
-    system ENV.cc, "-o", "dcraw", ENV.cflags, "dcraw.c", "-lm", "-ljpeg", "-llcms2", "-ljasper"
+    ENV.append "LDLIBS", "-lm -ljpeg -llcms2 -ljasper"
+    system "make", "dcraw"
     bin.install "dcraw"
     man1.install "dcraw.1"
   end

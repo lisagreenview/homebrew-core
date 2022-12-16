@@ -3,20 +3,20 @@ class GitArchiveAll < Formula
 
   desc "Archive a project and its submodules"
   homepage "https://github.com/Kentzo/git-archive-all"
-  url "https://github.com/Kentzo/git-archive-all/archive/1.23.0.tar.gz"
-  sha256 "25f36948b704e57c47c98a33280df271de7fbfb74753b4984612eabb08fb2ab1"
+  url "https://github.com/Kentzo/git-archive-all/archive/1.23.1.tar.gz"
+  sha256 "0c440d15be18e336672549231510fa3c66d0cb95069a5e4800fdd876ab6814df"
   license "MIT"
-  revision 2
-  head "https://github.com/Kentzo/git-archive-all.git"
+  head "https://github.com/Kentzo/git-archive-all.git", branch: "master"
 
   bottle do
-    sha256 cellar: :any_skip_relocation, all: "c943082d8a3627dfe6fbcb62f939158980af992a8e1f37a3f5958dfd6ce80293"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, all: "4f982b4bcb637872206aea1277c730c7157bb0eff99b753848c79e06c4531a33"
   end
 
-  depends_on "python@3.10"
+  depends_on "python@3.11"
 
   def install
-    rewrite_shebang detected_python_shebang, "*.py"
+    rewrite_shebang detected_python_shebang, "git_archive_all.py"
 
     system "make", "prefix=#{prefix}", "install"
   end
